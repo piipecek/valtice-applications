@@ -1,0 +1,13 @@
+{% extends "admin/admin_navbar.html" %}
+
+{% block content %}
+<form method="post">
+    <h2>Jmenování nových adminů</h2>
+    <div id="parent_div_1"></div>
+    <h2>Úprava rolí stávajících adminů</h2>
+    <div id="parent_div_2"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/admin/admin_jmenovat_adminy.js')}}"></script>
+
+{% endblock %}

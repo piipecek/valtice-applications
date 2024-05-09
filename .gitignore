@@ -1,0 +1,14 @@
+**/__pycache__/**
+website/database.db
+data/logs.txt
+user_data/**
+testing/**
+Pipfile
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+*.DS_Store
+known_bugs.json
+.idea
+.env

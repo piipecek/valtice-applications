@@ -1,0 +1,35 @@
+{%extends "index.html"%}
+{%block content%}
+
+<form method="post" id="form">
+	<h2>Zaregistruj se:</h2>
+	<div class="container">
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Email:
+			</div>
+			<div class="col">
+				<input type="email" name="email" id="email" required maxlength="100" class="form-control"/>
+			</div>
+		</div>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Heso
+			</div>
+			<div class="col">
+				<input type="password" name="password" id="password" maxlength="300" class="form-control"/>
+			</div>
+		</div>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Heslo pro kontrolu:
+			</div>
+			<div class="col">
+				<input type="password" name="password_confirm" id="password_confirm" maxlength="300" class="form-control"/>
+			</div>
+		</div>
+	</div>
+	<button type="button" id="btn" class="btn custom-button">Register</button>
+</form>
+<script type="module" src="{{url_for('static',filename='js/auth/register_form_validation.js')}}"></script>
+{%endblock%}

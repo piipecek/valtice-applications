@@ -1,0 +1,35 @@
+{%extends "index.html"%}
+{%block content%}
+
+<form method="post">
+	<h2> Přihlas se </h2>
+	<div class="container">
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Email
+			</div>
+			<div class="col">
+				<input type="text" name="email" id="email" maxlength="100" class="form-control"/>
+			</div>
+		</div>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Heslo
+			</div>
+			<div class="col">
+				<input type="password" name="password" id="password" maxlength="300" class="form-control"/>	
+			</div>
+		</div>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				<button type="submit" class="btn custom-button">Log-in</button>
+			</div>
+			<div class="col-auto">
+				<small>
+					Zapomněli jste heslo? <a class="link" href="{{url_for('auth_views.request_reset')}}">Požádat o nové</a>
+				</small>
+			</div>
+		</div>
+	</div>
+</form>
+{%endblock%}

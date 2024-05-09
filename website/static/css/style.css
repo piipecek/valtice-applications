@@ -1,0 +1,162 @@
+body {
+    background-color: #99D5EC !important;
+}
+header{
+    background-color: #99D5EC;
+}
+.dropdown-menu{
+    background-color: #FFF5D3 !important;
+}
+.alertcolor-info {
+    background-color: rgb(253, 235, 138  );
+}
+.alertcolor-error  {
+    background-color: rgb(255, 121, 121);
+}
+.alertcolor-success {
+    background-color: rgb(138, 253, 138  );
+}
+canvas {
+    background-color: white;
+}
+.border-orange{
+    border: 1px solid;
+    border-color: rgb(243,133,8);
+}
+.vydaje-white-div {
+    background-color: white;
+}
+.main-section{
+    background-color: #FFF5D3;
+}
+.suggestion{
+    background-color: #FFF5D3;
+}
+.link{
+    color:darkblue;
+}
+.panel-link{
+    min-height: 10rem;
+    background-color: #99D5EC;
+    text-decoration: none;
+    color: black;
+    width: 100%;
+    font-weight: bold;
+}
+.panel-link:hover{
+    background-color: aliceblue;
+    color:orange;
+}
+.footer-section{
+    background-color: #FFF5D3;
+}
+.custom-button{
+    background-color: rgb(243,133,8) !important;
+    color: white !important;
+}
+.custom-button:hover{
+    background-color: rgb(243,234,224) !important;
+    color: rgb(243,133,8) !important;
+    border-color: rgb(243,133,8) !important;
+}
+.tooltip1 {
+    position: relative;
+}
+  
+  .tooltip1 .tooltiptext1 {
+    visibility: hidden;
+    width: auto;
+    min-width: 100px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    bottom: 110%;
+    left: auto;
+    margin-left: -60px;
+}
+  
+  .tooltip1:hover .tooltiptext1 {
+    visibility: visible;
+}
+
+.evaluace_pocet{
+    width: auto !important;
+    display: inline !important;
+}
+
+.question_div {
+    background-color: #FFF1E2;
+}
+
+.italic_popisek {
+    font-style: italic;
+}
+
+.plot-div {
+    background-color: #FFF1E2;
+    /* width: 80%; */
+    border: 1px solid;
+    border-radius: .3rem;
+    border-color: rgb(243,133,8);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.canvas-div-wrapper{
+    display: flex;
+    justify-content: center;
+    max-width: 800px;
+    margin: auto;
+}
+
+.canvas-div{
+    width: 90%;
+}
+.otazka{
+    font-weight: bold;
+}
+
+.odpoved-div{
+    background-color: white;
+    padding: .2rem;
+    margin-bottom: .5rem;
+    font-style: italic;
+    border: 1px solid;
+    border-radius: .3rem;
+    border-color: rgb(243,133,8);
+}
+
+.totpal_hra_div{
+    text-align: center;
+}
+
+.totpal_topic{
+    font-size: 10vw;
+}
+
+.ctvrtletka-canvas-wrapper{
+    display: flex;
+    justify-content: center
+}
+
+.ctvrtletka-canvas-div{
+    width: 80%
+}
+
+.ctvrtletka-prumery{
+    text-align: center;
+}
+
+.dny_histogram_div{
+    display: flex;
+    justify-content: center;
+    max-width: 800px;
+    margin: auto;
+}

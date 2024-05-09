@@ -1,0 +1,11 @@
+{% extends "admin/admin_navbar.html" %}
+{% block content %}
+
+<h2>Úprava známých připomínek</h2>
+
+<form method="post">
+    <div id="content"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/admin/admin_uprava_znamych_chyb.js')}}"></script>
+{% endblock %}

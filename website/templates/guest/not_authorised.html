@@ -1,0 +1,8 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h2>Na tuto stránku nemáte přístup.</h2>
+Pokud si myslíte, že je to chyba, <a class="link" href="{{url_for('guest_views.nahlasit_bug')}}">nahlašte to, prosím</a>. 
+
+{% endblock %}

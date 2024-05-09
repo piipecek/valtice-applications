@@ -1,0 +1,47 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="d-flex justify-content-center">
+    <h1 class="my-2">Valtické přihlášky</h1>
+</div>
+
+<form method="post">
+    <div class="row my-1">
+        <div class="col-12 col-md-2 my-1">
+            Vyhledat účastníka
+        </div>
+        <div class="col-12 col-md my-1">
+            <input class="form-control" type="text" id="search" placeholder="Zadejte jméno nebo příjmení">
+        </div>
+        <div class="col-12 col-md-auto my-1">
+            <button class="btn btn-primary" id="searchButton" type="submit">Hledat</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-sm-2 my-1">
+            Výpis třídy
+        </div>
+        <div class="col-12 col-sm my-1">
+            <select class="form-select" id="classSelect">
+                <option value="0">Vyberte třídu</option>
+            </select>
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="btn btn-primary" id="searchClassButton" type="submit">Hledat</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-sm-2 my-1">
+            Nahrát tabulku s novými účastníky
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="file" id="file" accept=".xlsx">
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="btn btn-primary" id="uploadButton" type="submit">Nahrát</button>
+        </div>
+    </div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/slovnik/slovnik_dashboard.js')}}"></script>
+
+{% endblock %}

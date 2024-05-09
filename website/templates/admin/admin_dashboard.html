@@ -1,0 +1,73 @@
+{% extends "admin/admin_navbar.html" %}
+
+{% block content %}
+
+<h2>Admin sekce</h2>
+
+<div class="row p-2">
+    {% if "editing_users" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.edit_users')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Uživatelé
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.edit_admins')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Admini
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "editing_roles" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.uprava_roli')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Role
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "editing_admins" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.jmenovat_adminy')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Udílení rolí
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "editing_suggestions" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.uprava_znamych_bugu')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Připomínky
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "editing_app_logs" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.logs_file')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Logy
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "editing_languages" in roles %}
+    <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+        <a href="{{url_for('admin_views.jazyky')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <div class="text-center">
+                Jazyky
+            </div>
+        </a>
+    </div>
+{% endif %}
+</div>
+
+
+
+{% endblock %}

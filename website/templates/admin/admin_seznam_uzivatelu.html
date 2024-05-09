@@ -1,0 +1,11 @@
+{% extends "admin/admin_navbar.html" %}
+
+{% block content %}
+<form method="post">
+    <h2>Seznam uživatelů</h2>
+    <div id="parent_div"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/admin/admin_seznam_uzivatelu.js')}}"></script>
+
+{% endblock %}
