@@ -1,0 +1,95 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<input hidden id="id_getter" value="{{id}}"/>
+<h2>Detail účastníka <span id="full_name"></span></h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Čas registrace</td>
+                <td id="cas"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Oslovení</td>
+                <td id="osloveni"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Jméno</td>
+                <td id="jmeno"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Příjmení</td>
+                <td id="prijmeni"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Věk</td>
+                <td id="vek"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Telefon</td>
+                <td id="telefon"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Email</td>
+                <td id="email"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Člen SSH</td>
+                <td id="ssh_clen"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Účast</td>
+                <td id="ucast"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Ubytování</td>
+                <td id="ubytovani"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Strava</td>
+                <td id="strava"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Příspěvek</td>
+                <td id="prispevek"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Poznámky</td>
+                <td id="poznamka"></td> 
+            </tr>
+            <tr>
+                <td class="pravy_text">Vzdělání</td>
+                <td id="vzdelani"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída - volba 1</td>
+                <td id="hlavni_trida_1"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída - volba 2</td>
+                <td id="hlavni_trida_2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Vedlejší třída placená</td>
+                <td id="vedlejsi_trida_placena"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Vedlejší třída zdarma</td>
+                <td id="vedlejsi_trida_zdarma"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">ID v systému</td>
+                <td id="id"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<form method="post" id="smazat_form">
+    <button type="button" class="btn btn-danger" id="smazat_button">Smazat</button>
+    <input hidden value="{{id}}" name="smazat"/>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/valtice/ucastnik.js')}}"></script>
+
+{% endblock %}

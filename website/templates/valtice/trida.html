@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<input hidden id="id_getter" value="{{id}}"/>
+<h2>Detail Třídy <span id="short_name"></span></h2>
+<p id="full_name"></p>
+<p>Celkem <span id="celkem"></span> účastníků.</p>
+</p>
+<hr>
+<h3>Hlavní třída - 1. volba</h3>
+<p>
+    Celkem <span id="prvni_trida_count"></span> účastníků.
+</p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody id="hlavni_ucastnici_1">
+            
+        </tbody>
+    </table>
+</div>
+<h3>Hlavní třída - 2. volba</h3>
+<p>
+    Celkem <span id="druha_trida_count"></span> účastníků.
+</p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody id="hlavni_ucastnici_2">
+            
+        </tbody>
+    </table>
+</div>
+<h3>Vedlejší třída - placená</h3>
+<p>
+    Celkem <span id="vedlejsi_placena_count"></span> účastníků.
+</p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody id="vedlejsi_ucastnici_placeni">
+            
+        </tbody>
+    </table>
+</div>
+<h3>Vedlejší třída - zdarma</h3>
+<p>
+    Celkem <span id="vedlejsi_zdarma_count"></span> účastníků.
+</p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody id="vedlejsi_ucastnici_zdarma">
+            
+        </tbody>
+    </table>
+</div>
+
+<script type="module" src="{{url_for('static', filename='js/valtice/trida.js')}}"></script>
+
+{% endblock %}

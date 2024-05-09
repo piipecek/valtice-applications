@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block content %}
+<form method="post">
+    <h2>Seznam účastníků</h2>
+    <p>Jsou abecedně řazeni podle příjmení</p>
+    <div id="parent_div"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/valtice/seznam_ucastniku.js')}}"></script>
+
+{% endblock %}

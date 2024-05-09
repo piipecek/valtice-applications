@@ -47,6 +47,7 @@ def create_app() -> Flask:
     from .api.admin_api import admin_api
     from .api.guest_api import guest_api
     from .api.user_api import user_api
+    from .api.valtice_api import valtice_api
     from .api.static_sender import static_sender
 
 
@@ -58,6 +59,7 @@ def create_app() -> Flask:
     app.register_blueprint(guest_api, url_prefix = "/guest_api")
     app.register_blueprint(user_views, url_prefix = "/")
     app.register_blueprint(user_api, url_prefix = "/user_api")
+    app.register_blueprint(valtice_api, url_prefix = "/valtice_api")
     app.register_blueprint(static_sender, url_prefix="/static")
 
 
