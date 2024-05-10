@@ -6,7 +6,7 @@ let tc = new TableCreator(document.getElementById("parent_div"), true)
 tc.make_header(["Jméno", "E-mail", "Telefon", "Hlavní třída", "Detail"])
 ucastnici.forEach(element => {
     let button = document.createElement("button")
-    button.classList.add("btn", "btn-success")
+    button.classList.add("btn", "btn-success", "btn-narrow")
     button.type = "submit"
     button.innerText = "Detail účastníka"
     button.name="result"

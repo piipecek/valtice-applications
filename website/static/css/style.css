@@ -160,3 +160,8 @@ canvas {
     max-width: 800px;
     margin: auto;
 }
+
+.btn-narrow{
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
