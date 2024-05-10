@@ -15,6 +15,9 @@ for(let ucastnik of data.hlavni_ucastnici_1){
     a.innerText = ucastnik["name"]
     td.appendChild(a)
     tr.appendChild(td)
+    let td2 = document.createElement("td")
+    td2.innerText = ucastnik["ucast"]
+    tr.appendChild(td2)
     document.getElementById("hlavni_ucastnici_1").appendChild(tr)
 }
 
@@ -26,6 +29,9 @@ for(let ucastnik of data.hlavni_ucastnici_2){
     a.innerText = ucastnik["name"]
     td.appendChild(a)
     tr.appendChild(td)
+    let td2 = document.createElement("td")
+    td2.innerText = ucastnik["ucast"]
+    tr.appendChild(td2)
     document.getElementById("hlavni_ucastnici_2").appendChild(tr)
 }
 
@@ -37,6 +43,9 @@ for(let ucastnik of data.vedlejsi_ucastnici_placeni){
     a.innerText = ucastnik["name"]
     td.appendChild(a)
     tr.appendChild(td)
+    let td2 = document.createElement("td")
+    td2.innerText = ucastnik["ucast"]
+    tr.appendChild(td2)
     document.getElementById("vedlejsi_ucastnici_placeni").appendChild(tr)
 }
 
@@ -48,6 +57,9 @@ for(let ucastnik of data.vedlejsi_ucastnici_zdarma){
     a.innerText = ucastnik["name"]
     td.appendChild(a)
     tr.appendChild(td)
+    let td2 = document.createElement("td")
+    td2.innerText = ucastnik["ucast"]
+    tr.appendChild(td2)
     document.getElementById("vedlejsi_ucastnici_zdarma").appendChild(tr)
 }
 

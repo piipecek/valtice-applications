@@ -57,6 +57,11 @@ def seznam_ucastniku():
     else:
         if id:=request.form.get("result"):
             return redirect(url_for("valtice_views.ucastnik", id=id))
+        if request.form.get("delete_all"):
+            for u in Valtice_ucastnik.get_all():
+                u.delete()
+            flash("Všichni účastníci byli smazáni", category="success")
+            return redirect(url_for("valtice_views.seznam_ucastniku"))
         return request.form.to_dict()
     
 

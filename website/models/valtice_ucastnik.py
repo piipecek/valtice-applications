@@ -34,9 +34,11 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     def __repr__(self) -> str:
         return f"Uživatel | {self.email}"
 
+
     @staticmethod
-    def get_by_time(time: datetime) -> "Valtice_ucastnik":
-        return db.session.scalars(db.select(Valtice_ucastnik).where(Valtice_ucastnik.cas == time)).first()
+    def is_duplicate_ucastnik(time, prijmeni, jmeno) -> bool:
+        return db.session.scalars(db.select(Valtice_ucastnik).where(Valtice_ucastnik.cas == time, Valtice_ucastnik.jmeno == jmeno, Valtice_ucastnik.prijmeni == prijmeni)).first()
+    
     
     @staticmethod
     def vytvorit_nove_ucastniky_z_csv(csv_file: list[list[str]]) -> None:
@@ -44,8 +46,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         skipped = 0
         for row in csv_file[1:]:# skip first row
             cas = datetime.strptime(row[0], "%d.%m.%Y %H:%M:%S")
-            if Valtice_ucastnik.get_by_time(cas):
-                print(f"Uživatel s časem {cas} již existuje")
+            if Valtice_ucastnik.is_duplicate_ucastnik(cas, row[2], row[3]):
                 skipped += 1
                 continue
             else:
@@ -58,7 +59,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                     email=row[5],
                     telefon=row[6],
                     ssh_clen=True if row[7] in ["Ano", "Yes"] else False,
-                    ucast="Aktivní" if row[8] in ["Active", "Aktivní"] else "Neaktivní",
+                    ucast="Aktivní" if row[8] in ["Active", "Aktivní"] else "Pasivní",
                     ubytovani=row[13],
                     strava=row[14],
                     prispevek=row[15],
@@ -85,9 +86,10 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         }
     
     def get_full_name(self) -> str:
-        return f"{self.osloveni} {self.jmeno} {self.prijmeni}"
+        return f"{self.prijmeni} {self.jmeno}"
     
     def info_pro_detail(self):
+        print(self.cas, type(self.cas))
         return {
             "id": self.id,
             "cas": pretty_datetime(self.cas),

@@ -8,9 +8,11 @@ def pretty_datetime(_date: Union[str, datetime]) -> str:
         time, milis = time.split(".")
         hour, minute, sec = time.split(":")
         return f"{day}. {month}. {year}, {hour}:{minute}:{sec}"
-    elif isinstance(_date, date):
-        return f"{_date.day}. {_date.month}. {_date.year}"
     elif isinstance(_date, datetime):
+        print("is datetime")
         minute = str(_date.minute).ljust(2, "0")
         second = str(_date.second).ljust(2, "0")
         return f"{_date.day}. {_date.month}. {_date.year}, {_date.hour}:{minute}:{second}"
+    elif isinstance(_date, date):
+        print("is date", isinstance(_date, datetime))
+        return f"{_date.day}. {_date.month}. {_date.year}"
