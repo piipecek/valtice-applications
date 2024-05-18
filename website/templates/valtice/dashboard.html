@@ -1,12 +1,9 @@
 {% extends "index.html" %}
 {% block content %}
-<div class="d-flex justify-content-center">
-    <h1 class="my-2">Valtické přihlášky</h1>
+<div>
+    <h2 class="my-2">Výpis účastníků ve třídě</h2>
 </div>
 <form method="post" enctype="multipart/form-data">
-    <div class="d-flex justify-content-center align-items-center my-2">
-        <button class="btn btn-primary" name="vsichni" value="whatever" type="submit">Seznam všech účastníků</button>
-    </div>
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
             Ukázat výpis třídy
@@ -19,6 +16,7 @@
         </div>
     </div>
     <hr>
+    <h2>Nahrávání nové .csv tabulky</h2>
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
             Nahrát tabulku s novými účastníky (.csv)

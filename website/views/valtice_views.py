@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask_login import current_user
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
+from website.models.user import get_roles
 import csv
 from io import StringIO
 
@@ -10,7 +12,7 @@ valtice_views = Blueprint("valtice_views",__name__)
 @require_role_system_name_on_current_user("valtice_org")
 def home():
     if request.method == "GET":
-        return render_template("valtice/dashboard.html")
+        return render_template("valtice/dashboard.html", roles=get_roles(current_user))
     else:
         if request.form.get("trida_button"):
             return redirect(url_for("valtice_views.trida", id=request.form.get("id_tridy")))
@@ -40,7 +42,7 @@ def home():
 @require_role_system_name_on_current_user("valtice_org")
 def ucastnik(id:int):
     if request.method == "GET":
-        return render_template("valtice/ucastnik.html", id=id)
+        return render_template("valtice/ucastnik.html", id=id, roles=get_roles(current_user))
     else:
         if id:=request.form.get("smazat"):
             Valtice_ucastnik.get_by_id(id).delete()
@@ -53,7 +55,7 @@ def ucastnik(id:int):
 @require_role_system_name_on_current_user("valtice_org")
 def seznam_ucastniku():
     if request.method == "GET":
-        return render_template("valtice/seznam_ucastniku.html")
+        return render_template("valtice/seznam_ucastniku.html", roles=get_roles(current_user))
     else:
         if id:=request.form.get("result"):
             return redirect(url_for("valtice_views.ucastnik", id=id))
@@ -69,6 +71,6 @@ def seznam_ucastniku():
 @require_role_system_name_on_current_user("valtice_org")
 def trida(id:int):
     if request.method == "GET":
-        return render_template("valtice/trida.html", id=id)
+        return render_template("valtice/trida.html", id=id, roles=get_roles(current_user))
     else:
         return request.form.to_dict()

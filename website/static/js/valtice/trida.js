@@ -63,8 +63,20 @@ for(let ucastnik of data.vedlejsi_ucastnici_zdarma){
     document.getElementById("vedlejsi_ucastnici_zdarma").appendChild(tr)
 }
 
-document.getElementById("celkem").innerText = data["celkem"]
-document.getElementById("prvni_trida_count").innerText = data["prvni_trida_count"]
-document.getElementById("druha_trida_count").innerText = data["druha_trida_count"]
-document.getElementById("vedlejsi_placena_count").innerText = data["vedlejsi_placena_count"]
-document.getElementById("vedlejsi_zdarma_count").innerText = data["vedlejsi_zdarma_count"]
+function count_string(count) {
+    if (count == 0) {
+        return "Žádní účastníci."
+    } else if (count == 1) {
+        return "Celkem jeden účastník."
+    } else if (count <= 4) {
+        return "Celkem "+ String(count) + " účastníci." 
+    } else {
+        return "Celkem "+String(count)+" účastníků."
+    }
+}
+
+document.getElementById("celkem").innerText = count_string(data["celkem"])
+document.getElementById("prvni_trida_count").innerText = count_string(data["prvni_trida_count"])
+document.getElementById("druha_trida_count").innerText = count_string(data["druha_trida_count"])
+document.getElementById("vedlejsi_placena_count").innerText = count_string(data["vedlejsi_placena_count"])
+document.getElementById("vedlejsi_zdarma_count").innerText = count_string(data["vedlejsi_zdarma_count"])

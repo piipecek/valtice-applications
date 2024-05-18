@@ -27,7 +27,7 @@ class Valtice_trida(Common_methods_db_model):
             "hlavni_ucastnici_2": [{"name": u.get_full_name(), "link": "/valtice/ucastnik/" + str(u.id), "ucast": u.ucast} for u in self.hlavni_ucastnici_2],
             "vedlejsi_ucastnici_placeni": [{"name": u.get_full_name(), "link": "/valtice/ucastnik/" + str(u.id), "ucast": u.ucast} for u in self.vedlejsi_placena_ucastnici],
             "vedlejsi_ucastnici_zdarma": [{"name": u.get_full_name(), "link": "/valtice/ucastnik/" + str(u.id), "ucast": u.ucast} for u in self.vedlejsi_zdarma_ucastnici],
-            "celkem": len(self.hlavni_ucastnici_1) + len(self.hlavni_ucastnici_2) + len(self.vedlejsi_placena_ucastnici) + len(self.vedlejsi_zdarma_ucastnici),
+            "celkem": len(self.hlavni_ucastnici_1) + len(self.vedlejsi_placena_ucastnici) + len(self.vedlejsi_zdarma_ucastnici),
             "prvni_trida_count": len(self.hlavni_ucastnici_1),
             "druha_trida_count": len(self.hlavni_ucastnici_2),
             "vedlejsi_placena_count": len(self.vedlejsi_placena_ucastnici),

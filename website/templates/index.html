@@ -20,15 +20,25 @@
     <header class="container-sm">
         <nav class="navbar navbar-expand navbar-light">
             <a class="navbar-brand" href="{{url_for('guest_views.dashboard')}}">
-              <img src="{{url_for('static_sender.send_icon', filename='domu.png')}}" alt="House Icon" width="30" height="30" class="d-inline-block align-top">
+              <img src="{{url_for('static_sender.send_icon', filename='valtice.png')}}" alt="House Icon" width="30" height="30" class="d-inline-block align-top">
             </a>
-            {% block nav_jedna_ikonka %}
+            <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if "valtice_org" in roles%} 
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Seznam účastníků</a></li>
+                    {% endif %}
+                    {% if "valtice_org" in roles%} 
+                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Výpisy tříd a nahrání tabulky</a></li>
+                    {% endif %}
+                    {% block nav_start %}
 
-            {% endblock%}
-          
+                    {% endblock %}   
+                </ul>
+            </div>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    {% block nav %}
+                    
+                    {% block nav_end %}
 
                     {% endblock %}   
                 </ul>
