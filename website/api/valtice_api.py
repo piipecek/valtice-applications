@@ -3,7 +3,7 @@ import json
 from flask import Blueprint
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
-
+import czech_sort
 valtice_api = Blueprint("valtice_api", __name__)
 
 
@@ -16,7 +16,8 @@ def tridy_long_names_ids():
 @valtice_api.route("/ucastnici")
 @require_role_system_name_on_current_user("valtice_org")
 def ucastnici():
-    return json.dumps(sorted([u.info_pro_seznam() for u in Valtice_ucastnik.get_all()], key=lambda x: x["prijmeni"]))
+    sorted_users = sorted(Valtice_ucastnik.get_all(), key=lambda u: czech_sort.key(u.info_pro_seznam()["prijmeni"]))
+    return json.dumps([u.info_pro_seznam() for u in sorted_users])
 
 
 @valtice_api.route("/ucastnik/<int:id>")

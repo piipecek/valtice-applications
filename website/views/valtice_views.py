@@ -33,6 +33,10 @@ def home():
                 return redirect(request.url)
             else:
                 return 'Invalid file format'
+        elif request.form.get("novy"):
+            Valtice_ucastnik.novy_ucastnik_from_admin(jmeno = request.form.get("jmeno"), prijmeni = request.form.get("prijmeni"))
+            flash("Nový účastník byl vytvořen", category="success")
+            return redirect(url_for("valtice_views.seznam_ucastniku"))
         elif request.form.get("vsichni"):
             return redirect(url_for("valtice_views.seznam_ucastniku"))
         return request.form.to_dict()

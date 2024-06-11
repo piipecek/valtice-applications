@@ -28,6 +28,23 @@
             <button class="btn btn-primary" name="soubor" value="whatever" type="submit">Nahrát</button>
         </div>
     </div>
+    <hr>
+    <h2>Vytvoření nového účastníka</h2>
+    <div class="row">
+        <div class="col-12 col-sm-2 my-1">
+            Jméno:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="text" name="jmeno" placeholder="Franta">
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="text" name="prijmeni" placeholder="Vopička">
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="btn btn-primary" name="novy" value="whatever" type="submit">Vytvořit</button>
+        </div>
+    </div>
+    <small>Slouží zejména pro testing. Další atributy účastníka se dají upravit v detailu.</small>
 </form>
 
 <script type="module" src="{{url_for('static', filename='js/valtice/dashboard.js')}}"></script>

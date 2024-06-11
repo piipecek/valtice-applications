@@ -81,6 +81,10 @@ class TableCreator {
             
             if (typeof data == "string" || typeof data == "number") {
                 col.innerText = data
+            }
+
+            if (data == null) {
+                
             } else if (typeof data == "object") {
                 col.appendChild(data)
             }

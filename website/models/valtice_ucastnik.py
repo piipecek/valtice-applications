@@ -82,14 +82,13 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "prijmeni": self.prijmeni,
             "email": self.email,
             "telefon": self.telefon,
-            "hlavni_trida_1": Valtice_trida.get_by_id(self.hlavni_trida_1_id).short_name,
+            "hlavni_trida_1": Valtice_trida.get_by_id(self.hlavni_trida_1_id).short_name if self.hlavni_trida_1_id else "-",
         }
     
     def get_full_name(self) -> str:
         return f"{self.prijmeni} {self.jmeno}"
     
     def info_pro_detail(self):
-        print(self.cas, type(self.cas))
         return {
             "id": self.id,
             "cas": pretty_datetime(self.cas),
@@ -123,3 +122,11 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                 "link": "/valtice/trida/" + str(self.vedlejsi_trida_zdarma_id) if self.vedlejsi_trida_zdarma_id else None
             }
         }
+    
+    @staticmethod
+    def novy_ucastnik_from_admin(jmeno, prijmeni):
+        v = Valtice_ucastnik()
+        v.jmeno = jmeno
+        v.prijmeni = prijmeni
+        v.cas = datetime.now()
+        v.update()
