@@ -67,6 +67,7 @@ def create_app() -> Flask:
     from .models.user import User, get_roles
     from .models.valtice_trida import Valtice_trida
     from .models.valtice_ucastnik import Valtice_ucastnik
+    from .models.cena import Cena
  
     with app.app_context():
         db.create_all()

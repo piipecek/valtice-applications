@@ -7,6 +7,8 @@ from website.models.valtice_trida import Valtice_trida
 
 app = create_app()
 with app.app_context():
+    # short name = pouze jmeno lektora, pokud letor má dvě třídy, je tam i upřesnění
+    # full name = jmeno lektora + detailní název třídy
     Valtice_trida(short_name="Beatriz Lafont", full_name="Beatriz Lafont (ES) – Sólový zpěv/Solo singing").update()
     Valtice_trida(short_name="Margot Oitzinger", full_name="Margot Oitzinger (A) – Sólový zpěv/Solo singing").update()
     Valtice_trida(short_name="Peter Kooij", full_name="Peter Kooij (NL) – Sólový zpěv/Solo singing").update()

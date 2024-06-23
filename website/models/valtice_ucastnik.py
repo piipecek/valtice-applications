@@ -11,25 +11,50 @@ from website.models.valtice_trida import Valtice_trida
 
 class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(200))
     cas = db.Column(db.DateTime, nullable=False)
-    osloveni = db.Column(db.String(50))
     prijmeni = db.Column(db.String(100))
     jmeno = db.Column(db.String(100))
     vek = db.Column(db.String(50))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(200))
     telefon = db.Column(db.String(100))
+    finance_dne = db.Column(db.DateTime)
+    zaplacena_castka = db.Column(db.Float)
+    finance_1_trida = db.Column(db.Float)
+    finance_2_trida = db.Column(db.Float)
+    finance_ubytovani = db.Column(db.Float)
+    finance_snidane = db.Column(db.Float)
+    finance_obedy = db.Column(db.Float)
+    finance_vecere = db.Column(db.Float)
+    finance_dar = db.Column(db.Float)
+    finance_korekce_kurzovne = db.Column(db.Float)
+    finance_korekce_kurzovne_duvod = db.Column(db.String(2000))
+    finance_korekce_strava = db.Column(db.Float)
+    finance_korekce_strava_duvod = db.Column(db.String(2000))
     ssh_clen = db.Column(db.Boolean)
     ucast = db.Column(db.String(50))
-    ubytovani = db.Column(db.String(1000))
-    strava = db.Column(db.String(100))
-    prispevek = db.Column(db.String(2000))
-    poznamka = db.Column(db.String(2000))
-    vzdelani = db.Column(db.String(2000))
     hlavni_trida_1_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
-    hlavni_trida_2_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_placena_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_zdarma_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
+    ubytovani = db.Column(db.String(1000))
+    vzdelani = db.Column(db.String(2000)) 
+    nastroj = db.Column(db.String(2000))
+    repertoir = db.Column(db.String(2000))
+    student_zus_valtice_mikulov = db.Column(db.Boolean)
+    strava = db.Column(db.Boolean)
+    strava_snidane_vinarska = db.Column(db.Integer)
+    strava_snidane_zs = db.Column(db.Integer)
+    strava_obed_vinarska_maso = db.Column(db.Integer)
+    strava_obed_vinarska_vege = db.Column(db.Integer)
+    strava_obed_zs_maso = db.Column(db.Integer)
+    strava_obed_zs_vege = db.Column(db.Integer)
+    strava_vecere_vinarska_maso = db.Column(db.Integer)
+    strava_vecere_vinarska_vege = db.Column(db.Integer)
+    strava_vecere_zs_maso = db.Column(db.Integer)
+    strava_vecere_zs_vege = db.Column(db.Integer)
+    uzivatelska_poznamka = db.Column(db.String(2000))
+    admin_poznamka = db.Column(db.String(2000))
+    
+    
     
     def __repr__(self) -> str:
         return f"Uživatel | {self.email}"
@@ -40,7 +65,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         return db.session.scalars(db.select(Valtice_ucastnik).where(Valtice_ucastnik.cas == time, Valtice_ucastnik.jmeno == jmeno, Valtice_ucastnik.prijmeni == prijmeni)).first()
     
     
-    @staticmethod
+    @staticmethod    
     def vytvorit_nove_ucastniky_z_csv(csv_file: list[list[str]]) -> None:
         new = 0
         skipped = 0
