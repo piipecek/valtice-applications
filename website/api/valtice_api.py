@@ -1,8 +1,9 @@
-from website.models.valtice_trida import Valtice_trida
 import json
 from flask import Blueprint
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
+from website.models.valtice_trida import Valtice_trida
+from website.models.cena import Cena
 import czech_sort
 valtice_api = Blueprint("valtice_api", __name__)
 
@@ -29,3 +30,8 @@ def ucastnik(id: int):
 @require_role_system_name_on_current_user("valtice_org")
 def trida(id: int):
     return json.dumps(Valtice_trida.get_by_id(id).info_pro_detail())
+
+@valtice_api.route("/ceny")
+@require_role_system_name_on_current_user("valtice_org")
+def ceny():
+    return json.dumps([c.get_data_for_admin() for c in Cena.get_all()])

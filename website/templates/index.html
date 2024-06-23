@@ -30,6 +30,9 @@
                     {% if "valtice_org" in roles%} 
                         <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Výpisy tříd a nahrání tabulky</a></li>
                     {% endif %}
+                    {% if "valtice_org" in roles%} 
+                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Úprava cen</a></li>
+                    {% endif %}
                     {% block nav_start %}
 
                     {% endblock %}   

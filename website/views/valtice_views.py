@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
+from website.models.cena import Cena
 from website.models.user import get_roles
 import csv
 from io import StringIO
@@ -78,3 +79,24 @@ def trida(id:int):
         return render_template("valtice/trida.html", id=id, roles=get_roles(current_user))
     else:
         return request.form.to_dict()
+    
+
+@valtice_views.route("/ceny", methods=["GET","POST"])
+@require_role_system_name_on_current_user("valtice_org")
+def ceny():
+    if request.method == "GET":
+        return render_template("valtice/ceny.html", roles=get_roles(current_user))
+    else:
+        if request.form.get("ulozit"):
+            for cena in Cena.get_all():
+                try:
+                    cena.czk = float(request.form.get(f"{cena.id}_czk").replace(",","."))
+                    cena.eur = float(request.form.get(f"{cena.id}_eur").replace(",","."))
+                except ValueError:
+                    flash("Některá pole nebyla zadána jako čísla.", category="error")
+                    return redirect(url_for("valtice_views.ceny"))
+                cena.update()
+            flash("Ceny byly uloženy", category="success")
+            return redirect(url_for("valtice_views.ceny"))
+        else:
+            return request.form.to_dict()

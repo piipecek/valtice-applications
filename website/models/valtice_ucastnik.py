@@ -33,6 +33,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     ssh_clen = db.Column(db.Boolean)
     ucast = db.Column(db.String(50))
     hlavni_trida_1_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
+    hlavni_trida_2_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_placena_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_zdarma_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     ubytovani = db.Column(db.String(1000))

@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+{% block content %}
+<form method="post">
+<h2>Úpravy cen</h2> <button type="submit" class="btn btn-primary" name="ulozit" value="whatever">Uložit změny</button>
+    <hr>
+    <h3>Kurzovné</h3>
+    <div id="table_kurzovne"></div>
+    <hr>
+    <h3>Strava</h3>
+    <div id="table_strava"></div>
+    <hr>
+    <h3>Ubytování</h3>
+    <div id="table_ubytovani"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/valtice/ceny.js')}}"></script>
+
+{% endblock %}
