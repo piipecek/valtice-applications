@@ -1,21 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-<div>
-    <h2 class="my-2">Výpis účastníků ve třídě</h2>
-</div>
 <form method="post" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-12 col-sm-2 my-1">
-            Ukázat výpis třídy
-        </div>
-        <div class="col-12 col-sm my-1">
-            <select class="form-select" id="select_tridy" name="id_tridy"></select>
-        </div>
-        <div class="col-12 col-sm-auto my-1">
-            <button class="btn btn-primary" name="trida_button" value="whatever" type="submit">Zobrazit</button>
-        </div>
-    </div>
-    <hr>
     <h2>Nahrávání nové .csv tabulky</h2>
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
@@ -41,10 +26,17 @@
             <input class="form-control" type="text" name="prijmeni" placeholder="Vopička">
         </div>
         <div class="col-12 col-sm-auto my-1">
-            <button class="btn btn-primary" name="novy" value="whatever" type="submit">Vytvořit</button>
+            <button class="btn btn-primary" name="novy_ucastnik" value="whatever" type="submit">Vytvořit</button>
         </div>
     </div>
     <small>Slouží zejména pro testing. Další atributy účastníka se dají upravit v detailu.</small>
+    <hr>
+    <h2>Vytvoření nové třídy</h2>
+    <p>
+        <i>
+            Někdy příště
+        </i>
+    </p>
 </form>
 
 <script type="module" src="{{url_for('static', filename='js/valtice/dashboard.js')}}"></script>

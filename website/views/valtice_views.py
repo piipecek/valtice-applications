@@ -15,9 +15,7 @@ def home():
     if request.method == "GET":
         return render_template("valtice/dashboard.html", roles=get_roles(current_user))
     else:
-        if request.form.get("trida_button"):
-            return redirect(url_for("valtice_views.trida", id=request.form.get("id_tridy")))
-        elif request.form.get("soubor"):
+        if request.form.get("soubor"):
             if 'file' not in request.files:
                 flash("Nebyl nahrán žádný soubor", category="error")
                 return redirect(request.url)
@@ -34,11 +32,9 @@ def home():
                 return redirect(request.url)
             else:
                 return 'Invalid file format'
-        elif request.form.get("novy"):
+        elif request.form.get("novy_ucastnik"):
             Valtice_ucastnik.novy_ucastnik_from_admin(jmeno = request.form.get("jmeno"), prijmeni = request.form.get("prijmeni"))
             flash("Nový účastník byl vytvořen", category="success")
-            return redirect(url_for("valtice_views.seznam_ucastniku"))
-        elif request.form.get("vsichni"):
             return redirect(url_for("valtice_views.seznam_ucastniku"))
         return request.form.to_dict()
     
@@ -98,5 +94,17 @@ def ceny():
                 cena.update()
             flash("Ceny byly uloženy", category="success")
             return redirect(url_for("valtice_views.ceny"))
+        else:
+            return request.form.to_dict()
+        
+# endpoint /tridy
+@valtice_views.route("/tridy", methods=["GET","POST"])
+@require_role_system_name_on_current_user("valtice_org")
+def tridy():
+    if request.method == "GET":
+        return render_template("valtice/tridy.html", roles=get_roles(current_user))
+    else:
+        if id := request.form.get("trida"):
+            return redirect(url_for("valtice_views.trida", id=id))
         else:
             return request.form.to_dict()

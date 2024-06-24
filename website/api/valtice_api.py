@@ -31,6 +31,11 @@ def ucastnik(id: int):
 def trida(id: int):
     return json.dumps(Valtice_trida.get_by_id(id).info_pro_detail())
 
+@valtice_api.route("/tridy")
+@require_role_system_name_on_current_user("valtice_org")
+def tridy():
+    return json.dumps(sorted([t.get_short_name_id_for_seznam() for t in Valtice_trida.get_all()], key=lambda x: x["short_name"]))
+
 @valtice_api.route("/ceny")
 @require_role_system_name_on_current_user("valtice_org")
 def ceny():

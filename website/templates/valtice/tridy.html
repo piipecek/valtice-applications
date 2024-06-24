@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<h2>Třídy</h2>
+
+<form method="post">
+    <div id="parent_div"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/valtice/tridy.js')}}"></script>
+
+{% endblock %}

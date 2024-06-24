@@ -25,13 +25,16 @@
             <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
                 <ul class="navbar-nav">
                     {% if "valtice_org" in roles%} 
-                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Seznam účastníků</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Účastníci</a></li>
                     {% endif %}
                     {% if "valtice_org" in roles%} 
-                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Výpisy tříd a nahrání tabulky</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.tridy')}}">Třídy</a></li>
                     {% endif %}
                     {% if "valtice_org" in roles%} 
-                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Úprava cen</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Ceny</a></li>
+                    {% endif %}
+                    {% if "valtice_org" in roles%} 
+                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Ostatní</a></li>
                     {% endif %}
                     {% block nav_start %}
 
