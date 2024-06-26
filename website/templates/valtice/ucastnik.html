@@ -3,44 +3,26 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
 <h2>Detail účastníka <span id="full_name"></span></h2>
+<hr>
+<h3>Vybrané informace</h3>
+
+<p><i>Co tu chceme mít vypsáno? Mělo by tu být pár řádků, které musí být nejvíce na očích</i></p>
+
+<h3>Obecné</h3>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="pravy_text">Čas registrace</td>
+                <td class="pravy_text">Čas vyplnění formuláře</td>
                 <td id="cas"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Oslovení</td>
-                <td id="osloveni"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Jméno</td>
-                <td id="jmeno"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Příjmení</td>
-                <td id="prijmeni"></td>
+                <td class="pravy_text">Čas registrace ve Valticích</td>
+                <td id="registrovan_dne"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Věk</td>
                 <td id="vek"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Hlavní třída - volba 1</td>
-                <td id="hlavni_trida_1"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Vedlejší třída placená</td>
-                <td id="vedlejsi_trida_placena"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Vedlejší třída zdarma</td>
-                <td id="vedlejsi_trida_zdarma"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Hlavní třída - volba 2</td>
-                <td id="hlavni_trida_2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Telefon</td>
@@ -59,32 +41,143 @@
                 <td id="ssh_clen"></td>
             </tr>
             <tr>
+                <td class="pravy_text">Hlavní třída - volba 1</td>
+                <td id="hlavni_trida_1"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Vedlejší třída placená</td>
+                <td id="vedlejsi_trida_placena"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Vedlejší třída zdarma</td>
+                <td id="vedlejsi_trida_zdarma"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída - volba 2</td>
+                <td id="hlavni_trida_2"></td>
+            </tr>
+            <tr>
                 <td class="pravy_text">Ubytování</td>
                 <td id="ubytovani"></td>
+                <td id="ubytovani_pocet"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Strava</td>
                 <td id="strava"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Příspěvek</td>
-                <td id="prispevek"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Poznámky</td>
-                <td id="poznamka"></td> 
-            </tr>
-            <tr>
                 <td class="pravy_text">Vzdělání</td>
                 <td id="vzdelani"></td>
             </tr>
             <tr>
-                <td class="pravy_text">ID v systému</td>
-                <td id="id"></td>
+                <td class="pravy_text">Nástroj</td>
+                <td id="nastroj"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Repertoir</td>
+                <td id="repertoir"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student ZUŠ Valtice / Mikulov</td>
+                <td id="student_zus_valtice_mikulov"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Uživatelská poznámka</td>
+                <td id="uzivatelska_poznamka"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Organizátorská poznámka</td>
+                <td id="admin_poznamka"></td> 
             </tr>
         </tbody>
     </table>
 </div>
+<h3>Finance</h3>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Placeno dne</td>
+                <td id="finance_dne"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Celková částka</td>
+                <td id="finance_celkem"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">1. třída</td>
+                <td id="finance_trida_1"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">2. třída</td>
+                <td id="finance_trida_2"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Ubytování</td>
+                <td id="finance_ubytovani"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Snídaně</td>
+                <td id="finance_snidane"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Obědy</td>
+                <td id="finance_obedy"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Večeře</td>
+                <td id="finance_vecere"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Dar</td>
+                <td id="finance_dar"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Korekce kurzovné</td>
+                <td id="finance_korekce_kurzovne"></td>
+                <td id="finance_korekce_kurzovne_duvod"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Korekce strava</td>
+                <td id="finance_korekce_strava"></td>
+                <td id="finance_korekce_strava_duvod"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<h3>Strava</h3>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Strava</td>
+                <td id="strava"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Snídaně</td>
+                <td id="strava_snidane"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Obědy</td>
+                <td id="strava_obedy"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Večeře</td>
+                <td id="strava_vecere"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <form method="post" id="smazat_form">
     <button type="button" class="btn btn-danger" id="smazat_button">Smazat</button>
     <input hidden value="{{id}}" name="smazat"/>

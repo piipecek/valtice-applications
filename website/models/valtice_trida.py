@@ -5,6 +5,8 @@ class Valtice_trida(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
     short_name = db.Column(db.String(300), nullable=False) # viz. vytvoreni_trid.py pro detail o tom, co v atributach cekat
     full_name = db.Column(db.String(1000), nullable=False)
+    je_zdarma_jako_vedlejsi = db.Column(db.Boolean, default=False)
+    je_ansamblova = db.Column(db.Boolean, default=False)
     hlavni_ucastnici_1 = db.relationship('Valtice_ucastnik', backref='hlavni_trida_1', lazy=True, foreign_keys='Valtice_ucastnik.hlavni_trida_1_id')
     hlavni_ucastnici_2 = db.relationship('Valtice_ucastnik', backref='hlavni_trida_2', lazy=True, foreign_keys='Valtice_ucastnik.hlavni_trida_2_id')
     vedlejsi_placena_ucastnici = db.relationship('Valtice_ucastnik', backref='vedlejsi_trida_placena', lazy=True, foreign_keys='Valtice_ucastnik.vedlejsi_trida_placena_id')

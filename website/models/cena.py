@@ -18,3 +18,7 @@ class Cena(Common_methods_db_model):
             "czk": self.czk,
             "eur": self.eur
         }
+    
+    @staticmethod
+    def get_by_system_name(system_name:str):
+        return db.session.scalars(db.select(Cena).where(Cena.system_name == system_name)).first()

@@ -1,14 +1,10 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
-from website.models.jointables import user_role_jointable
 from website.helpers.pretty_date import pretty_datetime
-from datetime import datetime, timedelta, timezone
-from flask import current_app
-from flask_login import UserMixin, current_user, login_user
-from typing import List
-import jwt
+from datetime import datetime
+from flask_login import UserMixin
 from website.models.valtice_trida import Valtice_trida
-import unicodedata
+from website.models.cena import Cena
 
 class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,9 +14,10 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     vek = db.Column(db.String(50))
     email = db.Column(db.String(200))
     telefon = db.Column(db.String(100))
-    finance_dne = db.Column(db.DateTime)
+    finance_dne = db.Column(db.Date)
     finance_dar = db.Column(db.Float)
     finance_mena = db.Column(db.String(50))
+    finance_kategorie = db.Column(db.String(100))
     finance_korekce_kurzovne = db.Column(db.Float)
     finance_korekce_kurzovne_duvod = db.Column(db.String(2000))
     finance_korekce_strava = db.Column(db.Float)
@@ -50,10 +47,9 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     strava_vecere_zs_vege = db.Column(db.Integer)
     uzivatelska_poznamka = db.Column(db.String(2000))
     admin_poznamka = db.Column(db.Text)
-    registrovan_dne = db.Column(db.DateTime)
+    registrovan_dne = db.Column(db.Date)
     
-    
-    
+
     
     def __repr__(self) -> str:
         return f"Uživatel | {self.email}"
@@ -106,7 +102,6 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                 print("Je potřeba korekce ceny ubytka pro účastníka ", row[2], row[3])
             
             
-            
             # sjednocení poznámek
             pozn1 = row[41]
             pozn2 = row[42]
@@ -123,6 +118,24 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                     elif not Valtice_trida.get_by_full_name(trida):
                         print("Nepodařilo se najít třídu ", trida)
             
+            # rok zaplaceni
+            if row[7]:
+                finance_dne = datetime.strptime(row[7], "%d.%m.")
+                finance_dne = finance_dne.replace(year=2024)
+            else:
+                finance_dne = None
+            
+            # věková kategorie
+            if row[45] in ["Student do 26 let", "Student up to 26"]:
+                kategorie = "student"
+            elif row[45] in ["Dítě do 15 let", "Children up to 15"]:
+                kategorie = "dite"
+            elif row[45] in ["Dospělý", "Other"]:
+                kategorie = "dospely"
+            else:
+                print("Nepodařilo se určit věkovou kategorii ", row[45], row[2], row[3])
+            
+            
             if Valtice_ucastnik.is_duplicate_ucastnik(cas, row[2], row[3], row[5]):
                 skipped += 1 
                 continue
@@ -134,12 +147,13 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                     vek=row[4],
                     email=row[5],
                     telefon=row[6],
-                    finance_dne=datetime.strptime(row[7], "%d.%m.") if row[7] else None, 
+                    finance_dne=finance_dne, 
                     finance_dar=get_money_number(row[15]),
                     finance_mena=mena,
-                    finance_korekce_kurzovne=get_money_number(row[16]) if row[16] else None,
+                    finance_kategorie=kategorie,
+                    finance_korekce_kurzovne=get_money_number(row[16]) if row[16] else 0,
                     finance_korekce_kurzovne_duvod=row[17],
-                    finance_korekce_strava=get_money_number(row[18]) if row[18] else None,
+                    finance_korekce_strava=get_money_number(row[18]) if row[18] else 0,
                     finance_korekce_strava_duvod=row[19],
                     ssh_clen=True if row[20] in ["Ano", "Yes"] else False,
                     ucast="Aktivní" if row[21] in ["Active", "Aktivní"] else "Pasivní",
@@ -165,7 +179,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                     strava_vecere_zs_maso=int(row[39]) if row[39] else 0,
                     strava_vecere_zs_vege=int(row[40]) if row[40] else 0,
                     uzivatelska_poznamka=poznamka,
-                    admin_poznamka=row[42],
+                    admin_poznamka=row[43] + row[44],
                 )
                 novy_ucastnik.update()
                 new += 1
@@ -186,10 +200,23 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         return f"{self.prijmeni} {self.jmeno}"
     
     def info_pro_detail(self):
+        def pretty_penize(castka) -> str:
+            if castka == 0:
+                return "-"
+            if castka == int(castka):
+                castka = int(castka)
+            else:
+                castka = str(round(castka, 2)).replace(".", ",")
+            if self.finance_mena == "CZK":
+                return f"{castka} Kč"
+            elif self.finance_mena == "EUR":
+                return f"{castka} €"
+            
+        kalkulace = self.kalkulace()
+        
         return {
-            "id": self.id,
             "cas": pretty_datetime(self.cas),
-            "osloveni": self.osloveni,
+            "registrovan_dne": pretty_datetime(self.registrovan_dne) if self.registrovan_dne else "Zatím neregistrován",
             "prijmeni": self.prijmeni,
             "jmeno": self.jmeno,
             "vek": self.vek,
@@ -198,10 +225,13 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "ssh_clen": "Ano" if self.ssh_clen else "Ne",
             "ucast": self.ucast,
             "ubytovani": self.ubytovani,
-            "strava": self.strava,
-            "prispevek": self.prispevek,
-            "poznamka": self.poznamka,
-            "vzdelani": self.vzdelani,
+            "strava": "Ano" if self.strava else "Ne",
+            "vzdelani": "Žádné" if not self.vzdelani else self.vzdelani,
+            "nastroj": "Žádný" if not self.nastroj else self.nastroj,
+            "repertoir": "Žádný" if not self.repertoir else self.repertoir,
+            "student_zus_valtice_mikulov": "Ano" if self.student_zus_valtice_mikulov else "Ne",
+            "uzivatelska_poznamka": self.uzivatelska_poznamka if self.uzivatelska_poznamka else "Žádná",
+            "admin_poznamka": self.admin_poznamka if self.admin_poznamka else "Žádná",
             "hlavni_trida_1": {
                 "name": Valtice_trida.get_by_id(self.hlavni_trida_1_id).full_name if self.hlavni_trida_1_id else "-",
                 "link": "/valtice/trida/" + str(self.hlavni_trida_1_id) if self.hlavni_trida_1_id else None
@@ -217,7 +247,20 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "vedlejsi_trida_zdarma": {
                 "name": Valtice_trida.get_by_id(self.vedlejsi_trida_zdarma_id).full_name if self.vedlejsi_trida_zdarma_id else "-",
                 "link": "/valtice/trida/" + str(self.vedlejsi_trida_zdarma_id) if self.vedlejsi_trida_zdarma_id else None
-            }
+            },
+            "finance_dne": pretty_datetime(self.finance_dne) if self.finance_dne else "Zatím neplaceno",
+            "finance_celkem": pretty_penize(kalkulace["celkem"]),
+            "finance_trida_1": pretty_penize(kalkulace["prvni_trida"]),
+            "finance_trida_2": pretty_penize(kalkulace["vedlejsi_trida"]),
+            "finance_ubytovani": pretty_penize(kalkulace["ubytovani"]),
+            "finance_snidane": pretty_penize(kalkulace["snidane"]),
+            "finance_obedy": pretty_penize(kalkulace["obedy"]),
+            "finance_vecere": pretty_penize(kalkulace["vecere"]),
+            "finance_dar": pretty_penize(kalkulace["dar"]),
+            "finance_korekce_kurzovne": pretty_penize(self.finance_korekce_kurzovne),
+            "finance_korekce_strava": pretty_penize(self.finance_korekce_strava),
+            "finance_korekce_kurzovne_duvod": self.finance_korekce_kurzovne_duvod if self.finance_korekce_kurzovne_duvod else "-",
+            "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod if self.finance_korekce_strava_duvod else "-",
         }
     
     @staticmethod
@@ -227,3 +270,86 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         v.prijmeni = prijmeni
         v.cas = datetime.now()
         v.update()
+    
+    def kalkulace(self) -> dict:
+        # ubytovani
+        if self.ubytovani in ["Tělocvična", "Tělocvična (náhradník)"]:
+            if self.finance_mena == "CZK":        
+                ubytko = self.ubytovani_pocet * Cena.get_by_system_name("telocvicna").czk
+            elif self.finance_mena == "EUR":
+                ubytko = self.ubytovani_pocet * Cena.get_by_system_name("telocvicna").eur
+        elif self.ubytovani == "Internát vinařské školy":
+            if self.finance_mena == "CZK":
+                ubytko = self.ubytovani_pocet * Cena.get_by_system_name("internat").czk
+            elif self.finance_mena == "EUR":
+                ubytko = self.ubytovani_pocet * Cena.get_by_system_name("internat").eur
+        else:
+            ubytko = 0
+        
+        # kurzovne TODO
+        def vycislit(ucast: str, mena: str, kategorie: str, clen_ssh: bool, cislo_tridy: int, trida: Valtice_trida) -> int:
+            if trida is None:
+                return 0
+            if cislo_tridy == 1:
+                if ucast == "Pasivní":
+                    if mena == "CZK":
+                        return Cena.get_by_system_name("kurzovne_pasivni").czk
+                    elif mena == "EUR":
+                        return Cena.get_by_system_name("kurzovne_pasivni").eur
+                if kategorie == "dite":
+                    if mena == "CZK":
+                        return Cena.get_by_system_name("kurzovne_deti").czk
+                    elif mena == "EUR":
+                        return Cena.get_by_system_name("kurzovne_deti").eur
+                elif kategorie == "student":
+                    if mena == "CZK":
+                        return Cena.get_by_system_name("kurzovne_student").czk
+                    elif mena == "EUR":
+                        return Cena.get_by_system_name("kurzovne_student").eur
+                elif clen_ssh:
+                    if mena == "CZK":
+                        return Cena.get_by_system_name("kurzovne_ssh").czk
+                    elif mena == "EUR":
+                        return Cena.get_by_system_name("kurzovne_ssh").eur
+                elif kategorie == "dospely":
+                    if mena == "CZK":
+                        return Cena.get_by_system_name("kurzovne").czk
+                    elif mena == "EUR":
+                        return Cena.get_by_system_name("kurzovne").eur
+            elif cislo_tridy == 2:
+                if trida.je_zdarma_jako_vedlejsi:
+                    return 0
+                elif trida.je_ansamblova:
+                    if mena == "CZK":
+                        return Cena.get_by_system_name("ansambly").czk
+                    elif mena == "EUR":
+                        return Cena.get_by_system_name("ansambly").eur
+                else:
+                    return vycislit(ucast, mena, kategorie, clen_ssh, 1, trida)
+        
+        prvni_trida = vycislit(self.ucast, self.finance_mena, self.finance_kategorie, self.ssh_clen, 1, self.hlavni_trida_1)
+        vedlejsi_trida_placena = vycislit(self.ucast, self.finance_mena, self.finance_kategorie, self.ssh_clen, 2, self.vedlejsi_trida_placena)
+        
+        
+        # strava
+        if self.finance_mena == "CZK":
+            snidane = self.strava_snidane_zs * Cena.get_by_system_name("snidane_zs").czk + self.strava_snidane_vinarska * Cena.get_by_system_name("snidane_ss").czk
+            obedy = self.strava_obed_zs_maso * Cena.get_by_system_name("obed_zs").czk + self.strava_obed_zs_vege * Cena.get_by_system_name("obed_zs").czk + self.strava_obed_vinarska_maso * Cena.get_by_system_name("obed_ss").czk + self.strava_obed_vinarska_vege * Cena.get_by_system_name("obed_ss").czk
+            vecere = self.strava_vecere_zs_maso * Cena.get_by_system_name("vecere_zs").czk + self.strava_vecere_zs_vege * Cena.get_by_system_name("vecere_zs").czk + self.strava_vecere_vinarska_maso * Cena.get_by_system_name("vecere_ss").czk + self.strava_vecere_vinarska_vege * Cena.get_by_system_name("vecere_ss").czk
+        elif self.finance_mena == "EUR":
+            snidane = self.strava_snidane_zs * Cena.get_by_system_name("snidane_zs").eur + self.strava_snidane_vinarska * Cena.get_by_system_name("snidane_ss").eur
+            obedy = self.strava_obed_zs_maso * Cena.get_by_system_name("obed_zs").eur + self.strava_obed_zs_vege * Cena.get_by_system_name("obed_zs").eur + self.strava_obed_vinarska_maso * Cena.get_by_system_name("obed_ss").eur + self.strava_obed_vinarska_vege * Cena.get_by_system_name("obed_ss").eur
+            vecere = self.strava_vecere_zs_maso * Cena.get_by_system_name("vecere_zs").eur + self.strava_vecere_zs_vege * Cena.get_by_system_name("vecere_zs").eur + self.strava_vecere_vinarska_maso * Cena.get_by_system_name("vecere_ss").eur + self.strava_vecere_vinarska_vege * Cena.get_by_system_name("vecere_ss").eur
+        
+        print(ubytko, snidane, obedy, vecere, self.finance_dar, prvni_trida, vedlejsi_trida_placena, self.finance_korekce_kurzovne, self.finance_korekce_strava)
+        result = {
+            "ubytovani": ubytko,
+            "prvni_trida": prvni_trida,
+            "vedlejsi_trida": vedlejsi_trida_placena,
+            "snidane": snidane,
+            "obedy": obedy,
+            "vecere": vecere,
+            "dar": self.finance_dar,
+            "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena - self.finance_korekce_kurzovne - self.finance_korekce_strava
+        }
+        return result
