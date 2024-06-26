@@ -211,9 +211,47 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                 return f"{castka} Kč"
             elif self.finance_mena == "EUR":
                 return f"{castka} €"
+         
+        # display jidla
+        if self.strava_snidane_vinarska + self.strava_snidane_zs == 0:
+            snidane = "-"
+        elif self.strava_snidane_zs == 0:
+            snidane = f"SŠ: {self.strava_snidane_vinarska}"
+        elif self.strava_snidane_vinarska == 0:
+            snidane = f"ZŠ: {self.strava_snidane_zs}"
+        else:
+            snidane = f"ZŠ: {self.strava_snidane_zs}, SŠ: {self.strava_snidane_vinarska}"
+        
+        obed_list = []
+        if self.strava_obed_vinarska_maso + self.strava_obed_vinarska_vege + self.strava_obed_zs_maso + self.strava_obed_zs_vege == 0:
+            obed = "-"
+        if self.strava_obed_zs_maso != 0:
+            obed_list.append(f"ZŠ maso: {self.strava_obed_zs_maso}")
+        if self.strava_obed_zs_vege != 0:
+            obed_list.append(f"ZŠ vege: {self.strava_obed_zs_vege}")
+        if self.strava_obed_vinarska_maso != 0:
+            obed_list.append(f"SŠ maso: {self.strava_obed_vinarska_maso}")
+        if self.strava_obed_vinarska_vege != 0:
+            obed_list.append(f"SŠ vege: {self.strava_obed_vinarska_vege}")
+        if len(obed_list) != 0:    
+            obed = ", ".join(obed_list)
+        
+        vecere_list = []
+        if self.strava_vecere_vinarska_maso + self.strava_vecere_vinarska_vege + self.strava_vecere_zs_maso + self.strava_vecere_zs_vege == 0:
+            vecere = "-"
+        if self.strava_vecere_zs_maso != 0:
+            vecere_list.append("ZŠ maso")
+        if self.strava_vecere_zs_vege != 0:
+            vecere_list.append("ZŠ vege")
+        if self.strava_vecere_vinarska_maso != 0:
+            vecere_list.append("SŠ maso")
+        if self.strava_vecere_vinarska_vege != 0:
+            vecere_list.append("SŠ vege")
+        if len(vecere_list) != 0:
+            vecere = ", ".join(vecere_list)
+                
             
         kalkulace = self.kalkulace()
-        
         return {
             "cas": pretty_datetime(self.cas),
             "registrovan_dne": pretty_datetime(self.registrovan_dne) if self.registrovan_dne else "Zatím neregistrován",
@@ -261,6 +299,9 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "finance_korekce_strava": pretty_penize(self.finance_korekce_strava),
             "finance_korekce_kurzovne_duvod": self.finance_korekce_kurzovne_duvod if self.finance_korekce_kurzovne_duvod else "-",
             "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod if self.finance_korekce_strava_duvod else "-",
+            "strava_snidane": snidane,
+            "strava_obedy": obed,
+            "strava_vecere": vecere
         }
     
     @staticmethod
@@ -341,7 +382,6 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             obedy = self.strava_obed_zs_maso * Cena.get_by_system_name("obed_zs").eur + self.strava_obed_zs_vege * Cena.get_by_system_name("obed_zs").eur + self.strava_obed_vinarska_maso * Cena.get_by_system_name("obed_ss").eur + self.strava_obed_vinarska_vege * Cena.get_by_system_name("obed_ss").eur
             vecere = self.strava_vecere_zs_maso * Cena.get_by_system_name("vecere_zs").eur + self.strava_vecere_zs_vege * Cena.get_by_system_name("vecere_zs").eur + self.strava_vecere_vinarska_maso * Cena.get_by_system_name("vecere_ss").eur + self.strava_vecere_vinarska_vege * Cena.get_by_system_name("vecere_ss").eur
         
-        print(ubytko, snidane, obedy, vecere, self.finance_dar, prvni_trida, vedlejsi_trida_placena, self.finance_korekce_kurzovne, self.finance_korekce_strava)
         result = {
             "ubytovani": ubytko,
             "prvni_trida": prvni_trida,
