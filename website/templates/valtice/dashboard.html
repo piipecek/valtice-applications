@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="form">
     <h2>Nahrávání nové .csv tabulky</h2>
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
@@ -37,6 +37,10 @@
             Někdy příště
         </i>
     </p>
+    <hr>
+    <h2>Smazání všech účastníků</h2>
+    <button type="button" id="delete_button" class="btn btn-danger">Smazat všechny účastníky</button>
+    <input type="hidden" name="delete_all" value="whatever">
 </form>
 
 <script type="module" src="{{url_for('static', filename='js/valtice/dashboard.js')}}"></script>

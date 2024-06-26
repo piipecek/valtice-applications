@@ -32,6 +32,11 @@ def home():
                 return redirect(request.url)
             else:
                 return 'Invalid file format'
+        elif request.form.get("delete_all"):
+            for u in Valtice_ucastnik.get_all():
+                u.delete()
+            flash("Všichni účastníci byli smazáni", category="success")
+            return redirect(url_for("valtice_views.home"))
         elif request.form.get("novy_ucastnik"):
             Valtice_ucastnik.novy_ucastnik_from_admin(jmeno = request.form.get("jmeno"), prijmeni = request.form.get("prijmeni"))
             flash("Nový účastník byl vytvořen", category="success")
@@ -60,12 +65,8 @@ def seznam_ucastniku():
     else:
         if id:=request.form.get("result"):
             return redirect(url_for("valtice_views.ucastnik", id=id))
-        if request.form.get("delete_all"):
-            for u in Valtice_ucastnik.get_all():
-                u.delete()
-            flash("Všichni účastníci byli smazáni", category="success")
-            return redirect(url_for("valtice_views.seznam_ucastniku"))
-        return request.form.to_dict()
+        else:
+            return request.form.to_dict()
     
 
 @valtice_views.route("/trida/<int:id>", methods=["GET","POST"])

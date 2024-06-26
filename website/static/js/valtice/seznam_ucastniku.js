@@ -15,8 +15,3 @@ ucastnici.forEach(element => {
 });
 
 document.getElementById("total").innerText = ucastnici.length
-
-document.getElementById("delete_button").addEventListener("click", () => {
-    if(confirm("Opravdu chcete smazat všechny uživatele?")) {
-        document.getElementById("delete_form").submit()
-}})
