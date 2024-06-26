@@ -224,9 +224,9 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         elif self.strava_snidane_zs == 0:
             snidane = f"SŠ: {self.strava_snidane_vinarska}"
         elif self.strava_snidane_vinarska == 0:
-            snidane = f"ZŠ: {self.strava_snidane_zs}"
+            snidane = f"VŠ: {self.strava_snidane_zs}"
         else:
-            snidane = f"ZŠ: {self.strava_snidane_zs}, SŠ: {self.strava_snidane_vinarska}"
+            snidane = f"ZŠ: {self.strava_snidane_zs}, VŠ: {self.strava_snidane_vinarska}"
         
         obed_list = []
         if self.strava_obed_vinarska_maso + self.strava_obed_vinarska_vege + self.strava_obed_zs_maso + self.strava_obed_zs_vege == 0:
@@ -236,9 +236,9 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         if self.strava_obed_zs_vege != 0:
             obed_list.append(f"ZŠ vege: {self.strava_obed_zs_vege}")
         if self.strava_obed_vinarska_maso != 0:
-            obed_list.append(f"SŠ maso: {self.strava_obed_vinarska_maso}")
+            obed_list.append(f"VŠ maso: {self.strava_obed_vinarska_maso}")
         if self.strava_obed_vinarska_vege != 0:
-            obed_list.append(f"SŠ vege: {self.strava_obed_vinarska_vege}")
+            obed_list.append(f"VŠ vege: {self.strava_obed_vinarska_vege}")
         if len(obed_list) != 0:    
             obed = ", ".join(obed_list)
         
@@ -246,17 +246,16 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         if self.strava_vecere_vinarska_maso + self.strava_vecere_vinarska_vege + self.strava_vecere_zs_maso + self.strava_vecere_zs_vege == 0:
             vecere = "-"
         if self.strava_vecere_zs_maso != 0:
-            vecere_list.append("ZŠ maso")
+            vecere_list.append(f"ZŠ maso: {self.strava_vecere_zs_maso}")
         if self.strava_vecere_zs_vege != 0:
-            vecere_list.append("ZŠ vege")
+            vecere_list.append(f"ZŠ vege: {self.strava_vecere_zs_vege}")
         if self.strava_vecere_vinarska_maso != 0:
-            vecere_list.append("SŠ maso")
+            vecere_list.append(f"VŠ maso: {self.strava_vecere_vinarska_maso}")
         if self.strava_vecere_vinarska_vege != 0:
-            vecere_list.append("SŠ vege")
+            vecere_list.append(f"VŠ vege: {self.strava_vecere_vinarska_vege}")
         if len(vecere_list) != 0:
             vecere = ", ".join(vecere_list)
                 
-            
         kalkulace = self.kalkulace()
         return {
             "cas": pretty_datetime(self.cas),

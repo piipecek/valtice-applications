@@ -1,5 +1,5 @@
 class TableCreator {
-    constructor(parentDiv, small = false) {
+    constructor(parentDiv, small = false, striped = false) {
         this.parentDiv = parentDiv;
         this.parentDiv.innerHTML = ""
         this.table = document.createElement('table')
@@ -9,6 +9,9 @@ class TableCreator {
         this.table.classList.add("table", "table-hover")
         if (small) {
             this.table.classList.add("table-sm")
+        }
+        if (striped) {
+            this.table.classList.add("table-striped")
         }
         
         this.parentDiv.appendChild(table_responsive_div)

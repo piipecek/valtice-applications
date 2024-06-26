@@ -10,6 +10,16 @@ for (let key in data) {
     console.log(key, data[key])
     if (["jmeno", "prijmeni"].includes(key)) {
         continue
+    } else if (key == "email") {
+        console.log(data[key])
+        if (data[key]) {
+            let a = document.createElement("a")
+            a.href = "mailto:" + data[key]
+            a.innerText = data[key]
+            document.getElementById(key).appendChild(a)
+        } else {
+            document.getElementById(key).innerText = "-"
+        }
     } else if(["hlavni_trida_1", "hlavni_trida_2", "vedlejsi_trida_placena", "vedlejsi_trida_zdarma"].includes(key)){
         if (data[key]["link"]) {
             let a = document.createElement("a")
@@ -20,8 +30,9 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]["name"]
         }
         continue
+    } else {
+        document.getElementById(key).innerText = data[key]
     }
-    document.getElementById(key).innerText = data[key]
 }
 
 
