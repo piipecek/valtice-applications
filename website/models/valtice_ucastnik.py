@@ -183,6 +183,12 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                 )
                 novy_ucastnik.update()
                 new += 1
+                
+                # kontrola kalkulace s csv
+                kalkulace = novy_ucastnik.kalkulace()
+                if kalkulace["celkem"] != get_money_number(row[8]):
+                    print(f"Kalkulace účastníka {novy_ucastnik.jmeno} {novy_ucastnik.prijmeni} {pretty_datetime(novy_ucastnik.cas)} se neshoduje s csv: Očekávaná honota: {kalkulace['celkem']}, csv: {get_money_number(row[8])}, rozdíl = {kalkulace['celkem'] - get_money_number(row[8])}")
+                
         return {"new": new, "skipped": skipped}
             
     def info_pro_seznam(self) -> dict:
