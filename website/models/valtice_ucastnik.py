@@ -15,8 +15,8 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     email = db.Column(db.String(200))
     telefon = db.Column(db.String(100))
     finance_dne = db.Column(db.Date)
-    finance_dar = db.Column(db.Float)
-    finance_mena = db.Column(db.String(50))
+    finance_dar = db.Column(db.Float, default=0)
+    finance_mena = db.Column(db.String(50), default="CZK")
     finance_kategorie = db.Column(db.String(100))
     finance_korekce_kurzovne = db.Column(db.Float, default=0)
     finance_korekce_kurzovne_duvod = db.Column(db.String(2000))
@@ -25,28 +25,28 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     finance_korekce_ubytko = db.Column(db.Float, default=0)
     finance_korekce_ubytko_duvod = db.Column(db.String(2000))
     ssh_clen = db.Column(db.Boolean)
-    ucast = db.Column(db.String(50))
+    ucast = db.Column(db.String(50), default="Aktivní")
     hlavni_trida_1_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     hlavni_trida_2_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_placena_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_zdarma_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
-    ubytovani = db.Column(db.String(1000))
-    ubytovani_pocet = db.Column(db.Integer)
+    ubytovani = db.Column(db.String(1000), default="Nemá zájem")
+    ubytovani_pocet = db.Column(db.Integer, default=0)
     vzdelani = db.Column(db.String(2000)) 
     nastroj = db.Column(db.String(2000))
     repertoir = db.Column(db.String(2000))
     student_zus_valtice_mikulov = db.Column(db.Boolean)
     strava = db.Column(db.Boolean)
-    strava_snidane_vinarska = db.Column(db.Integer)
-    strava_snidane_zs = db.Column(db.Integer)
-    strava_obed_vinarska_maso = db.Column(db.Integer)
-    strava_obed_vinarska_vege = db.Column(db.Integer)
-    strava_obed_zs_maso = db.Column(db.Integer)
-    strava_obed_zs_vege = db.Column(db.Integer)
-    strava_vecere_vinarska_maso = db.Column(db.Integer)
-    strava_vecere_vinarska_vege = db.Column(db.Integer)
-    strava_vecere_zs_maso = db.Column(db.Integer)
-    strava_vecere_zs_vege = db.Column(db.Integer)
+    strava_snidane_vinarska = db.Column(db.Integer, default=0)
+    strava_snidane_zs = db.Column(db.Integer, default=0)
+    strava_obed_vinarska_maso = db.Column(db.Integer, default=0)
+    strava_obed_vinarska_vege = db.Column(db.Integer, default=0)
+    strava_obed_zs_maso = db.Column(db.Integer, default=0)
+    strava_obed_zs_vege = db.Column(db.Integer, default=0)
+    strava_vecere_vinarska_maso = db.Column(db.Integer, default=0)
+    strava_vecere_vinarska_vege = db.Column(db.Integer, default=0)
+    strava_vecere_zs_maso = db.Column(db.Integer, default=0)
+    strava_vecere_zs_vege = db.Column(db.Integer, default=0)
     uzivatelska_poznamka = db.Column(db.String(2000))
     admin_poznamka = db.Column(db.Text)
     cas_registrace = db.Column(db.DateTime)
@@ -264,19 +264,19 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "cas_registrace": pretty_datetime(self.cas_registrace) if self.cas_registrace else "Zatím neregistrován",
             "prijmeni": self.prijmeni,
             "jmeno": self.jmeno,
-            "vek": self.vek,
+            "vek": self.vek if self.vek else "-",
             "email": self.email,
-            "telefon": self.telefon,
+            "telefon": self.telefon if self.telefon else "-",
             "ssh_clen": "Ano" if self.ssh_clen else "Ne",
             "ucast": self.ucast,
             "ubytovani": self.ubytovani, # TODO pridat ubytovani_pocet
-            "strava": "Ano" if self.strava else "Ne",
-            "vzdelani": "Žádné" if not self.vzdelani else self.vzdelani,
-            "nastroj": "Žádný" if not self.nastroj else self.nastroj,
-            "repertoir": "Žádný" if not self.repertoir else self.repertoir,
+            "strava": "Má zájem, viz. níže" if self.strava else "Nemá zájem",
+            "vzdelani": "-" if not self.vzdelani else self.vzdelani,
+            "nastroj": "-" if not self.nastroj else self.nastroj,
+            "repertoir": "-" if not self.repertoir else self.repertoir,
             "student_zus_valtice_mikulov": "Ano" if self.student_zus_valtice_mikulov else "Ne",
-            "uzivatelska_poznamka": self.uzivatelska_poznamka if self.uzivatelska_poznamka else "Žádná",
-            "admin_poznamka": self.admin_poznamka if self.admin_poznamka else "Žádná",
+            "uzivatelska_poznamka": self.uzivatelska_poznamka if self.uzivatelska_poznamka else "-",
+            "admin_poznamka": self.admin_poznamka if self.admin_poznamka else "-",
             "hlavni_trida_1": {
                 "name": Valtice_trida.get_by_id(self.hlavni_trida_1_id).full_name if self.hlavni_trida_1_id else "-",
                 "link": "/valtice/trida/" + str(self.hlavni_trida_1_id) if self.hlavni_trida_1_id else None

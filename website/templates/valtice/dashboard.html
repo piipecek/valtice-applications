@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-<form method="post" enctype="multipart/form-data" id="form">
+<form method="post" enctype="multipart/form-data">
     <h2>Nahrávání nové .csv tabulky</h2>
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
@@ -37,6 +37,8 @@
             Někdy příště
         </i>
     </p>
+</form>
+<form id="form">
     <hr>
     <h2>Smazání všech účastníků</h2>
     <button type="button" id="delete_button" class="btn btn-danger">Smazat všechny účastníky</button>
