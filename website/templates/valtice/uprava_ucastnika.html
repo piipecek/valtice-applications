@@ -3,11 +3,278 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
 <h2>Úprava účastníka <span id="full_name"></span></h2>
-<hr>
 <form method="post">
     <button type="submit" class="btn btn-success" name="zpet" value="whatever">Zpět na detail</button>
     <button type="submit" class="btn btn-primary" name="save" value="whatever">Uložit změny</button>
     <button type="button" class="btn btn-danger" id="delete_button">Smazat účastníka</button>
+    <hr>
+    <div class="container my-2">
+        <h3>Obecné</h3>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Jméno</div>
+            <div class="col">
+                <input type="text" class="form-control" id="jmeno" name="jmeno">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Příjmení</div>
+            <div class="col">
+                <input type="text" class="form-control" id="prijmeni" name="prijmeni">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Čas registrace ve Valticích</div>
+            <div class="col">
+                <input type="date" class="form-control" id="cas_registrace" name="cas_registrace">
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <button type="submit" class="btn btn-primary" name="zrusit_registraci", value="whatever">Zrušit registraci</button>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Věk</div>
+            <div class="col">
+                <input type="number" class="form-control" id="vek" name="vek">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Telefon</div>
+            <div class="col">
+                <input type="text" class="form-control" id="telefon" name="telefon">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Email</div>
+            <div class="col">
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Účast</div>
+            <div class="col">
+                <select class="form-control" id="ucast" name="ucast">
+                    <option value="Aktivní">Aktivní</option>
+                    <option value="Pasivní">Pasivní</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Člen SSH</div>
+            <div class="col">
+                <select class="form-control" id="ssh_clen" name="ssh_clen">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Hlavní třída - volba 1</div>
+            <div class="col">
+                <select class="form-control" id="hlavni_trida_1" name="hlavni_trida_1">
+                    <option value="1">placeholder</option>
+                    <option value="2">placeholder 2</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Vedlejší třída placená</div>
+            <div class="col">
+                <select class="form-control" id="vedlejsi_trida_placena" name="vedlejsi_trida_placena">
+                    <option value="1">placeholder</option>
+                    <option value="2">placeholder 2</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Vedlejší třída zdarma</div>
+            <div class="col">
+                <select class="form-control" id="vedlejsi_trida_zdarma" name="vedlejsi_trida_zdarma">
+                    <option value="1">placeholder</option>
+                    <option value="2">placeholder 2</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Hlavní třída - volba 2</div>
+            <div class="col">
+                <select class="form-control" id="hlavni_trida_2" name="hlavni_trida_2">
+                    <option value="1">placeholder</option>
+                    <option value="2">placeholder 2</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Ubytování, počet</div>
+            <div class="col-4">
+                <select class="form-control" id="ubytovani" name="ubytovani">
+                    <option value="Nemá zájem">Nemá zájem</option>
+                    <option value="Tělocvična">Tělocvična</option>
+                    <option value="Internát vinařské školy">Internát vinařské školy</option>
+                    <option value="Tělocvična (náhradník)">Tělocvična (náhradník)</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="ubytovani_pocet" name="ubytovani_pocet">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Strava</div>
+            <div class="col">
+                <select class="form-control" id="strava" name="strava">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Vzdělání</div>
+            <div class="col">
+                <input type="text" class="form-control" id="vzdelani" name="vzdelani">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Nástroj</div>
+            <div class="col">
+                <input type="text" class="form-control" id="nastroj" name="nastroj">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Repertoir</div>
+            <div class="col">
+                <input type="text" class="form-control" id="repertoir" name="repertoir">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Student ZUŠ Valtice/Mikulov</div>
+            <div class="col">
+                <select class="form-control" id="student_zus_valtice_mikulov" name="student_zus_valtice_mikulov">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Uživatelská poznámka</div>
+            <div class="col">
+                <textarea class="form-control" id="uzivatelska_poznamka" name="uzivatelska_poznamka" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Organizátorská poznámka</div>
+            <div class="col">
+                <textarea class="form-control" id="admin_poznamka" name="admin_poznamka" rows="3"></textarea>
+            </div>
+        </div>
+        <h3>Finance</h3>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Datum zaplacení</div>
+            <div class="col">
+                <input type="date" class="form-control" id="finance_dne" name="finance_dne">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Měna</div>
+            <div class="col">
+                <select class="form-control" id="finance_mena" name="finance_mena">
+                    <option value="CZK">CZK</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Kategorie</div>
+            <div class="col">
+                <select class="form-control" id="finance_kategorie" name="finance_kategorie">
+                    <option value="dite">Dítě do 15 let</option>
+                    <option value="student">Student do 26 let</option>
+                    <option value="dospely">Dospělý</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Finanční dar</div>
+            <div class="col">
+                <input type="number" class="form-control" id="finance_dar" name="finance_dar">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Korekce kurzovné, důvod</div>
+            <div class="col-2">
+                <input type="number" class="form-control" id="finance_korekce_kurzovne" name="finance_korekce_kurzovne">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="finance_korekce_kurzovne_duvod" name="finance_korekce_kurzovne_duvod">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Korekce strava, důvod</div>
+            <div class="col-2">
+                <input type="number" class="form-control" id="finance_korekce_strava" name="finance_korekce_strava">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="finance_korekce_strava_duvod" name="finance_korekce_strava_duvod">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Korekce ubytování, důvod</div>
+            <div class="col-2">
+                <input type="number" class="form-control" id="finance_korekce_ubytko" name="finance_korekce_ubytko">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="finance_korekce_ubytko_duvod" name="finance_korekce_ubytko_duvod">
+            </div>
+        </div>
+        <h3>Strava</h3>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Snídaně</div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_snidane_vinarska" name="strava_snidane_vinarska">
+                <small>Snídaně na Vinařské</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_snidane_zs" name="strava_snidane_zs">
+                <small>Snídaně na ZŠ</small>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Oběd</div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_obed_vinarska_maso" name="strava_obed_vinarska_maso">
+                <small>Oběd na Vinařské - maso</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_obed_vinarska_vege" name="strava_obed_vinarska_vege">
+                <small>Oběd na Vinařské - vegetariánský</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_obed_zs_maso" name="strava_obed_zs_maso">
+                <small>Oběd na ZŠ - maso</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_obed_zs_vege" name="strava_obed_zs_vege">
+                <small>Oběd na ZŠ - vegetariánský</small>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Večeře</div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_vecere_vinarska_maso" name="strava_vecere_vinarska_maso">
+                <small>Večeře na Vinařské - maso</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_vecere_vinarska_vege" name="strava_vecere_vinarska_vege">
+                <small>Večeře na Vinařské - vegetariánský</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_vecere_zs_maso" name="strava_vecere_zs_maso">
+                <small>Večeře na ZŠ - maso</small>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" id="strava_vecere_zs_vege" name="strava_vecere_zs_vege">
+                <small>Večeře na ZŠ - vegetariánský</small>
+            </div>
+        </div>
+    </div>
 </form>
 <form method="post" id="delete_form">
     <input type="hidden" name="delete" value="whatever">

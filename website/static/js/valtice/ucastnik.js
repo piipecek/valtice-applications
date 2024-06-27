@@ -2,12 +2,10 @@ import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
 let data = JSON.parse(httpGet("/valtice_api/ucastnik/" + id))
 
-console.log(data)
 let full_name = data["jmeno"] + " " + data["prijmeni"]
 document.getElementById("full_name").innerText = full_name
 
 for (let key in data) {
-    console.log(key, data[key])
     if (["jmeno", "prijmeni"].includes(key)) {
         continue
     } else if (key == "cas_registrace") {
@@ -16,7 +14,6 @@ for (let key in data) {
             document.getElementById("zaregistrovat_form").hidden = true
         }
     } else if (key == "email") {
-        console.log(data[key])
         if (data[key]) {
             let a = document.createElement("a")
             a.href = "mailto:" + data[key]

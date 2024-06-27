@@ -19,19 +19,19 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     finance_mena = db.Column(db.String(50), default="CZK")
     finance_kategorie = db.Column(db.String(100))
     finance_korekce_kurzovne = db.Column(db.Float, default=0)
-    finance_korekce_kurzovne_duvod = db.Column(db.String(2000))
+    finance_korekce_kurzovne_duvod = db.Column(db.String(2000), default="")
     finance_korekce_strava = db.Column(db.Float, default=0)
-    finance_korekce_strava_duvod = db.Column(db.String(2000))
+    finance_korekce_strava_duvod = db.Column(db.String(2000), default="")
     finance_korekce_ubytko = db.Column(db.Float, default=0)
-    finance_korekce_ubytko_duvod = db.Column(db.String(2000))
-    ssh_clen = db.Column(db.Boolean)
+    finance_korekce_ubytko_duvod = db.Column(db.String(2000), default="")
+    ssh_clen = db.Column(db.Boolean, default=False)
     ucast = db.Column(db.String(50), default="Aktivní")
     hlavni_trida_1_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     hlavni_trida_2_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_placena_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     vedlejsi_trida_zdarma_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
     ubytovani = db.Column(db.String(1000), default="Nemá zájem")
-    ubytovani_pocet = db.Column(db.Integer, default=0)
+    ubytovani_pocet = db.Column(db.Float, default=0)
     vzdelani = db.Column(db.String(2000)) 
     nastroj = db.Column(db.String(2000))
     repertoir = db.Column(db.String(2000))
@@ -411,5 +411,45 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
 
     def info_pro_upravu(self):
         return {
-            "hello": "test"
+            "prijmeni": self.prijmeni,
+            "jmeno": self.jmeno,
+            "vek": self.vek,
+            "email": self.email,
+            "telefon": self.telefon,
+            "finance_dne": "vymyslet, jak poslat datum pro JS",
+            "finance_dar": self.finance_dar,
+            "finance_mena": self.finance_mena,
+            "finance_kategorie": self.finance_kategorie,
+            "finance_korekce_kurzovne": self.finance_korekce_kurzovne,
+            "finance_korekce_kurzovne_duvod": self.finance_korekce_kurzovne_duvod,
+            "finance_korekce_strava": self.finance_korekce_strava,
+            "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod,
+            "finance_korekce_ubytko": self.finance_korekce_ubytko,
+            "finance_korekce_ubytko_duvod": self.finance_korekce_ubytko_duvod,
+            "ssh_clen": self.ssh_clen,
+            "ucast": self.ucast,
+            "hlavni_trida_1": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
+            "hlavni_trida_2": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
+            "vedlejsi_trida_placena": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
+            "vedlejsi_trida_zdarma": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
+            "ubytovani": self.ubytovani,
+            "ubytovani_pocet": self.ubytovani_pocet,
+            "vzdelani": self.vzdelani,
+            "nastroj": self.nastroj,
+            "repertoir": self.repertoir,
+            "student_zus_valtice_mikulov": self.student_zus_valtice_mikulov,
+            "strava": self.strava,
+            "strava_snidane_vinarska": self.strava_snidane_vinarska,
+            "strava_snidane_zs": self.strava_snidane_zs,
+            "strava_obed_vinarska_maso": self.strava_obed_vinarska_maso,
+            "strava_obed_vinarska_vege": self.strava_obed_vinarska_vege,
+            "strava_obed_zs_maso": self.strava_obed_zs_maso,
+            "strava_obed_zs_vege": self.strava_obed_zs_vege,
+            "strava_vecere_vinarska_maso": self.strava_vecere_vinarska_maso,
+            "strava_vecere_vinarska_vege": self.strava_vecere_vinarska_vege,
+            "strava_vecere_zs_maso": self.strava_vecere_zs_maso,
+            "strava_vecere_zs_vege": self.strava_vecere_zs_vege,
+            "uzivatelska_poznamka": self.uzivatelska_poznamka,
+            "admin_poznamka": self.admin_poznamka,
+            "cas_registrace": "vymyslet jak udělat čas pro js"
         }

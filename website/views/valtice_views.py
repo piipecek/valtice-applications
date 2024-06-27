@@ -75,14 +75,7 @@ def uprava_ucastnika(id:int):
         return render_template("valtice/uprava_ucastnika.html", id=id, roles=get_roles(current_user))
     else:
         if request.form.get("save"):
-            u = Valtice_ucastnik.get_by_id(id)
-            # u.jmeno = request.form.get("jmeno")
-            # u.prijmeni = request.form.get("prijmeni")
-            # u.email = request.form.get("email")
-            # u.telefon = request.form.get("telefon")
-            # u.skola = request.form.get("skola")
-            # u.trida = request.form.get("trida")
-            u.update()
+            return request.form.to_dict()
             flash("Změny byly uloženy", category="success")
             return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
         elif request.form.get("zpet"):
