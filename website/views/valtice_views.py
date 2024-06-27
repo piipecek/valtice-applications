@@ -5,6 +5,7 @@ from website.models.valtice_ucastnik import Valtice_ucastnik
 from website.models.cena import Cena
 from website.models.user import get_roles
 import csv
+from datetime import datetime
 from io import StringIO
 
 valtice_views = Blueprint("valtice_views",__name__)
@@ -50,10 +51,16 @@ def ucastnik(id:int):
     if request.method == "GET":
         return render_template("valtice/ucastnik.html", id=id, roles=get_roles(current_user))
     else:
-        if id:=request.form.get("smazat"):
+        if request.form.get("smazat"):
             Valtice_ucastnik.get_by_id(id).delete()
             flash("Uživatel byl smazán", category="success")
             return redirect(url_for("valtice_views.seznam_ucastniku"))
+        elif request.form.get("zaregistrovat"):
+            u = Valtice_ucastnik.get_by_id(id)
+            u.cas_registrace = datetime.now()
+            u.update()
+            flash("Uživatel byl zaregistrován", category="success")
+            return redirect(url_for("valtice_views.ucastnik", id=id))
         return request.form.to_dict()
     
     

@@ -14,80 +14,84 @@
         <tbody>
             <tr>
                 <td class="pravy_text">Čas vyplnění formuláře</td>
-                <td id="cas"></td>
+                <td id="cas" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Čas registrace ve Valticích</td>
-                <td id="registrovan_dne"></td>
+                <td id="cas_registrace"></td>
+                <td>
+                    <form method="post" id="zaregistrovat_form">
+                        <button class="btn btn-primary" name="zaregistrovat" value="whatever">Zaregistrovat teď</button>
+                    </form>
+                </td>
             </tr>
             <tr>
                 <td class="pravy_text">Věk</td>
-                <td id="vek"></td>
+                <td id="vek" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Telefon</td>
-                <td id="telefon"></td>
+                <td id="telefon" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Email</td>
-                <td id="email"></td>
+                <td id="email" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Účast</td>
-                <td id="ucast"></td>
+                <td id="ucast" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Člen SSH</td>
-                <td id="ssh_clen"></td>
+                <td id="ssh_clen" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Hlavní třída - volba 1</td>
-                <td id="hlavni_trida_1"></td>
+                <td id="hlavni_trida_1" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Vedlejší třída placená</td>
-                <td id="vedlejsi_trida_placena"></td>
+                <td id="vedlejsi_trida_placena" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Vedlejší třída zdarma</td>
-                <td id="vedlejsi_trida_zdarma"></td>
+                <td id="vedlejsi_trida_zdarma" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Hlavní třída - volba 2</td>
-                <td id="hlavni_trida_2"></td>
+                <td id="hlavni_trida_2" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Ubytování</td>
-                <td id="ubytovani"></td>
-                <td id="ubytovani_pocet"></td>
+                <td id="ubytovani" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Strava</td>
-                <td id="strava"></td>
+                <td id="strava" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Vzdělání</td>
-                <td id="vzdelani"></td>
+                <td id="vzdelani" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Nástroj</td>
-                <td id="nastroj"></td>
+                <td id="nastroj" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Repertoir</td>
-                <td id="repertoir"></td>
+                <td id="repertoir" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Student ZUŠ Valtice / Mikulov</td>
-                <td id="student_zus_valtice_mikulov"></td>
+                <td id="student_zus_valtice_mikulov" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Uživatelská poznámka</td>
-                <td id="uzivatelska_poznamka"></td>
+                <td id="uzivatelska_poznamka" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Organizátorská poznámka</td>
-                <td id="admin_poznamka"></td> 
+                <td id="admin_poznamka" colspan="2"></td> 
             </tr>
         </tbody>
     </table>
@@ -150,6 +154,11 @@
                 <td class="pravy_text">Korekce strava</td>
                 <td id="finance_korekce_strava"></td>
                 <td id="finance_korekce_strava_duvod"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Korekce ubytko</td>
+                <td id="finance_korekce_ubytko"></td>
+                <td id="finance_korekce_ubytko_duvod"></td>
             </tr>
         </tbody>
     </table>

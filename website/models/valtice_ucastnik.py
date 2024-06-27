@@ -18,10 +18,12 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     finance_dar = db.Column(db.Float)
     finance_mena = db.Column(db.String(50))
     finance_kategorie = db.Column(db.String(100))
-    finance_korekce_kurzovne = db.Column(db.Float)
+    finance_korekce_kurzovne = db.Column(db.Float, default=0)
     finance_korekce_kurzovne_duvod = db.Column(db.String(2000))
-    finance_korekce_strava = db.Column(db.Float)
+    finance_korekce_strava = db.Column(db.Float, default=0)
     finance_korekce_strava_duvod = db.Column(db.String(2000))
+    finance_korekce_ubytko = db.Column(db.Float, default=0)
+    finance_korekce_ubytko_duvod = db.Column(db.String(2000))
     ssh_clen = db.Column(db.Boolean)
     ucast = db.Column(db.String(50))
     hlavni_trida_1_id = db.Column(db.Integer, db.ForeignKey('valtice_trida.id'))
@@ -47,7 +49,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     strava_vecere_zs_vege = db.Column(db.Integer)
     uzivatelska_poznamka = db.Column(db.String(2000))
     admin_poznamka = db.Column(db.Text)
-    registrovan_dne = db.Column(db.Date)
+    cas_registrace = db.Column(db.DateTime)
     
 
     
@@ -69,10 +71,10 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             cas = datetime.strptime(row[1], "%d.%m.%Y %H:%M:%S")
             
             # měna
-            dar_str = row[15]
-            if "Kč" in dar_str:
+            celkova_str = row[8]
+            if "Kč" in celkova_str:
                 mena = "CZK"
-            elif "€" in dar_str:
+            elif "€" in celkova_str:
                 mena = "EUR"
             
             # převod na čísla
@@ -259,7 +261,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         kalkulace = self.kalkulace()
         return {
             "cas": pretty_datetime(self.cas),
-            "registrovan_dne": pretty_datetime(self.registrovan_dne) if self.registrovan_dne else "Zatím neregistrován",
+            "cas_registrace": pretty_datetime(self.cas_registrace) if self.cas_registrace else "Zatím neregistrován",
             "prijmeni": self.prijmeni,
             "jmeno": self.jmeno,
             "vek": self.vek,
@@ -267,7 +269,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "telefon": self.telefon,
             "ssh_clen": "Ano" if self.ssh_clen else "Ne",
             "ucast": self.ucast,
-            "ubytovani": self.ubytovani,
+            "ubytovani": self.ubytovani, # TODO pridat ubytovani_pocet
             "strava": "Ano" if self.strava else "Ne",
             "vzdelani": "Žádné" if not self.vzdelani else self.vzdelani,
             "nastroj": "Žádný" if not self.nastroj else self.nastroj,
@@ -302,8 +304,10 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "finance_dar": pretty_penize(kalkulace["dar"]),
             "finance_korekce_kurzovne": pretty_penize(self.finance_korekce_kurzovne),
             "finance_korekce_strava": pretty_penize(self.finance_korekce_strava),
+            "finance_korekce_ubytko": pretty_penize(self.finance_korekce_ubytko),
             "finance_korekce_kurzovne_duvod": self.finance_korekce_kurzovne_duvod if self.finance_korekce_kurzovne_duvod else "-",
             "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod if self.finance_korekce_strava_duvod else "-",
+            "finance_korekce_ubytko_duvod": self.finance_korekce_ubytko_duvod if self.finance_korekce_ubytko_duvod else "-",
             "strava_snidane": snidane,
             "strava_obedy": obed,
             "strava_vecere": vecere
@@ -332,7 +336,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         else:
             ubytko = 0
         
-        # kurzovne TODO
+        # kurzovne
         def vycislit(ucast: str, mena: str, kategorie: str, clen_ssh: bool, cislo_tridy: int, trida: Valtice_trida) -> int:
             if trida is None:
                 return 0

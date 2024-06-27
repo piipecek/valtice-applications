@@ -10,6 +10,11 @@ for (let key in data) {
     console.log(key, data[key])
     if (["jmeno", "prijmeni"].includes(key)) {
         continue
+    } else if (key == "cas_registrace") {
+        document.getElementById(key).innerText = data[key]
+        if (data[key] != "Zatím neregistrován") {
+            document.getElementById("zaregistrovat_form").hidden = true
+        }
     } else if (key == "email") {
         console.log(data[key])
         if (data[key]) {
