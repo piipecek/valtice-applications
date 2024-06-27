@@ -3,6 +3,11 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
 <h2>Detail účastníka <span id="full_name"></span></h2>
+<div class="d-flex justify-content-between">
+    <form method="post">
+        <button type="submit" class="btn btn-success" name="edit_button" value="whatever">Upravit</button>
+    </form>
+</div>
 <hr>
 <h3>Vybrané informace</h3>
 
@@ -182,11 +187,6 @@
         </tbody>
     </table>
 </div>
-
-<form method="post" id="smazat_form">
-    <button type="button" class="btn btn-danger" id="smazat_button">Smazat</button>
-    <input hidden value="whatever" name="smazat"/>
-</form>
 
 <script type="module" src="{{url_for('static', filename='js/valtice/ucastnik.js')}}"></script>
 

@@ -54,16 +54,43 @@ def ucastnik(id:int):
             return redirect(url_for("valtice_views.seznam_ucastniku"))
         return render_template("valtice/ucastnik.html", id=id, roles=get_roles(current_user))
     else:
-        if request.form.get("smazat"):
-            Valtice_ucastnik.get_by_id(id).delete()
-            flash("Uživatel byl smazán", category="success")
-            return redirect(url_for("valtice_views.seznam_ucastniku"))
-        elif request.form.get("zaregistrovat"):
+        if request.form.get("zaregistrovat"):
             u = Valtice_ucastnik.get_by_id(id)
             u.cas_registrace = datetime.now()
             u.update()
             flash("Uživatel byl zaregistrován", category="success")
             return redirect(url_for("valtice_views.ucastnik", id=id))
+        elif request.form.get("edit_button"):
+            return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
+        return request.form.to_dict()
+    
+# view na upravu ucastnika
+@valtice_views.route("/uprava_ucastnika/<int:id>", methods=["GET","POST"])
+@require_role_system_name_on_current_user("valtice_org")
+def uprava_ucastnika(id:int):
+    if request.method == "GET":
+        if Valtice_ucastnik.get_by_id(id) is None:
+            flash("Uživatel s tímto ID neexistuje", category="error")
+            return redirect(url_for("valtice_views.seznam_ucastniku"))
+        return render_template("valtice/uprava_ucastnika.html", id=id, roles=get_roles(current_user))
+    else:
+        if request.form.get("save"):
+            u = Valtice_ucastnik.get_by_id(id)
+            # u.jmeno = request.form.get("jmeno")
+            # u.prijmeni = request.form.get("prijmeni")
+            # u.email = request.form.get("email")
+            # u.telefon = request.form.get("telefon")
+            # u.skola = request.form.get("skola")
+            # u.trida = request.form.get("trida")
+            u.update()
+            flash("Změny byly uloženy", category="success")
+            return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
+        elif request.form.get("zpet"):
+            return redirect(url_for("valtice_views.ucastnik", id=id))
+        elif request.form.get("delete"):
+            Valtice_ucastnik.get_by_id(id).delete()
+            flash("Uživatel byl smazán", category="success")
+            return redirect(url_for("valtice_views.seznam_ucastniku"))
         return request.form.to_dict()
     
     

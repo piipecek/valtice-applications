@@ -257,6 +257,12 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             vecere_list.append(f"VŠ vege: {self.strava_vecere_vinarska_vege}")
         if len(vecere_list) != 0:
             vecere = ", ".join(vecere_list)
+            
+        # ubytovani
+        if self.ubytovani == "Nemá zájem":
+            ubytovani = self.ubytovani
+        else:
+            ubytovani = f"{self.ubytovani}: {self.ubytovani_pocet}"
                 
         kalkulace = self.kalkulace()
         return {
@@ -269,7 +275,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "telefon": self.telefon if self.telefon else "-",
             "ssh_clen": "Ano" if self.ssh_clen else "Ne",
             "ucast": self.ucast,
-            "ubytovani": self.ubytovani, # TODO pridat ubytovani_pocet
+            "ubytovani": ubytovani,
             "strava": "Má zájem, viz. níže" if self.strava else "Nemá zájem",
             "vzdelani": "-" if not self.vzdelani else self.vzdelani,
             "nastroj": "-" if not self.nastroj else self.nastroj,
@@ -402,3 +408,8 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena - self.finance_korekce_kurzovne - self.finance_korekce_strava
         }
         return result
+
+    def info_pro_upravu(self):
+        return {
+            "hello": "test"
+        }

@@ -26,6 +26,11 @@ def ucastnici():
 def ucastnik(id: int):
     return json.dumps(Valtice_ucastnik.get_by_id(id).info_pro_detail())
 
+@valtice_api.route("/uprava_ucastnika/<int:id>")
+@require_role_system_name_on_current_user("valtice_org")
+def uprava_ucastnika(id: int):
+    return json.dumps(Valtice_ucastnik.get_by_id(id).info_pro_upravu())
+
 @valtice_api.route("/trida/<int:id>")
 @require_role_system_name_on_current_user("valtice_org")
 def trida(id: int):

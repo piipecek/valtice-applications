@@ -39,9 +39,3 @@ for (let key in data) {
         document.getElementById(key).innerText = data[key]
     }
 }
-
-
-document.getElementById("smazat_button").addEventListener("click", () => {
-    if(confirm("Opravdu chcete smazat uživatele?")) {
-        document.getElementById("smazat_form").submit()
-}})

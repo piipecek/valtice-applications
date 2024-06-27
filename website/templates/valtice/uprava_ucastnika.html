@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<input hidden id="id_getter" value="{{id}}"/>
+<h2>Úprava účastníka <span id="full_name"></span></h2>
+<hr>
+<form method="post">
+    <button type="submit" class="btn btn-success" name="zpet" value="whatever">Zpět na detail</button>
+    <button type="submit" class="btn btn-primary" name="save" value="whatever">Uložit změny</button>
+    <button type="button" class="btn btn-danger" id="delete_button">Smazat účastníka</button>
+</form>
+<form method="post" id="delete_form">
+    <input type="hidden" name="delete" value="whatever">
+</form>
+<script type="module" src="{{url_for('static', filename='js/valtice/uprava_ucastnika.js')}}"></script>
+
+{% endblock %}
