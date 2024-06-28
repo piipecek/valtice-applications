@@ -75,8 +75,21 @@ def uprava_ucastnika(id:int):
         return render_template("valtice/uprava_ucastnika.html", id=id, roles=get_roles(current_user))
     else:
         if request.form.get("save"):
-            return request.form.to_dict()
+            u = Valtice_ucastnik.get_by_id(id)
+            u.nacist_zmeny_z_requestu(request)
             flash("Změny byly uloženy", category="success")
+            return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
+        elif request.form.get("zrusit_registraci"):
+            u = Valtice_ucastnik.get_by_id(id)
+            u.cas_registrace = None
+            u.update()
+            flash("Registrace byla zrušena", category="success")
+            return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
+        elif request.form.get("registrovat_nyni"):
+            u = Valtice_ucastnik.get_by_id(id)
+            u.cas_registrace = datetime.now()
+            u.update()
+            flash("Uživatel byl zaregistrován", category="success")
             return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
         elif request.form.get("zpet"):
             return redirect(url_for("valtice_views.ucastnik", id=id))

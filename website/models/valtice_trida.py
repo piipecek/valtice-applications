@@ -35,3 +35,9 @@ class Valtice_trida(Common_methods_db_model):
             "vedlejsi_placena_count": len(self.vedlejsi_placena_ucastnici),
             "vedlejsi_zdarma_count": len(self.vedlejsi_zdarma_ucastnici)
         }
+    
+    def data_pro_upravu_ucastniku(self):
+        return {
+            "id": self.id,
+            "full_name": self.full_name,
+        }

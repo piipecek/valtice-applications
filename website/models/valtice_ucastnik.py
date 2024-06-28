@@ -416,7 +416,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "vek": self.vek,
             "email": self.email,
             "telefon": self.telefon,
-            "finance_dne": "vymyslet, jak poslat datum pro JS",
+            "finance_dne": self.finance_dne.isoformat() if self.finance_dne else None,
             "finance_dar": self.finance_dar,
             "finance_mena": self.finance_mena,
             "finance_kategorie": self.finance_kategorie,
@@ -426,19 +426,19 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod,
             "finance_korekce_ubytko": self.finance_korekce_ubytko,
             "finance_korekce_ubytko_duvod": self.finance_korekce_ubytko_duvod,
-            "ssh_clen": self.ssh_clen,
+            "ssh_clen": "Ano" if self.ssh_clen else "Ne", # takhle se to rovnou priradi ke spravnymu option v select 
             "ucast": self.ucast,
-            "hlavni_trida_1": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
-            "hlavni_trida_2": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
-            "vedlejsi_trida_placena": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
-            "vedlejsi_trida_zdarma": "vymyslet jak poslat info o tride. asi id a separe vsechny tridy?",
+            "hlavni_trida_1": self.hlavni_trida_1_id,
+            "hlavni_trida_2": self.hlavni_trida_2_id,
+            "vedlejsi_trida_placena": self.vedlejsi_trida_placena_id,
+            "vedlejsi_trida_zdarma": self.vedlejsi_trida_zdarma_id,
             "ubytovani": self.ubytovani,
             "ubytovani_pocet": self.ubytovani_pocet,
             "vzdelani": self.vzdelani,
             "nastroj": self.nastroj,
             "repertoir": self.repertoir,
-            "student_zus_valtice_mikulov": self.student_zus_valtice_mikulov,
-            "strava": self.strava,
+            "student_zus_valtice_mikulov": "Ano" if self.student_zus_valtice_mikulov else "Ne",
+            "strava": "Ano" if self.strava else "Ne",
             "strava_snidane_vinarska": self.strava_snidane_vinarska,
             "strava_snidane_zs": self.strava_snidane_zs,
             "strava_obed_vinarska_maso": self.strava_obed_vinarska_maso,
@@ -451,5 +451,48 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "strava_vecere_zs_vege": self.strava_vecere_zs_vege,
             "uzivatelska_poznamka": self.uzivatelska_poznamka,
             "admin_poznamka": self.admin_poznamka,
-            "cas_registrace": "vymyslet jak udělat čas pro js"
+            "cas_registrace": pretty_datetime(self.cas_registrace) if self.cas_registrace else None,
         }
+    
+    def nacist_zmeny_z_requestu(self, request):
+        self.jmeno = request.form.get("jmeno")
+        self.prijmeni = request.form.get("prijmeni")
+        self.vek = request.form.get("vek")
+        self.email = request.form.get("email")
+        self.telefon = request.form.get("telefon")
+        self.finance_dne = datetime.strptime(request.form.get("finance_dne"), "%Y-%m-%d") if request.form.get("finance_dne") else None
+        self.finance_dar = float(request.form.get("finance_dar"))
+        self.finance_mena = request.form.get("finance_mena")
+        self.finance_kategorie = request.form.get("finance_kategorie")
+        self.finance_korekce_kurzovne = float(request.form.get("finance_korekce_kurzovne"))
+        self.finance_korekce_kurzovne_duvod = request.form.get("finance_korekce_kurzovne_duvod")
+        self.finance_korekce_strava = float(request.form.get("finance_korekce_strava"))
+        self.finance_korekce_strava_duvod = request.form.get("finance_korekce_strava_duvod")
+        self.finance_korekce_ubytko = float(request.form.get("finance_korekce_ubytko"))
+        self.finance_korekce_ubytko_duvod = request.form.get("finance_korekce_ubytko_duvod")
+        self.ssh_clen = True if request.form.get("ssh_clen") == "Ano" else False
+        self.ucast = request.form.get("ucast")
+        self.hlavni_trida_1_id = int(request.form.get("hlavni_trida_1")) if request.form.get("hlavni_trida_1") != "-" else None
+        self.hlavni_trida_2_id = int(request.form.get("hlavni_trida_2")) if request.form.get("hlavni_trida_2") != "-" else None
+        self.vedlejsi_trida_placena_id = int(request.form.get("vedlejsi_trida_placena")) if request.form.get("vedlejsi_trida_placena") != "-" else None
+        self.vedlejsi_trida_zdarma_id = int(request.form.get("vedlejsi_trida_zdarma")) if request.form.get("vedlejsi_trida_zdarma") != "-" else None
+        self.ubytovani = request.form.get("ubytovani")
+        self.ubytovani_pocet = float(request.form.get("ubytovani_pocet"))
+        self.vzdelani = request.form.get("vzdelani")
+        self.nastroj = request.form.get("nastroj")
+        self.repertoir = request.form.get("repertoir")
+        self.student_zus_valtice_mikulov = True if request.form.get("student_zus_valtice_mikulov") == "Ano" else False
+        self.strava = True if request.form.get("strava") == "Ano" else False
+        self.strava_snidane_vinarska = int(request.form.get("strava_snidane_vinarska"))
+        self.strava_snidane_zs = int(request.form.get("strava_snidane_zs"))
+        self.strava_obed_vinarska_maso = int(request.form.get("strava_obed_vinarska_maso"))
+        self.strava_obed_vinarska_vege = int(request.form.get("strava_obed_vinarska_vege"))
+        self.strava_obed_zs_maso = int(request.form.get("strava_obed_zs_maso"))
+        self.strava_obed_zs_vege = int(request.form.get("strava_obed_zs_vege"))
+        self.strava_vecere_vinarska_maso = int(request.form.get("strava_vecere_vinarska_maso"))
+        self.strava_vecere_vinarska_vege = int(request.form.get("strava_vecere_vinarska_vege"))
+        self.strava_vecere_zs_maso = int(request.form.get("strava_vecere_zs_maso"))
+        self.strava_vecere_zs_vege = int(request.form.get("strava_vecere_zs_vege"))
+        self.uzivatelska_poznamka = request.form.get("uzivatelska_poznamka")
+        self.admin_poznamka = request.form.get("admin_poznamka")
+        self.update()

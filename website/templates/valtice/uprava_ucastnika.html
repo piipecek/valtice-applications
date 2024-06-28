@@ -24,11 +24,11 @@
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Čas registrace ve Valticích</div>
-            <div class="col">
-                <input type="date" class="form-control" id="cas_registrace" name="cas_registrace">
+            <div class="col-auto d-flex align-items-center" id="cas_registrace">
             </div>
             <div class="col-auto d-flex align-items-center">
-                <button type="submit" class="btn btn-primary" name="zrusit_registraci", value="whatever">Zrušit registraci</button>
+                <button type="submit" class="btn btn-primary" name="zrusit_registraci" value="whatever" id="zrusit_registraci_button" hidden>Zrušit registraci</button>
+                <button type="submit" class="btn btn-primary" name="registrovat_nyni" value="whatever" id="registrovat_button" hidden>Zaregistrovat teď</button>
             </div>
         </div>
         <div class="row my-1">
@@ -71,8 +71,7 @@
             <div class="col-2 d-flex align-items-center">Hlavní třída - volba 1</div>
             <div class="col">
                 <select class="form-control" id="hlavni_trida_1" name="hlavni_trida_1">
-                    <option value="1">placeholder</option>
-                    <option value="2">placeholder 2</option>
+                    <option value="-">-</option>
                 </select>
             </div>
         </div>
@@ -80,8 +79,7 @@
             <div class="col-2 d-flex align-items-center">Vedlejší třída placená</div>
             <div class="col">
                 <select class="form-control" id="vedlejsi_trida_placena" name="vedlejsi_trida_placena">
-                    <option value="1">placeholder</option>
-                    <option value="2">placeholder 2</option>
+                    <option value="-">-</option>
                 </select>
             </div>
         </div>
@@ -89,8 +87,7 @@
             <div class="col-2 d-flex align-items-center">Vedlejší třída zdarma</div>
             <div class="col">
                 <select class="form-control" id="vedlejsi_trida_zdarma" name="vedlejsi_trida_zdarma">
-                    <option value="1">placeholder</option>
-                    <option value="2">placeholder 2</option>
+                    <option value="-">-</option>
                 </select>
             </div>
         </div>
@@ -98,8 +95,7 @@
             <div class="col-2 d-flex align-items-center">Hlavní třída - volba 2</div>
             <div class="col">
                 <select class="form-control" id="hlavni_trida_2" name="hlavni_trida_2">
-                    <option value="1">placeholder</option>
-                    <option value="2">placeholder 2</option>
+                    <option value="-">-</option>
                 </select>
             </div>
         </div>
@@ -114,20 +110,20 @@
                 </select>
             </div>
             <div class="col">
-                <input type="number" class="form-control" id="ubytovani_pocet" name="ubytovani_pocet">
+                <input type="number" step="0.5" class="form-control" id="ubytovani_pocet" name="ubytovani_pocet">
             </div>
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Strava</div>
             <div class="col">
                 <select class="form-control" id="strava" name="strava">
-                    <option value="Ano">Ano</option>
-                    <option value="Ne">Ne</option>
+                    <option value="Ano">Má zájem</option>
+                    <option value="Ne">Nemá zájem</option>
                 </select>
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Vzdělání</div>
+            <div class="col-2 d-flex align-items-center">Hudební vzdělání</div>
             <div class="col">
                 <input type="text" class="form-control" id="vzdelani" name="vzdelani">
             </div>
@@ -170,6 +166,9 @@
             <div class="col-2 d-flex align-items-center">Datum zaplacení</div>
             <div class="col">
                 <input type="date" class="form-control" id="finance_dne" name="finance_dne">
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <small>Pokud je datum zobrazeno šedivě, žádné datum platby ještě uložené není.</small>
             </div>
         </div>
         <div class="row my-1">
