@@ -1,0 +1,52 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<input hidden id="id_getter" value="{{id}}"/>
+<h2>Úprava třídy <span id="full_name_title"></span></h2>
+<hr>
+<form method="post">
+    <button type="submit" class="btn btn-success" name="zpet" value="whatever">Zpět na detail</button>
+    <button type="submit" class="btn btn-primary" name="save" value="whatever">Uložit změny</button>
+    <button type="button" class="btn btn-danger" id="delete_button">Smazat třídu</button>
+    <hr>
+    <div class="container my-2">
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Krátký název</div>
+            <div class="col">
+                <input type="text" class="form-control" id="short_name" name="short_name">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Úplný název</div>
+            <div class="col">
+                <input type="text" class="form-control" id="full_name" name="full_name">
+            </div>
+        </div>
+        <small>
+            Typ třídy určuje, jak se třída chová při kalkulaci ve chvíli, kdy je vybrána jako druhá třída. První třída je vždy za plné kurzovné.
+            <ul>
+                <li><b>Ansámblová</b> - Pokud je zapsána jako druhá třída, platí cena pro ansámblové třídy.</li>
+                <li><b>Zdarma jako druhá</b> - Pokud je zapsána jako druhá, je zdarma.</li>
+                <li><b>Běžná</b> - za plné kurzovné, i když je zapsána jako druhá.</li>
+            </ul>
+        </small>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Typ</div>
+            <div class="col">
+                <select class="form-control" id="typ" name="typ">
+                    <option value="bezna">Běžná</option>
+                    <option value="ansamblova">Ansámblová</option>
+                    <option value="zdarma">Zdarma jako druhá</option>
+                </select>
+            </div>
+        </div>
+    </div> 
+</form>
+<form method="post" id="delete_form">
+    <input type="hidden" name="delete" value="whatever">
+</form>
+
+
+<script type="module" src="{{url_for('static', filename='js/valtice/uprava_tridy.js')}}"></script>
+
+{% endblock %}

@@ -4,7 +4,7 @@ from website.models.common_methods_db_model import Common_methods_db_model
 class Valtice_trida(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
     short_name = db.Column(db.String(300), nullable=False) # viz. vytvoreni_trid.py pro detail o tom, co v atributach cekat
-    full_name = db.Column(db.String(1000), nullable=False)
+    full_name = db.Column(db.String(1000), nullable=False, default="")
     je_zdarma_jako_vedlejsi = db.Column(db.Boolean, default=False)
     je_ansamblova = db.Column(db.Boolean, default=False)
     hlavni_ucastnici_1 = db.relationship('Valtice_ucastnik', backref='hlavni_trida_1', lazy=True, foreign_keys='Valtice_ucastnik.hlavni_trida_1_id')
@@ -41,3 +41,31 @@ class Valtice_trida(Common_methods_db_model):
             "id": self.id,
             "full_name": self.full_name,
         }
+    
+    def info_pro_upravu(self):
+        if self.je_zdarma_jako_vedlejsi:
+            typ = "zdarma"
+        elif self.je_ansamblova:
+            typ = "ansamblova"
+        else:
+            typ = "bezna"
+        return {
+            "short_name": self.short_name,
+            "full_name": self.full_name,
+            "typ": typ
+        }
+        
+    def nacist_zmeny_z_requestu(self, request):
+        self.short_name = request.form.get("short_name")
+        self.full_name = request.form.get("full_name")
+        if request.form.get("typ") == "bezna":
+            self.je_zdarma_jako_vedlejsi = False
+            self.je_ansamblova = False
+        elif request.form.get("typ") == "ansamblova":
+            self.je_zdarma_jako_vedlejsi = False
+            self.je_ansamblova = True
+        else:
+            self.je_zdarma_jako_vedlejsi = True
+            self.je_ansamblova = False
+        self.update()
+        

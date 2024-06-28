@@ -3,6 +3,9 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
 <h2>Detail Třídy <span id="short_name"></span></h2>
+<form method="post">
+    <button type="submit" class="btn btn-primary" name="upravit" value="whatever">Upravit</button>
+</form>
 <p id="full_name"></p>
 <p><span id="celkem"></span></p>
 <hr>

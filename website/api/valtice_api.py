@@ -45,6 +45,11 @@ def tridy_pro_upravu_ucastnika_druhe_zdarma():
 def trida(id: int):
     return json.dumps(Valtice_trida.get_by_id(id).info_pro_detail())
 
+@valtice_api.route("/uprava_tridy/<int:id>")
+@require_role_system_name_on_current_user("valtice_org")
+def uprava_tridy(id: int):
+    return json.dumps(Valtice_trida.get_by_id(id).info_pro_upravu())
+
 @valtice_api.route("/tridy")
 @require_role_system_name_on_current_user("valtice_org")
 def tridy():
