@@ -39,9 +39,8 @@ def home():
             flash("Všichni účastníci byli smazáni", category="success")
             return redirect(url_for("valtice_views.home"))
         elif request.form.get("novy_ucastnik"):
-            Valtice_ucastnik.novy_ucastnik_from_admin(jmeno = request.form.get("jmeno"), prijmeni = request.form.get("prijmeni"))
-            flash("Nový účastník byl vytvořen", category="success")
-            return redirect(url_for("valtice_views.seznam_ucastniku"))
+            id = Valtice_ucastnik.novy_ucastnik_from_admin(jmeno = request.form.get("jmeno"), prijmeni = request.form.get("prijmeni"))
+            return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
         return request.form.to_dict()
     
     
@@ -78,7 +77,7 @@ def uprava_ucastnika(id:int):
             u = Valtice_ucastnik.get_by_id(id)
             u.nacist_zmeny_z_requestu(request)
             flash("Změny byly uloženy", category="success")
-            return redirect(url_for("valtice_views.uprava_ucastnika", id=id))
+            return redirect(url_for("valtice_views.ucastnik", id=id))
         elif request.form.get("zrusit_registraci"):
             u = Valtice_ucastnik.get_by_id(id)
             u.cas_registrace = None

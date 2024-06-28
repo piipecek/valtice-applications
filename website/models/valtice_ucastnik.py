@@ -17,7 +17,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     finance_dne = db.Column(db.Date)
     finance_dar = db.Column(db.Float, default=0)
     finance_mena = db.Column(db.String(50), default="CZK")
-    finance_kategorie = db.Column(db.String(100))
+    finance_kategorie = db.Column(db.String(100), default="dospely")
     finance_korekce_kurzovne = db.Column(db.Float, default=0)
     finance_korekce_kurzovne_duvod = db.Column(db.String(2000), default="")
     finance_korekce_strava = db.Column(db.Float, default=0)
@@ -197,10 +197,10 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         full_name = self.get_full_name()
         return {
             "id": self.id,
-            "full_name": full_name,
-            "prijmeni": self.prijmeni,
-            "email": self.email,
-            "telefon": self.telefon,
+            "full_name": full_name if full_name else "-",
+            "prijmeni": self.prijmeni if self.prijmeni else "-",
+            "email": self.email if self.email else "-",
+            "registrovan": "Registrován" if self.cas_registrace else "-",
             "hlavni_trida_1": Valtice_trida.get_by_id(self.hlavni_trida_1_id).short_name if self.hlavni_trida_1_id else "-",
         }
     
@@ -221,26 +221,34 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                 return f"{castka} €"
          
         # display jidla
+        list_pro_stravu_na_ocich = []
+        snidane_list = []
         if self.strava_snidane_vinarska + self.strava_snidane_zs == 0:
             snidane = "-"
-        elif self.strava_snidane_zs == 0:
-            snidane = f"SŠ: {self.strava_snidane_vinarska}"
-        elif self.strava_snidane_vinarska == 0:
-            snidane = f"VŠ: {self.strava_snidane_zs}"
-        else:
-            snidane = f"ZŠ: {self.strava_snidane_zs}, VŠ: {self.strava_snidane_vinarska}"
-        
+        if self.strava_snidane_zs != 0:
+            snidane_list.append(f"ZŠ: {self.strava_snidane_zs}")
+            list_pro_stravu_na_ocich.append(f"Snídaně ZŠ: {self.strava_snidane_zs}")
+        if self.strava_snidane_vinarska != 0:
+            snidane_list.append(f"VŠ: {self.strava_snidane_vinarska}")
+            list_pro_stravu_na_ocich.append(f"Snídaně VŠ: {self.strava_snidane_vinarska}")
+        if len(snidane_list) != 0:
+            snidane = ", ".join(snidane_list)
+
         obed_list = []
         if self.strava_obed_vinarska_maso + self.strava_obed_vinarska_vege + self.strava_obed_zs_maso + self.strava_obed_zs_vege == 0:
             obed = "-"
         if self.strava_obed_zs_maso != 0:
             obed_list.append(f"ZŠ maso: {self.strava_obed_zs_maso}")
+            list_pro_stravu_na_ocich.append(f"Oběd ZŠ maso: {self.strava_obed_zs_maso}")
         if self.strava_obed_zs_vege != 0:
             obed_list.append(f"ZŠ vege: {self.strava_obed_zs_vege}")
+            list_pro_stravu_na_ocich.append(f"Oběd ZŠ vege: {self.strava_obed_zs_vege}")
         if self.strava_obed_vinarska_maso != 0:
             obed_list.append(f"VŠ maso: {self.strava_obed_vinarska_maso}")
+            list_pro_stravu_na_ocich.append(f"Oběd VŠ maso: {self.strava_obed_vinarska_maso}")
         if self.strava_obed_vinarska_vege != 0:
             obed_list.append(f"VŠ vege: {self.strava_obed_vinarska_vege}")
+            list_pro_stravu_na_ocich.append(f"Oběd VŠ vege: {self.strava_obed_vinarska_vege}")
         if len(obed_list) != 0:    
             obed = ", ".join(obed_list)
         
@@ -249,20 +257,35 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             vecere = "-"
         if self.strava_vecere_zs_maso != 0:
             vecere_list.append(f"ZŠ maso: {self.strava_vecere_zs_maso}")
+            list_pro_stravu_na_ocich.append(f"Večeře ZŠ maso: {self.strava_vecere_zs_maso}")
         if self.strava_vecere_zs_vege != 0:
             vecere_list.append(f"ZŠ vege: {self.strava_vecere_zs_vege}")
+            list_pro_stravu_na_ocich.append(f"Večeře ZŠ vege: {self.strava_vecere_zs_vege}")
         if self.strava_vecere_vinarska_maso != 0:
             vecere_list.append(f"VŠ maso: {self.strava_vecere_vinarska_maso}")
+            list_pro_stravu_na_ocich.append(f"Večeře VŠ maso: {self.strava_vecere_vinarska_maso}")
         if self.strava_vecere_vinarska_vege != 0:
             vecere_list.append(f"VŠ vege: {self.strava_vecere_vinarska_vege}")
+            list_pro_stravu_na_ocich.append(f"Večeře VŠ vege: {self.strava_vecere_vinarska_vege}")
         if len(vecere_list) != 0:
             vecere = ", ".join(vecere_list)
+            
+        if len(list_pro_stravu_na_ocich) == 0:
+            strava_na_ocich = "Nemá zájem"
+        else:
+            strava_na_ocich = ", ".join(list_pro_stravu_na_ocich)
             
         # ubytovani
         if self.ubytovani == "Nemá zájem":
             ubytovani = self.ubytovani
         else:
-            ubytovani = f"{self.ubytovani}: {self.ubytovani_pocet}"
+            if int(self.ubytovani_pocet) == self.ubytovani_pocet:
+                pocet = int(self.ubytovani_pocet)
+            else:
+                pocet = self.ubytovani_pocet
+            ubytovani = f"{self.ubytovani}: {pocet}"
+            
+
                 
         kalkulace = self.kalkulace()
         return {
@@ -316,16 +339,18 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "finance_korekce_ubytko_duvod": self.finance_korekce_ubytko_duvod if self.finance_korekce_ubytko_duvod else "-",
             "strava_snidane": snidane,
             "strava_obedy": obed,
-            "strava_vecere": vecere
+            "strava_vecere": vecere,
+            "strava_na_ocich": strava_na_ocich,
         }
     
     @staticmethod
-    def novy_ucastnik_from_admin(jmeno, prijmeni):
+    def novy_ucastnik_from_admin(jmeno, prijmeni) -> int:
         v = Valtice_ucastnik()
         v.jmeno = jmeno
         v.prijmeni = prijmeni
         v.cas = datetime.now()
         v.update()
+        return v.id
     
     def kalkulace(self) -> dict:
         # ubytovani
@@ -405,7 +430,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "obedy": obedy,
             "vecere": vecere,
             "dar": self.finance_dar,
-            "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena - self.finance_korekce_kurzovne - self.finance_korekce_strava - self.finance_korekce_ubytko_duvod
+            "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena - self.finance_korekce_kurzovne - self.finance_korekce_strava - self.finance_korekce_ubytko
         }
         return result
 
@@ -483,16 +508,16 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         self.repertoir = request.form.get("repertoir")
         self.student_zus_valtice_mikulov = True if request.form.get("student_zus_valtice_mikulov") == "Ano" else False
         self.strava = True if request.form.get("strava") == "Ano" else False
-        self.strava_snidane_vinarska = int(request.form.get("strava_snidane_vinarska"))
-        self.strava_snidane_zs = int(request.form.get("strava_snidane_zs"))
-        self.strava_obed_vinarska_maso = int(request.form.get("strava_obed_vinarska_maso"))
-        self.strava_obed_vinarska_vege = int(request.form.get("strava_obed_vinarska_vege"))
-        self.strava_obed_zs_maso = int(request.form.get("strava_obed_zs_maso"))
-        self.strava_obed_zs_vege = int(request.form.get("strava_obed_zs_vege"))
-        self.strava_vecere_vinarska_maso = int(request.form.get("strava_vecere_vinarska_maso"))
-        self.strava_vecere_vinarska_vege = int(request.form.get("strava_vecere_vinarska_vege"))
-        self.strava_vecere_zs_maso = int(request.form.get("strava_vecere_zs_maso"))
-        self.strava_vecere_zs_vege = int(request.form.get("strava_vecere_zs_vege"))
+        self.strava_snidane_vinarska = int(request.form.get("strava_snidane_vinarska")) if request.form.get("strava_snidane_vinarska") else 0
+        self.strava_snidane_zs = int(request.form.get("strava_snidane_zs")) if request.form.get("strava_snidane_zs") else 0
+        self.strava_obed_vinarska_maso = int(request.form.get("strava_obed_vinarska_maso")) if request.form.get("strava_obed_vinarska_maso") else 0
+        self.strava_obed_vinarska_vege = int(request.form.get("strava_obed_vinarska_vege")) if request.form.get("strava_obed_vinarska_vege") else 0
+        self.strava_obed_zs_maso = int(request.form.get("strava_obed_zs_maso")) if request.form.get("strava_obed_zs_maso") else 0
+        self.strava_obed_zs_vege = int(request.form.get("strava_obed_zs_vege")) if request.form.get("strava_obed_zs_vege") else 0
+        self.strava_vecere_vinarska_maso = int(request.form.get("strava_vecere_vinarska_maso")) if request.form.get("strava_vecere_vinarska_maso") else 0
+        self.strava_vecere_vinarska_vege = int(request.form.get("strava_vecere_vinarska_vege")) if request.form.get("strava_vecere_vinarska_vege") else 0
+        self.strava_vecere_zs_maso = int(request.form.get("strava_vecere_zs_maso")) if request.form.get("strava_vecere_zs_maso") else 0
+        self.strava_vecere_zs_vege = int(request.form.get("strava_vecere_zs_vege")) if request.form.get("strava_vecere_zs_vege") else 0
         self.uzivatelska_poznamka = request.form.get("uzivatelska_poznamka")
         self.admin_poznamka = request.form.get("admin_poznamka")
         self.update()

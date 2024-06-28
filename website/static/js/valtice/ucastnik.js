@@ -2,9 +2,17 @@ import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
 let data = JSON.parse(httpGet("/valtice_api/ucastnik/" + id))
 
+// jméno
 let full_name = data["jmeno"] + " " + data["prijmeni"]
 document.getElementById("full_name").innerText = full_name
 
+// věci na očích
+document.getElementById("ucast_na_ocich").innerText = data["ucast"]
+document.getElementById("strava_na_ocich").innerText = data["strava_na_ocich"]
+document.getElementById("ubytovani_na_ocich").innerText = data["ubytovani"]
+
+
+// ostatní
 for (let key in data) {
     if (["jmeno", "prijmeni"].includes(key)) {
         continue

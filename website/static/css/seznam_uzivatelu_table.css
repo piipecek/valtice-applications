@@ -1,3 +1,4 @@
 .pravy_text{
-    min-width: 200px;
+    /* min-width: 200px; */
+    width: 15em !important;
 }

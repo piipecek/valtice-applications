@@ -2,6 +2,7 @@ import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
 let data = JSON.parse(httpGet("/valtice_api/uprava_ucastnika/" + id))
 let tridy = JSON.parse(httpGet("/valtice_api/tridy_pro_upravu_ucastnika"))
+let tridy_pro_upravu_ucastnika_druhe_zdarma = JSON.parse(httpGet("/valtice_api/tridy_pro_upravu_ucastnika_druhe_zdarma"))
 
 for (let trida of tridy) {
     let option = document.createElement("option")
@@ -10,8 +11,13 @@ for (let trida of tridy) {
     document.getElementById("hlavni_trida_1").appendChild(option)
     document.getElementById("hlavni_trida_2").appendChild(option.cloneNode(true))
     document.getElementById("vedlejsi_trida_placena").appendChild(option.cloneNode(true))
-    document.getElementById("vedlejsi_trida_zdarma").appendChild(option.cloneNode(true))
+}
 
+for (let trida of tridy_pro_upravu_ucastnika_druhe_zdarma) {
+    let option = document.createElement("option")
+    option.value = trida["id"]
+    option.innerText = trida["full_name"]
+    document.getElementById("vedlejsi_trida_zdarma").appendChild(option)
 }
 
 let full_name = data["jmeno"] + " " + data["prijmeni"]
