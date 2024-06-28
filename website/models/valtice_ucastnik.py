@@ -430,7 +430,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "obedy": obedy,
             "vecere": vecere,
             "dar": self.finance_dar,
-            "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena - self.finance_korekce_kurzovne - self.finance_korekce_strava - self.finance_korekce_ubytko
+            "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena + self.finance_korekce_kurzovne + self.finance_korekce_strava + self.finance_korekce_ubytko
         }
         return result
 
