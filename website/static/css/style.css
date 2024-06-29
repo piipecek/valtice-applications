@@ -165,3 +165,13 @@ canvas {
     padding-top: 2px !important;
     padding-bottom: 2px !important;
 }
+
+.jmeno-a{
+    text-decoration: none !important;
+    color: black;
+}
+
+.trida-a{
+    text-decoration: none !important;
+    color: black;
+}

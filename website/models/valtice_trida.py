@@ -68,4 +68,10 @@ class Valtice_trida(Common_methods_db_model):
             self.je_zdarma_jako_vedlejsi = True
             self.je_ansamblova = False
         self.update()
+    
+    def data_pro_seznamy(self):
+        return {
+            "id": self.id,
+            "long_name": self.full_name
+        }
         
