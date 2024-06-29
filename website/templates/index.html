@@ -17,39 +17,32 @@
 <body class="mx-3">
 
     <header class="container-sm">
-        <nav class="navbar navbar-expand navbar-light">
-            <a class="navbar-brand" href="{{url_for('guest_views.dashboard')}}">
-              <img src="{{url_for('static_sender.send_icon', filename='valtice.png')}}" alt="House Icon" width="30" height="30" class="d-inline-block align-top">
-            </a>
-            <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
-                <ul class="navbar-nav">
-                    {% if "valtice_org" in roles%} 
-                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Účastníci</a></li>
-                    {% endif %}
-                    {% if "valtice_org" in roles%} 
-                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.tridy')}}">Třídy</a></li>
-                    {% endif %}
-                    {% if "valtice_org" in roles%} 
-                    <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Ceny</a></li>
-                    {% endif %}
-                    {% if "valtice_org" in roles%} 
-                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Ostatní</a></li>
-                    {% endif %}
-                    {% block nav_start %}
-
-                    {% endblock %}   
-                </ul>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{url_for('guest_views.dashboard')}}">
+                    <img src="{{url_for('static_sender.send_icon', filename='valtice.png')}}" alt="House Icon" width="30" height="30" class="d-inline-block align-top">
+                  </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_valtickej" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar_valtickej">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if "valtice_org" in roles%} 
+                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Účastníci</a></li>
+                        {% endif %}
+                        {% if "valtice_org" in roles%} 
+                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.tridy')}}">Třídy</a></li>
+                        {% endif %}
+                        {% if "valtice_org" in roles%} 
+                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Ceny</a></li>
+                        {% endif %}
+                        {% if "valtice_org" in roles%} 
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Ostatní</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    
-                    {% block nav_end %}
-
-                    {% endblock %}   
-                </ul>
-            </div>
-          </nav>
-    
+        </nav>
     </header>
 
     {% for category, message in get_flashed_messages(with_categories=True) %}
