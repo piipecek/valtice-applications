@@ -2,7 +2,6 @@ import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
 
 let ceny = JSON.parse(httpGet("/valtice_api/ceny"))
-console.log(ceny)
 
 let table_kurzovne = new TableCreator(document.getElementById("table_kurzovne"))
 table_kurzovne.make_header(["Název", "Cena v CZK", "Cena v EUR"])

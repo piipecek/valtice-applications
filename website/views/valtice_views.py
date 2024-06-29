@@ -189,4 +189,6 @@ def seznamy():
     if request.method == "GET":
         return render_template("valtice/seznamy.html", roles=get_roles(current_user))
     else:
-        return json.loads(request.form.get("result"))
+        result = json.loads(request.form.get("result"))
+        data_pro_tabulku = Valtice_ucastnik.vytvorit_seznam(result)
+        return json.dumps(data_pro_tabulku)

@@ -1,6 +1,20 @@
 import httpGet from "../http_get.js"
+import TableCreator from "../table_creator.js"
 let tridy = JSON.parse(httpGet("/valtice_api/tridy_pro_seznamy"))
 
+// togglovani sekci
+document.getElementById("vytvorit_button").addEventListener("click", function() {
+    vyhodnotit()
+    document.getElementById("prvni_krok").hidden = true
+    document.getElementById("druhy_krok").hidden = false
+})
+document.getElementById("ukazat_parametry").addEventListener("click", function() {
+    document.getElementById("prvni_krok").hidden = false
+    document.getElementById("druhy_krok").hidden = true
+})
+
+
+// vytvoreni checkboxu trid
 for (let trida of tridy) {
     let input = document.createElement("input")
     input.setAttribute("class", "form-check-input")
@@ -54,7 +68,7 @@ for (let strava_id of strava_ids) {
 document.getElementById("excel_button").addEventListener("click", function() {vyhodnotit("excel")})
 document.getElementById("pdf_button").addEventListener("click", function() {vyhodnotit("pdf")})
 
-function vyhodnotit(forma_vysledku) {
+function vyhodnotit() {
     // tridy
     let tridy_ids = []
     for (let trida of tridy) {
@@ -66,10 +80,10 @@ function vyhodnotit(forma_vysledku) {
     // ubytko
     let ubytko = []
     if (document.getElementById("telocvicna").checked) {
-        ubytko.push("telocvicna")
+        ubytko.push("Tělocvična")
     }
     if (document.getElementById("internat").checked) {
-        ubytko.push("internat")
+        ubytko.push("Internát vinařské školy")
     }
 
     // strava
@@ -80,8 +94,18 @@ function vyhodnotit(forma_vysledku) {
         }
     }
 
+    // ostatni
+    let ostatni = []
+    let ostatni_ids = ["korekce", "neregistrace", "dar", "poznamka"]
+    for (let id of ostatni_ids) {
+        if (document.getElementById(id).checked) {
+            ostatni.push(id)
+        }
+    }
+
+
     // atributy
-    let atributy_ids = ["jmeno", "prijmeni", "cas", "vek", "email", "telefon", "finance_dne", "finance_dar", "finance_mena", "finance_kategorie", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
+    let atributy_ids = ["cas", "vek", "email", "telefon", "finance_dne", "finance_dar", "finance_mena", "finance_kategorie", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
     let atributy = []
     for (let id of atributy_ids) {
         if (document.getElementById(id).checked) {
@@ -91,13 +115,31 @@ function vyhodnotit(forma_vysledku) {
 
     // result
     let result = {
-        "forma_vysledku": forma_vysledku,
         "tridy": tridy_ids,
         "ubytko": ubytko,
         "strava": strava,
+        "ostatni": ostatni,
         "atributy": atributy
     }
-    document.getElementById("result").value = JSON.stringify(result)
-    console.log(result)
-    // document.getElementById("form").submit()
+    $.ajax({
+        data : {
+            result: JSON.stringify(result)
+        },
+        type: "POST",
+        url: "/valtice/seznamy"
+    })
+    .done(function(data) {
+        vykreslit_tabulku(JSON.parse(data))
+    })
+}
+
+function vykreslit_tabulku(result) {
+    let table_creator = new TableCreator(document.getElementById("parent_div"), true, true)
+    let header = Object.keys(result["lidi"][0])
+    table_creator.make_header(header)
+    for (let row of result["lidi"]) {
+        table_creator.make_row(Object.values(row))
+    }
+    document.getElementById("pocet_ucastniku").innerText = result["lidi"].length
+    document.getElementById("maily").innerText = result["emaily"]
 }
