@@ -172,7 +172,6 @@ def ceny():
         else:
             return request.form.to_dict()
         
-# endpoint /tridy
 @valtice_views.route("/tridy", methods=["GET","POST"])
 @require_role_system_name_on_current_user("valtice_org")
 def tridy():
@@ -183,3 +182,13 @@ def tridy():
             return redirect(url_for("valtice_views.trida", id=id))
         else:
             return request.form.to_dict()
+        
+       # endpoint /seznamy
+       
+@valtice_views.route("/seznamy", methods=["GET","POST"])
+@require_role_system_name_on_current_user("valtice_org")
+def seznamy():
+    if request.method == "GET":
+        return render_template("valtice/seznamy.html", roles=get_roles(current_user))
+    else:
+        return request.form.to_dict() 

@@ -27,16 +27,19 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar_valtickej">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        {% if "valtice_org" in roles%} 
-                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Účastníci</a></li>
+                        {% if "valtice_org" in roles %} 
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznam_ucastniku')}}">Účastníci</a></li>
                         {% endif %}
-                        {% if "valtice_org" in roles%} 
-                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.tridy')}}">Třídy</a></li>
+                        {% if "valtice_org" in roles %} 
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.tridy')}}">Třídy</a></li>
                         {% endif %}
-                        {% if "valtice_org" in roles%} 
-                        <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Ceny</a></li>
+                        {% if "valtice_org" in roles %} 
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.ceny')}}">Ceny</a></li>
                         {% endif %}
-                        {% if "valtice_org" in roles%} 
+                        {% if "valtice_org" in roles %}
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.seznamy')}}">Seznamy</a></li>
+                        {% endif %}
+                        {% if "valtice_org" in roles %} 
                             <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Ostatní</a></li>
                         {% endif %}
                     </ul>
