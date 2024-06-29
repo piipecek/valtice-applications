@@ -6,6 +6,7 @@ from website.models.valtice_trida import Valtice_trida
 from website.models.cena import Cena
 from website.models.user import get_roles
 import csv
+import json
 from datetime import datetime
 from io import StringIO
 
@@ -112,10 +113,7 @@ def seznam_ucastniku():
     if request.method == "GET":
         return render_template("valtice/seznam_ucastniku.html", roles=get_roles(current_user))
     else:
-        if id:=request.form.get("result"):
-            return redirect(url_for("valtice_views.ucastnik", id=id))
-        else:
-            return request.form.to_dict()
+        return request.form.to_dict()
     
 
 @valtice_views.route("/trida/<int:id>", methods=["GET","POST"])
@@ -191,4 +189,4 @@ def seznamy():
     if request.method == "GET":
         return render_template("valtice/seznamy.html", roles=get_roles(current_user))
     else:
-        return request.form.to_dict() 
+        return json.loads(request.form.get("result"))

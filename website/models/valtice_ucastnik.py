@@ -202,6 +202,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "email": self.email if self.email else "-",
             "registrovan": "Registrován" if self.cas_registrace else "-",
             "hlavni_trida_1": Valtice_trida.get_by_id(self.hlavni_trida_1_id).short_name if self.hlavni_trida_1_id else "-",
+            "hlavni_trida_1_id": self.hlavni_trida_1_id
         }
     
     def get_full_name(self) -> str:

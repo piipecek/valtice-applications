@@ -3,14 +3,16 @@ import TableCreator from "../table_creator.js"
 let ucastnici = JSON.parse(httpGet("/valtice_api/ucastnici"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
-tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída", "Detail"])
+tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])
 ucastnici.forEach(element => {
-    let button = document.createElement("button")
-    button.classList.add("btn", "btn-success", "btn-narrow")
-    button.type = "submit"
-    button.innerText = "Detail účastníka"
-    button.name="result"
-    button.value = element["id"]
+    let jmeno_a = document.createElement("a")
+    jmeno_a.href = "/valtice/ucastnik/" + element["id"]
+    jmeno_a.innerText = element["full_name"]
+    jmeno_a.setAttribute("class", "jmeno-a")
+    let trida_a = document.createElement("a")
+    trida_a.href = "/valtice/trida/" + element["hlavni_trida_1_id"]
+    trida_a.innerText = element["hlavni_trida_1"]
+    trida_a.setAttribute("class", "trida-a")
     let email_element
     if (element["email"] == "-") {
         email_element = document.createElement("span")
@@ -21,7 +23,7 @@ ucastnici.forEach(element => {
         a.innerText = element["email"]
         email_element = a
     }
-    tc.make_row([element["full_name"], email_element, element["registrovan"], element["hlavni_trida_1"], button])
+    tc.make_row([jmeno_a, email_element, element["registrovan"], trida_a])
 });
 
 document.getElementById("total").innerText = ucastnici.length
