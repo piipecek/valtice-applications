@@ -1,0 +1,35 @@
+body {
+    font-family: ubuntu, arial, helvetica;
+    font-size: 12pt;
+    font-weight: normal;
+    padding: 2rem;
+    margin: 0px;
+} 
+
+.main-table {
+    border: 3px solid black;
+    min-width: 1000px;
+    padding: 3px;
+    padding-top: 1px;
+    border-collapse: collapse;
+}
+
+.tr-header {
+    height: 2rem;
+    border-bottom: 3px solid black;
+    text-align: start;
+}
+.tr-radek {
+    height: 2rem;
+}
+.td-okynko {
+    border-collapse: collapse;
+    border: 1px black solid;
+    padding: 0.2rem;
+}
+.th-okynko {
+    border-collapse: collapse;
+    border: 1px black solid;
+    padding: 0.2rem;
+    text-align: start !important;
+}

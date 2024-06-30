@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, make_response, send_file
 from flask_login import current_user
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
@@ -181,7 +181,6 @@ def tridy():
         else:
             return request.form.to_dict()
         
-       # endpoint /seznamy
        
 @valtice_views.route("/seznamy", methods=["GET","POST"])
 @require_role_system_name_on_current_user("valtice_org")
@@ -189,6 +188,19 @@ def seznamy():
     if request.method == "GET":
         return render_template("valtice/seznamy.html", roles=get_roles(current_user))
     else:
-        result = json.loads(request.form.get("result"))
-        data_pro_tabulku = Valtice_ucastnik.vytvorit_seznam(result)
-        return json.dumps(data_pro_tabulku)
+        if request.form.get("ucel") == "excel":
+            print("jsem tu")
+            result = json.loads(request.form.get("data"))
+            bytes = Valtice_ucastnik.vytvorit_xlsx_seznam(result)
+            return send_file(bytes, as_attachment=True, download_name="seznam.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            # return make_response(send_file(bytes, as_attachment=True, download_name="seznam.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+        elif request.form.get("ucel") == "pdf":
+            kriteria = json.loads(request.form.get("data"))
+            data_pro_tabulku = Valtice_ucastnik.vytvorit_seznam(kriteria)
+            return render_template("valtice/pdf_seznam.html", data = json.dumps(data_pro_tabulku))
+        elif request.form.get("ucel") == "view":
+            result = json.loads(request.form.get("result"))
+            data_pro_tabulku = Valtice_ucastnik.vytvorit_seznam(result)
+            return json.dumps(data_pro_tabulku)
+        else:
+            return request.form.to_dict()

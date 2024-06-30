@@ -243,12 +243,16 @@
         Počet vybraných účastníků: <span id="pocet_ucastniku"></span>
     </p>
     <p>
-        Jejich maily pro kopírování: <i>Může jich být méně než je vybraných účastníků, protože jsou ostraňovány duplikáty.</i><br>
+        Jejich maily pro kopírování: <i>Může jich být méně než je vybraných účastníků, protože jsou odstraňovány duplikáty.</i><br>
         <code id="maily"></code>
     </p>
     <div id="parent_div"></div>
     <button type="button" class="btn btn-primary" id="excel_button">Stáhnout .xlsx</button>
-    <button type="button" class="btn btn-primary" id="pdf_button">Zobrazit pro export do .pdf</button>
+    <button type="button" class="btn btn-primary" id="pdf_button" value="whatever">Zobrazit pro export do .pdf</button>
+    <form method="post" id="form">
+        <input hidden type="text" name="data" id="data">
+        <input hidden type="text" name="ucel" id="ucel">
+    </form>
 </div>
 
 

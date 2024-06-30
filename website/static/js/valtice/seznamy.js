@@ -4,9 +4,19 @@ let tridy = JSON.parse(httpGet("/valtice_api/tridy_pro_seznamy"))
 
 // togglovani sekci
 document.getElementById("vytvorit_button").addEventListener("click", function() {
-    vyhodnotit()
     document.getElementById("prvni_krok").hidden = true
     document.getElementById("druhy_krok").hidden = false
+    $.ajax({
+        data : {
+            ucel: "view",
+            result: JSON.stringify(vyhodnotit())
+        },
+        type: "POST",
+        url: "/valtice/seznamy"
+    })
+    .done(function(data) {
+        vykreslit_tabulku(JSON.parse(data))
+    })
 })
 document.getElementById("ukazat_parametry").addEventListener("click", function() {
     document.getElementById("prvni_krok").hidden = false
@@ -64,9 +74,17 @@ for (let strava_id of strava_ids) {
     })
 }
 
-// vyhodnocovani
-document.getElementById("excel_button").addEventListener("click", function() {vyhodnotit("excel")})
-document.getElementById("pdf_button").addEventListener("click", function() {vyhodnotit("pdf")})
+// TODO - exportovani do excelu a pdf
+document.getElementById("excel_button").addEventListener("click", function() {
+    document.getElementById("data").value = JSON.stringify(vyhodnotit())
+    document.getElementById("ucel").value = "excel"
+    document.getElementById("form").submit()
+})
+document.getElementById("pdf_button").addEventListener("click", function() {
+    document.getElementById("data").value = JSON.stringify(vyhodnotit())
+    document.getElementById("ucel").value = "pdf"
+    document.getElementById("form").submit()
+})
 
 function vyhodnotit() {
     // tridy
@@ -121,16 +139,7 @@ function vyhodnotit() {
         "ostatni": ostatni,
         "atributy": atributy
     }
-    $.ajax({
-        data : {
-            result: JSON.stringify(result)
-        },
-        type: "POST",
-        url: "/valtice/seznamy"
-    })
-    .done(function(data) {
-        vykreslit_tabulku(JSON.parse(data))
-    })
+    return result
 }
 
 function vykreslit_tabulku(result) {

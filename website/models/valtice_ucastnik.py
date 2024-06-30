@@ -5,6 +5,8 @@ from datetime import datetime
 from flask_login import UserMixin
 from website.models.valtice_trida import Valtice_trida
 from website.models.cena import Cena
+from io import BytesIO
+from openpyxl import Workbook
 
 class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -574,8 +576,9 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "emaily":"",
             "lidi": []
         }
-        for u in ucastnici:
+        for i, u in enumerate(ucastnici):
             entry = {
+                "#": i+1,
                 "Jméno": f"{u.prijmeni}, {u.jmeno}",
             }
             for a in kriteria["atributy"]:
@@ -649,3 +652,18 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
 
         result["emaily"] = ", ".join(ordered_unique_emails)
         return result
+
+    def vytvorit_xlsx_seznam(kriteria) -> BytesIO:
+        data = Valtice_ucastnik.vytvorit_seznam(kriteria)
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Učastníci"
+        keys = data["lidi"][0].keys()
+        ws.append(list(keys))
+        for radek in data["lidi"]:
+            ws.append([radek[k] for k in keys])
+        output = BytesIO()
+        wb.save(output)
+        output.seek(0)
+        return output
+    
