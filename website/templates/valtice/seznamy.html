@@ -112,7 +112,11 @@
                 <div id="checkboxy_udaju">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="cas">
-                        <label class="form-check-label" for="cas">Čas</label>
+                        <label class="form-check-label" for="cas">Čas vyplnění přihlášky</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="cas_registrace">
+                        <label class="form-check-label" for="cas_registrace">Čas registrace</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="vek">
@@ -128,7 +132,11 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="finance_dne">
-                        <label class="form-check-label" for="finance_dne">Finance - Datum</label>
+                        <label class="form-check-label" for="finance_dne">Datum zaplacení</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="finance_celkem">
+                        <label class="form-check-label " for="finance_celkem">Finance - Celková částka</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="finance_dar">
@@ -226,19 +234,45 @@
                         <input class="form-check-input" type="checkbox" value="" id="admin_poznamka">
                         <label class="form-check-label" for="admin_poznamka">Admin poznámka</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="cas_registrace">
-                        <label class="form-check-label" for="cas_registrace">Čas registrace</label>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-primary" id="vytvorit_button">Vytvořit seznam</button>
+    <h3>
+        Atribut pro řazení
+    </h3>
+    <small class="text-muted">Výpis bude defaultně řazený podle příjmení. Pokud chcete seřadit účastníky podle jiného atributu, můžete ho vybrat zde. Druhotný klíč řazení bude vždy příjmení. Řazení probíhá vždy vzestupně.</small>
+    <div class="row my-2">
+        <div class="col-sm">
+            <div>
+                <select class="form-select" id="atribut_razeni">
+                    <option value="prijmeni" selected>Příjmení</option>
+                    <option value="jmeno">Jméno</option>
+                    <option value="cas">Čas vyplnění přihlášky</option>
+                    <option value="cas_registrace">Čas registrace</option>
+                    <option value="vek">Věk</option>
+                    <option value="finance_dne">Datum zaplacení</option>
+                    <option value="finance_celkem">Finance - Celková částka</option>
+                    <option value="finance_dar">Finance - Dar</option>
+                    <option value="finance_mena">Finance - Měna</option>
+                    <option value="finance_kategorie">Finance - Kategorie</option>
+                    <option value="ssh_clen">SSH Člen</option>
+                    <option value="ucast">Účast</option>
+                    <option value="ubytovani">Ubytování</option>
+                    <option value="student_zus_valtice_mikulov">Student ZUŠ Valtice/Mikulov</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-auto">
+            <button type="button" class="btn btn-primary" id="vytvorit_button">Vytvořit seznam</button>
+        </div>
+    </div>
 </div>
 <div id="druhy_krok" hidden>
     <button type="button" class="btn btn-primary" id="ukazat_parametry">Ukázat parametry výběru</button>
     <hr>
+    <button type="button" class="btn btn-primary" id="excel_button">Stáhnout .xlsx</button>
+    <button type="button" class="btn btn-primary" id="pdf_button" value="whatever">Zobrazit pro export do .pdf</button>
     <p>
         Počet vybraných účastníků: <span id="pocet_ucastniku"></span>
     </p>
@@ -247,8 +281,6 @@
         <code id="maily"></code>
     </p>
     <div id="parent_div"></div>
-    <button type="button" class="btn btn-primary" id="excel_button">Stáhnout .xlsx</button>
-    <button type="button" class="btn btn-primary" id="pdf_button" value="whatever">Zobrazit pro export do .pdf</button>
     <form method="post" id="form">
         <input hidden type="text" name="data" id="data">
         <input hidden type="text" name="ucel" id="ucel">

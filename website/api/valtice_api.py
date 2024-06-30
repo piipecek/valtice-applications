@@ -64,3 +64,8 @@ def ceny():
 @require_role_system_name_on_current_user("valtice_org")
 def tridy_pro_seznamy():
     return json.dumps(sorted([t.data_pro_seznamy() for t in Valtice_trida.get_all()], key=lambda x: x["long_name"]))
+
+@valtice_api.route("/registrovanych")
+@require_role_system_name_on_current_user("valtice_org")
+def registrovanych():
+    return json.dumps({"pocet": len(list(filter(lambda u: u.cas_registrace, Valtice_ucastnik.get_all())))})

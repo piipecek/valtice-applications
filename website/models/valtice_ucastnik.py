@@ -1,12 +1,14 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
 from website.helpers.pretty_date import pretty_datetime
-from datetime import datetime
+from datetime import datetime, date
 from flask_login import UserMixin
 from website.models.valtice_trida import Valtice_trida
 from website.models.cena import Cena
 from io import BytesIO
 from openpyxl import Workbook
+import czech_sort
+
 
 class Valtice_ucastnik(Common_methods_db_model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -570,8 +572,39 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
         if "poznamka" in kriteria["ostatni"]:
             ucastnici = list(filter(lambda u: u.uzivatelska_poznamka, ucastnici))
         
+        # serazeni
+        ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.prijmeni + u.jmeno))
+        if kriteria["atribut_razeni"] == "prijmeni":
+            ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.prijmeni))
+        elif kriteria["atribut_razeni"] == "jmeno":
+            ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.jmeno))
+        elif kriteria["atribut_razeni"] == "cas":
+            ucastnici = sorted(ucastnici, key=lambda u: u.cas)
+        elif kriteria["atribut_razeni"] == "cas_registrace":
+            ucastnici = sorted(ucastnici, key=lambda u: u.cas_registrace if u.cas_registrace else datetime(1, 1, 1))
+        elif kriteria["atribut_razeni"] == "vek":
+            ucastnici = sorted(ucastnici, key=lambda u: int(u.vek) if u.vek else 0)
+        elif kriteria["atribut_razeni"] == "finance_dne":
+            ucastnici = sorted(ucastnici, key=lambda u: u.finance_dne if u.finance_dne else date(1, 1, 1))
+        elif kriteria["atribut_razeni"] == "finance_dar":
+            ucastnici = sorted(ucastnici, key=lambda u: u.finance_dar)
+        elif kriteria["atribut_razeni"] == "finance_celkem":
+            ucastnici = sorted(ucastnici, key=lambda u: u.kalkulace()["celkem"])
+        elif kriteria["atribut_razeni"] == "finance_mena":
+            ucastnici = sorted(ucastnici, key=lambda u: u.finance_mena)
+        elif kriteria["atribut_razeni"] == "finance_kategorie":
+            ucastnici = sorted(ucastnici, key=lambda u: u.finance_kategorie)
+        elif kriteria["atribut_razeni"] == "ssh_clen":
+            ucastnici = sorted(ucastnici, key=lambda u: u.ssh_clen)
+        elif kriteria["atribut_razeni"] == "ucast":
+            ucastnici = sorted(ucastnici, key=lambda u: u.ucast)
+        elif kriteria["atribut_razeni"] == "ubytovani":
+            ucastnici = sorted(ucastnici, key=lambda u: u.ubytovani)
+        elif kriteria["atribut_razeni"] == "student_zus_valtice_mikulov":
+            ucastnici = sorted(ucastnici, key=lambda u: u.student_zus_valtice_mikulov)
+
+        
         # vypsani atribut
-        ucastnici = sorted(ucastnici, key=lambda u: u.prijmeni + u.jmeno)
         result = {
             "emaily":"",
             "lidi": []
@@ -583,7 +616,7 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             }
             for a in kriteria["atributy"]:
                 if a == "cas":
-                    entry["Čas registrace"] = pretty_datetime(u.cas)
+                    entry["Čas vyplnění přihlášky"] = pretty_datetime(u.cas)
                 elif a == "vek":
                     entry["Věk"] = u.vek
                 elif a == "email":
@@ -594,10 +627,12 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                     entry["Datum platby"] = pretty_datetime(u.finance_dne)
                 elif a == "finance_dar":
                     entry["Dar"] = u.finance_dar
+                elif a == "finance_celkem":
+                    entry["Celkem"] = u.kalkulace()["celkem"]
                 elif a == "finance_mena":
                     entry["Měna"] = u.finance_mena
                 elif a == "finance_kategorie":
-                    entry["Kategorie"] = u.finance_kategorie
+                    entry["Kategorie"] = "Dítě" if u.finance_kategorie == "dite" else "Student" if u.finance_kategorie == "student" else "Dospělý"
                 elif a == "finance_korekce_kurzovne":
                     entry["Korekce kurzovné"] = u.finance_korekce_kurzovne
                 elif a == "finance_korekce_kurzovne_duvod":

@@ -1,6 +1,7 @@
 import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
 let ucastnici = JSON.parse(httpGet("/valtice_api/ucastnici"))
+let registrovanych = JSON.parse(httpGet("/valtice_api/registrovanych"))["pocet"]
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
 tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])
@@ -27,3 +28,4 @@ ucastnici.forEach(element => {
 });
 
 document.getElementById("total").innerText = ucastnici.length
+document.getElementById("registrovanych").innerText = String(registrovanych) + " (" + String(Math.round(registrovanych / ucastnici.length * 100)) + "%)"

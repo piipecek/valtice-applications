@@ -74,7 +74,6 @@ for (let strava_id of strava_ids) {
     })
 }
 
-// TODO - exportovani do excelu a pdf
 document.getElementById("excel_button").addEventListener("click", function() {
     document.getElementById("data").value = JSON.stringify(vyhodnotit())
     document.getElementById("ucel").value = "excel"
@@ -123,7 +122,7 @@ function vyhodnotit() {
 
 
     // atributy
-    let atributy_ids = ["cas", "vek", "email", "telefon", "finance_dne", "finance_dar", "finance_mena", "finance_kategorie", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
+    let atributy_ids = ["cas", "vek", "email", "telefon", "finance_dne", "finance_celkem", "finance_dar", "finance_mena", "finance_kategorie", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
     let atributy = []
     for (let id of atributy_ids) {
         if (document.getElementById(id).checked) {
@@ -137,7 +136,8 @@ function vyhodnotit() {
         "ubytko": ubytko,
         "strava": strava,
         "ostatni": ostatni,
-        "atributy": atributy
+        "atributy": atributy,
+        "atribut_razeni": document.getElementById("atribut_razeni").value,
     }
     return result
 }
