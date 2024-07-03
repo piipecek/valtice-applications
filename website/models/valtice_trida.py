@@ -12,6 +12,9 @@ class Valtice_trida(Common_methods_db_model):
     vedlejsi_placena_ucastnici = db.relationship('Valtice_ucastnik', backref='vedlejsi_trida_placena', lazy=True, foreign_keys='Valtice_ucastnik.vedlejsi_trida_placena_id')
     vedlejsi_zdarma_ucastnici = db.relationship('Valtice_ucastnik', backref='vedlejsi_trida_zdarma', lazy=True, foreign_keys='Valtice_ucastnik.vedlejsi_trida_zdarma_id')
 
+    def __repr__(self):
+        return f"Třída | {self.short_name}"
+
     def get_short_name_id_for_seznam(self):
         return {
             "id": self.id,

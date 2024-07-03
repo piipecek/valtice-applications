@@ -42,6 +42,9 @@
                         {% if "valtice_org" in roles %} 
                             <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Ostatní</a></li>
                         {% endif %}
+                        {% if "admin" in roles %}
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('admin_views.admin_dashboard')}}">Admin sekce</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

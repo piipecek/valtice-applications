@@ -33,14 +33,22 @@
     <hr>
     <h2>Vytvoření nové třídy</h2>
     <div class="row">
-        <div class="col-auto">
-            Krátký název třídy
+        <div class="col-sm-2">
+            Krátký název třídy:
         </div>
         <div class="col">
-            <input class="form-control" type="text" name="short_name" placeholder="Shalev Ad-El">
+            <input class="form-control" type="text" name="short_name" placeholder="Jméno Lektora | upřesnění">
         </div>
         <div class="col-auto">
             <button class="btn btn-primary" name="nova_trida" value="whatever" type="submit">Vytvořit</button>
+        </div>
+    </div>
+    <hr>
+    <h2>Vytvoření exportu systému</h2>
+    <div class="row">
+        <div class="col">Export slouží k archivaci dat po konci ročníku před tím, než bude systém promazán. Neslouží a nikdy nebude sloužit jako záloha dat, t.j. po promazání systému zůstanou ročníková data pouze ve vytvořeném .xlsx souboru.</div>
+        <div class="col-auto">
+            <button class="btn btn-primary" name="export" value="whatever" type="submit">Vytvořit export</button>
         </div>
     </div>
 </form>

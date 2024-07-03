@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, make_response, send_file
+from flask import Blueprint, render_template, request, flash, redirect, url_for, send_file
 from flask_login import current_user
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
@@ -9,6 +9,7 @@ import csv
 import json
 from datetime import datetime
 from io import StringIO
+from website.helpers.export import export
 
 valtice_views = Blueprint("valtice_views",__name__)
 
@@ -48,6 +49,9 @@ def home():
             v.update()
             id = v.id
             return redirect(url_for("valtice_views.uprava_tridy", id=id))
+        elif request.form.get("export"):
+            bytes = export()
+            return send_file(bytes, as_attachment=True, download_name="export.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         else:
             return request.form.to_dict()
     
