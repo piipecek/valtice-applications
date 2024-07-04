@@ -42,8 +42,21 @@
                         {% if "valtice_org" in roles %} 
                             <li class="nav-item"><a class="nav-link active" href="{{url_for('valtice_views.home')}}">Ostatní</a></li>
                         {% endif %}
-                        {% if "admin" in roles %}
-                            <li class="nav-item"><a class="nav-link active" href="{{url_for('admin_views.admin_dashboard')}}">Admin sekce</a></li>
+                    </ul>
+                    <ul class="navbar-nav d-flex">
+                        {% if "prihlasen" in roles %}
+                            {% if "user" in roles%} 
+                                <li class="nav-item"><a class="nav-link active" href="{{url_for('user_views.ucet')}}">Účet</a></li>
+                            {% endif %}
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.logout')}}">Logout</a></li>
+                            {% if "admin" in roles %}
+                            <a class="navbar-brand" href="{{url_for('admin_views.admin_dashboard')}}">
+                                <img src="{{url_for('static_sender.send_icon', filename='admin_dashboard.png')}}" alt="Admin Icon" width="30" height="30" class="d-inline-block align-top">
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.login')}}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.register')}}">Register</a></li>
                         {% endif %}
                     </ul>
                 </div>
