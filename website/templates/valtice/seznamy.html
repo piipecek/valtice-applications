@@ -139,10 +139,6 @@
                         <label class="form-check-label " for="finance_celkem">Finance - Celková částka</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_dar">
-                        <label class="form-check-label" for="finance_dar">Finance - Dar</label>
-                    </div>
-                    <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="finance_mena">
                         <label class="form-check-label" for="finance_mena">Finance - Měna</label>
                     </div>
@@ -150,6 +146,24 @@
                         <input class="form-check-input" type="checkbox" value="" id="finance_kategorie">
                         <label class="form-check-label" for="finance_kategorie">Finance - Kategorie</label>
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="finance_dar">
+                        <label class="form-check-label" for="finance_dar">Finance - Dar</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="finance_kurzovne">
+                        <label class="form-check-label" for="finance_kurzovne">Finance - Kurzovné</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="finance_strava">
+                        <label class="form-check-label" for="finance_strava">Finance - Strava</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="finance_ubytovani">
+                        <label class="form-check-label" for="finance_ubytovani">Finance - Ubytování</label>
+                    </div>
+
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="finance_korekce_kurzovne">
                         <label class="form-check-label" for="finance_korekce_kurzovne">Finance - Korekce kurzovné</label>
@@ -268,6 +282,11 @@
         </div>
     </div>
 </div>
+
+<div id="loader" hidden>
+    Načítám účastníky. Pokud to trvá déle, je to nejspíše kvůli tomu, že požadavek počítá kalkulace kažému účastníkovi.
+</div>
+
 <div id="druhy_krok" hidden>
     <button type="button" class="btn btn-primary" id="ukazat_parametry">Ukázat parametry výběru</button>
     <hr>

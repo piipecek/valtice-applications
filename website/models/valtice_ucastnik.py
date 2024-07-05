@@ -633,6 +633,12 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
                     entry["Měna"] = u.finance_mena
                 elif a == "finance_kategorie":
                     entry["Kategorie"] = "Dítě" if u.finance_kategorie == "dite" else "Student" if u.finance_kategorie == "student" else "Dospělý"
+                elif a == "finance_kurzovne":
+                    entry["Kurzovné"] = u.kalkulace()["prvni_trida"] + u.kalkulace()["vedlejsi_trida"]
+                elif a == "finance_ubytovani":
+                    entry["Ubytování"] = u.kalkulace()["ubytovani"]
+                elif a == "finance_strava":
+                    entry["strava"] = u.kalkulace()["snidane"] + u.kalkulace()["obedy"] + u.kalkulace()["vecere"]
                 elif a == "finance_korekce_kurzovne":
                     entry["Korekce kurzovné"] = u.finance_korekce_kurzovne
                 elif a == "finance_korekce_kurzovne_duvod":

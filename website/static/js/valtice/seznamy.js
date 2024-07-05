@@ -5,7 +5,7 @@ let tridy = JSON.parse(httpGet("/valtice_api/tridy_pro_seznamy"))
 // togglovani sekci
 document.getElementById("vytvorit_button").addEventListener("click", function() {
     document.getElementById("prvni_krok").hidden = true
-    document.getElementById("druhy_krok").hidden = false
+    document.getElementById("loader").hidden = false
     $.ajax({
         data : {
             ucel: "view",
@@ -15,7 +15,12 @@ document.getElementById("vytvorit_button").addEventListener("click", function() 
         url: "/valtice/seznamy"
     })
     .done(function(data) {
+        document.getElementById("loader").hidden = true
+        document.getElementById("druhy_krok").hidden = false
         vykreslit_tabulku(JSON.parse(data))
+    })
+    .fail(function() {
+        alert("Něco se nepovedlo")
     })
 })
 document.getElementById("ukazat_parametry").addEventListener("click", function() {
@@ -122,7 +127,7 @@ function vyhodnotit() {
 
 
     // atributy
-    let atributy_ids = ["cas", "vek", "email", "telefon", "finance_dne", "finance_celkem", "finance_dar", "finance_mena", "finance_kategorie", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
+    let atributy_ids = ["cas", "vek", "email", "telefon", "finance_dne", "finance_celkem", "finance_dar", "finance_mena", "finance_kategorie", "finance_kurzovne", "finance_strava", "finance_ubytovani", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
     let atributy = []
     for (let id of atributy_ids) {
         if (document.getElementById(id).checked) {
