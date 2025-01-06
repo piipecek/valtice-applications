@@ -45,9 +45,6 @@
                     </ul>
                     <ul class="navbar-nav d-flex">
                         {% if "prihlasen" in roles %}
-                            {% if "user" in roles%} 
-                                <li class="nav-item"><a class="nav-link active" href="{{url_for('user_views.ucet')}}">Účet</a></li>
-                            {% endif %}
                             <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.logout')}}">Logout</a></li>
                             {% if "admin" in roles %}
                             <a class="navbar-brand" href="{{url_for('admin_views.admin_dashboard')}}">

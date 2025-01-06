@@ -1,9 +1,6 @@
 {%extends "index.html"%}
 {% block nav_end%}
     {% if "prihlasen" in roles %}
-        {% if "user" in roles%} 
-            <li class="nav-item"><a class="nav-link active" href="{{url_for('user_views.ucet')}}">Účet</a></li>
-        {% endif %}
         <li class="nav-item mx-2"><a class="nav-link active" href="{{url_for('auth_views.logout')}}">Logout</a></li>
         {% if "admin" in roles %}
         <a class="navbar-brand" href="{{url_for('admin_views.admin_dashboard')}}">
@@ -11,35 +8,22 @@
         </a>
         {% endif %}
     {% else %}
-        <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.login')}}">Login</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.register')}}">Register</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.login')}}">Login - todo do patičky</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{url_for('auth_views.register')}}">Register - todo ditchnout</a></li>
     {% endif %}
 {% endblock %}
 
 {%block content%}
     <div class="d-flex justify-content-center">
-        <h1 class="my-2">Valtické přihlášky 2024</h1>
+        <h1 class="my-2">Valtické přihlášky - TODO</h1>
     </div>
     <div>
-        <p>
-            Tato stránka slouží jako nástroj pro náhled a editaci přihlášek na Valtice 2024. Přihlášky byly sesbírány přes google formuláře.
-            <ul>
-                <li>Ve formulářích se dá tabulka exportovat jako .csv, tento export se potom nahraje tady.</li>
-                <li>Při exportu do csv se vždy uloží právě aktivní list.</li>
-                <li>Jako unikátní označovač účastníka beru kombinaci časové značky, jména a příjmení.</li>
-                <li>Pokud tedy někdo dodatečně vyplní přihlášku, je možné celý .csv export nahrát znovu. Stávající účastníky to nepřepíše, pouze to přidá nové.</li>
-                <li>Pro jmenování nového účtu s přístupem kontaktujte Josefa Láta. Bude pootřeba vytvořit nový účet zde na stránce, kterému poté bude přidělena role <code>valtice_org</code></li>
-            </ul>
-        </p>
+        todo
     </div>
 {%endblock%}
 
 {% block footer %}
     <section class="container-sm border-orange border-2 rounded-3 p-2 footer-section my-3">
-        <a class="link" href="{{url_for('guest_views.known_bugs')}}">Známé připomínky</a>
-        <br>
-        <a class="link" href="{{url_for('guest_views.nahlasit_bug')}}">Nová připomínka, nápad, bug</a>
-        <br>
-        <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt</a>
+        <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na vývojáře</a>
     </section>
 {% endblock %}

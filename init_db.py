@@ -1,5 +1,5 @@
 # Tento skript připraví databázi při prvním spuštění.
-# je ošetřený proti opakovanému spuštění.
+# NENÍ ošetřený proti opakovanému spuštění.
 from website import create_app, db
 from website.models.user import User
 from website.models.cena import Cena
@@ -9,12 +9,18 @@ from werkzeug.security import generate_password_hash
 
 app = create_app()
 with app.app_context():
+    
+    #role
+    Role(system_name="organizator", display_name="Organizátor").update()
+    Role(system_name="admin", display_name="Admin").update()
+    Role(system_name="super_admin", display_name="Super admin").update()
+    
     # josef admin
     if User.get_by_email("josef.latj@gmail.com") is not None:
         print("Admin už je v db.")
     else:
         
-        josef = User(email="josef.latj@gmail.com", password=generate_password_hash("un1queValtice", method="sha256"))
+        josef = User(email="josef.latj@gmail.com", password=generate_password_hash("un1queValtice", method="scrypt"))
         for role in Role.get_all():
             josef.roles.append(role)
         db.session.add(josef)
@@ -37,8 +43,3 @@ with app.app_context():
     Cena(typ="strava", display_name="Oběd ZŠ", system_name="obed_zs").update()
     Cena(typ="strava", display_name="Večeře SŠ", system_name="vecere_ss").update()
     Cena(typ="strava", display_name="Večeře ZŠ", system_name="vecere_zs").update()
-    
-    #role
-    Role(system_name="organizator", display_name="Organizátor").update()
-    Role(system_name="admin", display_name="Admin").update()
-    Role(system_name="super_admin", display_name="Super admin").update()

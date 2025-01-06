@@ -1,6 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import current_user
-from website.models.suggestion import Suggestion
 from website.models.user import User, get_roles
 from website.models.role import Role
 from website.logs import delete_app_logs
@@ -17,24 +15,6 @@ def admin_dashboard():
     return render_template("admin/admin_dashboard.html", roles=get_roles())
 
 
-@admin_views.route("/uprava_znamych_bugu", methods=["GET","POST"])
-@require_role_system_name_on_current_user("editing_suggestions")
-def uprava_znamych_bugu():
-    if request.method == "GET":
-        return render_template("admin/admin_uprava_znamych_chyb.html", roles=get_roles())
-    else:
-        if _id := request.form.get("smazat_suggestion"):
-            Suggestion.get_by_id(_id).delete()
-            flash("Záznam smazán", category="success")
-        elif _id := request.form.get("ulozit_stav"):
-            popis = request.form.get(_id)
-            s = Suggestion.get_by_id(_id)
-            s.state = popis
-            s.update()
-            flash("Záznam upraven", category="success")
-        return redirect(url_for("admin_views.uprava_znamych_bugu"))
-    
-
 @admin_views.route("/logs_file", methods=["GET","POST"])
 @require_role_system_name_on_current_user("editing_app_logs")
 def logs_file():
@@ -44,48 +24,6 @@ def logs_file():
         delete_app_logs()
         flash("Logy úspěšně smazány", category="success")
         return redirect(url_for("admin_views.admin_dashboard"))
-
-
-@admin_views.route("/edit_users", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("editing_users")
-def edit_users():
-    if request.method == "GET":
-        return render_template("admin/admin_seznam_uzivatelu.html", roles=get_roles())
-    else:
-        result = request.form.get("result")
-        return redirect(url_for("admin_views.detail_usera", id=result))
-    
-@admin_views.route("/edit_admins", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("editing_users")
-def edit_admins():
-    if request.method == "GET":
-        return render_template("admin/admin_seznam_adminu.html", roles=get_roles())
-    else:
-        result = request.form.get("result")
-        return redirect(url_for("admin_views.detail_usera", id=result))
-
-@admin_views.route("/uprava_roli", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("editing_roles")
-def uprava_roli():
-    if request.method == "GET":
-        return render_template("admin/admin_uprava_roli.html", roles=get_roles())
-    else:
-        if request.form.get("smazat"):
-            system_name = request.form.get("smazat")
-            role: Role = Role.get_by_system_name(system_name)
-            role.delete()
-            flash("Role odebrána", category="success")
-            return redirect(url_for("admin_views.uprava_roli"))
-        else:
-            system_name = request.form.get("system_name")
-            display_name = request.form.get("display_name")
-            r = Role(system_name=system_name, display_name=display_name)
-            if Role.get_by_system_name(system_name):
-                flash("Role nebyla přidána, protože zadaný system_name je už použitý.", category="error")
-            else:
-                r.update()
-                flash("Role přidána", category="success")
-            return redirect(url_for("admin_views.uprava_roli"))
 
 @admin_views.route("/jmenovat_adminy", methods=["GET", "POST"])
 @require_role_system_name_on_current_user("editing_admins")

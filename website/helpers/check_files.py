@@ -2,6 +2,14 @@ import website.paths as p
 import json
 from website.logs import log
 
+def check_data_folder() -> None:
+    data_path = p.data_folder_path()
+    if data_path.exists():
+        log("data folder already exists")
+    else:
+        data_path.mkdir()
+        log("creating data folder at " + str(data_path))
+
 
 def check_logs_file() -> None:
     logs_path = p.log_file_path()

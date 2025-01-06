@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_mail import Mail
-from .helpers.check_files import check_logs_file
+from .helpers.check_files import check_logs_file, check_data_folder
 from .logs import log
 from .paths import dotenv_path
 
@@ -17,6 +17,7 @@ load_dotenv(dotenv_path=dotenv_path(), verbose=True)
 
 
 def create_app() -> Flask:
+    check_data_folder()
     check_logs_file()
     log("=== START appky ===")
     db_driver = os.environ.get("DB_DRIVER")
@@ -42,11 +43,9 @@ def create_app() -> Flask:
     from .views.guest_views import guest_views
     from .views.auth_views import auth_views
     from .views.admin_views import admin_views
-    from .views.user_views import user_views
     from .views.valtice_views import valtice_views
     from .api.admin_api import admin_api
     from .api.guest_api import guest_api
-    from .api.user_api import user_api
     from .api.valtice_api import valtice_api
     from .api.static_sender import static_sender
 
@@ -57,8 +56,6 @@ def create_app() -> Flask:
     app.register_blueprint(valtice_views, url_prefix = "/valtice")
     app.register_blueprint(admin_api, url_prefix = "/admin_api")
     app.register_blueprint(guest_api, url_prefix = "/guest_api")
-    app.register_blueprint(user_views, url_prefix = "/")
-    app.register_blueprint(user_api, url_prefix = "/user_api")
     app.register_blueprint(valtice_api, url_prefix = "/valtice_api")
     app.register_blueprint(static_sender, url_prefix="/static")
 
