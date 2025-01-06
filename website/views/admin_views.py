@@ -16,7 +16,7 @@ def admin_dashboard():
 
 
 @admin_views.route("/logs_file", methods=["GET","POST"])
-@require_role_system_name_on_current_user("editing_app_logs")
+@require_role_system_name_on_current_user("admin")
 def logs_file():
     if request.method == "GET":
         return render_template("admin/admin_logs_file.html", roles=get_roles())
@@ -26,7 +26,7 @@ def logs_file():
         return redirect(url_for("admin_views.admin_dashboard"))
 
 @admin_views.route("/jmenovat_adminy", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("editing_admins")
+@require_role_system_name_on_current_user("super_admin")
 def jmenovat_adminy():
     if request.method == "GET":
         return render_template("admin/admin_jmenovat_adminy.html", roles=get_roles())
@@ -36,7 +36,7 @@ def jmenovat_adminy():
         return redirect(url_for("admin_views.vybrat_role_adminovi", id=id))
     
 @admin_views.route("/jmenovat_adminy/<int:id>", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("editing_admins")
+@require_role_system_name_on_current_user("super_admin")
 def vybrat_role_adminovi(id):
     user = User.get_by_id(id)
     if request.method == "GET":
@@ -57,7 +57,7 @@ def vybrat_role_adminovi(id):
         
     
 @admin_views.route("/detail_usera/<int:id>", methods=["GET", "POST"])
-@require_role_system_name_on_current_user(["editing_users"])
+@require_role_system_name_on_current_user(["admin"])
 def detail_usera(id):
     if request.method == "GET":
         if id in [u.id for u in User.get_all()]:

@@ -14,7 +14,7 @@ from website.helpers.export import export
 valtice_views = Blueprint("valtice_views",__name__)
 
 @valtice_views.route("/", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def home():
     if request.method == "GET":
         return render_template("valtice/dashboard.html", roles=get_roles(current_user))
@@ -57,7 +57,7 @@ def home():
     
     
 @valtice_views.route("/ucastnik/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def ucastnik(id:int):
     if request.method == "GET":
         if Valtice_ucastnik.get_by_id(id) is None:
@@ -77,7 +77,7 @@ def ucastnik(id:int):
     
 # view na upravu ucastnika
 @valtice_views.route("/uprava_ucastnika/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def uprava_ucastnika(id:int):
     if request.method == "GET":
         if Valtice_ucastnik.get_by_id(id) is None:
@@ -112,7 +112,7 @@ def uprava_ucastnika(id:int):
     
     
 @valtice_views.route("/seznam_ucastniku", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def seznam_ucastniku():
     if request.method == "GET":
         return render_template("valtice/seznam_ucastniku.html", roles=get_roles(current_user))
@@ -121,7 +121,7 @@ def seznam_ucastniku():
     
 
 @valtice_views.route("/trida/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def trida(id:int):
     if request.method == "GET":
         return render_template("valtice/trida.html", id=id, roles=get_roles(current_user))
@@ -133,7 +133,7 @@ def trida(id:int):
         
 
 @valtice_views.route("/uprava_tridy/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def uprava_tridy(id:int):
     if request.method == "GET":
         return render_template("valtice/uprava_tridy.html", id=id, roles=get_roles(current_user))
@@ -155,7 +155,7 @@ def uprava_tridy(id:int):
     
 
 @valtice_views.route("/ceny", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def ceny():
     if request.method == "GET":
         return render_template("valtice/ceny.html", roles=get_roles(current_user))
@@ -175,7 +175,7 @@ def ceny():
             return request.form.to_dict()
         
 @valtice_views.route("/tridy", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def tridy():
     if request.method == "GET":
         return render_template("valtice/tridy.html", roles=get_roles(current_user))
@@ -187,7 +187,7 @@ def tridy():
         
        
 @valtice_views.route("/seznamy", methods=["GET","POST"])
-@require_role_system_name_on_current_user("valtice_org")
+@require_role_system_name_on_current_user("organizator")
 def seznamy():
     if request.method == "GET":
         return render_template("valtice/seznamy.html", roles=get_roles(current_user))

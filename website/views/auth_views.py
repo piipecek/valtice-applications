@@ -1,9 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from website.models.user import User
-from website.models.role import Role
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_required, login_user, logout_user, current_user
-from website import db
+from flask_login import login_required, logout_user, current_user
 from website.mail_handler import mail_sender
 
 auth_views = Blueprint("auth_views",__name__, template_folder="auth")
@@ -31,29 +29,6 @@ def login():
 		else:
 			flash("E-mail nebo heslo byly špatně", category="error")
 			return redirect(url_for("auth_views.login"))
-
-@auth_views.route("/register", methods=["GET","POST"])
-def register():
-	if current_user.is_authenticated:
-		return redirect(url_for("guest_views.dashboard"))
-	if request.method == "GET":
-		return render_template("auth/auth_register.html")
-	else:
-		email = request.form.get("email")
-		password = request.form.get("password")
-
-		user = User.get_by_email(email=email)
-		if user:
-			flash("Tento email je už zaregistrovaný. Použij prosím jiný", category="error")
-			return redirect(url_for("auth_views.register"))
-		else:
-			new_user = User(email=email, password=generate_password_hash(password, method="scrypt"))
-			new_user.roles.append(Role.get_by_system_name("user"))
-			new_user.update()
-			new_user.login()
-			# mail_sender(mail_identifier = "potvrzeni_emailu", target = new_user.email, data=new_user.get_reset_token())
-			flash("Úspěšná registrace.", category="success")
-			return redirect(url_for("guest_views.dashboard"))
 
 @auth_views.route("/logout")
 @login_required
