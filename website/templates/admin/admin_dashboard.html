@@ -6,9 +6,18 @@
 <div class="row p-2">
     {% if "super_admin" in roles %}
         <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
-            <a href="{{url_for('admin_views.jmenovat_adminy')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <a href="{{url_for('admin_views.new_admin')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
                 <div class="text-center">
-                    Udílení rolí
+                    Nový organizátorský účet
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "super_admin" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('admin_views.organizatori')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Organizátoři
                 </div>
             </a>
         </div>

@@ -13,25 +13,15 @@ admin_api = Blueprint("admin_api", __name__)
 def app_logs():
     return json.dumps(get_app_logs())
 
-@admin_api.route("/info_pro_upravu_roli")
-@require_role_system_name_on_current_user("super_admin")
-def info_pro_upravu_roli():
-    return json.dumps([r.get_info_for_admin() for r in Role.get_all()])
-
 @admin_api.route("/uzivatele_pro_udeleni_roli")
 @require_role_system_name_on_current_user("super_admin")
 def uzivatele_pro_udeleni_roli():
-    return json.dumps(User.get_seznam_pro_jmenovani_adminu())
+    return json.dumps(User.get_seznam_pro_udileni_roli())
 
 @admin_api.route("/role_uzivatele/<int:id>")
 @require_role_system_name_on_current_user("super_admin")
 def role_uzivatele(id):
     return json.dumps([r.system_name for r in User.get_by_id(id).roles])
-
-@admin_api.route("/both_names_of_all_roles")
-@require_role_system_name_on_current_user("super_admin")
-def both_names_of_all_roles():
-    return json.dumps([r.get_info_for_jmenovani() for r in Role.get_all()])
 
 @admin_api.route("/detail_usera/<int:id>")
 @require_role_system_name_on_current_user("admin")

@@ -25,35 +25,15 @@ def logs_file():
         flash("Logy úspěšně smazány", category="success")
         return redirect(url_for("admin_views.admin_dashboard"))
 
-@admin_views.route("/jmenovat_adminy", methods=["GET", "POST"])
+@admin_views.route("/organizatori", methods=["GET", "POST"])
 @require_role_system_name_on_current_user("super_admin")
-def jmenovat_adminy():
+def organizatori():
     if request.method == "GET":
-        return render_template("admin/admin_jmenovat_adminy.html", roles=get_roles())
+        return render_template("admin/organizatori.html", roles=get_roles())
     else:
         id = int(request.form.get("result"))
         print(id)
         return redirect(url_for("admin_views.vybrat_role_adminovi", id=id))
-    
-@admin_views.route("/jmenovat_adminy/<int:id>", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("super_admin")
-def vybrat_role_adminovi(id):
-    user = User.get_by_id(id)
-    if request.method == "GET":
-        return render_template("admin/admin_vybrat_role_adminovi.html", user=user, roles=get_roles())
-    else:
-        if request.form.get("detail"):
-            return redirect(url_for("admin_views.detail_usera", id=request.form.get("detail")))
-        else:
-            nove_role = json.loads(request.form.get("result"))
-            nove_role_objekty = [Role.get_by_system_name(r) for r in nove_role]
-            if user.roles == nove_role_objekty:
-                pass
-            else:
-                user.roles = nove_role_objekty
-                user.update()
-            flash("Role byly upraveny.", category="success")
-            return redirect(url_for("admin_views.jmenovat_adminy"))
         
     
 @admin_views.route("/detail_usera/<int:id>", methods=["GET", "POST"])
@@ -74,5 +54,33 @@ def detail_usera(id):
                 user_na_odstraneni.delete()
                 flash("User smazán", category="success")
             return redirect(url_for("admin_views.admin_dashboard"))
-        else:
+        elif nove_role := request.form.get("nove_role"):
+            nove_role_objekty = [Role.get_by_system_name(r) for r in json.loads(nove_role)]
+            user = User.get_by_id(id)
+            if user.roles == nove_role_objekty:
+                pass
+            else:
+                user.roles = nove_role_objekty
+                user.update()
+            flash("Role byly upraveny.", category="success")
+            return redirect(url_for("admin_views.detail_usera", id=id))
+        else:    
             return request.form.to_dict()
+
+@admin_views.route("/new_admin", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("super_admin")
+def new_admin():
+    if request.method == "GET":
+        return render_template("admin/new_admin.html", roles=get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        if User.get_by_email(email):
+            flash("Uživatel s tímhle emailem už existuje.", category="error")
+            return redirect(url_for("admin_views.new_admin"))
+        else:
+            user = User(email=email, password=password)
+            user.roles.append(Role.get_by_system_name("organizator"))
+            user.update()
+            flash("Admin vytvořen", category="success")
+            return redirect(url_for("admin_views.organizatori"))

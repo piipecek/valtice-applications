@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+{% block content %}
+<h2>Založená nového organizátorského účtu</h2>
+<form method="post">
+    <div class="row my-2">
+        <div class="col-2">
+            E-mail:
+        </div>
+        <div class="col">
+            <input type="email" name="email" required class="form-control">
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-2">
+            Heslo:
+        </div>
+        <div class="col">
+            <input type="text" name="password" required class="form-control">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Založit</button>
+</form>
+
+{% endblock %}

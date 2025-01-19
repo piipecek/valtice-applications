@@ -52,20 +52,15 @@ class User(Common_methods_db_model, UserMixin):
         return User.get_by_id(data["user_id"])
     
     @staticmethod
-    def get_seznam_pro_jmenovani_adminu() -> list:
-        result = {
-            "admins": [],
-            "users": []
-        }
+    def get_seznam_pro_udileni_roli() -> list:
+        result = []
         for u in User.get_all():
             data = {
                 "id": u.id,
-                "email": u.email
+                "email": u.email,
+                "role": ", ".join([r.display_name for r in u.roles])
             }
-            if "admin" in get_roles(u):
-                result["admins"].append(data)
-            else:
-                result["users"].append(data)
+            result.append(data)
         return result
     
     def get_info_pro_seznam_useru(self) -> dict:

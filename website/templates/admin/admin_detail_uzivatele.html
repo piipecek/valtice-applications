@@ -5,11 +5,36 @@
 <div class="row">
     <div class="col-sm-5" id="parent_div"></div>
 </div>
+<hr>
+<h2>Role uživatele</h2>
+<button class="btn btn-success" id="save_roles_button" type="button">Uložit role</button>
+
+<div id="check_div" class="my-2">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="organizator" value="organizator">
+        <label class="form-check-label" for="organizator">Organizátor</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="admin" value="admin">
+        <label class="form-check-label" for="admin">Admin</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="super_admin" value="super_admin">
+        <label class="form-check-label" for="super_admin">Super admin</label>
+    </div>
+</div>
+
+<hr>
 <form method="post">
     <button type="submit" class="btn btn-danger" name="smazat" value="whatever">Smazat uživatele</button>
+</form>
+<form method="post" id="form">
+    <input hidden id="result" name="nove_role"/>
 </form>
 
 
 <script type="module" src="{{url_for('static', filename='js/admin/admin_detail_uzivatele.js')}}"></script>
 
 {% endblock %}
+
+<!-- chybi mi tu form id form -->
