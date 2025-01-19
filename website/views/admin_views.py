@@ -11,19 +11,19 @@ admin_views = Blueprint("admin_views",__name__)
 @admin_views.route("/")
 @admin_views.route("/dashboard")
 @require_role_system_name_on_current_user("admin")
-def admin_dashboard():
-    return render_template("admin/admin_dashboard.html", roles=get_roles())
+def dashboard():
+    return render_template("admin/dashboard.html", roles=get_roles())
 
 
 @admin_views.route("/logs_file", methods=["GET","POST"])
 @require_role_system_name_on_current_user("admin")
 def logs_file():
     if request.method == "GET":
-        return render_template("admin/admin_logs_file.html", roles=get_roles())
+        return render_template("admin/logs_file.html", roles=get_roles())
     else:
         delete_app_logs()
         flash("Logy úspěšně smazány", category="success")
-        return redirect(url_for("admin_views.admin_dashboard"))
+        return redirect(url_for("admin_views.dashboard"))
 
 @admin_views.route("/organizatori", methods=["GET", "POST"])
 @require_role_system_name_on_current_user("super_admin")
@@ -41,7 +41,7 @@ def organizatori():
 def detail_usera(id):
     if request.method == "GET":
         if id in [u.id for u in User.get_all()]:
-            return render_template("admin/admin_detail_uzivatele.html", roles=get_roles(), id=id)
+            return render_template("admin/detail_uzivatele.html", roles=get_roles(), id=id)
         else:
             flash("Uživatel s tímhle ID neexistuje.", category="error")
             return redirect(url_for("admin_views.edit_users"))
@@ -53,7 +53,7 @@ def detail_usera(id):
             else:
                 user_na_odstraneni.delete()
                 flash("User smazán", category="success")
-            return redirect(url_for("admin_views.admin_dashboard"))
+            return redirect(url_for("admin_views.dashboard"))
         elif nove_role := request.form.get("nove_role"):
             nove_role_objekty = [Role.get_by_system_name(r) for r in json.loads(nove_role)]
             user = User.get_by_id(id)
