@@ -7,11 +7,11 @@ let tc = new TableCreator(document.getElementById("parent_div"), true, true, tru
 tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])
 ucastnici.forEach(element => {
     let jmeno_a = document.createElement("a")
-    jmeno_a.href = "/valtice/ucastnik/" + element["id"]
+    jmeno_a.href = "/organizator/ucastnik/" + element["id"]
     jmeno_a.innerText = element["full_name"]
     jmeno_a.setAttribute("class", "jmeno-a")
     let trida_a = document.createElement("a")
-    trida_a.href = "/valtice/trida/" + element["hlavni_trida_1_id"]
+    trida_a.href = "/organizator/trida/" + element["hlavni_trida_1_id"]
     trida_a.innerText = element["hlavni_trida_1"]
     trida_a.setAttribute("class", "trida-a")
     let email_element

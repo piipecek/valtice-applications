@@ -12,7 +12,7 @@ document.getElementById("vytvorit_button").addEventListener("click", function() 
             result: JSON.stringify(vyhodnotit())
         },
         type: "POST",
-        url: "/valtice/seznamy"
+        url: "/organizator/seznamy"
     })
     .done(function(data) {
         document.getElementById("loader").hidden = true

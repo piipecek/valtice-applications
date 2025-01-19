@@ -313,19 +313,19 @@ class Valtice_ucastnik(Common_methods_db_model, UserMixin):
             "admin_poznamka": self.admin_poznamka if self.admin_poznamka else "-",
             "hlavni_trida_1": {
                 "name": Valtice_trida.get_by_id(self.hlavni_trida_1_id).full_name if self.hlavni_trida_1_id else "-",
-                "link": "/valtice/trida/" + str(self.hlavni_trida_1_id) if self.hlavni_trida_1_id else None
+                "link": "/organizator/trida/" + str(self.hlavni_trida_1_id) if self.hlavni_trida_1_id else None
             },
             "hlavni_trida_2": {
                 "name": Valtice_trida.get_by_id(self.hlavni_trida_2_id).full_name if self.hlavni_trida_2_id else "-",
-                "link": "/valtice/trida/" + str(self.hlavni_trida_2_id) if self.hlavni_trida_2_id else None
+                "link": "/organizator/trida/" + str(self.hlavni_trida_2_id) if self.hlavni_trida_2_id else None
             },
             "vedlejsi_trida_placena": {
                 "name": Valtice_trida.get_by_id(self.vedlejsi_trida_placena_id).full_name if self.vedlejsi_trida_placena_id else "-",
-                "link": "/valtice/trida/" + str(self.vedlejsi_trida_placena_id) if self.vedlejsi_trida_placena_id else None
+                "link": "/organizator/trida/" + str(self.vedlejsi_trida_placena_id) if self.vedlejsi_trida_placena_id else None
             },
             "vedlejsi_trida_zdarma": {
                 "name": Valtice_trida.get_by_id(self.vedlejsi_trida_zdarma_id).full_name if self.vedlejsi_trida_zdarma_id else "-",
-                "link": "/valtice/trida/" + str(self.vedlejsi_trida_zdarma_id) if self.vedlejsi_trida_zdarma_id else None
+                "link": "/organizator/trida/" + str(self.vedlejsi_trida_zdarma_id) if self.vedlejsi_trida_zdarma_id else None
             },
             "finance_dne": pretty_datetime(self.finance_dne) if self.finance_dne else "Zatím neplaceno",
             "finance_celkem": pretty_penize(kalkulace["celkem"]),
