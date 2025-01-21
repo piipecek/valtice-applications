@@ -5,6 +5,7 @@ from website.models.valtice_ucastnik import Valtice_ucastnik
 from website.models.valtice_trida import Valtice_trida
 from website.models.cena import Cena
 from website.models.user import get_roles
+from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time
 import csv
 import json
 from datetime import datetime
@@ -53,6 +54,26 @@ def settings():
         elif request.form.get("export"):
             bytes = export()
             return send_file(bytes, as_attachment=True, download_name="export.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        elif request.form.get("datum_cas_start"):
+            applications_start_date = request.form.get("applications_start_date")
+            applications_start_time = request.form.get("applications_start_time")
+            if not all([applications_start_date, applications_start_time]):
+                flash("Nebyl vyplněn datum nebo čas začátku přihlášek.", category="error")
+                return redirect(url_for("org_views.settings"))
+            else:
+                set_applications_start_date_and_time(applications_start_date, applications_start_time)
+                flash("Datum a čas začátku přihlášek byl změněn.", category="success")
+                return redirect(url_for("org_views.settings"))
+        elif request.form.get("datum_cas_end"):
+            applications_end_date = request.form.get("applications_end_date")
+            applications_end_time = request.form.get("applications_end_time")
+            if not all([applications_end_date, applications_end_time]):
+                flash("Nebyl vyplněn datum nebo čas konce přihlášek.", category="error")
+                return redirect(url_for("org_views.settings"))
+            else:
+                set_applications_end_date_and_time(applications_end_date, applications_end_time)
+                flash("Datum a čas konce přihlášek byl změněn.", category="success")
+                return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()
     

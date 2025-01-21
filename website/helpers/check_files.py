@@ -18,4 +18,21 @@ def check_logs_file() -> None:
     else:
         logs_path.touch()
         log("creating (this) log file at  " + str(logs_path))
+        
+
+def check_settings_file() -> None:
+    settings_path = p.settings_path()
+    if settings_path.exists():
+        log("settings file already exists")
+    else:
+        with open(settings_path, "w") as f:
+            json.dump(
+                {
+                    "applications_start_date": "2025-01-01",
+                    "applications_start_time": "00:00",
+                    "applications_end_date": "2025-01-01",
+                    "applications_end_time": "00:00",
+                }
+                , f)
+        log("creating settings file at " + str(settings_path))
 

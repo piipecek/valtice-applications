@@ -1,6 +1,44 @@
 {% extends "index.html" %}
 {% block content %}
 <form method="post" enctype="multipart/form-data">
+    <h2>Datum a čas otevření přihlášek</h2>
+    <div class="row">
+        <div class="col-12 col-sm-1 my-1">
+            Datum:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="date" name="applications_start_date" id="applications_start_date">
+        </div>
+        <div class="col-12 col-sm-1 my-1">
+            Čas:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="time" name="applications_start_time" id="applications_start_time">
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="btn btn-primary" name="datum_cas_start" value="whatever" type="submit">Uložit</button>
+        </div>
+    </div>
+    <hr>   
+    <h2>Uzavření přihlášek</h2>
+    <div class="row">
+        <div class="col-12 col-sm-1 my-1">
+            Datum:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="date" name="applications_end_date" id="applications_end_date">
+        </div>
+        <div class="col-12 col-sm-1 my-1">
+            Čas:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="time" name="applications_end_time" id="applications_end_time">
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="btn btn-primary" name="datum_cas_end" value="whatever" type="submit">Uložit</button>
+        </div>
+    </div>
+    <hr>
     <h2>Nahrávání nové .csv tabulky</h2>
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
@@ -59,6 +97,6 @@
     <input type="hidden" name="delete_all" value="whatever">
 </form>
 
-<script type="module" src="{{url_for('static', filename='js/organizator/dashboard.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/organizator/settings.js')}}"></script>
 
 {% endblock %}

@@ -11,3 +11,6 @@ def ikonky_folder_path() -> Path:
 
 def data_folder_path() -> Path:
     return Path.cwd() / "data"
+
+def settings_path() -> Path:
+    return Path.cwd() / "data" / "settings.json"
