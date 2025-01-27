@@ -7,8 +7,8 @@ from socket import gaierror
 def mail_sender(mail_identifier, target, data) -> None:
     try:    
         if mail_identifier == "reset_password":
-            msg = Message("Změna hesla na 3D Portálu",
-                        sender="josef.latj@gmail.com",
+            msg = Message("Změna hesla na Valtickém přihláškovém systému",
+                        sender="application@early-music.cz",
                         recipients=[target])
             msg.html = render_template("mails/reset_password.html", url=url_for("auth_views.reset_password", token = data, _external = True))
             mail.send(msg)

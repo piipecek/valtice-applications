@@ -21,24 +21,7 @@ def settings():
     if request.method == "GET":
         return render_template("organizator/settings.html", roles=get_roles(current_user))
     else:
-        if request.form.get("soubor"):
-            if 'file' not in request.files:
-                flash("Nebyl nahrán žádný soubor", category="error")
-                return redirect(request.url)
-            file = request.files['file']
-            if file.filename == '':
-                flash("Nebyl nahrán žádný soubor", category="error")
-                return redirect(request.url)
-            if file and file.filename.endswith('.csv'):
-                text_stream = StringIO(file.stream.read().decode('utf-8'))
-                csv_reader = csv.reader(text_stream, delimiter=',')
-                rows = list(csv_reader)
-                result = Valtice_ucastnik.vytvorit_nove_ucastniky_z_csv(rows)
-                flash(f"Bylo úspěšně vytvořeno {result['new']} nových účastníků, přeskočeno bylo {result['skipped']} existujících.", category="success")
-                return redirect(request.url)
-            else:
-                return 'Invalid file format'
-        elif request.form.get("delete_all"):
+        if request.form.get("delete_all"):
             for u in Valtice_ucastnik.get_all():
                 u.delete()
             flash("Všichni účastníci byli smazáni", category="success")
