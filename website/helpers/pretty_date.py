@@ -14,3 +14,10 @@ def pretty_datetime(_date: Union[str, datetime]) -> str:
         return f"{_date.day}. {_date.month}. {_date.year}, {_date.hour}:{minute}:{second}"
     elif isinstance(_date, date):
         return f"{_date.day}. {_date.month}. {_date.year}"
+
+def pretty_date(_date: Union[str, date]) -> str:
+    if isinstance(_date, str):
+        year, month, day = _date.split("-")
+        return f"{day}. {month}. {year}"
+    elif isinstance(_date, date):
+        return f"{_date.day}. {_date.month}. {_date.year}"
