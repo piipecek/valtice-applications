@@ -9,7 +9,7 @@ auth_views = Blueprint("auth_views",__name__, template_folder="auth")
 @auth_views.route("/login", methods=["GET","POST"])
 def login():
 	if current_user.is_authenticated:
-		return redirect(url_for("guest_views.dashboard"))
+		return redirect(url_for("guest_views.cz_dashboard"))
 	if request.method == "GET":
 		return render_template("auth/auth_login.html")
 	else:
@@ -25,7 +25,7 @@ def login():
 		if user and check_password_hash(user.password, password):
 			user.login()
 			flash("úspěšné přihlášení", category="success")
-			return redirect(url_for("guest_views.dashboard"))
+			return redirect(url_for("guest_views.cz_dashboard"))
 		else:
 			flash("E-mail nebo heslo byly špatně", category="error")
 			return redirect(url_for("auth_views.login"))
@@ -35,7 +35,7 @@ def login():
 def logout():
 	logout_user()
 	flash("Odhlášení proběhlo úspěšně.", category="info")
-	return redirect(url_for("guest_views.dashboard"))
+	return redirect(url_for("guest_views.cz_dashboard"))
 
 
 @auth_views.route("/reset_password", methods=["GET","POST"])
