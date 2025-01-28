@@ -55,10 +55,8 @@
     </section>
 
     <section class="container-sm border-orange border-2 rounded-3 p-2 footer-section my-3">
-        Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na vývojáře</a><br>
-        {% if "prihlasen" not in roles %}
-            <a class="link" href="{{url_for('auth_views.login')}}">Přihlášení pro organizátory</a>
-        {% endif %}
+        {% block footer %}
+        {% endblock %}
 
     </section>
 

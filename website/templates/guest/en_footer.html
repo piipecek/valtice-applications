@@ -1,0 +1,16 @@
+{% extends"index.html" %}
+
+{% block footer %}
+
+<div class="row">
+    <div class="col">
+        Found a bug? <a class="link" target="_blank" href="https://t.me/piipecek">Contact the organisers</a><br>
+    </div>
+    <div class="col-auto">
+        <a href="{{url_for('guest_views.cz_dashboard')}}">
+            <img src="{{url_for('static', filename='img/ikonky/czech-republic.png')}}" alt="CZ" style="width: 40px;">
+        </a>
+    </div>
+</div>
+
+{% endblock %}

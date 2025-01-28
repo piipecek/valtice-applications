@@ -34,6 +34,10 @@ def get_faze_for_dashboard() -> str:
     else:
         return "pri"
 
-def get_datetime_zacatku_for_dashboard() -> str:
+def get_date_zacatku_for_dashboard() -> str:
     settings = get_settings()
-    return f"{pretty_date(settings['applications_start_date'])} v {settings['applications_start_time']}"
+    return f"{pretty_date(settings['applications_start_date'])}"
+
+def get_time_zacatku_for_dashboard() -> str:
+    settings = get_settings()
+    return f"{settings['applications_start_time']}"
