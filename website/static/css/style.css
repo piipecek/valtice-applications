@@ -4,9 +4,7 @@ body {
 header{
     background-color: #99D5EC;
 }
-.dropdown-menu{
-    background-color: #FFF5D3 !important;
-}
+
 .alertcolor-info {
     background-color: rgb(253, 235, 138  );
 }
@@ -16,16 +14,12 @@ header{
 .alertcolor-success {
     background-color: rgb(138, 253, 138  );
 }
-canvas {
-    background-color: white;
-}
+
 .border-orange{
     border: 1px solid;
     border-color: rgb(243,133,8);
 }
-.vydaje-white-div {
-    background-color: white;
-}
+
 .main-section{
     background-color: #FFF5D3;
 }
@@ -47,6 +41,7 @@ canvas {
 .footer-section{
     background-color: #FFF5D3;
 }
+
 .custom-button{
     background-color: rgb(243,133,8) !important;
     color: white !important;
@@ -56,11 +51,12 @@ canvas {
     color: rgb(243,133,8) !important;
     border-color: rgb(243,133,8) !important;
 }
+
 .tooltip1 {
     position: relative;
 }
   
-  .tooltip1 .tooltiptext1 {
+.tooltip1 .tooltiptext1 {
     visibility: hidden;
     width: auto;
     min-width: 100px;
@@ -81,81 +77,6 @@ canvas {
   
   .tooltip1:hover .tooltiptext1 {
     visibility: visible;
-}
-
-.evaluace_pocet{
-    width: auto !important;
-    display: inline !important;
-}
-
-.question_div {
-    background-color: #FFF1E2;
-}
-
-.italic_popisek {
-    font-style: italic;
-}
-
-.plot-div {
-    background-color: #FFF1E2;
-    /* width: 80%; */
-    border: 1px solid;
-    border-radius: .3rem;
-    border-color: rgb(243,133,8);
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-.canvas-div-wrapper{
-    display: flex;
-    justify-content: center;
-    max-width: 800px;
-    margin: auto;
-}
-
-.canvas-div{
-    width: 90%;
-}
-.otazka{
-    font-weight: bold;
-}
-
-.odpoved-div{
-    background-color: white;
-    padding: .2rem;
-    margin-bottom: .5rem;
-    font-style: italic;
-    border: 1px solid;
-    border-radius: .3rem;
-    border-color: rgb(243,133,8);
-}
-
-.totpal_hra_div{
-    text-align: center;
-}
-
-.totpal_topic{
-    font-size: 10vw;
-}
-
-.ctvrtletka-canvas-wrapper{
-    display: flex;
-    justify-content: center
-}
-
-.ctvrtletka-canvas-div{
-    width: 80%
-}
-
-.ctvrtletka-prumery{
-    text-align: center;
-}
-
-.dny_histogram_div{
-    display: flex;
-    justify-content: center;
-    max-width: 800px;
-    margin: auto;
 }
 
 .btn-narrow{
