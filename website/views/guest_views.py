@@ -24,3 +24,12 @@ def cz_prihlaska():
 @guest_views.route("/en_prihlaska")
 def en_prihlaska():
     return render_template("guest/en_prihlaska.html")
+
+@guest_views.route("/informace")
+def cz_info():
+    return render_template("guest/cz_info.html")
+
+@guest_views.route("/en_informace")
+def en_info():
+    return render_template("guest/en_info.html")
+
