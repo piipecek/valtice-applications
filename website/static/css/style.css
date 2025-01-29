@@ -172,3 +172,15 @@ canvas {
     text-decoration: none !important;
     color: black;
 }
+
+.logo{
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo a img {
+    height: 132px;
+}

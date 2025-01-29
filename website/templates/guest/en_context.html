@@ -1,5 +1,13 @@
 {% extends"index.html" %}
 
+{% block logo %}
+    <div class="logo">
+        <a href="{{url_for('guest_views.en_dashboard')}}">
+            <img src="{{url_for('static', filename='img/logo_en.png')}}" alt="Valtické logo">
+        </a>
+    </div>
+{% endblock %}
+
 {% block footer %}
 
 <div class="row">
