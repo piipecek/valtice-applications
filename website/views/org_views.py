@@ -6,11 +6,10 @@ from website.models.valtice_trida import Valtice_trida
 from website.models.cena import Cena
 from website.models.user import get_roles
 from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time
-import csv
 import json
 from datetime import datetime
-from io import StringIO
 from website.helpers.export import export
+from website.paths import logo_cz_path, logo_en_path
 
 org_views = Blueprint("org_views",__name__)
 
@@ -57,6 +56,22 @@ def settings():
                 set_applications_end_date_and_time(applications_end_date, applications_end_time)
                 flash("Datum a čas konce přihlášek byl změněn.", category="success")
                 return redirect(url_for("org_views.settings"))
+        elif request.form.get("nahrat_logo_cz"):
+            if "logo_cz" in request.files and request.files["logo_cz"].filename:
+                logo_cz = request.files["logo_cz"]
+                logo_cz.save(logo_cz_path())
+                flash("Logo bylo nahráno", category="success")
+            else:
+                flash("Soubor nebyl nahrán", category="error")
+            return redirect(url_for("org_views.settings"))
+        elif request.form.get("nahrat_logo_en"):
+            if "logo_en" in request.files and request.files["logo_en"].filename:
+                logo_en = request.files["logo_en"]
+                logo_en.save(logo_en_path())
+                flash("Logo bylo nahráno", category="success")
+            else:
+                flash("Soubor nebyl nahrán", category="error")
+            return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()
     

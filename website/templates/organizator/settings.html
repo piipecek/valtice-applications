@@ -1,4 +1,4 @@
-{% extends"guest/cz_footer.html" %}
+{% extends"guest/cz_context.html" %}
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     <h2>Datum a čas otevření přihlášek</h2>
@@ -66,6 +66,30 @@
         </div>
         <div class="col-auto">
             <button class="btn btn-primary" name="nova_trida" value="whatever" type="submit">Vytvořit</button>
+        </div>
+    </div>
+    <hr>
+    <h2>Nahrání nového loga ročníku</h2>
+    <div class="row">
+        <div class="col-sm-2">
+            České logo
+        </div>
+        <div class="col">
+            <input class="form-control" type="file" name="logo_cz" accept=".png">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" name="nahrat_logo_cz" value="whatever" type="submit">Nahrát</button>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-sm-2">
+            Anglické logo
+        </div>
+        <div class="col">
+            <input class="form-control" type="file" name="logo_en" accept=".png">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" name="nahrat_logo_en" value="whatever" type="submit">Nahrát</button>
         </div>
     </div>
     <hr>
