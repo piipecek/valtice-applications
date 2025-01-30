@@ -2,14 +2,13 @@
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
-<h2>Detail účastníka <span id="full_name"></span></h2>
-<div class="d-flex justify-content-between">
-    <form method="post">
-        <button type="submit" class="btn btn-success" name="edit_button" value="whatever">Upravit</button>
-    </form>
-</div>
+<h1>Detail účastníka <span id="full_name"></span></h1>
 <hr>
-<h3>Vybrané informace</h3>
+<form method="post">
+    <button type="submit" class="custom_button" name="edit_button" value="whatever">Upravit</button>
+</form>
+<hr>
+<h2>Vybrané informace</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
@@ -27,8 +26,8 @@
         </tbody>
     </table>
 </div>
-
-<h3>Obecné</h3>
+<hr>
+<h2>Obecné</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
@@ -41,7 +40,7 @@
                 <td id="cas_registrace"></td>
                 <td>
                     <form method="post" id="zaregistrovat_form">
-                        <button class="btn btn-primary" name="zaregistrovat" value="whatever">Zaregistrovat teď</button>
+                        <button class="custom_button" name="zaregistrovat" value="whatever">Zaregistrovat teď</button>
                     </form>
                 </td>
             </tr>
@@ -116,7 +115,8 @@
         </tbody>
     </table>
 </div>
-<h3>Finance</h3>
+<hr>
+<h2>Finance</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
@@ -183,7 +183,8 @@
         </tbody>
     </table>
 </div>
-<h3>Strava</h3>
+<hr>
+<h2>Strava</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>

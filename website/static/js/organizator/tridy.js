@@ -10,7 +10,7 @@ tc.make_header(["Název", "Detail"])
 for (let trida of tridy){
     let detail_button = document.createElement("button")
     detail_button.innerText = "Detail"
-    detail_button.classList.add("btn", "btn-success", "btn-narrow")
+    detail_button.classList.add("custom_button", "custom_button_narrow")
     detail_button.name = "trida"
     detail_button.value = trida["id"]
     tc.make_row([trida["short_name"], detail_button])

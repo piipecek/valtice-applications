@@ -1,28 +1,24 @@
 {% extends"index.html" %}
 
+{% block flag %}
+    <a href="{{url_for('guest_views.en_dashboard')}}" class="flag">
+        <img src="{{url_for('static', filename='img/ikonky/united-kingdom.png')}}" alt="CZ">
+    </a>
+{% endblock %}
+
 {% block logo %}
     <div class="logo">
-        <a href="{{url_for('guest_views.cz_dashboard')}}">
+        <a href="https://www.early-music.cz/aktualni-rocnik/">
             <img src="{{url_for('static', filename='img/logo_cz.png')}}" alt="Valtické logo">
         </a>
     </div>
 {% endblock %}
 
 {% block footer %}
-
-<div class="row">
-    <div class="col">
-        Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na vývojáře</a><br>
-        {% if "prihlasen" not in roles %}
-            <a class="link" href="{{url_for('auth_views.login')}}">Přihlášení pro organizátory</a><br>
-        {% endif %}
-        <a class="link" href="{{url_for('guest_views.cz_info')}}">Cookies a GDPR</a>
-    </div>
-    <div class="col-auto">
-        <a href="{{url_for('guest_views.en_dashboard')}}">
-            <img src="{{url_for('static', filename='img/ikonky/united-kingdom.png')}}" alt="CZ" style="width: 40px;">
-        </a>
-    </div>
-</div>
-
+    Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na vývojáře</a><br>
+    {% if "prihlasen" not in roles %}
+        <a class="link" href="{{url_for('auth_views.login')}}">Přihlášení pro organizátory</a><br>
+    {% endif %}
+    <a class="link" href="{{url_for('guest_views.cz_info')}}">Cookies a GDPR</a><br>
+    <a class="link" href="{{url_for('guest_views.cz_dashboard')}}">Zpět domů</a>
 {% endblock %}

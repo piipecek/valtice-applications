@@ -1,15 +1,17 @@
 {% extends"guest/cz_context.html" %}
 {% block content %}
+<h1>Úpravy cen</h1> 
+<hr>
 <form method="post">
-<h2>Úpravy cen</h2> <button type="submit" class="btn btn-primary" name="ulozit" value="whatever">Uložit změny</button>
+    <button type="submit" class="custom_button" name="ulozit" value="whatever">Uložit změny</button>
     <hr>
-    <h3>Kurzovné</h3>
+    <h2>Kurzovné</h2>
     <div id="table_kurzovne"></div>
     <hr>
-    <h3>Strava</h3>
+    <h2>Strava</h2>
     <div id="table_strava"></div>
     <hr>
-    <h3>Ubytování</h3>
+    <h2>Ubytování</h2>
     <div id="table_ubytovani"></div>
 </form>
 

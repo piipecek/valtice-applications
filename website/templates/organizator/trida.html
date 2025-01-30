@@ -2,13 +2,14 @@
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
-<h2>Detail Třídy <span id="full_name"></span></h2>
-<form method="post">
-    <button type="submit" class="btn btn-primary" name="upravit" value="whatever">Upravit</button>
-</form>
-<p><span id="celkem"></span></p>
+<h1>Detail Třídy <span id="full_name"></span></h1>
 <hr>
-<h3>Hlavní třída - 1. volba</h3>
+<p><span id="celkem"></span></p>
+<form method="post">
+    <button type="submit" class="custom_button" name="upravit" value="whatever">Upravit</button>
+</form>
+<hr>
+<h2>Hlavní třída - 1. volba</h2>
 <p><span id="prvni_trida_count"></span></p>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
@@ -23,7 +24,7 @@
         </tbody>
     </table>
 </div>
-<h3>Vedlejší třída - placená</h3>
+<h2>Vedlejší třída - placená</h2>
 <p><span id="vedlejsi_placena_count"></span></p>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
@@ -38,7 +39,7 @@
         </tbody>
     </table>
 </div>
-<h3>Vedlejší třída - zdarma</h3>
+<h2>Vedlejší třída - zdarma</h2>
 <p><span id="vedlejsi_zdarma_count"></span></p>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
@@ -53,7 +54,7 @@
         </tbody>
     </table>
 </div>
-<h3>Hlavní třída - 2. volba</h3>
+<h2>Hlavní třída - 2. volba</h2>
 <p><span id="druha_trida_count"></span></p>
 <div class="table-responsive">
     <table class="table table-hover table-striped">

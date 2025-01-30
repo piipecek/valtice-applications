@@ -1,7 +1,8 @@
 {% extends"guest/cz_context.html" %}
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
-<h2>Generování seznamů</h2>
+<h1>Generování seznamů</h1>
+<hr>
 <div id="prvni_krok">
     <p>
         Seznamy se generují v několika krocích:
@@ -12,14 +13,12 @@
             <li>Možnosti exportu jako .xlsx nebo .pdf soubory.</li>
         </ol>
     </p>
-    <h3> 
-        Výběr účastníků
-    </h3>
+    <h2> Výběr účastníků</h2>
     <small class="text-muted">Mezi jednotlivými kategoriemi platí konjunkce. <i>Příklad: Vyber všechny účastníky, kteří chodí do třídy Roberta Huga a zároveň mají snídani na VŠ.</i></small>
     <div class="container">
         <div class="row">
             <div class="col-sm">
-                <h4>Třída</h4>
+                <h3>Třída</h3>
                 <small class="text-muted">Mezi jednotlivými třídami funguje poměr slučovací: Při vybrání dvou a více tříd budou vybráni všichni účastníci, kteří chodí alespoň do jedné z nich. <i>Příklad: vyber všechny takové účastníky, kteří chodí k Evě Káčerkové nebo k Luise Haugk. </i></small>
                 <div id="checkboxy_trid">
                     <div class="form-check">
@@ -29,7 +28,7 @@
                 </div>
             </div>
             <div class="col-sm">
-                <h4>Ubytování</h4>
+                <h3>Ubytování</h3>
                 <small class="text-muted">Vybráním tělocvičny i ubytka budou vybráni všichni účastníci, kteří jsou ubytovaní v tělocvičně nebo na internátu. <i>Příklad: vyber všechny účastníky, kterým MLŠSH zajišťuje ubytko, tedy v tělocvične i na intru.</i></small>
                 <div id="checkboxy_ubytovani">
                     <div class="form-check">
@@ -45,7 +44,7 @@
                         <label class="form-check-label" for="internat">Internát VŠ</label>
                     </div>
                 </div>
-                <h4>Strava</h4>
+                <h3>Strava</h3>
                 <small class="text-muted">Mezi jednotlivými možnostmi stravy funguje poměr slučovací: Při vybrání dvou a více možností stravy budou vybráni všichni účastníci, kteří využívají alespoň jednu z nich. <i>Například: vyber všechny účastníky, kteří mají snídani na VŠ nebo oběd na ZŠ.</i></small>
                 <div id="checkboxy_strava">
                     <div class="form-check">
@@ -77,9 +76,7 @@
                         <label class="form-check-label" for="vecere_vs">Večeře na VŠ</label>
                     </div>
                 </div>
-                <h4>
-                    Ostatní
-                </h4>
+                <h3>Ostatní</h3>
                 <small class="text-muted">Mezi jednotlivými pravidly platí konjunkce. <i>Příklad: Vyber všechny účastníky, kteří něco darovali a zároveň se ještě neregistrovali.</i></small>
                 <div id="checkboxy_ostatni">
                     <div class="form-check">
@@ -102,9 +99,7 @@
             </div>
         </div>
     </div>
-    <h3>
-        Atributy k vypsání
-    </h3>
+    <h2>Atributy k vypsání</h2>
     <small class="text-muted">Jméno a příjmení budou vypsány vždy.</small>
     <div class="container">
         <div class="row">
@@ -252,9 +247,7 @@
             </div>
         </div>
     </div>
-    <h3>
-        Atribut pro řazení
-    </h3>
+    <h2>Atribut pro řazení</h2>
     <small class="text-muted">Výpis bude defaultně řazený podle příjmení. Pokud chcete seřadit účastníky podle jiného atributu, můžete ho vybrat zde. Druhotný klíč řazení bude vždy příjmení. Řazení probíhá vždy vzestupně.</small>
     <div class="row my-2">
         <div class="col-sm">
@@ -278,7 +271,7 @@
             </div>
         </div>
         <div class="col-sm-auto">
-            <button type="button" class="btn btn-primary" id="vytvorit_button">Vytvořit seznam</button>
+            <button type="button" class="custom_button" id="vytvorit_button">Vytvořit seznam</button>
         </div>
     </div>
 </div>
@@ -288,10 +281,10 @@
 </div>
 
 <div id="druhy_krok" hidden>
-    <button type="button" class="btn btn-primary" id="ukazat_parametry">Ukázat parametry výběru</button>
+    <button type="button" class="custom_button" id="ukazat_parametry">Ukázat parametry výběru</button>
     <hr>
-    <button type="button" class="btn btn-primary" id="excel_button">Stáhnout .xlsx</button>
-    <button type="button" class="btn btn-primary" id="pdf_button" value="whatever">Zobrazit pro export do .pdf</button>
+    <button type="button" class="custom_button" id="excel_button">Stáhnout .xlsx</button>
+    <button type="button" class="custom_button" id="pdf_button" value="whatever">Zobrazit pro export do .pdf</button>
     <p>
         Počet vybraných účastníků: <span id="pocet_ucastniku"></span>
     </p>

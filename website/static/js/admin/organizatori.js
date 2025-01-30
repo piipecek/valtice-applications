@@ -11,7 +11,7 @@ uzivatele_pro_udeleni_roli.forEach(element => {
     a.href = "/admin/detail_usera/" + String(element["id"])
 
     let button = document.createElement("button")
-    button.classList.add("btn", "btn-success")
+    button.classList.add("custom_button")
     button.innerHTML = "Detail"
     button.name="result"
     button.value = element["id"]

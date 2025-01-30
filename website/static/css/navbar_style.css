@@ -1,0 +1,110 @@
+.logo{
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo a img {
+    height: 132px;
+}
+
+.valtce_header {
+    position:fixed;
+    top:0;
+    z-index: 998;
+    width: 100%;
+    left: 0;
+    font-family: 'Oswald', sans-serif;
+    border-bottom: 3px solid rgb(255,245,235);
+}
+.hlavicka_tmava{
+    background-color: rgb(180, 130, 148);
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hlavicka_svetla{
+    background-color: rgb(209, 138, 154);
+    width: 100%;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+}
+.navbar_wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+}
+
+.link_wrapper {
+    display: flex;
+    gap: 20px;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+
+.navbar_link{
+    text-transform: uppercase;
+    color: rgb(255,245,235);
+    font-size: 1.2rem;
+    align-self: center;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+}
+
+.navbar_link:hover {
+    color: rgb(255,245,235);
+}
+
+.navbar_link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background-color: rgb(255,245,235);
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.navbar_link:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.flag_wrapper{
+    width: 70%;
+    padding-right: 2rem;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.flag img{
+    height: 25px;
+}
+
+@media (max-width: 1200px) {
+    .navbar_wrapper {
+        width: 80%;
+    }
+    .flag_wrapper {
+        width: 80%;
+    }
+}
+
+@media (max-width: 940px) {
+    .navbar_wrapper {
+        width: 90%;
+    }
+    .link_wrapper {
+        gap: 10px;
+    }
+    .flag_wrapper {
+        width: 90%;
+    }
+}

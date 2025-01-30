@@ -1,6 +1,7 @@
 {% extends"guest/cz_context.html" %}
 {% block content %}
-<h2>Založená nového organizátorského účtu</h2>
+<h1>Založení nového organizátorského účtu</h1>
+<hr>
 <form method="post">
     <div class="row my-2">
         <div class="col-2">
@@ -18,7 +19,7 @@
             <input type="text" name="password" required class="form-control">
         </div>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Založit</button>
+    <button type="submit" class="custom_button">Založit</button>
 </form>
 
 {% endblock %}

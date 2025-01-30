@@ -1,13 +1,14 @@
 {% extends"guest/cz_context.html" %}
 {% block content %}
-<h2>Detail uživatele </h2>
+<h1>Detail uživatele </h1>
+<hr>
 <input hidden id="id_getter" value="{{id}}"/>
 <div class="row">
     <div class="col-sm-5" id="parent_div"></div>
 </div>
 <hr>
-<h2>Role uživatele</h2>
-<button class="btn btn-success" id="save_roles_button" type="button">Uložit role</button>
+<h1>Role uživatele</h1>
+<button class="custom_button" id="save_roles_button" type="button">Uložit role</button>
 
 <div id="check_div" class="my-2">
     <div class="form-check">
