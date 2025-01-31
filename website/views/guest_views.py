@@ -19,17 +19,17 @@ def en_dashboard():
 
 @guest_views.route("/prihlaska")
 def cz_prihlaska():
-    return render_template("guest/cz_prihlaska.html")
+    return render_template("guest/cz_prihlaska.html", roles=get_roles(current_user))
 
 @guest_views.route("/en_prihlaska")
 def en_prihlaska():
-    return render_template("guest/en_prihlaska.html")
+    return render_template("guest/en_prihlaska.html", roles=get_roles(current_user))
 
 @guest_views.route("/informace")
 def cz_info():
-    return render_template("guest/cz_info.html")
+    return render_template("guest/cz_info.html", roles=get_roles(current_user))
 
 @guest_views.route("/en_informace")
 def en_info():
-    return render_template("guest/en_info.html")
+    return render_template("guest/en_info.html", roles=get_roles(current_user))
 

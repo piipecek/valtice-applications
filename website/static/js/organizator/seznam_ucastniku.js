@@ -28,4 +28,8 @@ ucastnici.forEach(element => {
 });
 
 document.getElementById("total").innerText = ucastnici.length
-document.getElementById("registrovanych").innerText = String(registrovanych) + " (" + String(Math.round(registrovanych / ucastnici.length * 100)) + "%)"
+let pocet_procent = 0
+if (ucastnici.length > 0) {
+    pocet_procent = Math.round(registrovanych / ucastnici.length * 100)
+}
+document.getElementById("registrovanych").innerText = String(registrovanych) + " (" + String(pocet_procent) + "%)"

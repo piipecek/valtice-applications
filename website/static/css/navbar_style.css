@@ -99,12 +99,16 @@
 
 @media (max-width: 940px) {
     .navbar_wrapper {
-        width: 90%;
+        width: 100%;
     }
     .link_wrapper {
         gap: 10px;
     }
     .flag_wrapper {
         width: 90%;
+    }
+    .link_wrapper{
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
     }
 }

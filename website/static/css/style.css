@@ -24,25 +24,23 @@ header{
     background-color: rgb(138, 253, 138  );
 }
 
-.border-orange{
-    border: 1px solid;
-    border-color: rgb(243,133,8);
-}
 
 .link{
     color:darkblue;
 }
 .panel-link{
-    min-height: 10rem;
-    background-color: #99D5EC;
+    min-height: 8rem;
+    background-color: rgb(209, 138, 154);
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    color: rgb(255,245,235);
     text-decoration: none;
-    color: black;
     width: 100%;
-    font-weight: bold;
+    border: 2px solid rgb(209, 138, 154);
 }
 .panel-link:hover{
-    background-color: aliceblue;
-    color:orange;
+    background-color: rgb(255,245,235);
+    color:rgb(209, 138, 154);
 }
 .custom_button{
     background-color: rgb(209, 138, 154);

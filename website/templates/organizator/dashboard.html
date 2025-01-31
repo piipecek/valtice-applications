@@ -1,0 +1,70 @@
+{% extends "guest/cz_context.html" %}
+
+{% block content %}
+
+<div class="row p-2">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+        <a href="{{url_for('org_views.seznam_ucastniku')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <div class="text-center">
+                Účastníci
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+        <a href="{{url_for('org_views.tridy')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <div class="text-center">
+                Třídy
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+        <a href="{{url_for('org_views.ceny')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <div class="text-center">
+                Ceny
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+        <a href="{{url_for('org_views.seznamy')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <div class="text-center">
+                Generování seznamů
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+        <a href="{{url_for('org_views.settings')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <div class="text-center">
+                Nastavení
+            </div>
+        </a>
+    </div>
+    {% if "super_admin" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('org_views.new_admin')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Nový organizátorský účet
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "super_admin" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('org_views.organizatori')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Organizátoři
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "admin" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('org_views.logs_file')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Logy
+                </div>
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

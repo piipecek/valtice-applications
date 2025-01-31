@@ -44,7 +44,6 @@ def create_app() -> Flask:
 
     from .views.guest_views import guest_views
     from .views.auth_views import auth_views
-    from .views.admin_views import admin_views
     from .views.org_views import org_views
     from .api.admin_api import admin_api
     from .api.guest_api import guest_api
@@ -54,7 +53,6 @@ def create_app() -> Flask:
 
     app.register_blueprint(guest_views, url_prefix="/")
     app.register_blueprint(auth_views, url_prefix="/auth")
-    app.register_blueprint(admin_views, url_prefix = "/admin")
     app.register_blueprint(org_views, url_prefix = "/organizator")
     app.register_blueprint(admin_api, url_prefix = "/admin_api")
     app.register_blueprint(guest_api, url_prefix = "/guest_api")

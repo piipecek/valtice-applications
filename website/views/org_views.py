@@ -10,6 +10,9 @@ import json
 from datetime import datetime
 from website.helpers.export import export
 from website.paths import logo_cz_path, logo_en_path
+from website.models.user import User, get_roles
+from website.models.role import Role
+from website.logs import delete_app_logs
 
 org_views = Blueprint("org_views",__name__)
 
@@ -228,3 +231,80 @@ def seznamy():
             return json.dumps(data_pro_tabulku)
         else:
             return request.form.to_dict()
+    
+    
+@org_views.route("/")
+@org_views.route("/dashboard", methods=["GET","POST"])
+def dashboard():
+    return render_template("organizator/dashboard.html", roles=get_roles())
+
+
+@org_views.route("/logs_file", methods=["GET","POST"])
+@require_role_system_name_on_current_user("admin")
+def logs_file():
+    if request.method == "GET":
+        return render_template("organizator/logs_file.html", roles=get_roles())
+    else:
+        delete_app_logs()
+        flash("Logy úspěšně smazány", category="success")
+        return redirect(url_for("org_views.dashboard"))
+
+@org_views.route("/organizatori", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("super_admin")
+def organizatori():
+    if request.method == "GET":
+        return render_template("organizator/organizatori.html", roles=get_roles())
+    else:
+        id = int(request.form.get("result"))
+        print(id)
+        return redirect(url_for("org_views.vybrat_role_adminovi", id=id))
+        
+    
+@org_views.route("/detail_usera/<int:id>", methods=["GET", "POST"])
+@require_role_system_name_on_current_user(["admin"])
+def detail_usera(id):
+    if request.method == "GET":
+        if id in [u.id for u in User.get_all()]:
+            return render_template("organizator/detail_uzivatele.html", roles=get_roles(), id=id)
+        else:
+            flash("Uživatel s tímhle ID neexistuje.", category="error")
+            return redirect(url_for("org_views.edit_users"))
+    else:
+        if request.form.get("smazat"):
+            user_na_odstraneni = User.get_by_id(id)
+            if "admin" in get_roles(user_na_odstraneni):
+                flash("Nemůžeš odstranit admina.", category="error")
+            else:
+                user_na_odstraneni.delete()
+                flash("User smazán", category="success")
+            return redirect(url_for("org_views.dashboard"))
+        elif nove_role := request.form.get("nove_role"):
+            nove_role_objekty = [Role.get_by_system_name(r) for r in json.loads(nove_role)]
+            user = User.get_by_id(id)
+            if user.roles == nove_role_objekty:
+                pass
+            else:
+                user.roles = nove_role_objekty
+                user.update()
+            flash("Role byly upraveny.", category="success")
+            return redirect(url_for("org_views.detail_usera", id=id))
+        else:    
+            return request.form.to_dict()
+
+@org_views.route("/new_admin", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("super_admin")
+def new_admin():
+    if request.method == "GET":
+        return render_template("organizator/new_admin.html", roles=get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        if User.get_by_email(email):
+            flash("Uživatel s tímhle emailem už existuje.", category="error")
+            return redirect(url_for("org_views.new_admin"))
+        else:
+            user = User(email=email, password=password)
+            user.roles.append(Role.get_by_system_name("organizator"))
+            user.update()
+            flash("Admin vytvořen", category="success")
+            return redirect(url_for("org_views.organizatori"))

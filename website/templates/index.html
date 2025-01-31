@@ -34,16 +34,11 @@
                 <!-- jsou tu dva divy, jeden na levo a jeden na pravo od loga -->
                 <div class="link_wrapper">
                     {% if "prihlasen" in roles %} 
-                        <a class="navbar_link" href="{{url_for('org_views.seznam_ucastniku')}}">Účastníci</a>
-                        <a class="navbar_link" href="{{url_for('org_views.tridy')}}">Třídy</a>
-                        <a class="navbar_link" href="{{url_for('org_views.ceny')}}">Ceny</a>
-                        <a class="navbar_link" href="{{url_for('org_views.seznamy')}}">Seznamy</a>
+                        <a class="navbar_link" href="{{url_for('org_views.dashboard')}}">Organizátoři</a>
                     {% endif %}
                 </div>
                 <div class="link_wrapper">
                     {% if "prihlasen" in roles %}
-                        <a class="navbar_link" href="{{url_for('org_views.settings')}}">Nastavení</a>
-                        <a class="navbar_link" href="{{url_for('admin_views.dashboard')}}">Admin sekce</a>
                         <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
                     {%  endif %}
                 </div>
