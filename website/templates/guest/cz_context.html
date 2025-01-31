@@ -16,7 +16,9 @@
 
 {% block footer %}
     Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na vývojáře</a><br>
-    {% if "prihlasen" not in roles %}
+    {% if "prihlasen" in roles %}
+        <a class="link" href="{{url_for('org_views.docs')}}">Dokumentace k systému</a><br>
+    {% else %}
         <a class="link" href="{{url_for('auth_views.login')}}">Přihlášení pro organizátory</a><br>
     {% endif %}
     <a class="link" href="{{url_for('guest_views.cz_info')}}">Cookies a GDPR</a><br>

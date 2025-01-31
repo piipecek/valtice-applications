@@ -290,3 +290,7 @@ def detail_usera(id):
             return redirect(url_for("org_views.detail_usera", id=id))
         else:    
             return request.form.to_dict()
+    
+@org_views.route("/docs")
+def docs():
+    return render_template("organizator/docs.html", roles=get_roles())

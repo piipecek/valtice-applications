@@ -1,0 +1,56 @@
+{%extends"guest/cz_context.html"%}
+
+{%block content%}
+    <h1>Dokumentace k Valtickému přihláškovému systému</h1>
+    <p>
+        Cílem této stránky je poskytnout organizátorům informace o tom, jak systém funguje a jak jej používat.
+    </p>
+    <hr>
+    <h2>Obsah</h2>
+    <ul>
+        <li><a class="link" href="#obsah">Obsah stránek přihláškového systému</a></li>
+        <li><a class="link" href="#ucastnici">Účastníci</a></li>
+        <li><a class="link" href="#tridy">Třídy</a></li>
+        <li><a class="link" href="#cenik">Ceník</a></li>
+        <li><a class="link" href="#generovani_seznamu">Generování seznamů</a></li>
+        <li><a class="link" href="#nastaveni_aplikace">Nastavení aplikace</a></li>
+        <li><a class="link" href="#organizatori">Organizátoři</a></li>
+        <li><a class="link" href="#technologie">Technologie webu a zdrojový kód</a></li>
+    </ul>
+
+    <h2 id="obsah">Obsah stránek přihláškového systému</h2>
+    <p>
+        To, co je na stránkách vidět, závisí na dvou věcech:
+        <ul>
+            <li>Na tom, zda je aktuálně otevřený přihlašovací formulář, nebo ne</li>
+            <li>Na tom, zda jste přihlášeni jako organizátor, nebo ne</li>
+        </ul>
+        <p>
+            Nastavení toho, zda je přihlašovací formulář otevřený, můžete provádět v sekci <a class="link" href="{{url_for('org_views.settings')}}">Nastavení</a>. Po nastavení dat a časů se domovská stránka začne chovat pro nově příchozí účastníky podle toho, zda právě probíhá období před otevřením přihlášek, období otevřených přihlášek, nebo období po uzavření přihlášek.
+        </p>
+        <p>
+            Pokud jste přihlášeni jako organizátor, zobrazí se vám v horní části stránky odkaz na <a class="link" href="{{url_for('org_views.dashboard')}}">Dashboard</a>, možnost odhlášení se a v patičce stránky odkaz na tuto <a class="link" href="{{url_for('org_views.docs')}}">dokumentaci k systému</a>.
+        </p>
+    </p>
+
+    <h2 id="ucastnici">Účastníci</h2>
+    <p>
+        <ul>
+            <li>Účastníci se do systému mohou do systému zapsat pomocí formuláře, který je dostupný na domovské stránce. Po vyplnění formuláře obdrží e-mail s potvrzením a cenou. </li>
+            <li>Nevzniká žádný účastnický účet.</li>
+            <li>Pokud chce účastník něco na své přihlášce změnit, pořadatelé mají k editaci přístup.</li>
+        </ul>
+    </p>
+
+    <h2 id="tridy">Třídy</h2>
+
+    <h2 id="cenik">Ceník</h2>
+
+    <h2 id="generovani_seznamu">Generování seznamů</h2>
+
+    <h2 id="nastaveni_aplikace">Nastavení aplikace</h2>
+
+    <h2 id="organizatori">Organizátoři</h2>
+
+    <h2 id="technologie">Technologie webu a zdrojový kód</h2>
+{%endblock%}

@@ -26,8 +26,12 @@ header{
 
 
 .link{
-    color:darkblue;
+    color: rgb(103,125, 171);
 }
+.link:hover{
+    color: rgb(209, 138, 154);
+}
+
 .panel-link{
     min-height: 8rem;
     background-color: rgb(209, 138, 154);
