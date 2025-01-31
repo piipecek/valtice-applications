@@ -1,8 +1,8 @@
 import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/valtice_api/uprava_ucastnika/" + id))
-let tridy = JSON.parse(httpGet("/valtice_api/tridy_pro_upravu_ucastnika"))
-let tridy_pro_upravu_ucastnika_druhe_zdarma = JSON.parse(httpGet("/valtice_api/tridy_pro_upravu_ucastnika_druhe_zdarma"))
+let data = JSON.parse(httpGet("/org_api/uprava_ucastnika/" + id))
+let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
+let tridy_pro_upravu_ucastnika_druhe_zdarma = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika_druhe_zdarma"))
 
 for (let trida of tridy) {
     let option = document.createElement("option")

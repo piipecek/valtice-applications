@@ -1,8 +1,8 @@
 import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
 let id_usera = document.getElementById("id_getter").value
-let detail_usera = JSON.parse(httpGet("/admin_api/detail_usera/" + String(id_usera)))
-let role_uzivatele = JSON.parse(httpGet("/admin_api/role_uzivatele/" + String(id_usera)))
+let detail_usera = JSON.parse(httpGet("/org_api/detail_usera/" + String(id_usera)))
+let role_uzivatele = JSON.parse(httpGet("/org_api/role_uzivatele/" + String(id_usera)))
 let checkdiv = document.getElementById("check_div")
 let save_roles_button = document.getElementById("save_roles_button")
 let resut_input = document.getElementById("result")

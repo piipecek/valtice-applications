@@ -1,6 +1,6 @@
 import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/valtice_api/uprava_tridy/" + id))
+let data = JSON.parse(httpGet("/org_api/uprava_tridy/" + id))
 
 document.getElementById("full_name_title").innerText = data["full_name"]
 

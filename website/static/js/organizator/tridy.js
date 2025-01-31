@@ -2,7 +2,7 @@ import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
 
 
-let tridy = JSON.parse(httpGet("/valtice_api/tridy"))
+let tridy = JSON.parse(httpGet("/org_api/tridy"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true)
 tc.make_header(["Název", "Detail"])

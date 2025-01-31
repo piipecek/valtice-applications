@@ -1,6 +1,6 @@
 import httpGet from "../http_get.js"
 
-let settings = JSON.parse(httpGet("/valtice_api/settings"))
+let settings = JSON.parse(httpGet("/org_api/settings"))
 
 document.getElementById("applications_start_date").value = settings["applications_start_date"]
 document.getElementById("applications_start_time").value = settings["applications_start_time"]

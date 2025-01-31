@@ -1,7 +1,7 @@
 import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
-let ucastnici = JSON.parse(httpGet("/valtice_api/ucastnici"))
-let registrovanych = JSON.parse(httpGet("/valtice_api/registrovanych"))["pocet"]
+let ucastnici = JSON.parse(httpGet("/org_api/ucastnici"))
+let registrovanych = JSON.parse(httpGet("/org_api/registrovanych"))["pocet"]
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
 tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])

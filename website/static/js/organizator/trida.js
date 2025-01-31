@@ -1,7 +1,7 @@
 import httpGet from "../http_get.js"
 
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/valtice_api/trida/" + id))
+let data = JSON.parse(httpGet("/org_api/trida/" + id))
 
 document.getElementById("full_name").innerHTML = data["full_name"]
 

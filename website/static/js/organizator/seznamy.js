@@ -1,6 +1,6 @@
 import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
-let tridy = JSON.parse(httpGet("/valtice_api/tridy_pro_seznamy"))
+let tridy = JSON.parse(httpGet("/org_api/tridy_pro_seznamy"))
 
 // togglovani sekci
 document.getElementById("vytvorit_button").addEventListener("click", function() {
