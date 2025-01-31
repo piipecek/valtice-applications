@@ -1,7 +1,7 @@
 {% extends"guest/cz_context.html" %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    <h2>Datum a čas otevření přihlášek</h2>
+<h2>Datum a čas otevření přihlášek</h2>
+<form method="post">
     <div class="row">
         <div class="col-12 col-sm-1 my-1">
             Datum:
@@ -19,8 +19,10 @@
             <button class="custom_button" name="datum_cas_start" value="whatever" type="submit">Uložit</button>
         </div>
     </div>
-    <hr>   
-    <h2>Uzavření přihlášek</h2>
+</form>
+<hr>   
+<h2>Uzavření přihlášek</h2>
+<form method="post">
     <div class="row">
         <div class="col-12 col-sm-1 my-1">
             Datum:
@@ -38,38 +40,45 @@
             <button class="custom_button" name="datum_cas_end" value="whatever" type="submit">Uložit</button>
         </div>
     </div>
-    <hr>
-    <h2>Vytvoření nového účastníka</h2>
+</form>
+<hr>
+<h2>Vytvoření nového účastníka</h2>
+<form method="post">
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
             Jméno:
         </div>
         <div class="col-12 col-sm my-1">
-            <input class="form-control" type="text" name="jmeno" placeholder="Franta">
+            <input class="form-control" type="text" name="jmeno" placeholder="Franta" required>
         </div>
         <div class="col-12 col-sm my-1">
-            <input class="form-control" type="text" name="prijmeni" placeholder="Vopička">
+            <input class="form-control" type="text" name="prijmeni" placeholder="Vopička" required>
         </div>
         <div class="col-12 col-sm-auto my-1">
             <button class="custom_button" name="novy_ucastnik" value="whatever" type="submit">Vytvořit</button>
         </div>
     </div>
-    <small>Slouží zejména pro testing. Další atributy účastníka se dají upravit v detailu.</small>
-    <hr>
-    <h2>Vytvoření nové třídy</h2>
+    <small>Slouží zejména pro testing. Účastníci by do systému měli přibývat skrze přihláškový formulář.</small>
+</form>
+<hr>
+<h2>Vytvoření nové třídy</h2>
+<form method="post">
     <div class="row">
         <div class="col-sm-2">
             Krátký název třídy:
         </div>
         <div class="col">
-            <input class="form-control" type="text" name="short_name" placeholder="Jméno Lektora | upřesnění">
+            <input class="form-control" type="text" name="short_name" placeholder="Jméno Lektora | upřesnění" required>
         </div>
         <div class="col-auto">
             <button class="custom_button" name="nova_trida" value="whatever" type="submit">Vytvořit</button>
         </div>
     </div>
-    <hr>
-    <h2>Nahrání nového loga ročníku</h2>
+    <small>Úplný název třídy a anglické znění půjde zadat po založení třídy.</small>
+</form>
+<hr>
+<h2>Nahrání nového loga ročníku</h2>
+<form method="post" enctype="multipart/form-data">
     <div class="row">
         <div class="col-sm-2">
             České logo
@@ -92,8 +101,10 @@
             <button class="custom_button" name="nahrat_logo_en" value="whatever" type="submit">Nahrát</button>
         </div>
     </div>
-    <hr>
-    <h2>Vytvoření exportu systému</h2>
+</form>
+<hr>
+<h2>Vytvoření exportu systému</h2>
+<form method="post">
     <div class="row">
         <div class="col">Export slouží k archivaci dat po konci ročníku před tím, než bude systém promazán. Neslouží a nikdy nebude sloužit jako záloha dat, t.j. po promazání systému zůstanou ročníková data pouze ve vytvořeném .xlsx souboru.</div>
         <div class="col-auto">

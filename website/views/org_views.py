@@ -1,17 +1,16 @@
+import json
+from datetime import datetime
 from flask import Blueprint, render_template, request, flash, redirect, url_for, send_file
 from flask_login import current_user
-from website.helpers.require_role import require_role_system_name_on_current_user
 from website.models.valtice_ucastnik import Valtice_ucastnik
 from website.models.valtice_trida import Valtice_trida
 from website.models.cena import Cena
-from website.models.user import get_roles
-from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time
-import json
-from datetime import datetime
-from website.helpers.export import export
-from website.paths import logo_cz_path, logo_en_path
 from website.models.user import User, get_roles
 from website.models.role import Role
+from website.helpers.require_role import require_role_system_name_on_current_user
+from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time
+from website.helpers.export import export
+from website.paths import logo_cz_path, logo_en_path
 from website.logs import delete_app_logs
 
 org_views = Blueprint("org_views",__name__)
