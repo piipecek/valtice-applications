@@ -26,16 +26,18 @@
 </div>
 
 <hr>
-<form method="post">
-    <button type="submit" class="btn btn-danger" name="smazat" value="whatever">Smazat uživatele</button>
-</form>
+
+<button type="button" class="btn btn-danger" name="smazat" value="whatever" id="delete_button">Smazat uživatele</button>
+
 <form method="post" id="form">
     <input hidden id="result" name="nove_role"/>
+</form>
+
+<form method="post" id="delete_form">
+    <input hidden name="delete" value="whatever"/>
 </form>
 
 
 <script type="module" src="{{url_for('static', filename='js/organizator/detail_uzivatele.js')}}"></script>
 
 {% endblock %}
-
-<!-- chybi mi tu form id form -->

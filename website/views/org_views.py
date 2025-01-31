@@ -269,10 +269,11 @@ def detail_usera(id):
             flash("Uživatel s tímhle ID neexistuje.", category="error")
             return redirect(url_for("org_views.edit_users"))
     else:
-        if request.form.get("smazat"):
+        if request.form.get("delete"):
             user_na_odstraneni = User.get_by_id(id)
             if "admin" in get_roles(user_na_odstraneni):
-                flash("Nemůžeš odstranit admina.", category="error")
+                flash("Nemůžete odstranit účet s rolí admina.", category="error")
+                return redirect(url_for("org_views.detail_usera", id=id))
             else:
                 user_na_odstraneni.delete()
                 flash("User smazán", category="success")
