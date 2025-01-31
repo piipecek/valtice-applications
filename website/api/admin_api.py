@@ -1,17 +1,10 @@
 import json
 from flask import Blueprint
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.logs import get_app_logs
-from website.models.role import Role
 from website.models.user import User
 
 admin_api = Blueprint("admin_api", __name__)
 
-
-@admin_api.route("/app_logs")
-@require_role_system_name_on_current_user("admin")
-def app_logs():
-    return json.dumps(get_app_logs())
 
 @admin_api.route("/uzivatele_pro_udeleni_roli")
 @require_role_system_name_on_current_user("super_admin")

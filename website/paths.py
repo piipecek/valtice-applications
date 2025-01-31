@@ -1,8 +1,5 @@
 from pathlib import Path
 
-def log_file_path() -> Path:
-    return Path.cwd() / "data" / "logs.txt"
-
 def dotenv_path() -> Path:
     return Path.cwd() / ".env"
 

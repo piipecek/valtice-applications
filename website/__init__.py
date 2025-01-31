@@ -5,8 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask_mail import Mail
-from .helpers.check_files import check_logs_file, check_data_folder, check_settings_file
-from .logs import log
+from .helpers.check_files import check_data_folder, check_settings_file
 from .paths import dotenv_path
 
 db = SQLAlchemy()
@@ -18,10 +17,8 @@ load_dotenv(dotenv_path=dotenv_path(), verbose=True)
 
 def create_app() -> Flask:
     check_data_folder()
-    check_logs_file()
     check_settings_file()
         
-    log("=== START appky ===")
     db_driver = os.environ.get("DB_DRIVER")
     db_username = os.environ.get("DB_USERNAME")
     db_password = os.environ.get("DB_PASSWORD")
