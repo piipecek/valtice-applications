@@ -4,47 +4,85 @@
 
 <div class="row p-2">
     <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
-        <a href="{{url_for('org_views.seznam_ucastniku')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+        <a href="{{url_for('org_views.seznam_ucastniku')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
             <div class="text-center">
                 Účastníci
             </div>
         </a>
     </div>
     <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
-        <a href="{{url_for('org_views.tridy')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+        <a href="{{url_for('org_views.tridy')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
             <div class="text-center">
                 Třídy
             </div>
         </a>
     </div>
     <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
-        <a href="{{url_for('org_views.ceny')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
-            <div class="text-center">
-                Ceny
-            </div>
-        </a>
-    </div>
-    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
-        <a href="{{url_for('org_views.seznamy')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+        <a href="{{url_for('org_views.seznamy')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
             <div class="text-center">
                 Generování seznamů
             </div>
         </a>
     </div>
-    <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
-        <a href="{{url_for('org_views.settings')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
-            <div class="text-center">
-                Nastavení
-            </div>
-        </a>
-    </div>
+    {% if "admin" in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('org_views.ceny')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Ceny
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if "organizator" in roles%}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
+            <a href="{{url_for('org_views.settings')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+                <div class="text-center">
+                    Nastavení
+                </div>
+            </a>
+        </div>
+    {% endif %}
     {% if "super_admin" in roles %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
-            <a href="{{url_for('org_views.organizatori')}}" class="border-orange rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
+            <a href="{{url_for('org_views.organizatori')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
                 <div class="text-center">
                     Organizátoři
                 </div>
             </a>
+        </div>
+    {% endif %}
+
+</div>
+<!-- Pokud role nemám -->
+{% if "super_admin" not in roles %}
+    <hr>
+{% endif %} 
+<div class="row p-2">
+    {% if "organizator" not in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center">
+            <div class="panel-link-inactive">
+                Nastavení
+                <span class="s_roli">s rolí</span> 
+                <span class="missing_role">Organizátor</span>
+            </div>
+        </div>
+    {% endif %}
+    {% if "admin" not in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center">
+            <div class="panel-link-inactive">
+                Ceny
+                <span class="s_roli">s rolí</span> 
+                <span class="missing_role">Admin</span>
+            </div>
+        </div>
+    {% endif %}
+    {% if "super_admin" not in roles %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center">
+            <div class="panel-link-inactive">
+                Organizátoři
+                <span class="s_roli">s rolí</span> 
+                <span class="missing_role">Super Admin</span>
+            </div>
         </div>
     {% endif %}
 </div>

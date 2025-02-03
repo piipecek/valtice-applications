@@ -9,6 +9,7 @@
     <h2>Obsah</h2>
     <ul>
         <li><a class="link" href="#obsah">Obsah stránek přihláškového systému</a></li>
+        <li><a class="link" href="#role">Role</a></li>
         <li><a class="link" href="#ucastnici">Účastníci</a></li>
         <li><a class="link" href="#tridy">Třídy</a></li>
         <li><a class="link" href="#cenik">Ceník</a></li>
@@ -31,6 +32,18 @@
         <p>
             Pokud jste přihlášeni jako organizátor, zobrazí se vám v horní části stránky odkaz na <a class="link" href="{{url_for('org_views.dashboard')}}">Dashboard</a>, možnost odhlášení se a v patičce stránky odkaz na tuto <a class="link" href="{{url_for('org_views.docs')}}">dokumentaci k systému</a>.
         </p>
+    </p>
+
+    <h2 id="role">Role</h2>
+    <p>
+        Každý organizátor potřebuje role k tomu, aby mohl v pořadatelské sekci něco dělat. Role jsou tři:
+        <ul>
+            <li><b>bez role</b>: přístup k seznamu účastníků, a tříd, přístup k detailům účastníků, přístup ke generování seznamů. Nemůže nic editovat.</li>
+            <li><b>Organizátor</b>: Možnost editace účastníků a tříd, přístup k některým nastavením.</li>
+            <li><b>Admin</b>: Možnost mazání účastníků a tříd, nastavení ceníku, přístup k více nastavením.</li>
+            <li><b>Super admin</b>: Přístup k zakládání a mazání účtu dalších pořadatelů, udílení těchto rolí pořadatelům.</li>
+        </ul>
+        V celém systému je u každé akce na kterou nemáte oprávnění jasně napsáno, jaká role danou činnost může provést.
     </p>
 
     <h2 id="ucastnici">Účastníci</h2>

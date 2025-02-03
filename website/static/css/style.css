@@ -46,6 +46,39 @@ header{
     background-color: rgb(255,245,235);
     color:rgb(209, 138, 154);
 }
+
+
+.panel-link-inactive{
+    min-height: 8rem;
+    background-color: rgb(103, 125, 171);
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    color: lightgray;
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+}
+.panel-link-inactive:hover{
+    color: lightgray;
+    cursor: default;
+}
+.s_roli{
+    font-family: 'Noto Serif', serif;
+    text-transform: none;
+    color: lightgray
+}
+.missing_role{
+    color: lightgray;
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: none;
+}
+
 .custom_button{
     background-color: rgb(209, 138, 154);
     border: 2px solid rgb(209, 138, 154);

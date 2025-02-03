@@ -177,7 +177,7 @@ def uprava_tridy(id:int):
     
 
 @org_views.route("/ceny", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
+@require_role_system_name_on_current_user("super_admin")
 def ceny():
     if request.method == "GET":
         return render_template("organizator/ceny.html", roles=get_roles(current_user))
@@ -252,7 +252,6 @@ def organizatori():
                 return redirect(url_for("org_views.new_admin"))
             else:
                 user = User(email=email, password=generate_password_hash(password, method="scrypt"))
-                user.roles.append(Role.get_by_system_name("organizator"))
                 user.update()
                 flash("Admin vytvořen", category="success")
                 return redirect(url_for("org_views.organizatori"))
