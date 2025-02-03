@@ -79,7 +79,6 @@ def settings():
     
     
 @org_views.route("/ucastnik/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
 def ucastnik(id:int):
     if request.method == "GET":
         if Valtice_ucastnik.get_by_id(id) is None:
@@ -134,7 +133,6 @@ def uprava_ucastnika(id:int):
     
     
 @org_views.route("/seznam_ucastniku", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
 def seznam_ucastniku():
     if request.method == "GET":
         return render_template("organizator/seznam_ucastniku.html", roles=get_roles(current_user))
@@ -143,7 +141,6 @@ def seznam_ucastniku():
     
 
 @org_views.route("/trida/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
 def trida(id:int):
     if request.method == "GET":
         return render_template("organizator/trida.html", id=id, roles=get_roles(current_user))
@@ -177,7 +174,7 @@ def uprava_tridy(id:int):
     
 
 @org_views.route("/ceny", methods=["GET","POST"])
-@require_role_system_name_on_current_user("super_admin")
+@require_role_system_name_on_current_user("admin")
 def ceny():
     if request.method == "GET":
         return render_template("organizator/ceny.html", roles=get_roles(current_user))
@@ -197,7 +194,6 @@ def ceny():
             return request.form.to_dict()
         
 @org_views.route("/tridy", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
 def tridy():
     if request.method == "GET":
         return render_template("organizator/tridy.html", roles=get_roles(current_user))
@@ -209,7 +205,6 @@ def tridy():
         
        
 @org_views.route("/seznamy", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
 def seznamy():
     if request.method == "GET":
         return render_template("organizator/seznamy.html", roles=get_roles(current_user))
@@ -260,7 +255,7 @@ def organizatori():
         
     
 @org_views.route("/detail_usera/<int:id>", methods=["GET", "POST"])
-@require_role_system_name_on_current_user(["admin"])
+@require_role_system_name_on_current_user("super_admin")
 def detail_usera(id):
     if request.method == "GET":
         if id in [u.id for u in User.get_all()]:
