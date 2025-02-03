@@ -11,6 +11,7 @@ from website.helpers.require_role import require_role_system_name_on_current_use
 from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time
 from website.helpers.export import export
 from website.paths import logo_cz_path, logo_en_path
+from werkzeug.security import generate_password_hash
 
 org_views = Blueprint("org_views",__name__)
 
@@ -250,7 +251,7 @@ def organizatori():
                 flash("Uživatel s tímhle emailem už existuje.", category="error")
                 return redirect(url_for("org_views.new_admin"))
             else:
-                user = User(email=email, password=password)
+                user = User(email=email, password=generate_password_hash(password, method="scrypt"))
                 user.roles.append(Role.get_by_system_name("organizator"))
                 user.update()
                 flash("Admin vytvořen", category="success")
@@ -276,7 +277,7 @@ def detail_usera(id):
                 return redirect(url_for("org_views.detail_usera", id=id))
             else:
                 user_na_odstraneni.delete()
-                flash("User smazán", category="success")
+                flash("Uživatel smazán", category="success")
                 return redirect(url_for("org_views.organizatori"))
         elif nove_role := request.form.get("nove_role"):
             nove_role_objekty = [Role.get_by_system_name(r) for r in json.loads(nove_role)]

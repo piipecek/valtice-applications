@@ -163,6 +163,8 @@ hr {
 @media (max-width: 940px) {
     .main_section {
         width: 90%;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
     .footer{
         width: 90%;
