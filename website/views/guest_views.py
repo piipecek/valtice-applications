@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import current_user
-from website.models.user import get_roles
+from website.helpers.get_roles import get_roles
 from website.helpers.settings_manager import get_faze_for_dashboard, get_date_zacatku_for_dashboard, get_time_zacatku_for_dashboard
 
 

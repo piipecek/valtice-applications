@@ -56,10 +56,12 @@ def create_app() -> Flask:
 
 
     from .models.role import Role
-    from .models.user import User, get_roles
-    from .models.valtice_trida import Valtice_trida
-    from .models.valtice_ucastnik import Valtice_ucastnik
-    from .models.cena import Cena
+    from .models.user import User
+    from .helpers.get_roles import get_roles
+    from .models.trida import Trida
+    from .models.billing import Billing
+    from .models.meal import Meal
+    from .models.meal_order import Meal_order
  
     with app.app_context():
         db.create_all()

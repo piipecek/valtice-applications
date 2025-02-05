@@ -1,16 +1,22 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
 
-class Valtice_trida(Common_methods_db_model):
+class Trida(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
-    short_name = db.Column(db.String(300), nullable=False) # viz. vytvoreni_trid.py pro detail o tom, co v atributach cekat
-    full_name = db.Column(db.String(1000), nullable=False, default="")
-    je_zdarma_jako_vedlejsi = db.Column(db.Boolean, default=False)
-    je_ansamblova = db.Column(db.Boolean, default=False)
-    hlavni_ucastnici_1 = db.relationship('Valtice_ucastnik', backref='hlavni_trida_1', lazy=True, foreign_keys='Valtice_ucastnik.hlavni_trida_1_id')
-    hlavni_ucastnici_2 = db.relationship('Valtice_ucastnik', backref='hlavni_trida_2', lazy=True, foreign_keys='Valtice_ucastnik.hlavni_trida_2_id')
-    vedlejsi_placena_ucastnici = db.relationship('Valtice_ucastnik', backref='vedlejsi_trida_placena', lazy=True, foreign_keys='Valtice_ucastnik.vedlejsi_trida_placena_id')
-    vedlejsi_zdarma_ucastnici = db.relationship('Valtice_ucastnik', backref='vedlejsi_trida_zdarma', lazy=True, foreign_keys='Valtice_ucastnik.vedlejsi_trida_zdarma_id')
+    short_name_cz = db.Column(db.String(300), nullable=False) # viz. vytvoreni_trid.py pro detail o tom, co v atributach cekat
+    full_name_cz = db.Column(db.String(1000))
+    short_name_en = db.Column(db.String(300))
+    full_name_en = db.Column(db.String(1000))
+    capacity = db.Column(db.Integer)
+    is_solo = db.Column(db.Boolean, default=True)
+    is_free_as_secondary = db.Column(db.Boolean, default=False)
+    age_group = db.Column(db.String(300)) #child, youth, adult
+    
+    tutor_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    tutor = db.relationship("User", back_populates="taught_classes", foreign_keys=[tutor_id])
+    main_paticipants_priority_1 = db.relationship("User", back_populates="main_class_priority_1", foreign_keys="User.main_class_id_priority_1")
+    main_paticipants_priority_2 = db.relationship("User", back_populates="main_class_priority_2", foreign_keys="User.main_class_id_priority_2")
+    secondary_participants = db.relationship("User", back_populates="secondary_class", foreign_keys="User.secondary_class_id")
 
     def __repr__(self):
         return f"Třída | {self.short_name}"
@@ -21,8 +27,8 @@ class Valtice_trida(Common_methods_db_model):
             "short_name": self.short_name
         }
     
-    def get_by_full_name(full_name: str) -> "Valtice_trida":
-        return db.session.scalars(db.select(Valtice_trida).where(Valtice_trida.full_name == full_name)).first()
+    def get_by_full_name(full_name: str) -> "Trida":
+        return db.session.scalars(db.select(Trida).where(Trida.full_name == full_name)).first()
     
     def info_pro_detail(self):
         return {
