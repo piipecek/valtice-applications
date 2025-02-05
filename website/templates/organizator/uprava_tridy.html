@@ -2,7 +2,7 @@
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
-<h2>Úprava třídy <span id="full_name_title"></span></h2>
+<h2>Úprava třídy <span id="name_title"></span></h2>
 <hr>
 <form method="post">
     <button type="submit" class="custom_button" name="save" value="whatever">Uložit změny</button>
@@ -11,35 +11,64 @@
     <hr>
     <div class="container my-2">
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Krátký název</div>
+            <div class="col-3 d-flex align-items-center">Krátký název česky</div>
             <div class="col">
-                <input type="text" class="form-control" id="short_name" name="short_name">
+                <input type="text" class="form-control" id="short_name_cz" name="short_name_cz">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Úplný název</div>
+            <div class="col-3 d-flex align-items-center">Úplný název česky</div>
             <div class="col">
-                <input type="text" class="form-control" id="full_name" name="full_name">
+                <input type="text" class="form-control" id="full_name_cz" name="full_name_cz">
             </div>
         </div>
-        <small>
-            Typ třídy určuje, jak se třída chová při kalkulaci ve chvíli, kdy je vybrána jako druhá třída. První třída je vždy za plné kurzovné.
-            <ul>
-                <li><b>Ansámblová</b> - Pokud je zapsána jako druhá třída, platí cena pro ansámblové třídy.</li>
-                <li><b>Zdarma jako druhá</b> - Pokud je zapsána jako druhá, je zdarma.</li>
-                <li><b>Běžná</b> - za plné kurzovné, i když je zapsána jako druhá.</li>
-            </ul>
-        </small>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Typ</div>
+            <div class="col-3 d-flex align-items-center">Krátký název anglicky</div>
             <div class="col">
-                <select class="form-control" id="typ" name="typ">
-                    <option value="bezna">Běžná</option>
-                    <option value="ansamblova">Ansámblová</option>
-                    <option value="zdarma">Zdarma jako druhá</option>
+                <input type="text" class="form-control" id="short_name_en" name="short_name_en">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Úplný název anglicky</div>
+            <div class="col">
+                <input type="text" class="form-control" id="full_name_en" name="full_name_en">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Kapacita</div>
+            <div class="col">
+                <input type="number" class="form-control" id="capacity" name="capacity">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Věková skupina</div>
+            <div class="col">
+                <select class="form-control" id="age_group" name="age_group">
+                    <option value="child">dětská</option>
+                    <option value="youth">pro děti do 15 let</option>
+                    <option value="adult">dospělá</option>
                 </select>
             </div>
         </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Je třídá sólová?</div>
+            <div class="col">
+                <select class="form-control" id="is_solo" name="is_solo">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Je zdarma jako vedlejší?</div>
+            <div class="col">
+                <select class="form-control" id="is_free_as_secondary" name="is_free_as_secondary">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+
     </div> 
 </form>
 <form method="post" id="delete_form">

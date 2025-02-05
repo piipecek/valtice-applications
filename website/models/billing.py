@@ -3,7 +3,7 @@ from website.models.common_methods_db_model import Common_methods_db_model
 
 class Billing(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(300)) # course / accommodation / food
+    type = db.Column(db.String(300), default="course") # course / accommodation / food
     display_name = db.Column(db.String(1000))
     system_name = db.Column(db.String(100), unique=True)
     czk = db.Column(db.Float, default=0)

@@ -39,7 +39,7 @@ class User(Common_methods_db_model, UserMixin):
     is_active_participant = db.Column(db.Boolean, default=True)
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
     datetime_registered = db.Column(db.DateTime)
-    accomodation_type = db.Column(db.String(200)) # own/vs/gym
+    accomodation_type = db.Column(db.String(200), default="own") # own/vs/gym
     accomodation_count = db.Column(db.Integer, default=0)
     musical_education = db.Column(db.Text)
     musical_instrument = db.Column(db.String(1000))
@@ -48,9 +48,9 @@ class User(Common_methods_db_model, UserMixin):
     admin_comment = db.Column(db.Text)
     
     #billing data
-    billing_currency = db.Column(db.String(200)) # czk/eur
+    billing_currency = db.Column(db.String(200), default="czk" ) # czk/eur
     billing_email = db.Column(db.String(200))
-    billing_age = db.Column(db.String(200)) # child/youth/adult
+    billing_age = db.Column(db.String(200), default="adult") # child/youth/adult
     billing_date_paid = db.Column(db.Date)
     billing_gift = db.Column(db.Integer, default=0)
     billing_correction = db.Column(db.Integer, default=0)
@@ -62,7 +62,7 @@ class User(Common_methods_db_model, UserMixin):
     
     #tutor data
     
-    tutor_travel = db.Column(db.String(200)) #own/public
+    tutor_travel = db.Column(db.String(200), default="own") #own/public
     tutor_license_plate = db.Column(db.String(200))
     tutor_arrival = db.Column(db.Text)
     tutor_departure = db.Column(db.Text)

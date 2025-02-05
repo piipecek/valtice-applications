@@ -43,9 +43,9 @@ def settings():
                 flash("Uživatel s tímto emailem už existuje.", category="error")
                 return redirect(url_for("org_views.settings"))
         elif request.form.get("nova_trida"):
-            v = Trida(short_name=request.form.get("short_name"))
-            v.update()
-            id = v.id
+            t = Trida(short_name_cz=request.form.get("short_name"))
+            t.update()
+            id = t.id
             return redirect(url_for("org_views.uprava_tridy", id=id))
         elif request.form.get("export"):
             bytes = export()

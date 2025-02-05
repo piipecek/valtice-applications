@@ -3,14 +3,14 @@ from website.models.common_methods_db_model import Common_methods_db_model
 
 class Trida(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
-    short_name_cz = db.Column(db.String(300), nullable=False) # viz. vytvoreni_trid.py pro detail o tom, co v atributach cekat
+    short_name_cz = db.Column(db.String(300), nullable=False)
     full_name_cz = db.Column(db.String(1000))
     short_name_en = db.Column(db.String(300))
     full_name_en = db.Column(db.String(1000))
-    capacity = db.Column(db.Integer)
+    capacity = db.Column(db.Integer, default=8)
     is_solo = db.Column(db.Boolean, default=True)
     is_free_as_secondary = db.Column(db.Boolean, default=False)
-    age_group = db.Column(db.String(300)) #child, youth, adult
+    age_group = db.Column(db.String(300), default="adult") #child, youth, adult
     
     tutor_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     tutor = db.relationship("User", back_populates="taught_classes", foreign_keys=[tutor_id])
@@ -54,16 +54,15 @@ class Trida(Common_methods_db_model):
         }
     
     def info_pro_upravu(self):
-        if self.je_zdarma_jako_vedlejsi:
-            typ = "zdarma"
-        elif self.je_ansamblova:
-            typ = "ansamblova"
-        else:
-            typ = "bezna"
         return {
-            "short_name": self.short_name,
-            "full_name": self.full_name,
-            "typ": typ
+            "short_name_cz": self.short_name_cz,
+            "full_name_cz": self.full_name_cz,
+            "short_name_en": self.short_name_en,
+            "full_name_en": self.full_name_en,
+            "capacity": self.capacity,
+            "age_group": self.age_group,
+            "is_solo": "Ano" if self.is_solo else "Ne",
+            "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
         }
         
     def nacist_zmeny_z_requestu(self, request):
