@@ -8,7 +8,7 @@ from website.models.user import User
 from website.helpers.get_roles import get_roles
 from website.models.role import Role
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time
+from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text
 from website.helpers.export import export
 from website.paths import logo_cz_path, logo_en_path
 from werkzeug.security import generate_password_hash
@@ -81,6 +81,14 @@ def settings():
                 flash("Logo bylo nahráno", category="success")
             else:
                 flash("Soubor nebyl nahrán", category="error")
+            return redirect(url_for("org_views.settings"))
+        elif request.form.get("text_cz") is not None: # aby to vzalo i prazdny
+            set_cz_frontpage_text(request.form.get("text_cz"))
+            flash("Text byl změněn", category="success")
+            return redirect(url_for("org_views.settings"))
+        elif request.form.get("text_en") is not None: # aby to vzalo i prazdny
+            set_en_frontpage_text(request.form.get("text_en"))
+            flash("Text byl změněn", category="success")
             return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()

@@ -41,3 +41,21 @@ def get_date_zacatku_for_dashboard() -> str:
 def get_time_zacatku_for_dashboard() -> str:
     settings = get_settings()
     return f"{settings['applications_start_time']}"
+
+def set_cz_frontpage_text(text: str):
+    settings = get_settings()
+    settings['cz_frontpage_text'] = text
+    save_settings(settings)
+    
+def set_en_frontpage_text(text: str):
+    settings = get_settings()
+    settings['en_frontpage_text'] = text
+    save_settings(settings)
+
+def get_cz_frontpage_text() -> str:
+    settings = get_settings()
+    return settings['cz_frontpage_text']
+
+def get_en_frontpage_text() -> str:
+    settings = get_settings()
+    return settings['en_frontpage_text']
