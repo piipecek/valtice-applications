@@ -28,7 +28,7 @@ detail_usera.forEach(element => {
 });
 
 for (let role of role_uzivatele) {
-    for (let id of ["organizator", "admin", "super_admin"]) {
+    for (let id of ["tutor", "organiser", "editor", "admin"]) {
         if (role == id) {
             document.getElementById(id).checked = true
         }

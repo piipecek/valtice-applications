@@ -15,9 +15,17 @@ from werkzeug.security import generate_password_hash
 
 org_views = Blueprint("org_views",__name__)
 
+
+@org_views.route("/")
+@org_views.route("/dashboard", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
+def dashboard():
+    return render_template("organizator/dashboard.html", roles=get_roles())
+
+
 @org_views.route("/", methods=["GET"])
 @org_views.route("/settings", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
+@require_role_system_name_on_current_user("organiser")
 def settings():
     if request.method == "GET":
         return render_template("organizator/settings.html", roles=get_roles(current_user))
@@ -79,6 +87,7 @@ def settings():
     
     
 @org_views.route("/ucastnik/<int:id>", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
 def ucastnik(id:int):
     if request.method == "GET":
         if User.get_by_id(id) is None:
@@ -98,7 +107,7 @@ def ucastnik(id:int):
     
 # view na upravu ucastnika
 @org_views.route("/uprava_ucastnika/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
+@require_role_system_name_on_current_user("editor")
 def uprava_ucastnika(id:int):
     if request.method == "GET":
         if User.get_by_id(id) is None:
@@ -133,14 +142,28 @@ def uprava_ucastnika(id:int):
     
     
 @org_views.route("/seznam_ucastniku", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
 def seznam_ucastniku():
     if request.method == "GET":
         return render_template("organizator/seznam_ucastniku.html", roles=get_roles(current_user))
     else:
         return request.form.to_dict()
     
+    
+@org_views.route("/tridy", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
+def tridy():
+    if request.method == "GET":
+        return render_template("organizator/tridy.html", roles=get_roles(current_user))
+    else:
+        if id := request.form.get("trida"):
+            return redirect(url_for("org_views.trida", id=id))
+        else:
+            return request.form.to_dict()
+
 
 @org_views.route("/trida/<int:id>", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
 def trida(id:int):
     if request.method == "GET":
         return render_template("organizator/trida.html", id=id, roles=get_roles(current_user))
@@ -152,7 +175,7 @@ def trida(id:int):
         
 
 @org_views.route("/uprava_tridy/<int:id>", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organizator")
+@require_role_system_name_on_current_user("editor")
 def uprava_tridy(id:int):
     if request.method == "GET":
         return render_template("organizator/uprava_tridy.html", id=id, roles=get_roles(current_user))
@@ -174,7 +197,7 @@ def uprava_tridy(id:int):
     
 
 @org_views.route("/ceny", methods=["GET","POST"])
-@require_role_system_name_on_current_user("admin")
+@require_role_system_name_on_current_user("editor")
 def ceny():
     if request.method == "GET":
         return render_template("organizator/ceny.html", roles=get_roles(current_user))
@@ -193,18 +216,9 @@ def ceny():
         else:
             return request.form.to_dict()
         
-@org_views.route("/tridy", methods=["GET","POST"])
-def tridy():
-    if request.method == "GET":
-        return render_template("organizator/tridy.html", roles=get_roles(current_user))
-    else:
-        if id := request.form.get("trida"):
-            return redirect(url_for("org_views.trida", id=id))
-        else:
-            return request.form.to_dict()
-        
        
 @org_views.route("/seznamy", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
 def seznamy():
     if request.method == "GET":
         return render_template("organizator/seznamy.html", roles=get_roles(current_user))
@@ -225,16 +239,10 @@ def seznamy():
             return json.dumps(data_pro_tabulku)
         else:
             return request.form.to_dict()
-    
-    
-@org_views.route("/")
-@org_views.route("/dashboard", methods=["GET","POST"])
-def dashboard():
-    return render_template("organizator/dashboard.html", roles=get_roles())
 
 
 @org_views.route("/organizatori", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("super_admin")
+@require_role_system_name_on_current_user("admin")
 def organizatori():
     if request.method == "GET":
         return render_template("organizator/organizatori.html", roles=get_roles())
@@ -255,7 +263,8 @@ def organizatori():
         
     
 @org_views.route("/detail_usera/<int:id>", methods=["GET", "POST"])
-@require_role_system_name_on_current_user("super_admin")
+#TODO rozdelit kde se udelujou role a kde je detail ucastnika
+@require_role_system_name_on_current_user("admin")
 def detail_usera(id):
     if request.method == "GET":
         if id in [u.id for u in User.get_all()]:
@@ -287,5 +296,24 @@ def detail_usera(id):
             return request.form.to_dict()
     
 @org_views.route("/docs")
+@require_role_system_name_on_current_user("organiser")
 def docs():
     return render_template("organizator/docs.html", roles=get_roles())
+
+
+@org_views.route("/tutor", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("tutor")
+def tutor():
+    if request.method == "GET":
+        return render_template("organizator/cz_tutor.html", roles=get_roles())
+    else:
+        return request.form.to_dict()
+    
+    
+@org_views.route("/en_tutor", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("tutor")
+def en_tutor():
+    if request.method == "GET":
+        return render_template("organizator/en_tutor.html", roles=get_roles())
+    else:
+        return request.form.to_dict()

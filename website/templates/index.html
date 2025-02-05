@@ -33,14 +33,12 @@
             <div class="navbar_wrapper">
                 <!-- jsou tu dva divy, jeden na levo a jeden na pravo od loga -->
                 <div class="link_wrapper">
-                    {% if "prihlasen" in roles %} 
-                        <a class="navbar_link" href="{{url_for('org_views.dashboard')}}">Organizátoři</a>
-                    {% endif %}
+                    {% block left_nav %}
+                    {% endblock %}
                 </div>
                 <div class="link_wrapper">
-                    {% if "prihlasen" in roles %}
-                        <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
-                    {%  endif %}
+                    {% block right_nav %}
+                    {% endblock %}
                 </div>
             </div>
         </div>

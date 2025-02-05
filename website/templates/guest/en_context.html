@@ -1,10 +1,5 @@
 {% extends"index.html" %}
 
-{% block flag %}
-    <a href="{{url_for('guest_views.cz_dashboard')}}" class="flag">
-        <img src="{{url_for('static', filename='img/ikonky/czech-republic.png')}}" alt="CZ">
-    </a>
-{% endblock %}
 
 {% block logo %}
     <div class="logo">
@@ -13,6 +8,32 @@
         </a>
     </div>
 {% endblock %}
+
+
+{% block flag %}
+    <a href="{{url_for('guest_views.cz_dashboard')}}" class="flag">
+        <img src="{{url_for('static', filename='img/ikonky/czech-republic.png')}}" alt="CZ">
+    </a>
+{% endblock %}
+
+
+{% block left_nav %}
+    {% if "tutor" in roles%} 
+        <a class="navbar_link" href="{{url_for('org_views.en_tutor')}}">Tutor</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block right_nav %}
+    {% if "prihlasen" in roles %}
+        <a href="{{url_for('user_views.en_account')}}" class="navbar_link">Account</a>
+        <a href="{{url_for('auth_views.en_logout')}}" class="navbar_link">Log out</a>
+    {% else %}
+        <a class="navbar_link" href="{{url_for('auth_views.en_login')}}">Log in</a><br>
+        <a class="navbar_link" href="{{url_for('auth_views.en_register')}}">Register</a>
+    {%  endif %}
+{% endblock %}
+
 
 {% block footer %}
     Found a bug? <a class="link" target="_blank" href="https://t.me/piipecek">Contact the organisers</a><br>

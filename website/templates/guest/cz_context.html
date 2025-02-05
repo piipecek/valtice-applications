@@ -1,10 +1,5 @@
 {% extends"index.html" %}
 
-{% block flag %}
-    <a href="{{url_for('guest_views.en_dashboard')}}" class="flag">
-        <img src="{{url_for('static', filename='img/ikonky/united-kingdom.png')}}" alt="CZ">
-    </a>
-{% endblock %}
 
 {% block logo %}
     <div class="logo">
@@ -14,12 +9,39 @@
     </div>
 {% endblock %}
 
+
+{% block flag %}
+    <a href="{{url_for('guest_views.en_dashboard')}}" class="flag">
+        <img src="{{url_for('static', filename='img/ikonky/united-kingdom.png')}}" alt="CZ">
+    </a>
+{% endblock %}
+
+
+{% block left_nav %}
+    {% if "tutor" in roles%} 
+        <a class="navbar_link" href="{{url_for('org_views.tutor')}}">Lektor</a>
+    {% endif %}
+    {% if "organiser" in roles %} 
+        <a class="navbar_link" href="{{url_for('org_views.dashboard')}}">Pořadatelská sekce</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block right_nav %}
+    {% if "prihlasen" in roles %}
+        <a href="{{url_for('user_views.account')}}" class="navbar_link">Účet</a>
+        <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
+    {% else %}
+        <a class="navbar_link" href="{{url_for('auth_views.login')}}">Přihlášení</a><br>
+        <a class="navbar_link" href="{{url_for('auth_views.register')}}">Registrace</a>
+    {%  endif %}
+{% endblock %}
+
+
 {% block footer %}
     Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na vývojáře</a><br>
-    {% if "prihlasen" in roles %}
+    {% if "organiser" in roles %}
         <a class="link" href="{{url_for('org_views.docs')}}">Dokumentace k systému</a><br>
-    {% else %}
-        <a class="link" href="{{url_for('auth_views.login')}}">Přihlášení pro organizátory</a><br>
     {% endif %}
     <a class="link" href="{{url_for('guest_views.cz_info')}}">Cookies a GDPR</a><br>
     <a class="link" href="{{url_for('guest_views.cz_dashboard')}}">Zpět domů</a>

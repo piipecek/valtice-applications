@@ -4,14 +4,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, logout_user, current_user
 from website.mail_handler import mail_sender
 
+
 auth_views = Blueprint("auth_views",__name__, template_folder="auth")
+
 
 @auth_views.route("/login", methods=["GET","POST"])
 def login():
 	if current_user.is_authenticated:
 		return redirect(url_for("guest_views.cz_dashboard"))
 	if request.method == "GET":
-		return render_template("auth/auth_login.html")
+		return render_template("auth/cz_login.html")
 	else:
 		email = request.form.get("email")
 		password = request.form.get("password")
@@ -30,12 +32,51 @@ def login():
 			flash("E-mail nebo heslo byly špatně", category="error")
 			return redirect(url_for("auth_views.login"))
 
+
+@auth_views.route("/en_login", methods=["GET","POST"])
+def en_login():
+	if current_user.is_authenticated:
+		return redirect(url_for("guest_views.en_dashboard"))
+	if request.method == "GET":
+		return render_template("auth/en_login.html")
+	else:
+		return request.form.to_dict()
+
+
+@auth_views.route("/register", methods=["GET","POST"])
+def register():
+	if current_user.is_authenticated:
+		return redirect(url_for("guest_views.cz_dashboard"))
+	if request.method == "GET":
+		return render_template("auth/cz_register.html")
+	else:
+		return request.form.to_dict()
+
+
+@auth_views.route("/en_register", methods=["GET","POST"])
+def en_register():
+	if current_user.is_authenticated:
+		return redirect(url_for("guest_views.en_dashboard"))
+	if request.method == "GET":
+		return render_template("auth/en_register.html")
+	else:
+		return request.form.to_dict()
+
+
 @auth_views.route("/logout")
 @login_required
 def logout():
 	logout_user()
 	flash("Odhlášení proběhlo úspěšně.", category="info")
 	return redirect(url_for("guest_views.cz_dashboard"))
+
+
+@auth_views.route("/en_logout")
+@login_required
+def en_logout():
+	logout_user()
+	flash("Log out successful.", category="info")
+	return redirect(url_for("guest_views.en_dashboard"))
 
 
 @auth_views.route("/reset_password", methods=["GET","POST"])

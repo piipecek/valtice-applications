@@ -3,21 +3,5 @@
 {%block content%}
     <h1>Přihláškový systém pro MLŠSH Valtice</h1>
     <hr>
-    {% if faze == "pred" %}
-        <div>
-            Přihlášky na Valtickou mezinárodní letní školu staré hudby jsou zatím uzavřeny a budou otevřeny {{date_zacatku}} v {{time_zacatku}}. Vstup do přihlášek bude na této stránce.
-            <br>
-            TODO: bude co ucastnik to prihlaska? co si maj pripravit predem?
-        </div>
-    {% elif faze == "pri" %}
-        <div>
-            <a href="{{url_for('guest_views.cz_prihlaska')}}">
-                <button class="custom_button">Vytvořit novou přihlášku</button>
-            </a>
-        </div>
-    {% else %}
-        <div>
-            Přihlášky na Valtickou mezinárodní letní školu staré hudby byly uzavřeny. Pokud máte zájem o účast, kontaktujte nás. TODO odkaz na kontakty
-        </div>
-    {% endif %}
+    podle fází tu bude content
 {%endblock%}

@@ -24,7 +24,7 @@
             </div>
         </a>
     </div>
-    {% if "admin" in roles %}
+    {% if "editor" in roles %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
             <a href="{{url_for('org_views.ceny')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
                 <div class="text-center">
@@ -33,7 +33,7 @@
             </a>
         </div>
     {% endif %}
-    {% if "organizator" in roles%}
+    {% if "organiser" in roles%}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
             <a href="{{url_for('org_views.settings')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
                 <div class="text-center">
@@ -42,7 +42,7 @@
             </a>
         </div>
     {% endif %}
-    {% if "super_admin" in roles %}
+    {% if "admin" in roles %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center p-2">
             <a href="{{url_for('org_views.organizatori')}}" class="rounded-3 panel-link d-flex align-items-center justify-content-center p-2">
                 <div class="text-center">
@@ -54,11 +54,11 @@
 
 </div>
 <!-- Pokud role nemám -->
-{% if "super_admin" not in roles %}
+{% if "admin" not in roles %}
     <hr>
 {% endif %} 
 <div class="row p-2">
-    {% if "organizator" not in roles %}
+    {% if "organiser" not in roles %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center">
             <div class="panel-link-inactive">
                 Nastavení
@@ -67,21 +67,21 @@
             </div>
         </div>
     {% endif %}
-    {% if "admin" not in roles %}
+    {% if "editor" not in roles %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center">
             <div class="panel-link-inactive">
                 Ceny
                 <span class="s_roli">s rolí</span> 
-                <span class="missing_role">Admin</span>
+                <span class="missing_role">Editor</span>
             </div>
         </div>
     {% endif %}
-    {% if "super_admin" not in roles %}
+    {% if "admin" not in roles %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 d-flex justify-content-center align-items-center">
             <div class="panel-link-inactive">
                 Organizátoři
                 <span class="s_roli">s rolí</span> 
-                <span class="missing_role">Super Admin</span>
+                <span class="missing_role">Admin</span>
             </div>
         </div>
     {% endif %}
