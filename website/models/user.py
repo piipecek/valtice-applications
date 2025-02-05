@@ -229,7 +229,7 @@ class User(Common_methods_db_model, UserMixin):
             data = {
                 "id": u.id,
                 "email": u.email,
-                "role": ", ".join([r.display_name for r in u.roles])
+                "role": ", ".join([r.display_name for r in sorted(u.roles)])
             }
             result.append(data)
         return result

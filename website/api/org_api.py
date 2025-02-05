@@ -78,13 +78,13 @@ def settings():
 
 
 @org_api.route("/uzivatele_pro_udeleni_roli")
-@require_role_system_name_on_current_user("super_admin")
+@require_role_system_name_on_current_user("admin")
 def uzivatele_pro_udeleni_roli():
     return json.dumps(User.get_seznam_pro_udileni_roli())
 
 
 @org_api.route("/role_uzivatele/<int:id>")
-@require_role_system_name_on_current_user("super_admin")
+@require_role_system_name_on_current_user("admin")
 def role_uzivatele(id):
     return json.dumps([r.system_name for r in User.get_by_id(id).roles])
 

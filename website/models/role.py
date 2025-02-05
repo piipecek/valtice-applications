@@ -9,6 +9,13 @@ class Role(Common_methods_db_model):
     
     users = db.relationship("User", secondary=user_role_jointable, back_populates="roles")
     
+    _role_hiearchy = {
+        "tutor": 1,
+        "organiser": 2,
+        "editor": 3,
+        "admin": 4
+    }
+    
     def __repr__(self) -> str:
         return f"Role | {self.display_name}"
     
@@ -23,3 +30,22 @@ class Role(Common_methods_db_model):
         else:
             role.display_name = self.display_name
         db.session.commit()
+
+    def __lt__(self, other) -> bool:
+        return self._role_hiearchy[self.system_name] < self._role_hiearchy[other.system_name]
+    
+    def __le__(self, other) -> bool:
+        return self._role_hiearchy[self.system_name] <= self._role_hiearchy[other.system_name]
+    
+    def __gt__(self, other) -> bool:
+        return self._role_hiearchy[self.system_name] > self._role_hiearchy[other.system_name]
+    
+    def __ge__(self, other) -> bool:
+        return self._role_hiearchy[self.system_name] >= self._role_hiearchy[other.system_name]
+    
+    def __eq__(self, other) -> bool:
+        return self._role_hiearchy[self.system_name] == self._role_hiearchy[other.system_name]
+    
+    def __ne__(self, other) -> bool:
+        return self._role_hiearchy[self.system_name] != self._role_hiearchy[other.system_name]
+    

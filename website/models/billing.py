@@ -12,7 +12,7 @@ class Billing(Common_methods_db_model):
     def get_data_for_admin(self) -> dict:
         return {
             "id": self.id,
-            "typ": self.typ,
+            "typ": self.type,
             "display_name": self.display_name,
             "system_name": self.system_name,
             "czk": self.czk,

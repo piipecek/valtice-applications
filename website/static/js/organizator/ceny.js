@@ -4,11 +4,13 @@ import TableCreator from "../table_creator.js"
 let ceny = JSON.parse(httpGet("/org_api/ceny"))
 
 let table_kurzovne = new TableCreator(document.getElementById("table_kurzovne"))
-table_kurzovne.make_header(["Název", "Cena v CZK", "Cena v EUR"])
+table_kurzovne.make_header(["Název", "Sazba v CZK", "Sazba v EUR"])
 let table_ubytovani = new TableCreator(document.getElementById("table_ubytovani"))
-table_ubytovani.make_header(["Název", "Cena v CZK", "Cena v EUR"])
+table_ubytovani.make_header(["Název", "Sazba v CZK", "Sazba v EUR"])
 let table_strava = new TableCreator(document.getElementById("table_strava"))
-table_strava.make_header(["Název", "Cena v CZK", "Cena v EUR"])
+table_strava.make_header(["Název", "Sazba v CZK", "Sazba v EUR"])
+let table_slevy = new TableCreator(document.getElementById("table_slevy"))
+table_slevy.make_header(["Název", "Sazba v CZK", "Sazba v EUR"])
 
 for (let cena of ceny) {
     let row = [cena["display_name"]]
@@ -34,5 +36,8 @@ for (let cena of ceny) {
     }
     if (cena.typ == "strava") {
         table_strava.make_row(row)
+    }
+    if (cena.typ == "sleva") {
+        table_slevy.make_row(row)
     }
 }
