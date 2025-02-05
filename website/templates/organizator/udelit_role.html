@@ -1,13 +1,7 @@
 {% extends"guest/cz_context.html" %}
 {% block content %}
-<h1>Detail organizátora </h1>
-<hr>
 <input hidden id="id_getter" value="{{id}}"/>
-<div class="row">
-    <div class="col-sm-5" id="parent_div"></div>
-</div>
-<hr>
-<h1>Role</h1>
+<h1>Úprava rolí organizátora {{email}}</h1>
 <button class="custom_button" id="save_roles_button" type="button">Uložit role</button>
 
 <div id="check_div" class="my-2">
@@ -30,7 +24,7 @@
 </div>
 
 <hr>
-
+TODO tohle taky patří jinam
 <button type="button" class="btn btn-danger" name="smazat" value="whatever" id="delete_button">Smazat uživatele</button>
 
 <form method="post" id="form">
@@ -42,6 +36,6 @@
 </form>
 
 
-<script type="module" src="{{url_for('static', filename='js/organizator/detail_uzivatele.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/organizator/udelit_role.js')}}"></script>
 
 {% endblock %}

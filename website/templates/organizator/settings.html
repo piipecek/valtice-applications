@@ -78,23 +78,26 @@
 </form>
 <hr>
 
-<h2>Vytvoření nového účastníka</h2>
+<h2>Vytvoření nového účtu</h2>
+<small>Pokud vytváříte účet pro lektora nebo pořadatele, je nutné mu poté udělit správné role. Zde zadaný e-mail bude považován za ověřený.</small>
 <form method="post">
     <div class="row">
         <div class="col-12 col-sm-2 my-1">
-            Jméno:
+            e-mail:
         </div>
         <div class="col-12 col-sm my-1">
-            <input class="form-control" type="text" name="jmeno" placeholder="Franta" required>
+            <input class="form-control" type="text" name="email" placeholder="Franta" required>
+        </div>
+        <div class="col-12 col-sm-2 my-1">
+            heslo:
         </div>
         <div class="col-12 col-sm my-1">
-            <input class="form-control" type="text" name="prijmeni" placeholder="Vopička" required>
+            <input class="form-control" type="text" name="password" placeholder="Vopička" required>
         </div>
         <div class="col-12 col-sm-auto my-1">
             <button class="custom_button" name="novy_ucastnik" value="whatever" type="submit">Vytvořit</button>
         </div>
     </div>
-    <small>Slouží zejména pro testing. Účastníci by do systému měli přibývat skrze přihláškový formulář.</small>
 </form>
 <hr>
 <h2>Vytvoření nové třídy</h2>

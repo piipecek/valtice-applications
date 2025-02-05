@@ -24,6 +24,7 @@ with app.app_context():
         josef = User(email="josef.latj@gmail.com", password=generate_password_hash("un1queValtice", method="scrypt"))
         for role in Role.get_all():
             josef.roles.append(role)
+        josef.confirmed_email = True
         db.session.add(josef)
         db.session.commit()
         print("Success")

@@ -20,11 +20,14 @@ for (let trida of tridy_pro_upravu_ucastnika_druhe_zdarma) {
     document.getElementById("vedlejsi_trida_zdarma").appendChild(option)
 }
 
-let full_name = data["jmeno"] + " " + data["prijmeni"]
+let full_name = data["name"] + " " + data["surname"]
+if (full_name.trim() == "") {
+    full_name = "beze jména"
+}
 document.getElementById("full_name").innerText = full_name
 
 for (let key in data) {
-    if (key == "cas_registrace") {
+    if (key == "datetime_registered") {
         if (data[key] == null) {
             document.getElementById(key).innerText = "Zatím neregistrován"
             document.getElementById("registrovat_button").hidden = false
@@ -32,11 +35,15 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]
             document.getElementById("zrusit_registraci_button").hidden = false
         }
-    } else if (["hlavni_trida_1", "hlavni_trida_2", "vedlejsi_trida_placena", "vedlejsi_trida_zdarma"].includes(key)) {
+    } else if (["main_class_id_priority_1", "main_class_id_priority_2", "secondary_class_id"].includes(key)) {
         if (data[key]) {
             document.getElementById(key).value = data[key]
         } else{
             document.getElementById(key).value = "-"
+        }
+    } else if (key.includes("tutor")) {
+        if (document.getElementById(key)) {
+            document.getElementById(key).value = data[key]
         }
     } else {
         document.getElementById(key).value = data[key]

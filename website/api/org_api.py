@@ -69,7 +69,7 @@ def tridy_pro_seznamy():
 @org_api.route("/registrovanych")
 @require_role_system_name_on_current_user("organiser")
 def registrovanych():
-    return json.dumps({"pocet": len(list(filter(lambda u: u.cas_registrace, User.get_all())))})
+    return json.dumps({"pocet": len(list(filter(lambda u: u.datetime_registered, User.get_all())))})
 
 @org_api.route("/settings")
 @require_role_system_name_on_current_user("organiser")
@@ -87,9 +87,3 @@ def uzivatele_pro_udeleni_roli():
 @require_role_system_name_on_current_user("admin")
 def role_uzivatele(id):
     return json.dumps([r.system_name for r in User.get_by_id(id).roles])
-
-
-@org_api.route("/detail_usera/<int:id>")
-@require_role_system_name_on_current_user("admin")
-def detail_usera(id):
-    return json.dumps(User.get_by_id(id).get_info_for_admin_detail_usera())

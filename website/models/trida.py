@@ -19,18 +19,20 @@ class Trida(Common_methods_db_model):
     secondary_participants = db.relationship("User", back_populates="secondary_class", foreign_keys="User.secondary_class_id")
 
     def __repr__(self):
-        return f"Třída | {self.short_name}"
+        return f"Třída | {self.short_name_cz}"
 
     def get_short_name_id_for_seznam(self):
         return {
             "id": self.id,
-            "short_name": self.short_name
+            "short_name": self.short_name_cz
         }
     
     def get_by_full_name(full_name: str) -> "Trida":
-        return db.session.scalars(db.select(Trida).where(Trida.full_name == full_name)).first()
+        #TODO tohle se mi nelibi, proc to tu je? je to z nacitani csvcek?
+        return db.session.scalars(db.select(Trida).where(Trida.full_name_cz == full_name)).first()
     
     def info_pro_detail(self):
+        #TODO tohle musi projit upravou prejmenovani atributu
         return {
             "short_name": self.short_name,
             "full_name": self.full_name,
@@ -48,7 +50,7 @@ class Trida(Common_methods_db_model):
     def data_pro_upravu_ucastniku(self):
         return {
             "id": self.id,
-            "full_name": self.full_name,
+            "full_name": self.full_name_cz,
         }
     
     def info_pro_upravu(self):

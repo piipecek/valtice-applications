@@ -36,8 +36,12 @@ def settings():
             flash("Všichni účastníci byli smazáni", category="success")
             return redirect(url_for("org_views.settings"))
         elif request.form.get("novy_ucastnik"):
-            id = User.novy_ucastnik_from_admin(jmeno = request.form.get("jmeno"), prijmeni = request.form.get("prijmeni"))
-            return redirect(url_for("org_views.uprava_ucastnika", id=id))
+            id = User.novy_ucet_from_admin(email = request.form.get("email"), password = request.form.get("password"))
+            if id:
+                return redirect(url_for("org_views.uprava_ucastnika", id=id))
+            else:
+                flash("Uživatel s tímto emailem už existuje.", category="error")
+                return redirect(url_for("org_views.settings"))
         elif request.form.get("nova_trida"):
             v = Trida(short_name=request.form.get("short_name"))
             v.update()
@@ -94,18 +98,18 @@ def settings():
             return request.form.to_dict()
     
     
-@org_views.route("/ucastnik/<int:id>", methods=["GET","POST"])
+@org_views.route("/detail_ucastnika/<int:id>", methods=["GET","POST"])
 @require_role_system_name_on_current_user("organiser")
-def ucastnik(id:int):
+def detail_ucastnika(id:int):
     if request.method == "GET":
         if User.get_by_id(id) is None:
             flash("Uživatel s tímto ID neexistuje", category="error")
             return redirect(url_for("org_views.seznam_ucastniku"))
-        return render_template("organizator/ucastnik.html", id=id, roles=get_roles(current_user))
+        return render_template("organizator/detail_ucastnika.html", id=id, roles=get_roles(current_user))
     else:
         if request.form.get("zaregistrovat"):
             u = User.get_by_id(id)
-            u.cas_registrace = datetime.now()
+            u.datetime_registered = datetime.now()
             u.update()
             flash("Uživatel byl zaregistrován", category="success")
             return redirect(url_for("org_views.ucastnik", id=id))
@@ -113,7 +117,7 @@ def ucastnik(id:int):
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         return request.form.to_dict()
     
-# view na upravu ucastnika
+    
 @org_views.route("/uprava_ucastnika/<int:id>", methods=["GET","POST"])
 @require_role_system_name_on_current_user("editor")
 def uprava_ucastnika(id:int):
@@ -270,13 +274,13 @@ def organizatori():
             return request.form.to_dict()
         
     
-@org_views.route("/detail_usera/<int:id>", methods=["GET", "POST"])
-#TODO rozdelit kde se udelujou role a kde je detail ucastnika
+@org_views.route("/udelit_role/<int:id>", methods=["GET", "POST"])
 @require_role_system_name_on_current_user("admin")
-def detail_usera(id):
+def udelit_role(id):
     if request.method == "GET":
         if id in [u.id for u in User.get_all()]:
-            return render_template("organizator/detail_uzivatele.html", roles=get_roles(), id=id)
+            u = User.get_by_id(id)
+            return render_template("organizator/udelit_role.html", roles=get_roles(), id=id, email=u.email)
         else:
             flash("Uživatel s tímhle ID neexistuje.", category="error")
             return redirect(url_for("org_views.edit_users"))
@@ -285,7 +289,7 @@ def detail_usera(id):
             user_na_odstraneni = User.get_by_id(id)
             if "admin" in get_roles(user_na_odstraneni):
                 flash("Nemůžete odstranit účet s rolí admina.", category="error")
-                return redirect(url_for("org_views.detail_usera", id=id))
+                return redirect(url_for("org_views.udelit_role", id=id))
             else:
                 user_na_odstraneni.delete()
                 flash("Uživatel smazán", category="success")
@@ -299,7 +303,7 @@ def detail_usera(id):
                 user.roles = nove_role_objekty
                 user.update()
             flash("Role byly upraveny.", category="success")
-            return redirect(url_for("org_views.detail_usera", id=id))
+            return redirect(url_for("org_views.udelit_role", id=id))
         else:    
             return request.form.to_dict()
     

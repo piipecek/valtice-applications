@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 from flask import current_app
 from flask_login import UserMixin, login_user
 import jwt
+from werkzeug.security import generate_password_hash
 
 #todo procistit stare importy
 # from website import db
@@ -28,36 +29,36 @@ class User(Common_methods_db_model, UserMixin):
     surname = db.Column(db.String(200))
     email = db.Column(db.String(200))
     phone = db.Column(db.String(200))
-    age = db.Column(db.String(200)) # child/youth/adult
     is_student = db.Column(db.Boolean, default=False)
-    is_ssh_member = db.Column(db.Boolean, default=False)
-    is_active_participant = db.Column(db.Boolean, default=True)
-    is_student_of_partner_zus = db.Column(db.Boolean, default=False)
     
     #automatic data
     datetime_created = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
     
     #valtice data
+    is_ssh_member = db.Column(db.Boolean, default=False)
+    is_active_participant = db.Column(db.Boolean, default=True)
+    is_student_of_partner_zus = db.Column(db.Boolean, default=False)
     datetime_registered = db.Column(db.DateTime)
-    datetime_paid = db.Column(db.DateTime)
     accomodation_type = db.Column(db.String(200)) # own/vs/gym
     accomodation_count = db.Column(db.Integer, default=0)
     musical_education = db.Column(db.Text)
-    musical_instruments = db.Column(db.String(1000))
+    musical_instrument = db.Column(db.String(1000))
     repertoire = db.Column(db.Text)
     comment = db.Column(db.Text)
     admin_comment = db.Column(db.Text)
     
     #billing data
     billing_currency = db.Column(db.String(200)) # czk/eur
+    billing_email = db.Column(db.String(200))
+    billing_age = db.Column(db.String(200)) # child/youth/adult
+    billing_date_paid = db.Column(db.Date)
+    billing_gift = db.Column(db.Integer, default=0)
     billing_correction = db.Column(db.Integer, default=0)
     billing_correction_reason = db.Column(db.Text)
     billing_food_correction = db.Column(db.Integer, default=0)
     billing_food_correction_reason = db.Column(db.Text)
     billing_accomodation_correction = db.Column(db.Integer, default=0)
     billing_accomodation_correction_reason = db.Column(db.Text)
-    billing_gift = db.Column(db.Integer, default=0)
-    billing_email = db.Column(db.String(200))
     
     #tutor data
     
@@ -73,6 +74,7 @@ class User(Common_methods_db_model, UserMixin):
     #auth data
     password = db.Column(db.String(200))
     must_change_password_upon_login = db.Column(db.Boolean, default=False)
+    confirmed_email = db.Column(db.Boolean, default=False)
     
     #relationships
     roles = db.relationship("Role", secondary=user_role_jointable, back_populates="users")
@@ -123,7 +125,9 @@ class User(Common_methods_db_model, UserMixin):
     
 
     def get_full_name(self) -> str:
-        return f"{self.prijmeni} {self.jmeno}"
+        if self.name is None and self.surname is None:
+            return "Beze jména"
+        return f"{self.name} {self.surname}"
     
     
     def info_pro_seznam(self) -> dict:
@@ -131,9 +135,9 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "id": self.id,
             "full_name": full_name if full_name else "-",
-            "prijmeni": self.prijmeni if self.prijmeni else "-",
+            "prijmeni": self.surname if self.surname else "-",
             "email": self.email if self.email else "-",
-            "registrovan": "Registrován" if self.cas_registrace else "-",
+            "registrovan": "Registrován" if self.datetime_registered else "-",
             "hlavni_trida_1": self.main_class_priority_1.short_name_cz if self.main_class_priority_1 else "-",
             "hlavni_trida_1_id": self.main_class_id_priority_1
         }
@@ -245,36 +249,20 @@ class User(Common_methods_db_model, UserMixin):
             "id": self.id,
             "email": self.email,
         }
-    
-        
-    def get_info_for_admin_detail_usera(self) -> dict:
-        return [
-            {
-                "display_name": "ID v systému",
-                "value": self.id
-            },
-            {
-                "display_name":"E-mail",
-                "value": self.email
-            }
-        ]
 
         
-    def get_info_for_detail_usera(self) -> dict:
-        return {
-            "email": self.email,
-            }
-        
+    @staticmethod
+    def novy_ucet_from_admin(email, password) -> int:
+        if User.get_by_email(email):
+            return None
+        u = User()
+        u.email = email
+        u.password = generate_password_hash(password, method="scrypt")
+        u.confirmed_email = True
+        u.update()
+        return u.id
     
     #todo prepsat stare funckce
-    # @staticmethod
-    # def novy_ucastnik_from_admin(jmeno, prijmeni) -> int:
-    #     v = User()
-    #     v.jmeno = jmeno
-    #     v.prijmeni = prijmeni
-    #     v.cas = datetime.now()
-    #     v.update()
-    #     return v.id
     
     # def kalkulace(self) -> dict:
     #     # ubytovani
@@ -359,50 +347,55 @@ class User(Common_methods_db_model, UserMixin):
     #     return result
     
     
-    # def info_pro_upravu(self):
-    #     return {
-    #         "prijmeni": self.prijmeni,
-    #         "jmeno": self.jmeno,
-    #         "vek": self.vek,
-    #         "email": self.email,
-    #         "telefon": self.telefon,
-    #         "finance_dne": self.finance_dne.isoformat() if self.finance_dne else None,
-    #         "finance_dar": self.finance_dar,
-    #         "finance_mena": self.finance_mena,
-    #         "finance_kategorie": self.finance_kategorie,
-    #         "finance_korekce_kurzovne": self.finance_korekce_kurzovne,
-    #         "finance_korekce_kurzovne_duvod": self.finance_korekce_kurzovne_duvod,
-    #         "finance_korekce_strava": self.finance_korekce_strava,
-    #         "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod,
-    #         "finance_korekce_ubytko": self.finance_korekce_ubytko,
-    #         "finance_korekce_ubytko_duvod": self.finance_korekce_ubytko_duvod,
-    #         "ssh_clen": "Ano" if self.ssh_clen else "Ne", # takhle se to rovnou priradi ke spravnymu option v select 
-    #         "ucast": self.ucast,
-    #         "hlavni_trida_1": self.hlavni_trida_1_id,
-    #         "hlavni_trida_2": self.hlavni_trida_2_id,
-    #         "vedlejsi_trida_placena": self.vedlejsi_trida_placena_id,
-    #         "vedlejsi_trida_zdarma": self.vedlejsi_trida_zdarma_id,
-    #         "ubytovani": self.ubytovani,
-    #         "ubytovani_pocet": self.ubytovani_pocet,
-    #         "vzdelani": self.vzdelani,
-    #         "nastroj": self.nastroj,
-    #         "repertoir": self.repertoir,
-    #         "student_zus_valtice_mikulov": "Ano" if self.student_zus_valtice_mikulov else "Ne",
-    #         "strava": "Ano" if self.strava else "Ne",
-    #         "strava_snidane_vinarska": self.strava_snidane_vinarska,
-    #         "strava_snidane_zs": self.strava_snidane_zs,
-    #         "strava_obed_vinarska_maso": self.strava_obed_vinarska_maso,
-    #         "strava_obed_vinarska_vege": self.strava_obed_vinarska_vege,
-    #         "strava_obed_zs_maso": self.strava_obed_zs_maso,
-    #         "strava_obed_zs_vege": self.strava_obed_zs_vege,
-    #         "strava_vecere_vinarska_maso": self.strava_vecere_vinarska_maso,
-    #         "strava_vecere_vinarska_vege": self.strava_vecere_vinarska_vege,
-    #         "strava_vecere_zs_maso": self.strava_vecere_zs_maso,
-    #         "strava_vecere_zs_vege": self.strava_vecere_zs_vege,
-    #         "uzivatelska_poznamka": self.uzivatelska_poznamka,
-    #         "admin_poznamka": self.admin_poznamka,
-    #         "cas_registrace": pretty_datetime(self.cas_registrace) if self.cas_registrace else None,
-    #     }
+    def info_pro_upravu(self):
+        return {
+            "name": self.name if self.name else "",
+            "surname": self.surname if self.surname else "",
+            "email": self.email,
+            "phone": self.phone,
+            "is_student": "Ano" if self.is_student else "Ne",
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "active" if self.is_active_participant else "passive",
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            
+            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else None,
+            "accomodation_type": self.accomodation_type,
+            "accomodation_count": self.accomodation_count,
+            "musical_education": self.musical_education,
+            "musical_instrument": self.musical_instrument,
+            "repertoire": self.repertoire,
+            "comment": self.comment,
+            "admin_comment": self.admin_comment,
+            
+            "billing_currency": self.billing_currency,
+            "billing_email": self.billing_email,
+            "billing_age": self.billing_age,
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else None,
+            "billing_correction": self.billing_correction,
+            "billing_correction_reason": self.billing_correction_reason,
+            "billing_food_correction": self.billing_food_correction,
+            "billing_food_correction_reason": self.billing_food_correction_reason,
+            "billing_accomodation_correction": self.billing_accomodation_correction,
+            "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
+            "billing_gift": self.billing_gift,
+            
+            "tutor_travel": self.tutor_travel,
+            "tutor_license_plate": self.tutor_license_plate,
+            "tutor_arrival": self.tutor_arrival,
+            "tutor_departure": self.tutor_departure,
+            "tutor_accompanying_names": self.tutor_accompanying_names,
+            "tutor_adress": self.tutor_adress,
+            "tutor_date_of_birth": self.tutor_date_of_birth,
+            "tutor_bank_account": self.tutor_bank_account,
+            
+            "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
+            "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            
+            "main_class_id_priority_1": self.main_class_priority_1.id if self.main_class_priority_1 else None,
+            "main_class_id_priority_2": self.main_class_priority_2.id if self.main_class_priority_2 else None,
+            "secondary_class_id": self.secondary_class.id if self.secondary_class else None,
+            #TODO tady určitě přibudou meals a children
+        }
     
     # def nacist_zmeny_z_requestu(self, request):
     #     self.jmeno = request.form.get("jmeno")

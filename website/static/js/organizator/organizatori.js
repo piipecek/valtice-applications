@@ -8,7 +8,7 @@ tc.make_header(["#", "E-mail", "Role", "Detail"])
 uzivatele_pro_udeleni_roli.forEach(element => {
 
     let a = document.createElement("a")
-    a.href = "/organizator/detail_usera/" + String(element["id"])
+    a.href = "/organizator/udelit_role/" + String(element["id"])
 
     let button = document.createElement("button")
     button.classList.add("custom_button")
