@@ -48,9 +48,9 @@ class Trida(Common_methods_db_model):
             "is_solo": "sólová" if self.is_solo else "hromadná",
             "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
             "age_group": age_group,
-            "main_participants_priority_1": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.is_active} for u in sorted(self.main_paticipants_priority_1, key=lambda u: u.surname)],
-            "main_participants_priority_2": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.is_active} for u in sorted(self.main_paticipants_priority_2, key=lambda u: u.surname)],
-            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.is_active} for u in sorted(self.secondary_participants, key=lambda u: u.surname)],
+            "main_participants_priority_1": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_1, key=lambda u: u.surname)],
+            "main_participants_priority_2": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_2, key=lambda u: u.surname)],
+            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: u.surname)],
             "main_participants_priority_1_count": len(self.main_paticipants_priority_1),
             "main_participants_priority_2_count": len(self.main_paticipants_priority_2),
             "secondary_participants_count": len(self.secondary_participants),
@@ -59,7 +59,7 @@ class Trida(Common_methods_db_model):
     def data_pro_upravu_ucastniku(self):
         return {
             "id": self.id,
-            "full_name": self.full_name_cz,
+            "full_name_cz": self.full_name_cz,
         }
     
     def info_pro_upravu(self):
@@ -75,18 +75,16 @@ class Trida(Common_methods_db_model):
         }
         
     def nacist_zmeny_z_requestu(self, request):
-        self.short_name = request.form.get("short_name")
-        self.full_name = request.form.get("full_name")
-        if request.form.get("typ") == "bezna":
-            self.je_zdarma_jako_vedlejsi = False
-            self.je_ansamblova = False
-        elif request.form.get("typ") == "ansamblova":
-            self.je_zdarma_jako_vedlejsi = False
-            self.je_ansamblova = True
-        else:
-            self.je_zdarma_jako_vedlejsi = True
-            self.je_ansamblova = False
+        self.short_name_cz = request.form.get("short_name_cz")
+        self.full_name_cz = request.form.get("full_name_cz")
+        self.short_name_en = request.form.get("short_name_en")
+        self.full_name_en = request.form.get("full_name_en")
+        self.capacity = int(request.form.get("capacity"))
+        self.age_group = request.form.get("age_group")
+        self.is_solo = request.form.get("is_solo") == "Ano"
+        self.is_free_as_secondary = request.form.get("is_free_as_secondary") == "Ano"
         self.update()
+        
     
     def data_pro_seznamy(self):
         return {

@@ -18,7 +18,7 @@ def tridy_long_names_ids():
 @org_api.route("/ucastnici")
 @require_role_system_name_on_current_user("organiser")
 def ucastnici():
-    sorted_users = sorted(User.get_all(), key=lambda u: czech_sort.key(u.info_pro_seznam()["prijmeni"]))
+    sorted_users = sorted(User.get_all(), key=lambda u: czech_sort.key(u.info_pro_seznam()["surname"]))
     return json.dumps([u.info_pro_seznam() for u in sorted_users])
 
 
@@ -35,11 +35,7 @@ def uprava_ucastnika(id: int):
 @org_api.route("/tridy_pro_upravu_ucastnika")
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_upravu_ucastnika():
-    return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all()], key=lambda x: x["full_name"]))
-
-@org_api.route("/tridy_pro_upravu_ucastnika_druhe_zdarma")
-def tridy_pro_upravu_ucastnika_druhe_zdarma():
-    return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all() if t.je_zdarma_jako_vedlejsi], key=lambda x: x["full_name"]))
+    return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all()], key=lambda x: x["full_name_cz"]))
 
 @org_api.route("/detail_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")

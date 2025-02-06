@@ -2,22 +2,14 @@ import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
 let data = JSON.parse(httpGet("/org_api/uprava_ucastnika/" + id))
 let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
-let tridy_pro_upravu_ucastnika_druhe_zdarma = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika_druhe_zdarma"))
 
 for (let trida of tridy) {
     let option = document.createElement("option")
     option.value = trida["id"]
-    option.innerText = trida["full_name"]
-    document.getElementById("hlavni_trida_1").appendChild(option)
-    document.getElementById("hlavni_trida_2").appendChild(option.cloneNode(true))
-    document.getElementById("vedlejsi_trida_placena").appendChild(option.cloneNode(true))
-}
-
-for (let trida of tridy_pro_upravu_ucastnika_druhe_zdarma) {
-    let option = document.createElement("option")
-    option.value = trida["id"]
-    option.innerText = trida["full_name"]
-    document.getElementById("vedlejsi_trida_zdarma").appendChild(option)
+    option.innerText = trida["full_name_cz"]
+    document.getElementById("main_class_id_priority_1").appendChild(option)
+    document.getElementById("main_class_id_priority_2").appendChild(option.cloneNode(true))
+    document.getElementById("secondary_class_id").appendChild(option.cloneNode(true))
 }
 
 let full_name = data["name"] + " " + data["surname"]
@@ -44,6 +36,12 @@ for (let key in data) {
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).value = data[key]
+        }
+    } else if (key == "is_tutor") {
+        if (data[key]) {
+            document.getElementById("tutor_yes").hidden = false
+        } else {
+            document.getElementById("tutor_no").hidden = false
         }
     } else {
         document.getElementById(key).value = data[key]

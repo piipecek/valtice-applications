@@ -19,6 +19,12 @@ document.getElementById("ubytovani_na_ocich").innerText = data["accomodation_typ
 for (let key in data) {
     if (["name", "surname", "meals_top_visible"].includes(key)) {
         continue
+    } else if (key == "is_tutor") {
+        if (data[key]) {
+            document.getElementById("tutor_yes").hidden = false
+        } else {
+            document.getElementById("tutor_no").hidden = false
+        }
     } else if (key == "datetime_registered") {
         document.getElementById(key).innerText = data[key]
         if (data[key] != "Zatím neregistrován") {

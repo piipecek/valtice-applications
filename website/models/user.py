@@ -3,6 +3,7 @@ from website.models.common_methods_db_model import Common_methods_db_model
 from website.models.jointables import user_role_jointable
 from website.models.trida import Trida
 from website.models.billing import Billing
+from website.models.role import Role
 from website.helpers.pretty_date import pretty_datetime
 from datetime import datetime, timedelta, timezone
 from flask import current_app
@@ -68,7 +69,7 @@ class User(Common_methods_db_model, UserMixin):
     tutor_arrival = db.Column(db.Text)
     tutor_departure = db.Column(db.Text)
     tutor_accompanying_names = db.Column(db.Text)
-    tutor_adress = db.Column(db.Text)
+    tutor_address = db.Column(db.Text)
     tutor_date_of_birth = db.Column(db.Date)
     tutor_bank_account = db.Column(db.String(200))
     
@@ -126,7 +127,10 @@ class User(Common_methods_db_model, UserMixin):
     
 
     def get_full_name(self) -> str:
+        
         if self.name is None and self.surname is None:
+            return "Beze jména"
+        elif f"{self.name} {self.surname}".strip() == "":
             return "Beze jména"
         return f"{self.name} {self.surname}"
     
@@ -136,7 +140,7 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "id": self.id,
             "full_name": full_name if full_name else "-",
-            "prijmeni": self.surname if self.surname else "-",
+            "surname": self.surname if self.surname else "-",
             "email": self.email if self.email else "-",
             "registrovan": "Registrován" if self.datetime_registered else "-",
             "hlavni_trida_1": self.main_class_priority_1.short_name_cz if self.main_class_priority_1 else "-",
@@ -184,15 +188,15 @@ class User(Common_methods_db_model, UserMixin):
     def kalkulace(self) -> dict:
         # ubytovani
         if self.accomodation_type == "gym":
-            if self.billing_currency == "czk":        
+            if self.billing_currency == "czk":      
                 ubytko = self.accomodation_count * Billing.get_by_system_name("telocvicna").czk
-            elif self.billing_currency == "EUR":
-                ubytko = self.accomodation_type * Billing.get_by_system_name("telocvicna").eur
+            elif self.billing_currency == "eur":
+                ubytko = self.accomodation_count * Billing.get_by_system_name("telocvicna").eur
         elif self.accomodation_type == "vs":
-            if self.billing_currency == "CZK":
-                ubytko = self.accomodation_type * Billing.get_by_system_name("internat").czk
-            elif self.billing_currency == "EUR":
-                ubytko = self.accomodation_type * Billing.get_by_system_name("internat").eur
+            if self.billing_currency == "czk":
+                ubytko = self.accomodation_count * Billing.get_by_system_name("internat").czk
+            elif self.billing_currency == "eur":
+                ubytko = self.accomodation_count * Billing.get_by_system_name("internat").eur
         else:
             ubytko = 0
         
@@ -330,16 +334,18 @@ class User(Common_methods_db_model, UserMixin):
             "billing_food_correction_reason": self.billing_food_correction_reason if self.billing_food_correction_reason else "-",
             "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction),
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason if self.billing_accomodation_correction_reason else "-",
-            "tutor_travel": self.tutor_travel,
+            "is_tutor": True if Role.get_by_system_name("tutor") in self.roles else False,
+            "tutor_travel": "vlastní" if self.tutor_travel == "own" else "veřejná",
             "tutor_license_plate": self.tutor_license_plate if self.tutor_license_plate else "-",
             "tutor_arrival": self.tutor_arrival if self.tutor_arrival else "-",
             "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
             "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
-            "tutor_adress": self.tutor_adress if self.tutor_adress else "-",
+            "tutor_address": self.tutor_address if self.tutor_address else "-",
             "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
             "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "roles": ", ".join([r.display_name for r in sorted(self.roles)]),
             "billing_celkem": pretty_penize(kalkulace["celkem"]),
             "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"]),
             "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"]),
@@ -354,15 +360,15 @@ class User(Common_methods_db_model, UserMixin):
             "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
             "hlavni_trida_1": {
                 "name": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
-                "link": "/organizator/trida/" + str(self.main_class_id_priority_1) if self.main_class_priority_1 else None
+                "link": "/organizator/detail_tridy/" + str(self.main_class_id_priority_1) if self.main_class_priority_1 else None
             },
             "hlavni_trida_2": {
                 "name": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
-                "link": "/organizator/trida/" + str(self.main_class_id_priority_2) if self.main_class_priority_2 else None
+                "link": "/organizator/detail_tridy/" + str(self.main_class_id_priority_2) if self.main_class_priority_2 else None
             },
             "vedlejsi_trida": {
                 "name": self.secondary_class.full_name_cz if self.secondary_class else "-",
-                "link": "/organizator/trida/" + str(self.secondary_class_id) if self.secondary_class else None
+                "link": "/organizator/detail_tridy/" + str(self.secondary_class_id) if self.secondary_class else None
             }
         }
     
@@ -392,7 +398,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_currency": self.billing_currency,
             "billing_email": self.billing_email,
             "billing_age": self.billing_age,
-            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else None,
+            "billing_date_paid": self.billing_date_paid.strftime("%Y-%m-%d") if self.billing_date_paid else None,
             "billing_correction": self.billing_correction,
             "billing_correction_reason": self.billing_correction_reason,
             "billing_food_correction": self.billing_food_correction,
@@ -401,13 +407,14 @@ class User(Common_methods_db_model, UserMixin):
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
             "billing_gift": self.billing_gift,
             
+            "is_tutor": True if Role.get_by_system_name("tutor") in self.roles else False,
             "tutor_travel": self.tutor_travel,
             "tutor_license_plate": self.tutor_license_plate,
             "tutor_arrival": self.tutor_arrival,
             "tutor_departure": self.tutor_departure,
             "tutor_accompanying_names": self.tutor_accompanying_names,
-            "tutor_adress": self.tutor_adress,
-            "tutor_date_of_birth": self.tutor_date_of_birth,
+            "tutor_address": self.tutor_address,
+            "tutor_date_of_birth": self.tutor_date_of_birth.strftime("%Y-%m-%d") if self.tutor_date_of_birth else None,
             "tutor_bank_account": self.tutor_bank_account,
             
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
@@ -419,48 +426,54 @@ class User(Common_methods_db_model, UserMixin):
             #TODO tady určitě přibudou meals a children
         }
     
-    # def nacist_zmeny_z_requestu(self, request):
-    #     self.jmeno = request.form.get("jmeno")
-    #     self.prijmeni = request.form.get("prijmeni")
-    #     self.vek = request.form.get("vek")
-    #     self.email = request.form.get("email")
-    #     self.telefon = request.form.get("telefon")
-    #     self.finance_dne = datetime.strptime(request.form.get("finance_dne"), "%Y-%m-%d") if request.form.get("finance_dne") else None
-    #     self.finance_dar = float(request.form.get("finance_dar"))
-    #     self.finance_mena = request.form.get("finance_mena")
-    #     self.finance_kategorie = request.form.get("finance_kategorie")
-    #     self.finance_korekce_kurzovne = float(request.form.get("finance_korekce_kurzovne"))
-    #     self.finance_korekce_kurzovne_duvod = request.form.get("finance_korekce_kurzovne_duvod")
-    #     self.finance_korekce_strava = float(request.form.get("finance_korekce_strava"))
-    #     self.finance_korekce_strava_duvod = request.form.get("finance_korekce_strava_duvod")
-    #     self.finance_korekce_ubytko = float(request.form.get("finance_korekce_ubytko"))
-    #     self.finance_korekce_ubytko_duvod = request.form.get("finance_korekce_ubytko_duvod")
-    #     self.ssh_clen = True if request.form.get("ssh_clen") == "Ano" else False
-    #     self.ucast = request.form.get("ucast")
-    #     self.hlavni_trida_1_id = int(request.form.get("hlavni_trida_1")) if request.form.get("hlavni_trida_1") != "-" else None
-    #     self.hlavni_trida_2_id = int(request.form.get("hlavni_trida_2")) if request.form.get("hlavni_trida_2") != "-" else None
-    #     self.vedlejsi_trida_placena_id = int(request.form.get("vedlejsi_trida_placena")) if request.form.get("vedlejsi_trida_placena") != "-" else None
-    #     self.vedlejsi_trida_zdarma_id = int(request.form.get("vedlejsi_trida_zdarma")) if request.form.get("vedlejsi_trida_zdarma") != "-" else None
-    #     self.ubytovani = request.form.get("ubytovani")
-    #     self.ubytovani_pocet = float(request.form.get("ubytovani_pocet"))
-    #     self.vzdelani = request.form.get("vzdelani")
-    #     self.nastroj = request.form.get("nastroj")
-    #     self.repertoir = request.form.get("repertoir")
-    #     self.student_zus_valtice_mikulov = True if request.form.get("student_zus_valtice_mikulov") == "Ano" else False
-    #     self.strava = True if request.form.get("strava") == "Ano" else False
-    #     self.strava_snidane_vinarska = int(request.form.get("strava_snidane_vinarska")) if request.form.get("strava_snidane_vinarska") else 0
-    #     self.strava_snidane_zs = int(request.form.get("strava_snidane_zs")) if request.form.get("strava_snidane_zs") else 0
-    #     self.strava_obed_vinarska_maso = int(request.form.get("strava_obed_vinarska_maso")) if request.form.get("strava_obed_vinarska_maso") else 0
-    #     self.strava_obed_vinarska_vege = int(request.form.get("strava_obed_vinarska_vege")) if request.form.get("strava_obed_vinarska_vege") else 0
-    #     self.strava_obed_zs_maso = int(request.form.get("strava_obed_zs_maso")) if request.form.get("strava_obed_zs_maso") else 0
-    #     self.strava_obed_zs_vege = int(request.form.get("strava_obed_zs_vege")) if request.form.get("strava_obed_zs_vege") else 0
-    #     self.strava_vecere_vinarska_maso = int(request.form.get("strava_vecere_vinarska_maso")) if request.form.get("strava_vecere_vinarska_maso") else 0
-    #     self.strava_vecere_vinarska_vege = int(request.form.get("strava_vecere_vinarska_vege")) if request.form.get("strava_vecere_vinarska_vege") else 0
-    #     self.strava_vecere_zs_maso = int(request.form.get("strava_vecere_zs_maso")) if request.form.get("strava_vecere_zs_maso") else 0
-    #     self.strava_vecere_zs_vege = int(request.form.get("strava_vecere_zs_vege")) if request.form.get("strava_vecere_zs_vege") else 0
-    #     self.uzivatelska_poznamka = request.form.get("uzivatelska_poznamka")
-    #     self.admin_poznamka = request.form.get("admin_poznamka")
-    #     self.update()
+    def nacist_zmeny_z_requestu(self, request):
+            
+        self.name = request.form.get("name")
+        self.surname = request.form.get("surname")
+        self.email = request.form.get("email")
+        self.phone = request.form.get("phone")
+        self.is_student = True if request.form.get("is_student") == "Ano" else False
+        self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
+        self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
+        self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
+        self.accomodation_type = request.form.get("accomodation_type")
+        self.accomodation_count = int(request.form.get("accomodation_count")) if request.form.get("accomodation_count") else 0
+        self.musical_education = request.form.get("musical_education")
+        self.musical_instrument = request.form.get("musical_instrument")
+        self.repertoire = request.form.get("repertoire")
+        self.comment = request.form.get("comment")
+        self.admin_comment = request.form.get("admin_comment")
+        self.billing_currency = request.form.get("billing_currency")
+        self.billing_email = request.form.get("billing_email")
+        self.billing_age = request.form.get("billing_age")
+        self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
+        self.billing_date_paid = datetime.strptime(request.form.get("billing_date_paid"), "%Y-%m-%d") if request.form.get("billing_date_paid") else None
+        self.billing_correction = int(request.form.get("billing_correction")) if request.form.get("billing_correction") else 0
+        self.billing_correction_reason = request.form.get("billing_correction_reason")
+        self.billing_food_correction = int(request.form.get("billing_food_correction")) if request.form.get("billing_food_correction") else 0
+        self.billing_food_correction_reason = request.form.get("billing_food_correction_reason")
+        self.billing_accomodation_correction = int(request.form.get("billing_accomodation_correction")) if request.form.get("billing_accomodation_correction") else 0
+        self.billing_accomodation_correction_reason = request.form.get("billing_accomodation_correction_reason")
+        self.main_class_id_priority_1 = int(request.form.get("main_class_id_priority_1")) if request.form.get("main_class_id_priority_1") != "-"  else None
+        self.main_class_id_priority_2 = int(request.form.get("main_class_id_priority_2")) if request.form.get("main_class_id_priority_2") != "-"  else None
+        self.secondary_class_id = int(request.form.get("secondary_class_id")) if request.form.get("secondary_class_id") != "-" else None
+        
+        self.tutor_travel = request.form.get("tutor_travel")
+        self.tutor_license_plate = request.form.get("tutor_license_plate")
+        self.tutor_arrival = request.form.get("tutor_arrival")
+        self.tutor_departure = request.form.get("tutor_departure")
+        self.tutor_accompanying_names = request.form.get("tutor_accompanying_names")
+        self.tutor_address = request.form.get("tutor_address")
+        self.tutor_date_of_birth = datetime.strptime(request.form.get("tutor_date_of_birth"), "%Y-%m-%d") if request.form.get("tutor_date_of_birth") else None
+        self.tutor_bank_account = request.form.get("tutor_bank_account")
+        
+        self.must_change_password_upon_login = True if request.form.get("must_change_password_upon_login") == "Ano" else False
+        self.confirmed_email = True if request.form.get("confirmed_email") == "Ano" else False
+        if request.form.get("new_password"):
+            self.password = generate_password_hash(request.form.get("new_password"), method="scrypt")
+            self.must_change_password_upon_login = True
+            
+        self.update()
     
     
     # @staticmethod

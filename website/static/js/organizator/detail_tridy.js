@@ -57,15 +57,3 @@ for(let ucastnik of data.secondary_participants){
     tr.appendChild(td2)
     document.getElementById("secondary_participants").appendChild(tr)
 }
-
-function count_string(count) {
-    if (count == 0) {
-        return "Žádní účastníci."
-    } else if (count == 1) {
-        return "Celkem jeden účastník."
-    } else if (count <= 4) {
-        return "Celkem "+ String(count) + " účastníci." 
-    } else {
-        return "Celkem "+String(count)+" účastníků."
-    }
-}

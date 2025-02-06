@@ -6,8 +6,8 @@ class Billing(Common_methods_db_model):
     type = db.Column(db.String(300), default="course") # course / accommodation / food
     display_name = db.Column(db.String(1000))
     system_name = db.Column(db.String(100), unique=True)
-    czk = db.Column(db.Float, default=0)
-    eur = db.Column(db.Float, default=0)
+    czk = db.Column(db.Float, default=0, nullable=False)
+    eur = db.Column(db.Float, default=0, nullable=False)
     
     def get_data_for_admin(self) -> dict:
         return {

@@ -5,8 +5,8 @@
 <h2>Úprava třídy <span id="name_title"></span></h2>
 <hr>
 <form method="post">
+    <button type="submit" class="custom_button" name="zpet" value="whatever">Zpět na účastníky</button>
     <button type="submit" class="custom_button" name="save" value="whatever">Uložit změny</button>
-    <button type="submit" class="custom_button" name="zpet" value="whatever">Účastníci</button>
     <button type="button" class="btn btn-danger" id="delete_button">Smazat třídu</button>
     <hr>
     <div class="container my-2">
@@ -41,21 +41,21 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-3 d-flex align-items-center">Věková skupina</div>
+            <div class="col-3 d-flex align-items-center">Typ třídy</div>
             <div class="col">
-                <select class="form-control" id="age_group" name="age_group">
-                    <option value="child">dětská</option>
-                    <option value="youth">pro děti do 15 let</option>
-                    <option value="adult">dospělá</option>
+                <select class="form-control" id="is_solo" name="is_solo">
+                    <option value="Ano">sólová</option>
+                    <option value="Ne">hromadná - kapacita nehraje roli</option>
                 </select>
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-3 d-flex align-items-center">Je třídá sólová?</div>
+            <div class="col-3 d-flex align-items-center">Věková skupina</div>
             <div class="col">
-                <select class="form-control" id="is_solo" name="is_solo">
-                    <option value="Ano">Ano</option>
-                    <option value="Ne">Ne</option>
+                <select class="form-control" id="age_group" name="age_group">
+                    <option value="child">dětská</option>
+                    <option value="youth">pro mládež do 15 let</option>
+                    <option value="adult">dospělá</option>
                 </select>
             </div>
         </div>
@@ -71,6 +71,7 @@
 
     </div> 
 </form>
+Manuální zapsání účastníků do třídy je možné z detailu jejich účtu.
 <form method="post" id="delete_form">
     <input type="hidden" name="delete" value="whatever">
 </form>

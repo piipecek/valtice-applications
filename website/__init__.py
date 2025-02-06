@@ -22,11 +22,11 @@ def create_app() -> Flask:
     db_driver = os.environ.get("DB_DRIVER")
     db_username = os.environ.get("DB_USERNAME")
     db_password = os.environ.get("DB_PASSWORD")
-    db_adress = os.environ.get("DB_ADRESS")
+    db_address = os.environ.get("DB_ADDRESS")
     db_name = os.environ.get("DB_NAME")
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"{db_driver}://{db_username}:{db_password}@{db_adress}/{db_name}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"{db_driver}://{db_username}:{db_password}@{db_address}/{db_name}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle' : 280}
     app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER")

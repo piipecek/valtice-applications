@@ -112,7 +112,7 @@ def detail_ucastnika(id:int):
             u.datetime_registered = datetime.now()
             u.update()
             flash("Uživatel byl zaregistrován", category="success")
-            return redirect(url_for("org_views.ucastnik", id=id))
+            return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif request.form.get("edit_button"):
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         return request.form.to_dict()
@@ -131,21 +131,21 @@ def uprava_ucastnika(id:int):
             u = User.get_by_id(id)
             u.nacist_zmeny_z_requestu(request)
             flash("Změny byly uloženy", category="success")
-            return redirect(url_for("org_views.ucastnik", id=id))
+            return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif request.form.get("zrusit_registraci"):
             u = User.get_by_id(id)
-            u.cas_registrace = None
+            u.datetime_registered = None
             u.update()
             flash("Registrace byla zrušena", category="success")
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         elif request.form.get("registrovat_nyni"):
             u = User.get_by_id(id)
-            u.cas_registrace = datetime.now()
+            u.datetime_registered = datetime.now()
             u.update()
             flash("Uživatel byl zaregistrován", category="success")
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         elif request.form.get("zpet"):
-            return redirect(url_for("org_views.ucastnik", id=id))
+            return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif request.form.get("delete"):
             User.get_by_id(id).delete()
             flash("Uživatel byl smazán", category="success")

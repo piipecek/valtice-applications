@@ -215,20 +215,48 @@
 </div>
 <hr>
 <h2>Lektor</h2>
-{% if "tutor" in roles %}
-<div class="table-responsive">
+<div class="table-responsive" id="tutor_yes" hidden>
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
                 <td class="pravy_text">Způsob dopravy</td>
-                <td id="lektor_jmeno"></td>
+                <td id="tutor_travel"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Registrační značka vozidla</td>
+                <td id="tutor_license_plate"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Příjezd</td>
+                <td id="tutor_arrival"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Odjezd</td>
+                <td id="tutor_departure"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Jména doprovodu</td>
+                <td id="tutor_accompanying_names"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Adresa</td>
+                <td id="tutor_address"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Datum narození</td>
+                <td id="tutor_date_of_birth"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Bankovní účet</td>
+                <td id="tutor_bank_account"></td>
             </tr>
         </tbody>
     </table>
 </div>
-{% else %} 
-s rolí lektora. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">Udělit role</a> tomuto uživateli.
-{% endif %}
+<p id="tutor_no" hidden>
+    s rolí lektora. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">Udělit role</a> tomuto uživateli.
+</p>
+
 <hr>
 <h2>Přístup k účtu</h2>
 <div class="table-responsive">
@@ -245,6 +273,10 @@ s rolí lektora. <a class="link" href="{{url_for('org_views.udelit_role', id=id)
             <tr>
                 <td class="pravy_text">Datum vytvoření účtu</td>
                 <td id="datetime_created" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Role</td>
+                <td id="roles" colspan="2"></td>
             </tr>
         </tbody>
     </table>
