@@ -27,17 +27,49 @@
     </table>
 </div>
 <hr>
-<h2>Obecné</h2>
+<h2>Osobní informace</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="pravy_text">Čas vyplnění přihlášky</td>
-                <td id="cas" colspan="2"></td>
+                <td class="pravy_text">Email</td>
+                <td id="email" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Telefon</td>
+                <td id="phone" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student</td>
+                <td id="is_student" colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Valtické informace</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Člen SSH</td>
+                <td id="is_ssh_member" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Účast</td>
+                <td id="is_active_participant" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student ZUŠ Valtice / Mikulov</td>
+                <td id="is_student_of_partner_zus" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Čas výběru třídy</td>
+                <td id="datetime_class_pick" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Čas registrace ve Valticích</td>
-                <td id="cas_registrace"></td>
+                <td id="datetime_registered"></td>
                 <td>
                     <form method="post" id="zaregistrovat_form">
                         <button class="custom_button" name="zaregistrovat" value="whatever">Zaregistrovat teď</button>
@@ -45,72 +77,40 @@
                 </td>
             </tr>
             <tr>
-                <td class="pravy_text">Věk</td>
-                <td id="vek" colspan="2"></td>
+                <td class="pravy_text">Ubytování</td>
+                <td id="accomodation_type" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Telefon</td>
-                <td id="telefon" colspan="2"></td>
+                <td class="pravy_text">Hudební vzdělání</td>
+                <td id="musical_education" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Email</td>
-                <td id="email" colspan="2"></td>
+                <td class="pravy_text">Nástroj</td>
+                <td id="musical_instrument" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Účast</td>
-                <td id="ucast" colspan="2"></td>
+                <td class="pravy_text">Repertoir</td>
+                <td id="repertoire" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Člen SSH</td>
-                <td id="ssh_clen" colspan="2"></td>
+                <td class="pravy_text">Uživatelská poznámka</td>
+                <td id="comment" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Organizátorská poznámka</td>
+                <td id="admin_comment" colspan="2"></td> 
             </tr>
             <tr>
                 <td class="pravy_text">Hlavní třída - volba 1</td>
                 <td id="hlavni_trida_1" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Vedlejší třída placená</td>
-                <td id="vedlejsi_trida_placena" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Vedlejší třída zdarma</td>
-                <td id="vedlejsi_trida_zdarma" colspan="2"></td>
+                <td class="pravy_text">Vedlejší třída</td>
+                <td id="vedlejsi_trida" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Hlavní třída - volba 2</td>
                 <td id="hlavni_trida_2" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Ubytování</td>
-                <td id="ubytovani" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Strava</td>
-                <td id="strava" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Hudební vzdělání</td>
-                <td id="vzdelani" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Nástroj</td>
-                <td id="nastroj" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Repertoir</td>
-                <td id="repertoir" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Student ZUŠ Valtice / Mikulov</td>
-                <td id="student_zus_valtice_mikulov" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Uživatelská poznámka</td>
-                <td id="uzivatelska_poznamka" colspan="2"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Organizátorská poznámka</td>
-                <td id="admin_poznamka" colspan="2"></td> 
             </tr>
         </tbody>
     </table>
@@ -121,64 +121,74 @@
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
+                <td class="pravy_text">Fakturační e-mail</td>
+                <td id="billing_email"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Kategorie</td>
+                <td id="billing_age"></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td class="pravy_text">Placeno dne</td>
-                <td id="finance_dne"></td>
+                <td id="billing_date_paid"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Celková částka</td>
-                <td id="finance_celkem"></td>
+                <td id="billing_celkem"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">hlavní třída</td>
-                <td id="finance_trida_1"></td>
+                <td class="pravy_text">Hlavní třída</td>
+                <td id="billing_hlavni_trida"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Vedlejší třída</td>
-                <td id="finance_trida_2"></td>
+                <td id="billing_vedlejsi_trida"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Ubytování</td>
-                <td id="finance_ubytovani"></td>
+                <td id="billing_ubytovani"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Snídaně</td>
-                <td id="finance_snidane"></td>
+                <td id="billing_snidane"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Obědy</td>
-                <td id="finance_obedy"></td>
+                <td id="billing_obedy"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Večeře</td>
-                <td id="finance_vecere"></td>
+                <td id="billing_vecere"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Dar</td>
-                <td id="finance_dar"></td>
+                <td id="billing_dar"></td>
                 <td></td>
             </tr>
             <tr>
                 <td class="pravy_text">Korekce kurzovné</td>
-                <td id="finance_korekce_kurzovne"></td>
-                <td id="finance_korekce_kurzovne_duvod"></td>
+                <td id="billing_correction"></td>
+                <td id="billing_correction_reason"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Korekce strava</td>
-                <td id="finance_korekce_strava"></td>
-                <td id="finance_korekce_strava_duvod"></td>
+                <td id="billing_food_correction"></td>
+                <td id="billing_food_correction_reason"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Korekce ubytko</td>
-                <td id="finance_korekce_ubytko"></td>
-                <td id="finance_korekce_ubytko_duvod"></td>
+                <td id="billing_accomodation_correction"></td>
+                <td id="billing_accomodation_correction_reason"></td>
             </tr>
         </tbody>
     </table>
@@ -199,6 +209,42 @@
             <tr>
                 <td class="pravy_text">Večeře</td>
                 <td id="strava_vecere"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Lektor</h2>
+{% if "tutor" in roles %}
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Způsob dopravy</td>
+                <td id="lektor_jmeno"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% else %} 
+s rolí lektora. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">Udělit role</a> tomuto uživateli.
+{% endif %}
+<hr>
+<h2>Přístup k účtu</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Musí při dalším přihlášení změnit heslo?</td>
+                <td id="must_change_password_upon_login"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Má ověřený e-mail?</td>
+                <td id="confirmed_email"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Datum vytvoření účtu</td>
+                <td id="datetime_created" colspan="2"></td>
             </tr>
         </tbody>
     </table>

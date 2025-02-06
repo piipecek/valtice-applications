@@ -22,9 +22,9 @@ def ucastnici():
     return json.dumps([u.info_pro_seznam() for u in sorted_users])
 
 
-@org_api.route("/ucastnik/<int:id>")
+@org_api.route("/detail_ucastnika/<int:id>")
 @require_role_system_name_on_current_user("organiser")
-def ucastnik(id: int):
+def detail_ucastnika(id: int):
     return json.dumps(User.get_by_id(id).info_pro_detail())
 
 @org_api.route("/uprava_ucastnika/<int:id>")
@@ -41,9 +41,9 @@ def tridy_pro_upravu_ucastnika():
 def tridy_pro_upravu_ucastnika_druhe_zdarma():
     return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all() if t.je_zdarma_jako_vedlejsi], key=lambda x: x["full_name"]))
 
-@org_api.route("/trida/<int:id>")
+@org_api.route("/detail_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")
-def trida(id: int):
+def detail_tridy(id: int):
     return json.dumps(Trida.get_by_id(id).info_pro_detail())
 
 @org_api.route("/uprava_tridy/<int:id>")

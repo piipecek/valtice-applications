@@ -32,19 +32,28 @@ class Trida(Common_methods_db_model):
         return db.session.scalars(db.select(Trida).where(Trida.full_name_cz == full_name)).first()
     
     def info_pro_detail(self):
-        #TODO tohle musi projit upravou prejmenovani atributu
+        if self.age_group == "child":
+            age_group = "dětská"
+        elif self.age_group == "youth":
+            age_group = "mládež do 15 let"
+        else:
+            age_group = "dospělá"
+            
         return {
-            "short_name": self.short_name,
-            "full_name": self.full_name,
-            "hlavni_ucastnici_1": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.ucast} for u in sorted(self.hlavni_ucastnici_1, key=lambda u: u.prijmeni)],
-            "hlavni_ucastnici_2": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.ucast} for u in sorted(self.hlavni_ucastnici_2, key=lambda u: u.prijmeni)],
-            "vedlejsi_ucastnici_placeni": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.ucast} for u in sorted(self.vedlejsi_placena_ucastnici, key=lambda u: u.prijmeni)],
-            "vedlejsi_ucastnici_zdarma": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.ucast} for u in sorted(self.vedlejsi_zdarma_ucastnici, key=lambda u: u.prijmeni)],
-            "celkem": len(self.hlavni_ucastnici_1) + len(self.vedlejsi_placena_ucastnici) + len(self.vedlejsi_zdarma_ucastnici),
-            "prvni_trida_count": len(self.hlavni_ucastnici_1),
-            "druha_trida_count": len(self.hlavni_ucastnici_2),
-            "vedlejsi_placena_count": len(self.vedlejsi_placena_ucastnici),
-            "vedlejsi_zdarma_count": len(self.vedlejsi_zdarma_ucastnici)
+            "short_name_cz": self.short_name_cz,
+            "full_name_cz": self.full_name_cz if self.full_name_cz else "-",
+            "short_name_en": self.short_name_en if self.short_name_en else "-",
+            "full_name_en": self.full_name_en if self.full_name_en else "-",
+            "capacity": self.capacity if self.capacity else "-",
+            "is_solo": "sólová" if self.is_solo else "hromadná",
+            "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
+            "age_group": age_group,
+            "main_participants_priority_1": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.is_active} for u in sorted(self.main_paticipants_priority_1, key=lambda u: u.surname)],
+            "main_participants_priority_2": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.is_active} for u in sorted(self.main_paticipants_priority_2, key=lambda u: u.surname)],
+            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/ucastnik/" + str(u.id), "ucast": u.is_active} for u in sorted(self.secondary_participants, key=lambda u: u.surname)],
+            "main_participants_priority_1_count": len(self.main_paticipants_priority_1),
+            "main_participants_priority_2_count": len(self.main_paticipants_priority_2),
+            "secondary_participants_count": len(self.secondary_participants),
         }
     
     def data_pro_upravu_ucastniku(self):

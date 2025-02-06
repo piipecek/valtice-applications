@@ -169,16 +169,16 @@ def tridy():
         return render_template("organizator/tridy.html", roles=get_roles(current_user))
     else:
         if id := request.form.get("trida"):
-            return redirect(url_for("org_views.trida", id=id))
+            return redirect(url_for("org_views.detail_tridy", id=id))
         else:
             return request.form.to_dict()
 
 
-@org_views.route("/trida/<int:id>", methods=["GET","POST"])
+@org_views.route("/detail_tridy/<int:id>", methods=["GET","POST"])
 @require_role_system_name_on_current_user("organiser")
-def trida(id:int):
+def detail_tridy(id:int):
     if request.method == "GET":
-        return render_template("organizator/trida.html", id=id, roles=get_roles(current_user))
+        return render_template("organizator/detail_tridy.html", id=id, roles=get_roles(current_user))
     else:
         if request.form.get("upravit"):
             return redirect(url_for("org_views.uprava_tridy", id=id))
@@ -196,9 +196,9 @@ def uprava_tridy(id:int):
             t = Trida.get_by_id(id)
             t.nacist_zmeny_z_requestu(request)
             flash("Změny byly uloženy", category="success")
-            return redirect(url_for("org_views.trida", id=id))
+            return redirect(url_for("org_views.detail_tridy", id=id))
         elif request.form.get("zpet"):
-            return redirect(url_for("org_views.trida", id=id))
+            return redirect(url_for("org_views.detail_tridy", id=id))
         elif request.form.get("delete"):
             t = Trida.get_by_id(id)
             t.delete()

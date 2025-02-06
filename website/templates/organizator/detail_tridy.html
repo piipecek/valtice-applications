@@ -1,0 +1,101 @@
+{% extends"guest/cz_context.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<input hidden id="id_getter" value="{{id}}"/>
+<h1>Detail Třídy <span id="name"></span></h1>
+<hr>
+<p><span id="celkem"></span></p>
+<form method="post">
+    <button type="submit" class="custom_button" name="upravit" value="whatever">Upravit</button>
+</form>
+<hr>
+<h2>Obecné informace</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Krátké jméno česky</td>
+                <td id="short_name_cz" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Dlouhé jméno česky</td>
+                <td id="full_name_cz" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Krátké jméno anglicky</td>
+                <td id="short_name_en" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Dlouhé jméno anglicky</td>
+                <td id="full_name_en" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Kapacita</td>
+                <td id="capacity" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Typ třídy</td>
+                <td id="is_solo" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Je zdarma jako vedlejší</td>
+                <td id="is_free_as_secondary" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Věková skupina</td>
+                <td id="age_group" colspan="2"></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Hlavní třída - 1. volba</h2>
+<p>celkem účastníků: <span id="main_participants_priority_1_count"></span></p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Jméno</th>
+                <th>Účast</th>
+            </tr>
+        </thead>
+        <tbody id="main_participants_1">
+            
+        </tbody>
+    </table>
+</div>
+<h2>Vedlejší třída</h2>
+<p>celkem účastníků: <span id="secondary_participants_count"></span></p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Jméno</th>
+                <th>Účast</th>
+            </tr>
+        </thead>
+        <tbody id="secondary_participants">
+            
+        </tbody>
+    </table>
+</div>
+<h2>Hlavní třída - 2. volba</h2>
+<p>celkem účastníků: <span id="main_participants_priority_2_count"></span></p>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Jméno</th>
+                <th>Účast</th>
+            </tr>
+        </thead>
+        <tbody id="main_participants_2">
+            
+        </tbody>
+    </table>
+</div>
+
+<script type="module" src="{{url_for('static', filename='js/organizator/detail_tridy.js')}}"></script>
+
+{% endblock %}

@@ -2,6 +2,7 @@ from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
 from website.models.jointables import user_role_jointable
 from website.models.trida import Trida
+from website.models.billing import Billing
 from website.helpers.pretty_date import pretty_datetime
 from datetime import datetime, timedelta, timezone
 from flask import current_app
@@ -16,7 +17,6 @@ from werkzeug.security import generate_password_hash
 # from datetime import datetime, date
 # from flask_login import UserMixin
 # from website.models.trida import Trida
-# from website.models.cena import Cena
 # from io import BytesIO
 # from openpyxl import Workbook
 # import czech_sort
@@ -38,6 +38,7 @@ class User(Common_methods_db_model, UserMixin):
     is_ssh_member = db.Column(db.Boolean, default=False)
     is_active_participant = db.Column(db.Boolean, default=True)
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
+    datetime_class_pick = db.Column(db.DateTime)
     datetime_registered = db.Column(db.DateTime)
     accomodation_type = db.Column(db.String(200), default="own") # own/vs/gym
     accomodation_count = db.Column(db.Integer, default=0)
@@ -141,91 +142,8 @@ class User(Common_methods_db_model, UserMixin):
             "hlavni_trida_1": self.main_class_priority_1.short_name_cz if self.main_class_priority_1 else "-",
             "hlavni_trida_1_id": self.main_class_id_priority_1
         }
-    
-    
-    def info_pro_detail(self):
-        def pretty_penize(castka) -> str:
-            if castka == 0:
-                return "-"
-            if castka == int(castka):
-                castka = int(castka)
-            else:
-                castka = str(round(castka, 2)).replace(".", ",")
-            if self.billing_currency == "CZK":
-                return f"{castka} Kč"
-            elif self.finance_mena == "EUR":
-                return f"{castka} €"
-         
-        # ubytovani
-        if self.accomodation_type == "own":
-            ubytovani = "Vlastní"
-        elif self.accomodation_type == "vs":
-            ubytovani = "Vinařská škola"
-        else:
-            ubytovani = "Tělocvična"
-        ubytovani = f"{ubytovani}: {self.accomodation_count}"
-            
-
-                
-        kalkulace = self.kalkulace()
-        return {
-            "datetime_created": pretty_datetime(self.datetime_created),
-            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "Zatím neregistrován",
-            #atd, cele prepsat
-            # "prijmeni": self.prijmeni,
-            # "jmeno": self.jmeno,
-            # "vek": self.vek if self.vek else "-",
-            # "email": self.email,
-            # "telefon": self.telefon if self.telefon else "-",
-            # "ssh_clen": "Ano" if self.ssh_clen else "Ne",
-            # "ucast": self.ucast,
-            # "ubytovani": ubytovani,
-            # "strava": "Má zájem, viz. níže" if self.strava else "Nemá zájem",
-            # "vzdelani": "-" if not self.vzdelani else self.vzdelani,
-            # "nastroj": "-" if not self.nastroj else self.nastroj,
-            # "repertoir": "-" if not self.repertoir else self.repertoir,
-            # "student_zus_valtice_mikulov": "Ano" if self.student_zus_valtice_mikulov else "Ne",
-            # "uzivatelska_poznamka": self.uzivatelska_poznamka if self.uzivatelska_poznamka else "-",
-            # "admin_poznamka": self.admin_poznamka if self.admin_poznamka else "-",
-            # "hlavni_trida_1": {
-            #     "name": Trida.get_by_id(self.hlavni_trida_1_id).full_name if self.hlavni_trida_1_id else "-",
-            #     "link": "/organizator/trida/" + str(self.hlavni_trida_1_id) if self.hlavni_trida_1_id else None
-            # },
-            # "hlavni_trida_2": {
-            #     "name": Trida.get_by_id(self.hlavni_trida_2_id).full_name if self.hlavni_trida_2_id else "-",
-            #     "link": "/organizator/trida/" + str(self.hlavni_trida_2_id) if self.hlavni_trida_2_id else None
-            # },
-            # "vedlejsi_trida_placena": {
-            #     "name": Trida.get_by_id(self.vedlejsi_trida_placena_id).full_name if self.vedlejsi_trida_placena_id else "-",
-            #     "link": "/organizator/trida/" + str(self.vedlejsi_trida_placena_id) if self.vedlejsi_trida_placena_id else None
-            # },
-            # "vedlejsi_trida_zdarma": {
-            #     "name": Trida.get_by_id(self.vedlejsi_trida_zdarma_id).full_name if self.vedlejsi_trida_zdarma_id else "-",
-            #     "link": "/organizator/trida/" + str(self.vedlejsi_trida_zdarma_id) if self.vedlejsi_trida_zdarma_id else None
-            # },
-            # "finance_dne": pretty_datetime(self.finance_dne) if self.finance_dne else "Zatím neplaceno",
-            # "finance_celkem": pretty_penize(kalkulace["celkem"]),
-            # "finance_trida_1": pretty_penize(kalkulace["prvni_trida"]),
-            # "finance_trida_2": pretty_penize(kalkulace["vedlejsi_trida"]),
-            # "finance_ubytovani": pretty_penize(kalkulace["ubytovani"]),
-            # "finance_snidane": pretty_penize(kalkulace["snidane"]),
-            # "finance_obedy": pretty_penize(kalkulace["obedy"]),
-            # "finance_vecere": pretty_penize(kalkulace["vecere"]),
-            # "finance_dar": pretty_penize(kalkulace["dar"]),
-            # "finance_korekce_kurzovne": pretty_penize(self.finance_korekce_kurzovne),
-            # "finance_korekce_strava": pretty_penize(self.finance_korekce_strava),
-            # "finance_korekce_ubytko": pretty_penize(self.finance_korekce_ubytko),
-            # "finance_korekce_kurzovne_duvod": self.finance_korekce_kurzovne_duvod if self.finance_korekce_kurzovne_duvod else "-",
-            # "finance_korekce_strava_duvod": self.finance_korekce_strava_duvod if self.finance_korekce_strava_duvod else "-",
-            # "finance_korekce_ubytko_duvod": self.finance_korekce_ubytko_duvod if self.finance_korekce_ubytko_duvod else "-",
-            # "strava_snidane": snidane,
-            # "strava_obedy": obed,
-            # "strava_vecere": vecere,
-            # "strava_na_ocich": strava_na_ocich,
-        }
-    
-    
-    
+        
+        
     @staticmethod
     def get_seznam_pro_udileni_roli() -> list:
         result = []
@@ -262,89 +180,193 @@ class User(Common_methods_db_model, UserMixin):
         u.update()
         return u.id
     
-    #todo prepsat stare funckce
     
-    # def kalkulace(self) -> dict:
-    #     # ubytovani
-    #     if self.ubytovani in ["Tělocvična", "Tělocvična (náhradník)"]:
-    #         if self.finance_mena == "CZK":        
-    #             ubytko = self.ubytovani_pocet * Cena.get_by_system_name("telocvicna").czk
-    #         elif self.finance_mena == "EUR":
-    #             ubytko = self.ubytovani_pocet * Cena.get_by_system_name("telocvicna").eur
-    #     elif self.ubytovani == "Internát vinařské školy":
-    #         if self.finance_mena == "CZK":
-    #             ubytko = self.ubytovani_pocet * Cena.get_by_system_name("internat").czk
-    #         elif self.finance_mena == "EUR":
-    #             ubytko = self.ubytovani_pocet * Cena.get_by_system_name("internat").eur
-    #     else:
-    #         ubytko = 0
+    def kalkulace(self) -> dict:
+        # ubytovani
+        if self.accomodation_type == "gym":
+            if self.billing_currency == "czk":        
+                ubytko = self.accomodation_count * Billing.get_by_system_name("telocvicna").czk
+            elif self.billing_currency == "EUR":
+                ubytko = self.accomodation_type * Billing.get_by_system_name("telocvicna").eur
+        elif self.accomodation_type == "vs":
+            if self.billing_currency == "CZK":
+                ubytko = self.accomodation_type * Billing.get_by_system_name("internat").czk
+            elif self.billing_currency == "EUR":
+                ubytko = self.accomodation_type * Billing.get_by_system_name("internat").eur
+        else:
+            ubytko = 0
         
-    #     # kurzovne
-    #     def vycislit(ucast: str, mena: str, kategorie: str, clen_ssh: bool, cislo_tridy: int, trida: Trida) -> int:
-    #         if trida is None:
-    #             return 0
-    #         if cislo_tridy == 1:
-    #             if ucast == "Pasivní":
-    #                 if mena == "CZK":
-    #                     return Cena.get_by_system_name("kurzovne_pasivni").czk
-    #                 elif mena == "EUR":
-    #                     return Cena.get_by_system_name("kurzovne_pasivni").eur
-    #             if kategorie == "dite":
-    #                 if mena == "CZK":
-    #                     return Cena.get_by_system_name("kurzovne_deti").czk
-    #                 elif mena == "EUR":
-    #                     return Cena.get_by_system_name("kurzovne_deti").eur
-    #             elif kategorie == "student":
-    #                 if mena == "CZK":
-    #                     return Cena.get_by_system_name("kurzovne_student").czk
-    #                 elif mena == "EUR":
-    #                     return Cena.get_by_system_name("kurzovne_student").eur
-    #             elif clen_ssh:
-    #                 if mena == "CZK":
-    #                     return Cena.get_by_system_name("kurzovne_ssh").czk
-    #                 elif mena == "EUR":
-    #                     return Cena.get_by_system_name("kurzovne_ssh").eur
-    #             elif kategorie == "dospely":
-    #                 if mena == "CZK":
-    #                     return Cena.get_by_system_name("kurzovne").czk
-    #                 elif mena == "EUR":
-    #                     return Cena.get_by_system_name("kurzovne").eur
-    #         elif cislo_tridy == 2:
-    #             if trida.je_zdarma_jako_vedlejsi:
-    #                 return 0
-    #             elif trida.je_ansamblova:
-    #                 if mena == "CZK":
-    #                     return Cena.get_by_system_name("ansambly").czk
-    #                 elif mena == "EUR":
-    #                     return Cena.get_by_system_name("ansambly").eur
-    #             else:
-    #                 return vycislit(ucast, mena, kategorie, clen_ssh, 1, trida)
+        # kurzovne
+        def vycislit(ucast: str, mena: str, kategorie: str, clen_ssh: bool, cislo_tridy: int, trida: Trida) -> int:
+            #TODO ve vedlejsi tride musi nove byt check na to, zda je placena nebo ne
+            return 42
+            # if trida is None:
+            #     return 0
+            # if cislo_tridy == 1:
+            #     if ucast == "Pasivní":
+            #         if mena == "CZK":
+            #             return Billing.get_by_system_name("kurzovne_pasivni").czk
+            #         elif mena == "EUR":
+            #             return Billing.get_by_system_name("kurzovne_pasivni").eur
+            #     if kategorie == "dite":
+            #         if mena == "CZK":
+            #             return Billing.get_by_system_name("kurzovne_deti").czk
+            #         elif mena == "EUR":
+            #             return Billing.get_by_system_name("kurzovne_deti").eur
+            #     elif kategorie == "student":
+            #         if mena == "CZK":
+            #             return Billing.get_by_system_name("kurzovne_student").czk
+            #         elif mena == "EUR":
+            #             return Billing.get_by_system_name("kurzovne_student").eur
+            #     elif clen_ssh:
+            #         if mena == "CZK":
+            #             return Billing.get_by_system_name("kurzovne_ssh").czk
+            #         elif mena == "EUR":
+            #             return Billing.get_by_system_name("kurzovne_ssh").eur
+            #     elif kategorie == "dospely":
+            #         if mena == "CZK":
+            #             return Billing.get_by_system_name("kurzovne").czk
+            #         elif mena == "EUR":
+            #             return Billing.get_by_system_name("kurzovne").eur
+            # elif cislo_tridy == 2:
+            #     if trida.je_zdarma_jako_vedlejsi:
+            #         return 0
+            #     elif trida.je_ansamblova:
+            #         if mena == "CZK":
+            #             return Billing.get_by_system_name("ansambly").czk
+            #         elif mena == "EUR":
+            #             return Billing.get_by_system_name("ansambly").eur
+            #     else:
+            #         return vycislit(ucast, mena, kategorie, clen_ssh, 1, trida)
         
-    #     prvni_trida = vycislit(self.ucast, self.finance_mena, self.finance_kategorie, self.ssh_clen, 1, self.hlavni_trida_1)
-    #     vedlejsi_trida_placena = vycislit(self.ucast, self.finance_mena, self.finance_kategorie, self.ssh_clen, 2, self.vedlejsi_trida_placena)
+        prvni_trida = vycislit(self.is_active, self.billing_currency, self.billing_age, self.is_ssh_member, 1, self.main_class_priority_1)
+        vedlejsi_trida = vycislit(self.is_active, self.billing_currency, self.billing_age, self.is_ssh_member, 2, self.secondary_class)
         
         
-    #     # strava
-    #     if self.finance_mena == "CZK":
-    #         snidane = self.strava_snidane_zs * Cena.get_by_system_name("snidane_zs").czk + self.strava_snidane_vinarska * Cena.get_by_system_name("snidane_ss").czk
-    #         obedy = self.strava_obed_zs_maso * Cena.get_by_system_name("obed_zs").czk + self.strava_obed_zs_vege * Cena.get_by_system_name("obed_zs").czk + self.strava_obed_vinarska_maso * Cena.get_by_system_name("obed_ss").czk + self.strava_obed_vinarska_vege * Cena.get_by_system_name("obed_ss").czk
-    #         vecere = self.strava_vecere_zs_maso * Cena.get_by_system_name("vecere_zs").czk + self.strava_vecere_zs_vege * Cena.get_by_system_name("vecere_zs").czk + self.strava_vecere_vinarska_maso * Cena.get_by_system_name("vecere_ss").czk + self.strava_vecere_vinarska_vege * Cena.get_by_system_name("vecere_ss").czk
-    #     elif self.finance_mena == "EUR":
-    #         snidane = self.strava_snidane_zs * Cena.get_by_system_name("snidane_zs").eur + self.strava_snidane_vinarska * Cena.get_by_system_name("snidane_ss").eur
-    #         obedy = self.strava_obed_zs_maso * Cena.get_by_system_name("obed_zs").eur + self.strava_obed_zs_vege * Cena.get_by_system_name("obed_zs").eur + self.strava_obed_vinarska_maso * Cena.get_by_system_name("obed_ss").eur + self.strava_obed_vinarska_vege * Cena.get_by_system_name("obed_ss").eur
-    #         vecere = self.strava_vecere_zs_maso * Cena.get_by_system_name("vecere_zs").eur + self.strava_vecere_zs_vege * Cena.get_by_system_name("vecere_zs").eur + self.strava_vecere_vinarska_maso * Cena.get_by_system_name("vecere_ss").eur + self.strava_vecere_vinarska_vege * Cena.get_by_system_name("vecere_ss").eur
+        # # strava
+        #TODO strava jinak
+        # if self.finance_mena == "CZK":
+        #     snidane = self.strava_snidane_zs * Billing.get_by_system_name("snidane_zs").czk + self.strava_snidane_vinarska * Billing.get_by_system_name("snidane_ss").czk
+        #     obedy = self.strava_obed_zs_maso * Billing.get_by_system_name("obed_zs").czk + self.strava_obed_zs_vege * Billing.get_by_system_name("obed_zs").czk + self.strava_obed_vinarska_maso * Billing.get_by_system_name("obed_ss").czk + self.strava_obed_vinarska_vege * Billing.get_by_system_name("obed_ss").czk
+        #     vecere = self.strava_vecere_zs_maso * Billing.get_by_system_name("vecere_zs").czk + self.strava_vecere_zs_vege * Billing.get_by_system_name("vecere_zs").czk + self.strava_vecere_vinarska_maso * Billing.get_by_system_name("vecere_ss").czk + self.strava_vecere_vinarska_vege * Billing.get_by_system_name("vecere_ss").czk
+        # elif self.finance_mena == "EUR":
+        #     snidane = self.strava_snidane_zs * Billing.get_by_system_name("snidane_zs").eur + self.strava_snidane_vinarska * Billing.get_by_system_name("snidane_ss").eur
+        #     obedy = self.strava_obed_zs_maso * Billing.get_by_system_name("obed_zs").eur + self.strava_obed_zs_vege * Billing.get_by_system_name("obed_zs").eur + self.strava_obed_vinarska_maso * Billing.get_by_system_name("obed_ss").eur + self.strava_obed_vinarska_vege * Billing.get_by_system_name("obed_ss").eur
+        #     vecere = self.strava_vecere_zs_maso * Billing.get_by_system_name("vecere_zs").eur + self.strava_vecere_zs_vege * Billing.get_by_system_name("vecere_zs").eur + self.strava_vecere_vinarska_maso * Billing.get_by_system_name("vecere_ss").eur + self.strava_vecere_vinarska_vege * Billing.get_by_system_name("vecere_ss").eur
+        snidane = 11
+        obedy = 22
+        vecere = 33
         
-    #     result = {
-    #         "ubytovani": ubytko,
-    #         "prvni_trida": prvni_trida,
-    #         "vedlejsi_trida": vedlejsi_trida_placena,
-    #         "snidane": snidane,
-    #         "obedy": obedy,
-    #         "vecere": vecere,
-    #         "dar": self.finance_dar,
-    #         "celkem": ubytko + snidane + obedy + vecere + self.finance_dar + prvni_trida + vedlejsi_trida_placena + self.finance_korekce_kurzovne + self.finance_korekce_strava + self.finance_korekce_ubytko
-    #     }
-    #     return result
+        result = {
+            "ubytovani": ubytko,
+            "prvni_trida": prvni_trida,
+            "vedlejsi_trida": vedlejsi_trida,
+            "snidane": snidane,
+            "obedy": obedy,
+            "vecere": vecere,
+            "dar": self.billing_gift,
+            "celkem": ubytko + snidane + obedy + vecere + self.billing_gift + prvni_trida + vedlejsi_trida + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
+            #TODO fakt tu sčítám ty korekce?
+        }
+        return result
+    
+    
+    def info_pro_detail(self):
+        def pretty_penize(castka) -> str:
+            if castka == 0:
+                return "-"
+            if castka == int(castka):
+                castka = int(castka)
+            else:
+                castka = str(round(castka, 2)).replace(".", ",")
+            if self.billing_currency == "czk":
+                return f"{castka} Kč"
+            elif self.billing_currency == "eur":
+                return f"{castka} €"
+         
+        # ubytovani
+        if self.accomodation_type == "own":
+            ubytovani = "vlastní"
+        elif self.accomodation_type == "vs":
+            ubytovani = f"vinařská škola: {self.accomodation_count}"
+        else:
+            ubytovani = f"tělocvična: {self.accomodation_count}"
+            
+        # billing kategorie
+        if self.billing_age == "child":
+            billing_age = "dítě"
+        elif self.billing_age == "youth":
+            billing_age = "mládež do 15 let"
+        else:
+            billing_age = "dospělý"
+            
+
+                
+        kalkulace = self.kalkulace()
+        return {
+            "name": self.name if self.name else "-",
+            "surname": self.surname if self.surname else "-",
+            "email": self.email,
+            "phone": self.phone if self.phone else "-",
+            "is_student": "Ano" if self.is_student else "Ne",
+            "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "Zatím nevybráno",
+            "datetime_created": pretty_datetime(self.datetime_created),
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "Zatím neregistrován",
+            "accomodation_type": ubytovani,
+            "musical_education": self.musical_education if self.musical_education else "-",
+            "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
+            "repertoire": self.repertoire if self.repertoire else "-",
+            "comment": self.comment if self.comment else "-",
+            "admin_comment": self.admin_comment if self.admin_comment else "-",
+            "billing_email": self.billing_email if self.billing_email else "bude použit hlavní e-mail",
+            "billing_age": billing_age,
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno",
+            "billing_correction": pretty_penize(self.billing_correction),
+            "billing_correction_reason": self.billing_correction_reason if self.billing_correction_reason else "-",
+            "billing_food_correction": pretty_penize(self.billing_food_correction),
+            "billing_food_correction_reason": self.billing_food_correction_reason if self.billing_food_correction_reason else "-",
+            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction),
+            "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason if self.billing_accomodation_correction_reason else "-",
+            "tutor_travel": self.tutor_travel,
+            "tutor_license_plate": self.tutor_license_plate if self.tutor_license_plate else "-",
+            "tutor_arrival": self.tutor_arrival if self.tutor_arrival else "-",
+            "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
+            "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
+            "tutor_adress": self.tutor_adress if self.tutor_adress else "-",
+            "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
+            "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
+            "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
+            "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "billing_celkem": pretty_penize(kalkulace["celkem"]),
+            "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"]),
+            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"]),
+            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"]),
+            "billing_snidane": pretty_penize(kalkulace["snidane"]),
+            "billing_obedy": pretty_penize(kalkulace["obedy"]),
+            "billing_vecere": pretty_penize(kalkulace["vecere"]),
+            "billing_dar": pretty_penize(kalkulace["dar"]),
+            "strava_snidane": "info o snidanich",
+            "strava_obedy": "info o obedech",
+            "strava_vecere": "info o vecerich",
+            "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
+            "hlavni_trida_1": {
+                "name": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
+                "link": "/organizator/trida/" + str(self.main_class_id_priority_1) if self.main_class_priority_1 else None
+            },
+            "hlavni_trida_2": {
+                "name": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
+                "link": "/organizator/trida/" + str(self.main_class_id_priority_2) if self.main_class_priority_2 else None
+            },
+            "vedlejsi_trida": {
+                "name": self.secondary_class.full_name_cz if self.secondary_class else "-",
+                "link": "/organizator/trida/" + str(self.secondary_class_id) if self.secondary_class else None
+            }
+        }
+    
+    
     
     
     def info_pro_upravu(self):
