@@ -21,7 +21,7 @@ def check_settings_file() -> None:
                     "applications_start_time": "00:00",
                     "applications_end_date": "2025-01-01",
                     "applications_end_time": "00:00",
-                    "cz_frontpage_text": "Tento text je nutné uppravit z admin sekce.",
+                    "cz_frontpage_text": "Tento text je nutné upravit z admin sekce.",
                     "en_frontpage_text": "This text has to be edited from the admin section."
                 }
                 , f)
