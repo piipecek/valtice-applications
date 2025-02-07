@@ -18,6 +18,14 @@ if (full_name.trim() == "") {
 }
 document.getElementById("full_name").innerText = full_name
 
+
+if (data["is_tutor"]) {
+    document.getElementById("tutor_yes").hidden = false
+} else {
+    document.getElementById("tutor_no").hidden = false
+}
+
+
 for (let key in data) {
     if (key == "datetime_registered") {
         if (data[key] == null) {
@@ -36,12 +44,6 @@ for (let key in data) {
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).value = data[key]
-        }
-    } else if (key == "is_tutor") {
-        if (data[key]) {
-            document.getElementById("tutor_yes").hidden = false
-        } else {
-            document.getElementById("tutor_no").hidden = false
         }
     } else {
         document.getElementById(key).value = data[key]

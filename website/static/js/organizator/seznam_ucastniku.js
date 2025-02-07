@@ -1,6 +1,6 @@
 import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
-let ucastnici = JSON.parse(httpGet("/org_api/ucastnici"))
+let ucastnici = JSON.parse(httpGet("/org_api/seznam_ucastniku"))
 let registrovanych = JSON.parse(httpGet("/org_api/registrovanych"))["pocet"]
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)

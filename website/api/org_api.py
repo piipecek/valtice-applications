@@ -16,10 +16,10 @@ def tridy_long_names_ids():
     return json.dumps(sorted([trida.get_short_name_id_for_seznam() for trida in Trida.get_all()], key=lambda x: x["short_name"]))
 
 
-@org_api.route("/ucastnici")
+@org_api.route("/seznam_ucastniku")
 @require_role_system_name_on_current_user("organiser")
-def ucastnici():
-    sorted_users = sorted(User.get_all(), key=lambda u: czech_sort.key(u.info_pro_seznam()["surname"]))
+def seznam_ucastniku():
+    sorted_users = sorted([u for u in User.get_all() if len(u.roles) == 0], key=lambda u: czech_sort.key(u.info_pro_seznam()["surname"]))
     return json.dumps([u.info_pro_seznam() for u in sorted_users])
 
 
