@@ -162,11 +162,11 @@ def seznam_ucastniku():
         return request.form.to_dict()
     
     
-@org_views.route("/tridy", methods=["GET","POST"])
+@org_views.route("/seznam_trid", methods=["GET","POST"])
 @require_role_system_name_on_current_user("organiser")
-def tridy():
+def seznam_trid():
     if request.method == "GET":
-        return render_template("organizator/tridy.html", roles=get_roles(current_user))
+        return render_template("organizator/seznam_trid.html", roles=get_roles(current_user))
     else:
         if id := request.form.get("trida"):
             return redirect(url_for("org_views.detail_tridy", id=id))
@@ -203,7 +203,7 @@ def uprava_tridy(id:int):
             t = Trida.get_by_id(id)
             t.delete()
             flash("Třída byla smazána", category="success")
-            return redirect(url_for("org_views.tridy"))
+            return redirect(url_for("org_views.seznam_trid"))
         else:
             return request.form.to_dict()
     
@@ -329,3 +329,9 @@ def en_tutor():
         return render_template("organizator/en_tutor.html", roles=get_roles())
     else:
         return request.form.to_dict()
+    
+
+@org_views.route("/seznam_lektoru")
+@require_role_system_name_on_current_user("organiser")
+def seznam_lektoru():
+    return render_template("organizator/seznam_lektoru.html", roles=get_roles())

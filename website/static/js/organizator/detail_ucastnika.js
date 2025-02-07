@@ -56,6 +56,22 @@ for (let key in data) {
             // TODO dodelat tohle, jestli tam nejsou nejaky special cases
             document.getElementById(key).innerText = data[key]
         }
+    } else if (key == "taught_classes") {
+        let links_span = document.createElement("span")
+        if (data["taught_classes"].length == 0) {
+            links_span.innerText = "Žádné"
+        } else {
+            for (let trida of data["taught_classes"]) {
+                let trida_a = document.createElement("a")
+                trida_a.href = "/organizator/detail_tridy/" + trida["id"]
+                trida_a.innerText = trida["short_name"]
+                trida_a.classList.add("link")
+                links_span.appendChild(trida_a)
+                links_span.appendChild(document.createTextNode(", "))
+            }
+            links_span.lastChild.remove()
+        }
+        document.getElementById(key).appendChild(links_span)
     } else {
         document.getElementById(key).innerText = data[key]
     }

@@ -21,10 +21,12 @@ class Trida(Common_methods_db_model):
     def __repr__(self):
         return f"Třída | {self.short_name_cz}"
 
-    def get_short_name_id_for_seznam(self):
+    def info_pro_seznam_trid(self):
         return {
             "id": self.id,
-            "short_name": self.short_name_cz
+            "short_name": self.short_name_cz,
+            "tutor_full_name": self.tutor.get_full_name(),
+            "tutor_id": self.tutor_id,
         }
     
     def get_by_full_name(full_name: str) -> "Trida":
@@ -38,8 +40,16 @@ class Trida(Common_methods_db_model):
             age_group = "mládež do 15 let"
         else:
             age_group = "dospělá"
+        
+        tutor = "Zatím bez lektora"
+        if self.tutor:
+            tutor = self.tutor.get_full_name()
             
         return {
+            "tutor": {
+                "name": tutor,
+                "id": self.tutor_id,
+            },
             "short_name_cz": self.short_name_cz,
             "full_name_cz": self.full_name_cz if self.full_name_cz else "-",
             "short_name_en": self.short_name_en if self.short_name_en else "-",
@@ -72,6 +82,7 @@ class Trida(Common_methods_db_model):
             "age_group": self.age_group,
             "is_solo": "Ano" if self.is_solo else "Ne",
             "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
+            "tutor_id": self.tutor_id if self.tutor_id else "-",
         }
         
     def nacist_zmeny_z_requestu(self, request):
@@ -83,6 +94,7 @@ class Trida(Common_methods_db_model):
         self.age_group = request.form.get("age_group")
         self.is_solo = request.form.get("is_solo") == "Ano"
         self.is_free_as_secondary = request.form.get("is_free_as_secondary") == "Ano"
+        self.tutor_id = int(request.form.get("tutor_id")) if request.form.get("tutor_id") != "-" else None
         self.update()
         
     

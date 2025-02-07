@@ -2,7 +2,7 @@
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
-<h1>Detail účastníka <span id="full_name"></span></h1>
+<h1><span id="full_name"></span> - detail účtu</h1>
 <hr>
 <form method="post">
     <button type="submit" class="custom_button" name="edit_button" value="whatever">Upravit</button>
@@ -218,6 +218,10 @@
 <div class="table-responsive" id="tutor_yes" hidden>
     <table class="table table-hover table-striped">
         <tbody>
+            <tr>
+                <td class="pravy_text">Vyučované třídy</td>
+                <td id="taught_classes"></td>
+            </tr>
             <tr>
                 <td class="pravy_text">Způsob dopravy</td>
                 <td id="tutor_travel"></td>

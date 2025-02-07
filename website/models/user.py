@@ -146,7 +146,21 @@ class User(Common_methods_db_model, UserMixin):
             "hlavni_trida_1": self.main_class_priority_1.short_name_cz if self.main_class_priority_1 else "-",
             "hlavni_trida_1_id": self.main_class_id_priority_1
         }
-        
+    
+    def info_pro_seznam_lektoru(self) -> dict:
+        full_name = self.get_full_name()
+        return {
+            "id": self.id,
+            "full_name": full_name if full_name else "-",
+            "surname": self.surname if self.surname else "-",
+            "email": self.email if self.email else "-",
+            "taught_classes":[
+                {
+                    "id": trida.id,
+                    "short_name": trida.short_name_cz
+                } for trida in self.taught_classes
+            ],
+        }
         
     @staticmethod
     def get_seznam_pro_udileni_roli() -> list:
@@ -159,6 +173,18 @@ class User(Common_methods_db_model, UserMixin):
             }
             result.append(data)
         return result
+
+    @staticmethod
+    def get_seznam_pro_options_na_uprave_tridy() -> list:
+        result = []
+        for u in User.get_all():
+            data = {
+                "id": u.id,
+                "full_name": u.get_full_name(),
+                "surname": u.surname
+            }
+            result.append(data)
+        return sorted(result, key=lambda x: x["surname"])
     
     
     def login(self):
@@ -303,13 +329,13 @@ class User(Common_methods_db_model, UserMixin):
             billing_age = "mládež do 15 let"
         else:
             billing_age = "dospělý"
-            
 
                 
         kalkulace = self.kalkulace()
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
+            "full_name": self.get_full_name(),
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "is_student": "Ano" if self.is_student else "Ne",
@@ -335,6 +361,12 @@ class User(Common_methods_db_model, UserMixin):
             "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction),
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason if self.billing_accomodation_correction_reason else "-",
             "is_tutor": True if Role.get_by_system_name("tutor") in self.roles else False,
+            "taught_classes":[
+                {
+                    "id": trida.id,
+                    "short_name": trida.short_name_cz
+                } for trida in self.taught_classes
+            ],
             "tutor_travel": "vlastní" if self.tutor_travel == "own" else "veřejná",
             "tutor_license_plate": self.tutor_license_plate if self.tutor_license_plate else "-",
             "tutor_arrival": self.tutor_arrival if self.tutor_arrival else "-",

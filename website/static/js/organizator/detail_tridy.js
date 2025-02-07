@@ -8,6 +8,16 @@ document.getElementById("name").innerHTML = data["short_name_cz"]
 for (let key in data) {
     if (["main_participants_priority_1", "main_participants_priority_2", "secondary_participants"].includes(key)) {
         continue
+    } else if (key === "tutor") {
+        if (data["tutor"]["id"]) {
+            let a = document.createElement("a")
+            a.href = "/organizator/detail_ucastnika/" + data["tutor"]["id"]
+            a.innerText = data["tutor"]["name"]
+            a.classList.add("link")
+            document.getElementById("tutor").appendChild(a)
+        } else {
+            document.getElementById("tutor").innerText = data["tutor"]["name"]
+        }
     } else {
         document.getElementById(key).innerText = data[key]
     }

@@ -4,6 +4,7 @@ from website.helpers.require_role import require_role_system_name_on_current_use
 from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.user import User
+from website.models.role import Role
 from website.helpers.settings_manager import get_settings
 import czech_sort
 org_api = Blueprint("org_api", __name__)
@@ -47,10 +48,10 @@ def detail_tridy(id: int):
 def uprava_tridy(id: int):
     return json.dumps(Trida.get_by_id(id).info_pro_upravu())
 
-@org_api.route("/tridy")
+@org_api.route("/seznam_trid")
 @require_role_system_name_on_current_user("organiser")
-def tridy():
-    return json.dumps(sorted([t.get_short_name_id_for_seznam() for t in Trida.get_all()], key=lambda x: x["short_name"]))
+def seznam_trid():
+    return json.dumps(sorted([t.info_pro_seznam_trid() for t in Trida.get_all()], key=lambda x: x["short_name"]))
 
 @org_api.route("/ceny")
 @require_role_system_name_on_current_user("organiser")
@@ -83,3 +84,15 @@ def uzivatele_pro_udeleni_roli():
 @require_role_system_name_on_current_user("admin")
 def role_uzivatele(id):
     return json.dumps([r.system_name for r in User.get_by_id(id).roles])
+
+@org_api.route("/seznam_lektoru")
+@require_role_system_name_on_current_user("organiser")
+def seznam_lektoru():
+    tutor_role = Role.get_by_system_name("tutor")
+    return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles], key=lambda x: x["surname"]))
+
+@org_api.route("/seznam_lektoru_pro_upravu_tridy")
+@require_role_system_name_on_current_user("organiser")
+def seznam_lektoru_pro_upravu_tridy():
+    tutor_role = Role.get_by_system_name("tutor")
+    return json.dumps(User.get_seznam_pro_options_na_uprave_tridy())
