@@ -11,21 +11,24 @@ auth_views = Blueprint("auth_views",__name__, template_folder="auth")
 
 @auth_views.route("/login", methods=["GET","POST"])
 def login():
-	if current_user.is_authenticated:
-		return redirect(url_for("guest_views.cz_dashboard"))
-	if request.method == "GET":
-		return render_template("auth/cz_login.html", roles = get_roles())
-	else:
-		email = request.form.get("email")
-		password = request.form.get("password")
-		user = User.get_by_email(email=email)
-		if user and check_password_hash(user.password, password):
-			user.login()
-			flash("úspěšné přihlášení", category="success")
-			return redirect(url_for("guest_views.cz_dashboard"))
-		else:
-			flash("E-mail nebo heslo byly špatně", category="error")
-			return redirect(url_for("auth_views.login"))
+    if current_user.is_authenticated:
+        return redirect(url_for("guest_views.cz_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/cz_login.html", roles = get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        if not all([email, password]):
+            flash("E-mail a heslo nesmí být prázdné.", category="error")
+            return redirect(url_for("auth_views.login"))
+        user = User.get_by_email(email=email)
+        if user and check_password_hash(user.password, password):
+            user.login()
+            flash("úspěšné přihlášení", category="success")
+            return redirect(url_for("guest_views.cz_dashboard"))
+        else:
+            flash("E-mail nebo heslo byly špatně", category="error")
+            return redirect(url_for("auth_views.login"))
 
 
 @auth_views.route("/en_login", methods=["GET","POST"])
@@ -37,6 +40,9 @@ def en_login():
     else:
         email = request.form.get("email")
         password = request.form.get("password")
+        if not all([email, password]):
+            flash("Email and password must not be empty.", category="error")
+            return redirect(url_for("auth_views.en_login"))
         user = User.get_by_email(email=email)
         if user and check_password_hash(user.password, password):
             user.login()

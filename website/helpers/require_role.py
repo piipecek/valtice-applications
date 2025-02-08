@@ -36,23 +36,27 @@ def ensure_email_password(language): # cz/en
     """
     Decorator to ensure that the current user has a confirmed email
     and does not need to change their password upon login.
+    If they do not have an email at all, they are a kid and are free to go.
     """
     def what_should_i_name_this(original_function):
         @wraps(original_function)
         def wrapper(*args, **kwargs):
-            if not current_user.is_authenticated:
+            if current_user.email is None:
+                pass
+            
+            elif not current_user.is_authenticated:
                 if language == "cz":
                     return redirect(url_for("auth_views.login"))
                 else:
                     return redirect(url_for("auth_views.en_login"))
             
-            if not current_user.confirmed_email:
+            elif not current_user.confirmed_email:
                 if language == "cz":
                     return redirect(url_for("auth_views.confirm_mail"))
                 else:
                     return redirect(url_for("auth_views.en_confirm_mail"))
             
-            if current_user.must_change_password_upon_login:
+            elif current_user.must_change_password_upon_login:
                 if language == "cz":
                     return redirect(url_for("auth_views.change_password"))
                 else:

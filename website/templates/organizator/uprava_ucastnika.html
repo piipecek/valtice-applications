@@ -312,10 +312,18 @@
             </div>
         </div>
         <small>Po změně hesla ho uživatel jednou použije a bude vyzván k nastavení svého hesla. Pokud mu má Vámi zadané heslo zůstat, změnte po změně hesla tento fakt o několik řádků výše.</small>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">E-mail s obnovou hesla</div>
+            <div class="col">
+                Odešle na e-mail účtu obnovovací odkaz.
+                <button type="submit" class="custom_button" name="send_cz_reset_email" value="whatever">Odeslat česky</button>
+                <button type="submit" class="custom_button" name="send_en_reset_email" value="whatever">Odeslat anglicky</button>
+            </div>
+        </div>
         <div class="row my-1" id="parent_no" hidden>
             <div class="col-2 d-flex align-items-center">Připojit k rodičovskému účtu</div>
             <div class="col">
-                <input type="email" class="form-control" id="parent_email" name="parent_email" placeholder="e-mail rodiče">
+                <input type="text" class="form-control" id="parent_email" name="parent_email" placeholder="e-mail rodiče">
             </div>
         </div>
         <div class="row my-1" id="parent_yes" hidden>

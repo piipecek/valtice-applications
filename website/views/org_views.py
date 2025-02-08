@@ -12,6 +12,7 @@ from website.helpers.settings_manager import set_applications_start_date_and_tim
 from website.helpers.export import export
 from website.paths import logo_cz_path, logo_en_path
 from werkzeug.security import generate_password_hash
+from website.mail_handler import mail_sender
 
 org_views = Blueprint("org_views",__name__)
 
@@ -169,6 +170,16 @@ def uprava_ucastnika(id:int):
             u.parent_id = None
             u.update()
             flash("Rodič byl odebrán", category="success")
+            return redirect(url_for("org_views.uprava_ucastnika", id=id))
+        elif request.form.get("send_cz_reset_email"):
+            u = User.get_by_id(id)
+            mail_sender(mail_identifier="reset_password", target=u.email, data=u.get_reset_token())
+            flash("Email s odkazem na změnu hesla byl odeslán", category="success")
+            return redirect(url_for("org_views.uprava_ucastnika", id=id))
+        elif request.form.get("send_en_reset_email"):
+            u = User.get_by_id(id)
+            mail_sender(mail_identifier="en_reset_password", target=u.email, data=u.get_reset_token())
+            flash("Email s odkazem na změnu hesla byl odeslán", category="success")
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         return request.form.to_dict()
     
