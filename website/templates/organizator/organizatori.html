@@ -2,34 +2,15 @@
 {% block content %}
 <h1>Úprava rolí stávajících pořadatelů</h1>
 <hr>
-<form method="post">
-    <div id="parent_div"></div>
-</form>
+<p>
+    Co která role znamená je popsáno v <a class="link" href="{{url_for('org_views.docs')}}">dokumentaci</a>.
+</p>
+<div id="parent_div_stavajici"></div>
 
 <h1>Jmenování nových pořadatelů</h1>
 <hr>
-<h1>Založení nového organizátorského účtu</h1>
-TODO tohle patří jinam, protože se zakládá user účet žejo
-<hr>
-<form method="post">
-    <div class="row my-2">
-        <div class="col-2">
-            E-mail:
-        </div>
-        <div class="col">
-            <input type="text" name="email" required class="form-control">
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-2">
-            Heslo:
-        </div>
-        <div class="col">
-            <input type="text" name="password" required class="form-control">
-        </div>
-    </div>
-    <button type="submit" class="custom_button" name="new_org_button" value="whatever">Založit</button>
-</form>
+<div id="parent_div_novi"></div>
+
 
 <script type="module" src="{{url_for('static', filename='js/organizator/organizatori.js')}}"></script>
 

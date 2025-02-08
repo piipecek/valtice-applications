@@ -20,7 +20,7 @@ org_views = Blueprint("org_views",__name__)
 @org_views.route("/dashboard", methods=["GET","POST"])
 @require_role_system_name_on_current_user("organiser")
 def dashboard():
-    return render_template("organizator/dashboard.html", roles=get_roles())
+    return render_template("organizator/dashboard.html", roles=get_roles(), admins = ", ".join([u.email for u in User.get_all() if Role.get_by_system_name("admin") in u.roles])) 
 
 
 @org_views.route("/", methods=["GET"])
@@ -259,19 +259,7 @@ def organizatori():
     if request.method == "GET":
         return render_template("organizator/organizatori.html", roles=get_roles())
     else:
-        if request.form.get("new_org_button"):
-            email = request.form.get("email")
-            password = request.form.get("password")
-            if User.get_by_email(email):
-                flash("Uživatel s tímhle emailem už existuje.", category="error")
-                return redirect(url_for("org_views.new_admin"))
-            else:
-                user = User(email=email, password=generate_password_hash(password, method="scrypt"))
-                user.update()
-                flash("Admin vytvořen", category="success")
-                return redirect(url_for("org_views.organizatori"))
-        else:
-            return request.form.to_dict()
+        return request.form.to_dict()
         
     
 @org_views.route("/udelit_role/<int:id>", methods=["GET", "POST"])
@@ -285,16 +273,7 @@ def udelit_role(id):
             flash("Uživatel s tímhle ID neexistuje.", category="error")
             return redirect(url_for("org_views.edit_users"))
     else:
-        if request.form.get("delete"):
-            user_na_odstraneni = User.get_by_id(id)
-            if "admin" in get_roles(user_na_odstraneni):
-                flash("Nemůžete odstranit účet s rolí admina.", category="error")
-                return redirect(url_for("org_views.udelit_role", id=id))
-            else:
-                user_na_odstraneni.delete()
-                flash("Uživatel smazán", category="success")
-                return redirect(url_for("org_views.organizatori"))
-        elif nove_role := request.form.get("nove_role"):
+        if nove_role := request.form.get("nove_role"):
             nove_role_objekty = [Role.get_by_system_name(r) for r in json.loads(nove_role)]
             user = User.get_by_id(id)
             if user.roles == nove_role_objekty:
@@ -303,7 +282,7 @@ def udelit_role(id):
                 user.roles = nove_role_objekty
                 user.update()
             flash("Role byly upraveny.", category="success")
-            return redirect(url_for("org_views.udelit_role", id=id))
+            return redirect(url_for("org_views.organizatori", id=id))
         else:    
             return request.form.to_dict()
     

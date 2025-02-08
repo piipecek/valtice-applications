@@ -10,10 +10,17 @@ ucastnici.forEach(element => {
     jmeno_a.href = "/organizator/detail_ucastnika/" + element["id"]
     jmeno_a.innerText = element["full_name"]
     jmeno_a.setAttribute("class", "jmeno-a")
-    let trida_a = document.createElement("a")
-    trida_a.href = "/organizator/trida/" + element["hlavni_trida_1_id"]
-    trida_a.innerText = element["hlavni_trida_1"]
-    trida_a.setAttribute("class", "trida-a")
+    let trida_span = document.createElement("span")
+    if (element["hlavni_trida_1_id"]) {
+        let trida_a = document.createElement("a")
+        trida_a.href = "/organizator/trida/" + element["hlavni_trida_1_id"]
+        trida_a.innerText = element["hlavni_trida_1"]
+        trida_a.setAttribute("class", "trida-a")
+        trida_span.appendChild(trida_a)
+    } else {
+        trida_span.innerText = "Zatím nevybrána"
+    }
+        
     let email_element
     if (element["email"] == "-") {
         email_element = document.createElement("span")
@@ -25,7 +32,7 @@ ucastnici.forEach(element => {
         a.classList.add("link")
         email_element = a
     }
-    tc.make_row([jmeno_a, email_element, element["registrovan"], trida_a])
+    tc.make_row([jmeno_a, email_element, element["registrovan"], trida_span])
 });
 
 document.getElementById("total").innerText = ucastnici.length

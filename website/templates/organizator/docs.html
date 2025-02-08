@@ -3,13 +3,13 @@
 {%block content%}
     <h1>Dokumentace k Valtickému přihláškovému systému</h1>
     TODO je outdated
-    <!-- <p>
+    <p>
         Cílem této stránky je poskytnout organizátorům informace o tom, jak systém funguje a jak jej používat.
     </p>
     <hr>
     <h2>Obsah</h2>
     <ul>
-        <li><a class="link" href="#obsah">Obsah stránek přihláškového systému</a></li>
+        <li><a class="link" href="#uvod">Úvodní stránka přihlašovacího systému</a></li>
         <li><a class="link" href="#role">Role</a></li>
         <li><a class="link" href="#ucastnici">Účastníci</a></li>
         <li><a class="link" href="#tridy">Třídy</a></li>
@@ -20,41 +20,41 @@
         <li><a class="link" href="#technologie">Technologie webu a zdrojový kód</a></li>
     </ul>
 
-    <h2 id="obsah">Obsah stránek přihláškového systému</h2>
+    <h2 id="uvod">Úvodní stránka</h2>
     <p>
-        To, co je na stránkách vidět, závisí na dvou věcech:
+        To, co je na úvodní stránce vidět, závisí na dvou věcech:
         <ul>
-            <li>Na tom, zda je aktuálně otevřený přihlašovací formulář, nebo ne</li>
-            <li>Na tom, zda jste přihlášeni jako organizátor, nebo ne</li>
+            <li>Na tom, zda jste přihlášeni a s jakou rolí</li>
+            <li>Na tom, jaký text je tam aktuálně z admin sekce nastavený.</li>
         </ul>
         <p>
-            Nastavení toho, zda je přihlašovací formulář otevřený, můžete provádět v sekci <a class="link" href="{{url_for('org_views.settings')}}">Nastavení</a>. Po nastavení dat a časů se domovská stránka začne chovat pro nově příchozí účastníky podle toho, zda právě probíhá období před otevřením přihlášek, období otevřených přihlášek, nebo období po uzavření přihlášek.
+            Znění textu na úvodní stránce můžete provádět v sekci <a class="link" href="{{url_for('org_views.settings')}}">Nastavení</a>.
         </p>
         <p>
-            Pokud jste přihlášeni jako organizátor, zobrazí se vám v horní části stránky odkaz na <a class="link" href="{{url_for('org_views.dashboard')}}">Dashboard</a>, možnost odhlášení se a v patičce stránky odkaz na tuto <a class="link" href="{{url_for('org_views.docs')}}">dokumentaci k systému</a>.
+            Pokud jste přihlášeni jako účastník, zobrazí se vám v horní liště přístup na účet a přístup k přihlašování do tříd.
+        </p>
+        <p>
+            Pokud jste přihlášeni jako lektor, zobrazí se vám v horní liště dále přístup do náhledu na své třídy a účastníky.
+        </p>
+        <p>
+            Pokud jste přihlášeni jako organizátor, zobrazí se vám v horní části stránky dále vstup do <a class="link" href="{{url_for('org_views.dashboard')}}">pořadatelské sekce</a> a v patičce stránky odkaz na tuto <a class="link" href="{{url_for('org_views.docs')}}">dokumentaci k systému</a>.
         </p>
     </p>
 
     <h2 id="role">Role</h2>
     <p>
-        Každý organizátor potřebuje role k tomu, aby mohl v pořadatelské sekci něco dělat. Role jsou tři:
+        Každý uživatel může mít přiřazeno několik rolí:
         <ul>
-            <li><b>bez role</b>: přístup k seznamu účastníků, a tříd, přístup k detailům účastníků, přístup ke generování seznamů, k dokumentaci. Nemůže nic editovat.</li>
-            <li><b>Organizátor</b>: Možnost editace účastníků a tříd, přístup k některým nastavením.</li>
-            <li><b>Admin</b>: Možnost mazání účastníků a tříd, nastavení ceníku, přístup k více nastavením.</li>
-            <li><b>Super admin</b>: Přístup k zakládání a mazání účtu dalších pořadatelů, udílení těchto rolí pořadatelům.</li>
+            <li><b>bez role</b>: Běžný účastník MLŠSH, vidí pouze svůj účet</li>
+            <li><b>Lektor</b>: Má náhled na svou třídu a účastníky v ní.</li>
+            <li><b>Organizátor</b>Má náhled na všechny účastníky a třídy.</li>
+            <li><b>Editor</b>: Možnost mazání účastníků a tříd, nastavení ceníku, přístup k více nastavením.</li>
+            <li><b>Admin</b>: Přístup k udílení rolí dalším pořadatelům.</li>
         </ul>
         V celém systému je u každé akce na kterou nemáte oprávnění jasně napsáno, jaká role danou činnost může provést.
     </p>
 
     <h2 id="ucastnici">Účastníci</h2>
-    <p>
-        <ul>
-            <li>Účastníci se do systému mohou do systému zapsat pomocí formuláře, který je dostupný na domovské stránce. Po vyplnění formuláře obdrží e-mail s potvrzením a cenou. </li>
-            <li>Nevzniká žádný účastnický účet.</li>
-            <li>Pokud chce účastník něco na své přihlášce změnit, pořadatelé mají k editaci přístup.</li>
-        </ul>
-    </p>
 
     <h2 id="tridy">Třídy</h2>
 
@@ -66,5 +66,5 @@
 
     <h2 id="organizatori">Organizátoři</h2>
 
-    <h2 id="technologie">Technologie webu a zdrojový kód</h2> -->
+    <h2 id="technologie">Technologie webu a zdrojový kód</h2>
 {%endblock%}

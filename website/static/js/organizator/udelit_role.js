@@ -1,12 +1,10 @@
 import httpGet from "../http_get.js"
-import TableCreator from "../table_creator.js"
 let id_usera = document.getElementById("id_getter").value
 let role_uzivatele = JSON.parse(httpGet("/org_api/role_uzivatele/" + String(id_usera)))
 let checkdiv = document.getElementById("check_div")
 let save_roles_button = document.getElementById("save_roles_button")
 let resut_input = document.getElementById("result")
 let form = document.getElementById("form")
-let delete_button = document.getElementById("delete_button")
 
 save_roles_button.addEventListener("click", function () {
     let result = []
@@ -27,9 +25,3 @@ for (let role of role_uzivatele) {
         }
     }
 }
-
-delete_button.addEventListener("click", function () {
-    if (confirm("Opravdu chcete smazat uživatele?")) {
-        document.getElementById("delete_form").submit()
-    }
-})

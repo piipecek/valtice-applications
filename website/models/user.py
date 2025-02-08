@@ -39,7 +39,7 @@ class User(Common_methods_db_model, UserMixin):
     is_ssh_member = db.Column(db.Boolean, default=False)
     is_active_participant = db.Column(db.Boolean, default=True)
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
-    datetime_class_pick = db.Column(db.DateTime)
+    datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy priority 1
     datetime_registered = db.Column(db.DateTime)
     accomodation_type = db.Column(db.String(200), default="own") # own/vs/gym
     accomodation_count = db.Column(db.Integer, default=0)
@@ -169,7 +169,8 @@ class User(Common_methods_db_model, UserMixin):
             data = {
                 "id": u.id,
                 "email": u.email,
-                "role": ", ".join([r.display_name for r in sorted(u.roles)])
+                "role": ", ".join([r.display_name for r in sorted(u.roles)]),
+                "name": u.get_full_name()
             }
             result.append(data)
         return result
@@ -207,6 +208,7 @@ class User(Common_methods_db_model, UserMixin):
         u.email = email
         u.password = generate_password_hash(password, method="scrypt")
         u.confirmed_email = True
+        u.must_change_password_upon_login = True
         u.update()
         return u.id
     
@@ -459,6 +461,11 @@ class User(Common_methods_db_model, UserMixin):
         }
     
     def nacist_zmeny_z_requestu(self, request):
+        
+        if request.form.get("main_class_id_priority_1") != self.main_class_id_priority_1:
+            self.datetime_class_pick = datetime.now(tz=timezone.utc)
+        if request.form.get("main_class_id_priority_1") == "-":
+            self.datetime_class_pick = None
             
         self.name = request.form.get("name")
         self.surname = request.form.get("surname")
