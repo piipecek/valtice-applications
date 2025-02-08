@@ -45,9 +45,12 @@
     </header>
 
     <section class="main_section_wrapper">
-        {% for category, message in get_flashed_messages(with_categories=True) %}
-            <div class="alert alertcolor-{{category}}">
-                {{message}}
+        <!-- musi bejt v main, jinak to skace za header -->
+        {% for category, message in get_flashed_messages(with_categories=True) %} 
+            <div class="alert alertcolor-{{category}} d-flex justify-content-center">
+                <div class="message_wrapper">
+                    {{message}}
+                </div>
             </div>
         {% endfor %}
         <section class="main_section">

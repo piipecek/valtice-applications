@@ -19,7 +19,7 @@ def account():
 @user_views.route("/en_account", methods=["GET", "POST"])
 @login_required
 def en_account():
-    if not current_user.confirmed_email:
+    if current_user.email and not current_user.confirmed_email:
         return redirect(url_for("auth_views.en_confirm_mail"))
     if request.method == "GET":
         return render_template("user/en_account.html", roles=get_roles())

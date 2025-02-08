@@ -13,9 +13,9 @@ ucastnici.forEach(element => {
     let trida_span = document.createElement("span")
     if (element["hlavni_trida_1_id"]) {
         let trida_a = document.createElement("a")
-        trida_a.href = "/organizator/trida/" + element["hlavni_trida_1_id"]
+        trida_a.href = "/organizator/detail_tridy/" + element["hlavni_trida_1_id"]
         trida_a.innerText = element["hlavni_trida_1"]
-        trida_a.setAttribute("class", "trida-a")
+        trida_a.classList.add("link")
         trida_span.appendChild(trida_a)
     } else {
         trida_span.innerText = "Zatím nevybrána"

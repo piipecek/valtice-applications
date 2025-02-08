@@ -157,6 +157,12 @@ header{
     padding-bottom: 1rem;
 }
 
+.message_wrapper{
+    width: 70%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
 .footer {
     background-color: rgb(255,245,235);
     width: 70%;
@@ -199,6 +205,9 @@ hr {
     .footer{
         width: 80%;
     }
+    .message_wrapper{
+        width: 80%;
+    }
 }
 
 @media (max-width: 940px) {
@@ -209,5 +218,10 @@ hr {
     }
     .footer{
         width: 90%;
+    }
+    .message_wrapper{
+        width: 90%;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
 }

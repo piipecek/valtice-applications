@@ -1,0 +1,15 @@
+{% extends"guest/en_context.html" %}
+
+{% block content %}
+<h1>E-mail confirmation</h1>
+<hr>
+<p>
+    <ul>
+        <li>E-mail is an important communication channel between participants and organizers, so we need you to verify it by clicking on the link in the e-mail.</li>
+        <li>We have sent a verification e-mail to {{email}}. If you cannot find it, contact the organizer.</li>
+    </ul>
+    <form method="post">
+        <button type="submit" name="again" value="whatever" class="custom_button">Send e-mail again</button>
+    </form>
+</p>
+{% endblock %}
