@@ -298,3 +298,65 @@ def en_reset_password(token):
         return redirect(url_for("auth_views.en_login"))
 
 
+@auth_views.route("/change_password", methods=["GET","POST"])
+@login_required
+def change_password():
+    if not current_user.must_change_password_upon_login:
+        return redirect(url_for("user_views.account"))
+    if request.method == "GET":
+        return render_template("auth/cz_change_password.html", roles = get_roles())
+    else:
+        if request.form.get("keep"):
+            current_user.must_change_password_upon_login = False
+            current_user.update()
+            return redirect(url_for("user_views.account"))
+        elif request.form.get("change"):
+            password = request.form.get("password")
+            confirm = request.form.get("confirm")
+            if password != confirm:
+                flash("Hesla se neshodují.", category="error")
+                return redirect(url_for("auth_views.change_password"))
+            elif len(password) == 0:
+                flash("Heslo nesmí být prázdné.", category="error")
+                return redirect(url_for("auth_views.change_password"))
+            else:
+                current_user.password = generate_password_hash(password, method="scrypt")
+                current_user.must_change_password_upon_login = False
+                current_user.update()
+                flash("Heslo bylo úspěšně změněno.", category="success")
+                return redirect(url_for("user_views.account"))
+        else:
+            return request.form.to_dict()
+    
+
+@auth_views.route("/en_change_password", methods=["GET","POST"])
+@login_required
+def en_change_password():
+    if not current_user.must_change_password_upon_login:
+        return redirect(url_for("user_views.en_account"))
+    if request.method == "GET":
+        return render_template("auth/en_change_password.html", roles = get_roles())
+    else:
+        if request.form.get("keep"):
+            current_user.must_change_password_upon_login = False
+            current_user.update()
+            return redirect(url_for("user_views.en_account"))
+        elif request.form.get("change"):
+            password = request.form.get("password")
+            confirm = request.form.get("confirm")
+            if password != confirm:
+                flash("Passwords do not match.", category="error")
+                return redirect(url_for("auth_views.en_change_password"))
+            elif len(password) == 0:
+                flash("Password must not be empty.", category="error")
+                return redirect(url_for("auth_views.en_change_password"))
+            else:
+                current_user.password = generate_password_hash(password, method="scrypt")
+                current_user.must_change_password_upon_login = False
+                current_user.update()
+                flash("Password successfully changed.", category="success")
+                return redirect(url_for("user_views.en_account"))
+        else:
+            return request.form.to_dict()
+
+
