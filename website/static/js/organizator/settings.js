@@ -8,10 +8,3 @@ document.getElementById("applications_end_date").value = settings["applications_
 document.getElementById("applications_end_time").value = settings["applications_end_time"]
 document.getElementById("text_cz").value = settings["cz_frontpage_text"]
 document.getElementById("text_en").value = settings["en_frontpage_text"]
-
-
-
-document.getElementById("delete_button").addEventListener("click", () => {
-    if(confirm("Opravdu chcete smazat všechny uživatele?")) {
-        document.getElementById("form").submit()
-}})

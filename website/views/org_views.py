@@ -30,18 +30,25 @@ def settings():
     if request.method == "GET":
         return render_template("organizator/settings.html", roles=get_roles(current_user))
     else:
-        if request.form.get("delete_all"):
-            for u in User.get_all():
-                u.delete()
-            flash("Všichni účastníci byli smazáni", category="success")
-            return redirect(url_for("org_views.settings"))
-        elif request.form.get("novy_ucastnik"):
-            id = User.novy_ucet_from_admin(email = request.form.get("email"), password = request.form.get("password"))
-            if id:
-                return redirect(url_for("org_views.uprava_ucastnika", id=id))
-            else:
+        if request.form.get("novy_ucastnik"):
+            email = request.form.get("email")
+            password = request.form.get("password")
+            if User.get_by_email(email):
                 flash("Uživatel s tímto emailem už existuje.", category="error")
                 return redirect(url_for("org_views.settings"))
+            if not all([email, password]):
+                flash("Nebyl vyplněn email nebo heslo.", category="error")
+                return redirect(url_for("org_views.settings"))
+            u = User(email = email, password = generate_password_hash(password, method='scrypt'))
+            if request.form.get("is_tutor"):
+                u.roles.append(Role.get_by_system_name("tutor"))
+            if request.form.get("email_verified"):
+                u.confirmed_email = True
+            if request.form.get("require_password_change"):
+                u.must_change_password_upon_login = True
+            u.update()
+            flash("Uživatel byl vytvořen", category="success")
+            return redirect(url_for("org_views.uprava_ucastnika", id=u.id))
         elif request.form.get("nova_trida"):
             t = Trida(short_name_cz=request.form.get("short_name"))
             t.update()

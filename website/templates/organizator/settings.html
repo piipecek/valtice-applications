@@ -42,6 +42,56 @@
     </div>
 </form>
 <hr>
+<h2>Vytvoření nového účtu</h2>
+<small>Pokud vytváříte účet pro pořadatele, je nutné mu poté <a class="link" href="{{url_for('org_views.organizatori')}}">udělit správné role</a>.</small>
+<form method="post">
+    <div class="row">
+        <div class="col-12 col-sm-2 my-1">
+            e-mail:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="text" name="email" placeholder="franta.vopicka@example.com" required>
+        </div>
+        <div class="col-12 col-sm-2 my-1">
+            heslo:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="text" name="password" placeholder="heslo123" required>
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="custom_button" name="novy_ucastnik" value="whatever" type="submit">Vytvořit</button>
+        </div>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" name="is_tutor" id="is_tutor" class="form-check-input">
+        <label for="is_tutor" class="form-check-label">Udělit roli lektora</label>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" name="email_verified" id="email_verified" class="form-check-input" checked>
+        <label for="email_verified" class="form-check-label">Považovat e-mail za ověřený</label>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" name="require_password_change" id="require_password_change" class="form-check-input" checked>
+        <label for="require_password_change" class="form-check-label">Vyžadovat změnu hesla při prvním přihlášení</label>
+    </div>
+</form>
+<hr>
+<h2>Vytvoření nové třídy</h2>
+<form method="post">
+    <div class="row">
+        <div class="col-sm-2">
+            Krátký název třídy:
+        </div>
+        <div class="col">
+            <input class="form-control" type="text" name="short_name" placeholder="Jméno Lektora | upřesnění" required>
+        </div>
+        <div class="col-auto">
+            <button class="custom_button" name="nova_trida" value="whatever" type="submit">Vytvořit</button>
+        </div>
+    </div>
+    <small>Úplný název třídy a anglické znění půjde zadat po založení třídy.</small>
+</form>
+<hr>
 <h2>Český text na úvodní stránce přihláškového systému</h2>
 <form method="post">
     <div class="row">
@@ -78,44 +128,6 @@
 </form>
 <hr>
 
-<h2>Vytvoření nového účtu</h2>
-<small>Pokud vytváříte účet pro lektora nebo pořadatele, je nutné mu poté udělit správné role. Zde zadaný e-mail bude považován za ověřený.</small>
-<form method="post">
-    <div class="row">
-        <div class="col-12 col-sm-2 my-1">
-            e-mail:
-        </div>
-        <div class="col-12 col-sm my-1">
-            <input class="form-control" type="text" name="email" placeholder="franta.vopicka@example.com" required>
-        </div>
-        <div class="col-12 col-sm-2 my-1">
-            heslo:
-        </div>
-        <div class="col-12 col-sm my-1">
-            <input class="form-control" type="text" name="password" placeholder="heslo123" required>
-        </div>
-        <div class="col-12 col-sm-auto my-1">
-            <button class="custom_button" name="novy_ucastnik" value="whatever" type="submit">Vytvořit</button>
-        </div>
-    </div>
-</form>
-<hr>
-<h2>Vytvoření nové třídy</h2>
-<form method="post">
-    <div class="row">
-        <div class="col-sm-2">
-            Krátký název třídy:
-        </div>
-        <div class="col">
-            <input class="form-control" type="text" name="short_name" placeholder="Jméno Lektora | upřesnění" required>
-        </div>
-        <div class="col-auto">
-            <button class="custom_button" name="nova_trida" value="whatever" type="submit">Vytvořit</button>
-        </div>
-    </div>
-    <small>Úplný název třídy a anglické znění půjde zadat po založení třídy.</small>
-</form>
-<hr>
 <h2>Nahrání nového loga ročníku</h2>
 <form method="post" enctype="multipart/form-data">
     <div class="row">
@@ -150,12 +162,6 @@
             <button class="custom_button" name="export" value="whatever" type="submit">Vytvořit export</button>
         </div>
     </div>
-</form>
-<hr>
-<h2>Smazání všech účastníků</h2>
-<button type="button" id="delete_button" class="btn btn-danger">Smazat všechny účastníky</button>
-<form id="form" method="post">
-    <input type="hidden" name="delete_all" value="whatever">
 </form>
 
 <script type="module" src="{{url_for('static', filename='js/organizator/settings.js')}}"></script>

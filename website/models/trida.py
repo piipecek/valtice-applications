@@ -25,7 +25,7 @@ class Trida(Common_methods_db_model):
         return {
             "id": self.id,
             "short_name": self.short_name_cz,
-            "tutor_full_name": self.tutor.get_full_name(),
+            "tutor_full_name": self.tutor.get_full_name() if self.tutor else "Zatím bez lektora",
             "tutor_id": self.tutor_id,
         }
     

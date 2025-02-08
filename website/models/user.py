@@ -11,17 +11,6 @@ from flask_login import UserMixin, login_user
 import jwt
 from werkzeug.security import generate_password_hash
 
-#todo procistit stare importy
-# from website import db
-# from website.models.common_methods_db_model import Common_methods_db_model
-# from website.helpers.pretty_date import pretty_datetime
-# from datetime import datetime, date
-# from flask_login import UserMixin
-# from website.models.trida import Trida
-# from io import BytesIO
-# from openpyxl import Workbook
-# import czech_sort
-
 
 class User(Common_methods_db_model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -153,7 +142,7 @@ class User(Common_methods_db_model, UserMixin):
             "id": self.id,
             "full_name": full_name if full_name else "-",
             "surname": self.surname if self.surname else "-",
-            "email": self.email if self.email else "-",
+            "phone": self.phone if self.phone else "-",
             "taught_classes":[
                 {
                     "id": trida.id,
@@ -178,14 +167,16 @@ class User(Common_methods_db_model, UserMixin):
     @staticmethod
     def get_seznam_pro_options_na_uprave_tridy() -> list:
         result = []
+        tutor_role = Role.get_by_system_name("tutor")
         for u in User.get_all():
-            data = {
-                "id": u.id,
-                "full_name": u.get_full_name(),
-                "surname": u.surname
-            }
-            result.append(data)
-        return sorted(result, key=lambda x: x["surname"])
+            if tutor_role in u.roles:
+                data = {
+                    "id": u.id,
+                    "full_name": u.get_full_name(),
+                    "surname": u.surname
+                }
+                result.append(data)
+        return sorted(result, key=lambda x: (x["surname"] is None, x["surname"] or ""))
     
     
     def login(self):
@@ -198,19 +189,6 @@ class User(Common_methods_db_model, UserMixin):
             "id": self.id,
             "email": self.email,
         }
-
-        
-    @staticmethod
-    def novy_ucet_from_admin(email, password) -> int:
-        if User.get_by_email(email):
-            return None
-        u = User()
-        u.email = email
-        u.password = generate_password_hash(password, method="scrypt")
-        u.confirmed_email = True
-        u.must_change_password_upon_login = True
-        u.update()
-        return u.id
     
     
     def kalkulace(self) -> dict:
@@ -226,53 +204,57 @@ class User(Common_methods_db_model, UserMixin):
             elif self.billing_currency == "eur":
                 ubytko = self.accomodation_count * Billing.get_by_system_name("internat").eur
         else:
-            ubytko = 0
+            ubytko = None
         
         # kurzovne
-        def vycislit(ucast: str, mena: str, kategorie: str, clen_ssh: bool, cislo_tridy: int, trida: Trida) -> int:
-            #TODO ve vedlejsi tride musi nove byt check na to, zda je placena nebo ne
-            return 42
-            # if trida is None:
-            #     return 0
-            # if cislo_tridy == 1:
-            #     if ucast == "Pasivní":
-            #         if mena == "CZK":
-            #             return Billing.get_by_system_name("kurzovne_pasivni").czk
-            #         elif mena == "EUR":
-            #             return Billing.get_by_system_name("kurzovne_pasivni").eur
-            #     if kategorie == "dite":
-            #         if mena == "CZK":
-            #             return Billing.get_by_system_name("kurzovne_deti").czk
-            #         elif mena == "EUR":
-            #             return Billing.get_by_system_name("kurzovne_deti").eur
-            #     elif kategorie == "student":
-            #         if mena == "CZK":
-            #             return Billing.get_by_system_name("kurzovne_student").czk
-            #         elif mena == "EUR":
-            #             return Billing.get_by_system_name("kurzovne_student").eur
-            #     elif clen_ssh:
-            #         if mena == "CZK":
-            #             return Billing.get_by_system_name("kurzovne_ssh").czk
-            #         elif mena == "EUR":
-            #             return Billing.get_by_system_name("kurzovne_ssh").eur
-            #     elif kategorie == "dospely":
-            #         if mena == "CZK":
-            #             return Billing.get_by_system_name("kurzovne").czk
-            #         elif mena == "EUR":
-            #             return Billing.get_by_system_name("kurzovne").eur
-            # elif cislo_tridy == 2:
-            #     if trida.je_zdarma_jako_vedlejsi:
-            #         return 0
-            #     elif trida.je_ansamblova:
-            #         if mena == "CZK":
-            #             return Billing.get_by_system_name("ansambly").czk
-            #         elif mena == "EUR":
-            #             return Billing.get_by_system_name("ansambly").eur
-            #     else:
-            #         return vycislit(ucast, mena, kategorie, clen_ssh, 1, trida)
+        def calculate_trida(trida: Trida, self, je_vedlejsi) -> int:
+            if trida is None:
+                return None
+            if not self.is_active_participant: # pasivní účastníci
+                if self.billing_currency == "czk":
+                    return Billing.get_by_system_name("kurzovne_pasivni").czk
+                elif self.billing_currency == "eur":
+                    return Billing.get_by_system_name("kurzovne_pasivni").eur
+            if je_vedlejsi:
+                if trida.is_free_as_secondary: # napr. zapsanej sbor jako vedlejsi trida
+                    return 0
+                elif not trida.is_solo: # napr. zapsana Poppy Holden jako vedlejsi trida
+                    if self.billing_currency == "czk":
+                        return Billing.get_by_system_name("ansambly").czk
+                    elif self.billing_currency == "eur":
+                        return Billing.get_by_system_name("ansambly").eur
+                else:
+                    return calculate_trida(trida, self, False) # napr. zapsana solo trida jako vedlejsi trida, pocita se to znova aby byly slevy apod.
+            else:
+                if self.billing_age == "child":
+                    if self.billing_currency == "czk":
+                        return Billing.get_by_system_name("kurzovne_deti").czk
+                    elif self.billing_currency == "eur":
+                        return Billing.get_by_system_name("kurzovne_deti").eur
+                elif self.billing_age == "youth":
+                    if self.billing_currency == "czk":
+                        return Billing.get_by_system_name("kurzovne_deti").czk
+                    elif self.billing_currency == "eur":
+                        return Billing.get_by_system_name("kurzovne_deti").eur
+                elif self.is_ssh_member:
+                    if self.billing_currency == "czk":
+                        return Billing.get_by_system_name("kurzovne_ssh").czk
+                    elif self.billing_currency == "eur":
+                        return Billing.get_by_system_name("kurzovne_ssh").eur
+                elif self.is_student:
+                    if self.billing_currency == "czk":
+                        return Billing.get_by_system_name("kurzovne_student").czk
+                    elif self.billing_currency == "eur":
+                        return Billing.get_by_system_name("kurzovne_student").eur
+                else:
+                    if self.billing_currency == "czk":
+                        return Billing.get_by_system_name("kurzovne").czk
+                    elif self.billing_currency == "eur":
+                        return Billing.get_by_system_name("kurzovne").eur
+                
         
-        prvni_trida = vycislit(self.is_active, self.billing_currency, self.billing_age, self.is_ssh_member, 1, self.main_class_priority_1)
-        vedlejsi_trida = vycislit(self.is_active, self.billing_currency, self.billing_age, self.is_ssh_member, 2, self.secondary_class)
+        hlavni_trida = calculate_trida(self.main_class_priority_1, self, False)
+        vedlejsi_trida = calculate_trida(self.secondary_class, self, True)
         
         
         # # strava
@@ -289,24 +271,28 @@ class User(Common_methods_db_model, UserMixin):
         obedy = 22
         vecere = 33
         
+        hlavni_trida_do_sumy = hlavni_trida if hlavni_trida is not None else 0
+        vedlejsi_trida_do_sumy = vedlejsi_trida if vedlejsi_trida is not None else 0
+        ubytko_do_sumy = ubytko if ubytko is not None else 0
         result = {
             "ubytovani": ubytko,
-            "prvni_trida": prvni_trida,
+            "prvni_trida": hlavni_trida,
             "vedlejsi_trida": vedlejsi_trida,
             "snidane": snidane,
             "obedy": obedy,
             "vecere": vecere,
             "dar": self.billing_gift,
-            "celkem": ubytko + snidane + obedy + vecere + self.billing_gift + prvni_trida + vedlejsi_trida + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
-            #TODO fakt tu sčítám ty korekce?
+            "celkem": ubytko_do_sumy + snidane + obedy + vecere + self.billing_gift + hlavni_trida_do_sumy + vedlejsi_trida_do_sumy + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
         }
         return result
     
     
     def info_pro_detail(self):
         def pretty_penize(castka) -> str:
-            if castka == 0:
+            if castka is None:
                 return "-"
+            if castka == 0:
+                castka = 0
             if castka == int(castka):
                 castka = int(castka)
             else:
@@ -531,6 +517,12 @@ class User(Common_methods_db_model, UserMixin):
             self.must_change_password_upon_login = True
             
         self.update()
+        
+# TODO procistit importy a dat je nahoru
+from datetime import date
+from io import BytesIO
+from openpyxl import Workbook
+import czech_sort
     
     
     # @staticmethod

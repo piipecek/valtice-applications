@@ -15,7 +15,7 @@ for (let trida of tridy){
 
     let links_span = document.createElement("span")
     if (trida["tutor_id"] == null) {
-        links_span.innerText = "Žádný"
+        links_span.innerText = trida["tutor_full_name"]
     } else {
         let lektor_a = document.createElement("a")
         lektor_a.href = "/organizator/detail_ucastnika/" + trida["tutor_id"]
