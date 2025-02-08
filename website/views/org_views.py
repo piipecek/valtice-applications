@@ -129,6 +129,13 @@ def uprava_ucastnika(id:int):
     else:
         if request.form.get("save"):
             u = User.get_by_id(id)
+            
+            if request.form.get("parent_email"):
+                if parent := User.get_by_email(request.form.get("parent_email")):
+                    u.parent = parent
+                else:
+                    flash("Rodič s tímto emailem neexistuje", category="error")
+            
             u.nacist_zmeny_z_requestu(request)
             flash("Změny byly uloženy", category="success")
             return redirect(url_for("org_views.detail_ucastnika", id=id))
@@ -150,6 +157,12 @@ def uprava_ucastnika(id:int):
             User.get_by_id(id).delete()
             flash("Uživatel byl smazán", category="success")
             return redirect(url_for("org_views.seznam_ucastniku"))
+        elif request.form.get("remove_parent"):
+            u = User.get_by_id(id)
+            u.parent_id = None
+            u.update()
+            flash("Rodič byl odebrán", category="success")
+            return redirect(url_for("org_views.uprava_ucastnika", id=id))
         return request.form.to_dict()
     
     

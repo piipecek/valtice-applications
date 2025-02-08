@@ -72,6 +72,31 @@ for (let key in data) {
             links_span.lastChild.remove()
         }
         document.getElementById(key).appendChild(links_span)
+    } else if (key == "parent") {
+        if (data["parent"] == "-") {
+            document.getElementById(key).innerText = "-"
+        } else {
+            let parent_a = document.createElement("a")
+            parent_a.href = "/organizator/detail_ucastnika/" + data["parent"]["parent_id"]
+            parent_a.innerText = data["parent"]["parent_name"]
+            parent_a.classList.add("link")
+            document.getElementById(key).appendChild(parent_a)
+        }
+    } else if (key == "children") {
+        console.log(data["children"])
+        if (data["children"] == "-") {
+            document.getElementById(key).innerText = "-"
+        } else {
+            for (let child of data["children"]) {
+                let child_a = document.createElement("a")
+                child_a.href = "/organizator/detail_ucastnika/" + child["child_id"]
+                child_a.innerText = child["child_name"]
+                child_a.classList.add("link")
+                document.getElementById(key).appendChild(child_a)
+                document.getElementById(key).appendChild(document.createTextNode(", "))
+            }
+            document.getElementById(key).lastChild.remove()
+        }
     } else {
         document.getElementById(key).innerText = data[key]
     }

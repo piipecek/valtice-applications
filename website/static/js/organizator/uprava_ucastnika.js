@@ -45,6 +45,13 @@ for (let key in data) {
         if (document.getElementById(key)) {
             document.getElementById(key).value = data[key]
         }
+    } else if (key == "parent") {
+        if (data[key]) {
+            document.getElementById("parent_yes").hidden = false
+            document.getElementById("parent_name").innerText = data[key]["parent_name"]
+        } else {
+            document.getElementById("parent_no").hidden = false
+        }
     } else {
         document.getElementById(key).value = data[key]
     }

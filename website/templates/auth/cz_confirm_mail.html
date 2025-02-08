@@ -1,0 +1,15 @@
+{% extends"guest/cz_context.html" %}
+
+{% block content %}
+<h1>Potvrzení e-mailu</h1>
+<hr>
+<p>
+    <ul>
+        <li>E-mail je důležitý komunikační kanál mezi účastníky a organizátory, proto potřebujeme, abyste ho ověřili kliknutím na odkaz v e-mailu.</li>
+        <li>Odeslali jsme ověřovací e-mail na {{email}}. Pokud ho nemůžete najít, kontaktujte pořadatele.</li>
+    </ul>
+    <form method="post">
+        <button type="submit" name="again" value="whatever" class="custom_button">Odeslat e-mail znovu</button>
+    </form>
+</p>
+{% endblock %}

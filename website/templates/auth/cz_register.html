@@ -1,5 +1,122 @@
 {% extends"guest/cz_context.html" %}
+{%block content%}
 
-{% block content %}
-cz login
-{% endblock %}
+<form method="post">
+    <div id="age_rozcestnik">
+        <h1>Registrace na MLŠSH - úvod</h1>
+        <hr>
+        <p>
+            Před registrací máte jistě několik otázek ohledně změn od minulých ročníků. Vše je přehledně vysvětleno na <a class="link" href="{{url_for('guest_views.cz_info')}}">této stránce</a>.
+        </p>
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <button type="button" class="custom_button register_button" id="bylo_15">Je mi 15 let nebo více</button>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <button type="button" class="custom_button register_button" id="nebylo_15">Je mi méně než 15 let / registruji účastníka, kterému je méně než 15 let</button>
+            </div>
+        </div>
+    </div>
+    <div id="under_15" hidden>
+        <h1>Registrace dětského účastníka</h1>
+        <hr>
+        <p>
+            Dětský účastník musí být přiřazený k již existujícímu účtu odpovědné osoby. Pokud ještě takovýto účet neexistuje, musí daná osoba <a class="link" href="{{url_for('auth_views.register')}}">projít registrací znovu jako osoba, které již bylo 15 let</a>.
+        </p>
+        <p>
+            Dětský účastník může nebo nemusí mít vlastní e-mail a heslo. Pokud se rozhodnete mu e-mail a heslo zadat, bude se moct sám přihlásit. Pokud ne, účet bude spravovatelný pouze z účtu odpovědné osoby.
+        </p>
+        <div class="row">
+            <div class="col-auto">
+                E-mail odpovědné osoby:
+            </div>
+            <div class="col">
+                <input type="text" name="email_odpovedne" id="email_odpovedne" maxlength="100" class="form-control"/>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center my-2">
+            <button type="button" class="custom_button" id="under_15_pokracovat">Pokračovat</button>
+        </div>
+    </div>
+	<div id="registrace" hidden>
+        <h1>Registrace na MLŠSH</h1>
+        <hr>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Email
+			</div>
+			<div class="col">
+				<input type="text" name="email" maxlength="100" class="form-control"/>
+			</div>
+		</div>
+        <small>V dalším kroku budeme potřebovat e-mail ověřit.</small>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Heslo
+			</div>
+			<div class="col">
+				<input type="password" name="password" maxlength="300" class="form-control"/>	
+			</div>
+		</div>
+        <div class="row my-1">
+            <div class="col-sm-3">
+                Potvrzení hesla
+            </div>
+            <div class="col">
+                <input type="password" name="confirm" maxlength="300" class="form-control"/>	
+            </div>
+        </div>
+        <div class="d-flex justify-content-center my-2">
+            <button type="submit" class="custom_button">Vytvořit účet</button>
+        </div>
+    </div>
+    <div id="registrace_nebylo_15" hidden>
+        <h1>Registrace dětského účastníka</h1>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Email
+			</div>
+			<div class="col">
+				<input type="text" name="email_child" maxlength="100" class="form-control"/>
+			</div>
+		</div>
+        <small>E-mail dětského účastníka můžete nebo nemusíte vyplňovat.</small>
+		<div class="row my-1">
+			<div class="col-sm-3">
+				Heslo
+			</div>
+			<div class="col">
+				<input type="password" name="password_child" maxlength="300" class="form-control"/>	
+			</div>
+		</div>
+        <small>Heslo dětského účastníka můžete nebo nemusíte vyplňovat.</small>
+        <div class="row my-1">
+            <div class="col-sm-3">
+                Potvrzení hesla
+            </div>
+            <div class="col">
+                <input type="password" name="confirm_child" maxlength="300" class="form-control"/>	
+            </div>
+        </div>
+        <div class="d-flex justify-content-center my-2">
+            <button type="submit" class="custom_button">Vytvořit dětský účet</button>
+        </div>
+    </div>
+    <div id="jak_vypada_heslo" hidden>
+        <p>
+            Jak vypadá dobré heslo?
+            <ul>
+                <li>Mělo by být delší, než 8 znaků.</li>
+                <li>Mělo by obsahovat nějaký speciální znak jiný, než písmena nebo čísla.</li>
+                <li>Mělo by být unikátní.</li>
+                <li>Pokud používáte správce hesel, není nutné, aby bylo lidsky zapamatovatelné.</li>
+            </ul>
+            Heslo jde vždy obnovit, pokud ho zapomenete.
+        </p>
+        <div class="d-flex justify-content-center">
+            <img class="xkcd" src="https://imgs.xkcd.com/comics/password_strength.png" alt="xkcd password strength">
+        </div>
+	</div>
+</form>
+<script type="module" src="{{url_for('static', filename='js/guest/cz_register.js')}}"></script>
+{%endblock%}

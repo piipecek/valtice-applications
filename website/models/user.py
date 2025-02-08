@@ -331,6 +331,10 @@ class User(Common_methods_db_model, UserMixin):
             billing_age = "mládež do 15 let"
         else:
             billing_age = "dospělý"
+            
+        billing_email = self.billing_email if self.billing_email else "bude použit hlavní e-mail"
+        if self.parent:
+            billing_email = "bude použit e-mail rodiče"
 
                 
         kalkulace = self.kalkulace()
@@ -353,7 +357,7 @@ class User(Common_methods_db_model, UserMixin):
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
             "admin_comment": self.admin_comment if self.admin_comment else "-",
-            "billing_email": self.billing_email if self.billing_email else "bude použit hlavní e-mail",
+            "billing_email": billing_email,
             "billing_age": billing_age,
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno",
             "billing_correction": pretty_penize(self.billing_correction),
@@ -379,7 +383,17 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
-            "roles": ", ".join([r.display_name for r in sorted(self.roles)]),
+            "roles": ", ".join([r.display_name for r in sorted(self.roles)]) if self.roles else "-",
+            "parent": {
+                "parent_id": self.parent_id,
+                "parent_name": self.parent.get_full_name()
+            } if self.parent else "-",
+            "children": sorted([
+                {
+                    "child_id": child.id,
+                    "child_name": child.get_full_name()
+                } for child in self.children
+            ], key=lambda x: x["child_name"]) if self.children else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"]),
             "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"]),
             "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"]),
@@ -453,6 +467,10 @@ class User(Common_methods_db_model, UserMixin):
             
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "parent": {
+                "parent_id": self.parent_id,
+                "parent_name": self.parent.get_full_name()
+            } if self.parent else None,
             
             "main_class_id_priority_1": self.main_class_priority_1.id if self.main_class_priority_1 else None,
             "main_class_id_priority_2": self.main_class_priority_2.id if self.main_class_priority_2 else None,

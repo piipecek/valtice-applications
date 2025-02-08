@@ -312,9 +312,22 @@
             </div>
         </div>
         <small>Po změně hesla ho uživatel jednou použije a bude vyzván k nastavení svého hesla. Pokud mu má Vámi zadané heslo zůstat, změnte po změně hesla tento fakt o několik řádků výše.</small>
-
-
+        <div class="row my-1" id="parent_no" hidden>
+            <div class="col-2 d-flex align-items-center">Připojit k rodičovskému účtu</div>
+            <div class="col">
+                <input type="email" class="form-control" id="parent_email" name="parent_email" placeholder="e-mail rodiče">
+            </div>
+        </div>
+        <div class="row my-1" id="parent_yes" hidden>
+            <div class="col-2 d-flex align-items-center">Rodič účtu</div>
+            <div class="col-2 d-flex align-items-center" id="parent_name"></div>
+            <div class="col">
+                <button type="submit" class="custom_button" name="remove_parent" value="whatever">Odebrat rodiče</button>
+            </div>
+        </div>
+        <small>Přidělení a odebrání dítěte účtu proveďte z účtu dítěte.</small>
     </div>
+
 </form>
 <form method="post" id="delete_form">
     <input type="hidden" name="delete" value="whatever">

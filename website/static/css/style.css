@@ -183,6 +183,14 @@ hr {
     opacity: 1 !important;
 }
 
+.xkcd{
+    width: 70%;
+}
+
+.register_button{
+    max-width: 60%;
+}
+
 
 @media (max-width: 1200px) {
     .main_section {
