@@ -1,5 +1,220 @@
-{% extends "cz_context.html" %}
-
+{% extends"cz_context.html" %}
 {% block content %}
-cz edit account
+<h1>Úprava osobních údajů</h1>
+<hr>
+<form method="post">
+    <button type="submit" class="custom_button" name="save" value="whatever">Uložit změny</button>
+    <hr>
+    <div class="container my-2">
+        <h2>Osobní informace</h2>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Jméno</div>
+            <div class="col">
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Příjmení</div>
+            <div class="col">
+                <input type="text" class="form-control" id="surname" name="surname">
+            </div>
+        </div>
+        <small>Po změně e-mailu Vám zašleme ověřovací zprávu.</small>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Email</div>
+            <div class="col">
+                <input type="text" class="form-control" id="email" name="email">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Telefon</div>
+            <div class="col">
+                <input type="text" class="form-control" id="phone" name="phone">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Student</div>
+            <div class="col">
+                <select class="form-control" id="is_student" name="is_student">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <hr>
+        <h2>Valtické informace</h2>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Člen SSH</div>
+            <div class="col">
+                <select class="form-control" id="is_ssh_member" name="is_ssh_member">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Účast</div>
+            <div class="col">
+                <select class="form-control" id="is_active_participant" name="is_active_participant">
+                    <option value="active">aktivní</option>
+                    <option value="passive">pasivní</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Student ZUŠ Valtice/Mikulov</div>
+            <div class="col">
+                <select class="form-control" id="is_student_of_partner_zus" name="is_student_of_partner_zus">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Hudební vzdělání</div>
+            <div class="col">
+                <input type="text" class="form-control" id="musical_education" name="musical_education">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Nástroj</div>
+            <div class="col">
+                <input type="text" class="form-control" id="musical_instrument" name="musical_instrument">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Repertoir</div>
+            <div class="col">
+                <input type="text" class="form-control" id="repertoire" name="repertoire">
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Uživatelská poznámka</div>
+            <div class="col">
+                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+            </div>
+        </div>
+        <hr>
+        <h2>Finance</h2>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Měna</div>
+            <div class="col">
+                <select class="form-control" id="billing_currency" name="billing_currency">
+                    <option value="czk">CZK</option>
+                    <option value="eur">EUR</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Email pro odeslání kalkulace</div>
+            <div class="col">
+                <input type="email" class="form-control" id="billing_email" name="billing_email">
+            </div>
+        </div>
+        <small>Pokud je e-mail ponechaný prázdný, bude použit mail účtu.</small>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Kategorie</div>
+            <div class="col">
+                <select class="form-control" id="billing_age" name="billing_age">
+                    <option value="child">Dítě</option>
+                    <option value="youth">Mládež do 15 let</option>
+                    <option value="adult">Dospělý</option>
+                </select>
+            </div>
+        </div>
+        <small>Ovlivňuje také třídy, které jsou na výběr.</small>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Finanční dar</div>
+            <div class="col">
+                <input type="number" class="form-control" id="billing_gift" name="billing_gift">
+            </div>
+        </div>
+
+        <hr>
+        {% if "tutor" in roles %}
+            <h2>Lektorské informace</h2>
+            <div class="row my-1" id="tutor_yes">
+                <div class="col-2 d-flex align-items-center">Způsob dopravy</div>
+                <div class="col">
+                    <select class="form-control" id="tutor_travel" name="tutor_travel">
+                        <option value="own">vlastní</option>
+                        <option value="public">veřejná</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Registrační značka vozidla</div>
+                <div class="col">
+                    <input type="text" class="form-control" id="tutor_license_plate" name="tutor_license_plate">
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Příjezd</div>
+                <div class="col">
+                <input type="text" class="form-control" id="tutor_arrival" name="tutor_arrival">
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Odjezd</div>
+                <div class="col">
+                <input type="text" class="form-control" id="tutor_departure" name="tutor_departure">
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Jména doprovodu</div>
+                <div class="col">
+                <input type="text" class="form-control" id="tutor_accompanying_names" name="tutor_accompanying_names">
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Adresa</div>
+                <div class="col">
+                <input type="text" class="form-control" id="tutor_address" name="tutor_address">
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Datum narození</div>
+                <div class="col">
+                <input type="date" class="form-control" id="tutor_date_of_birth" name="tutor_date_of_birth">
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-2 d-flex align-items-center">Číslo bankovního účtu</div>
+                <div class="col">
+                <input type="text" class="form-control" id="tutor_bank_account" name="tutor_bank_account">
+                </div>
+            </div>
+            <hr>
+        {% endif %}
+        <h2>Přístup k účtu</h2>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Nové heslo</div>
+            <div class="col">
+                <input type="text" class="form-control" id="new_password" name="new_password">
+            </div>
+        </div>
+        <div class="row my-1" id="no_parent" hidden>
+            <div class="col-2 d-flex align-items-center">Přidat nadřazený účet</div>
+            <div class="col">
+                <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
+            </div>
+        </div>
+        <div class="row my-1" id="yes_parent" hidden>
+            <div class="col">
+                Tento účet spravuje <span id="manager_name"></span>. Pokud si přejete tyto účty rozpojit, musí to provést nadřazený účet.
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2">Spravované účty</div>
+            <div class="col" id="children">
+            </div>
+        </div>
+    </div>
+
+</form>
+<form method="post" hidden id="unlink_form">
+    <input type="text" id="unlink_child_id" name="unlink_child_id">
+</form>
+<script type="module" src="{{url_for('static', filename='js/user/cz_edit_account.js')}}"></script>
+
 {% endblock %}

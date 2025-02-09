@@ -7,3 +7,8 @@ user_api = Blueprint("user_api", __name__)
 @user_api.route("/ucet", methods=["GET"])
 def ucet():
     return json.dumps(current_user.info_pro_user_detail())
+
+@user_api.route("/uprava_uctu", methods=["GET"])
+def uprava_uctu():
+    return json.dumps(current_user.info_pro_user_upravu())
+

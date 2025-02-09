@@ -578,6 +578,71 @@ class User(Common_methods_db_model, UserMixin):
             ]
         }
         
+        
+    def info_pro_user_upravu(self) -> dict:
+        return {
+            "name": self.name if self.name else "",
+            "surname": self.surname if self.surname else "",
+            "email": self.email,
+            "phone": self.phone,
+            "is_student": "Ano" if self.is_student else "Ne",
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "active" if self.is_active_participant else "passive",
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "musical_education": self.musical_education,
+            "musical_instrument": self.musical_instrument,
+            "repertoire": self.repertoire,
+            "comment": self.comment,
+            "billing_email": self.billing_email,
+            "billing_currency": self.billing_currency,
+            "billing_age": self.billing_age,
+            "billing_gift": self.billing_gift,
+            "has_parent": True if self.parent else False,
+            "manager_name": self.parent.get_full_name() if self.parent else "",
+            "children": [
+                {
+                    "id": child.id,
+                    "full_name": child.get_full_name()
+                } for child in self.children
+            ],
+        }     
+    
+    
+    def nacist_zmeny_z_user_requestu(self, request):
+        self.name = request.form.get("name")
+        self.surname = request.form.get("surname")
+        self.phone = request.form.get("phone")
+        self.is_student = True if request.form.get("is_student") == "Ano" else False
+        self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
+        self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
+        self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
+        self.musical_education = request.form.get("musical_education")
+        self.musical_instrument = request.form.get("musical_instrument")
+        self.repertoire = request.form.get("repertoire")
+        self.comment = request.form.get("comment")
+        
+        self.billing_currency = request.form.get("billing_currency")
+        self.billing_email = request.form.get("billing_email")
+        self.billing_age = request.form.get("billing_age")
+        self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
+        
+        self.tutor_travel = request.form.get("tutor_travel")
+        self.tutor_license_plate = request.form.get("tutor_license_plate")
+        self.tutor_arrival = request.form.get("tutor_arrival")
+        self.tutor_departure = request.form.get("tutor_departure")
+        self.tutor_accompanying_names = request.form.get("tutor_accompanying_names")
+        self.tutor_address = request.form.get("tutor_address")
+        self.tutor_date_of_birth = datetime.strptime(request.form.get("tutor_date_of_birth"), "%Y-%m-%d") if request.form.get("tutor_date_of_birth") else None
+        self.tutor_bank_account = request.form.get("tutor_bank_account")
+        
+        if request.form.get("new_password"):
+            self.password = generate_password_hash(request.form.get("new_password"), method="scrypt")
+        # parent_email je vyresenej ve view
+        # zmena emailu je taky ve view
+        
+        self.update()
+        
+        
 # TODO procistit importy a dat je nahoru
 from datetime import date
 from io import BytesIO

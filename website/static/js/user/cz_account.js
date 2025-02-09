@@ -8,7 +8,6 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]
         }
     } else if (key == "children") {
-        console.log(data["children"])
         if (data["children"] == "-") {
             document.getElementById(key).innerText = "-"
         } else {
@@ -25,6 +24,13 @@ for (let key in data) {
                 document.getElementById(key).appendChild(document.createElement("br"))
             }
             document.getElementById(key).lastChild.remove()
+        }
+    } else if (key == "parent") {
+        document.getElementById(key).innerText = data[key]
+        if (data[key] == "-") {
+            document.getElementById("parent_hint").hidden = true
+        } else {
+            document.getElementById("parent_hint").hidden = false
         }
     } else {
         document.getElementById(key).innerText = data[key]
