@@ -1,6 +1,6 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
-from website.models.jointables import user_role_jointable
+from website.models.jointables import user_role_jointable, user_meal_jointable
 from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.role import Role
@@ -76,7 +76,7 @@ class User(Common_methods_db_model, UserMixin):
     parent = db.relationship("User", remote_side=[id], back_populates="children")
     children = db.relationship("User", back_populates="parent")
     
-    meal_orders = db.relationship("Meal_order", back_populates="user")
+    meals = db.relationship("Meal", secondary=user_meal_jointable, back_populates="users")
     
     taught_classes = db.relationship("Trida", back_populates="tutor", foreign_keys="Trida.tutor_id")
     main_class_id_priority_1 = db.Column(db.Integer, db.ForeignKey("trida.id"))

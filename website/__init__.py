@@ -65,7 +65,6 @@ def create_app() -> Flask:
     from .models.trida import Trida
     from .models.billing import Billing
     from .models.meal import Meal
-    from .models.meal_order import Meal_order
  
     with app.app_context():
         db.create_all()
