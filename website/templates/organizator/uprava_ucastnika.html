@@ -288,7 +288,7 @@
         <hr>
         <h2>Přístup k účtu</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Musí si změnit heslo při dalším přihlášení</div>
+            <div class="col-2 d-flex align-items-center">Musí si změnit heslo při dalším přihlášení?</div>
             <div class="col">
                 <select class="form-control" id="must_change_password_upon_login" name="must_change_password_upon_login">
                     <option value="Ano">Ano</option>
@@ -297,9 +297,18 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Má ověřený e-mail</div>
+            <div class="col-2 d-flex align-items-center">Má ověřený e-mail?</div>
             <div class="col">
                 <select class="form-control" id="confirmed_email" name="confirmed_email">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Má uzamčené změny účtu?</div>
+            <div class="col">
+                <select class="form-control" id="is_locked" name="is_locked">
                     <option value="Ano">Ano</option>
                     <option value="Ne">Ne</option>
                 </select>

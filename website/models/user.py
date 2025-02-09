@@ -5,6 +5,7 @@ from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.role import Role
 from website.helpers.pretty_date import pretty_datetime
+from website.helpers.pretty_penize import pretty_penize
 from datetime import datetime, timedelta, timezone
 from flask import current_app
 from flask_login import UserMixin, login_user
@@ -66,6 +67,7 @@ class User(Common_methods_db_model, UserMixin):
     password = db.Column(db.String(200))
     must_change_password_upon_login = db.Column(db.Boolean, default=False)
     confirmed_email = db.Column(db.Boolean, default=False)
+    is_locked = db.Column(db.Boolean, default=False)
     
     #relationships
     roles = db.relationship("Role", secondary=user_role_jointable, back_populates="users")
@@ -288,20 +290,6 @@ class User(Common_methods_db_model, UserMixin):
     
     
     def info_pro_detail(self):
-        def pretty_penize(castka) -> str:
-            if castka is None:
-                return "-"
-            if castka == 0:
-                castka = 0
-            if castka == int(castka):
-                castka = int(castka)
-            else:
-                castka = str(round(castka, 2)).replace(".", ",")
-            if self.billing_currency == "czk":
-                return f"{castka} Kč"
-            elif self.billing_currency == "eur":
-                return f"{castka} €"
-         
         # ubytovani
         if self.accomodation_type == "own":
             ubytovani = "vlastní"
@@ -346,11 +334,11 @@ class User(Common_methods_db_model, UserMixin):
             "billing_email": billing_email,
             "billing_age": billing_age,
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno",
-            "billing_correction": pretty_penize(self.billing_correction),
+            "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
             "billing_correction_reason": self.billing_correction_reason if self.billing_correction_reason else "-",
-            "billing_food_correction": pretty_penize(self.billing_food_correction),
+            "billing_food_correction": pretty_penize(self.billing_food_correction, self.billing_currency),
             "billing_food_correction_reason": self.billing_food_correction_reason if self.billing_food_correction_reason else "-",
-            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction),
+            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason if self.billing_accomodation_correction_reason else "-",
             "is_tutor": True if Role.get_by_system_name("tutor") in self.roles else False,
             "taught_classes":[
@@ -369,6 +357,7 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "is_locked": "Ano" if self.is_locked else "Ne",
             "roles": ", ".join([r.display_name for r in sorted(self.roles)]) if self.roles else "-",
             "parent": {
                 "parent_id": self.parent_id,
@@ -380,14 +369,14 @@ class User(Common_methods_db_model, UserMixin):
                     "child_name": child.get_full_name()
                 } for child in self.children
             ], key=lambda x: x["child_name"]) if self.children else "-",
-            "billing_celkem": pretty_penize(kalkulace["celkem"]),
-            "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"]),
-            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"]),
-            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"]),
-            "billing_snidane": pretty_penize(kalkulace["snidane"]),
-            "billing_obedy": pretty_penize(kalkulace["obedy"]),
-            "billing_vecere": pretty_penize(kalkulace["vecere"]),
-            "billing_dar": pretty_penize(kalkulace["dar"]),
+            "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
+            "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"], self.billing_currency),
+            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),
+            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
+            "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
+            "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
+            "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
+            "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
             "strava_snidane": "info o snidanich",
             "strava_obedy": "info o obedech",
             "strava_vecere": "info o vecerich",
@@ -453,6 +442,7 @@ class User(Common_methods_db_model, UserMixin):
             
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "is_locked": "Ano" if self.is_locked else "Ne",
             "parent": {
                 "parent_id": self.parent_id,
                 "parent_name": self.parent.get_full_name()
@@ -512,11 +502,81 @@ class User(Common_methods_db_model, UserMixin):
         
         self.must_change_password_upon_login = True if request.form.get("must_change_password_upon_login") == "Ano" else False
         self.confirmed_email = True if request.form.get("confirmed_email") == "Ano" else False
+        self.is_locked = True if request.form.get("is_locked") == "Ano" else False
         if request.form.get("new_password"):
             self.password = generate_password_hash(request.form.get("new_password"), method="scrypt")
             self.must_change_password_upon_login = True
             
         self.update()
+        
+        
+    def info_pro_user_detail(self) -> dict:
+        kalkulace = self.kalkulace()
+        billing_age = "dospělý"
+        if self.billing_age == "child":
+            billing_age = "dítě"
+        elif self.billing_age == "youth":
+            billing_age = "mládež do 15 let"
+            
+        billing_email = self.billing_email if self.billing_email else "bude použit hlavní e-mail"
+        if self.parent:
+            billing_email = "bude použit e-mail nadřazeného účtu"
+            
+        return {
+            "name": self.name if self.name else "-",
+            "surname": self.surname if self.surname else "-",
+            "email": self.email,
+            "phone": self.phone if self.phone else "-",
+            "is_student": "Ano" if self.is_student else "Ne",
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
+            "accomodation_type": self.accomodation_type,
+            "musical_education": self.musical_education if self.musical_education else "-",
+            "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
+            "repertoire": self.repertoire if self.repertoire else "-",
+            "comment": self.comment if self.comment else "-",
+            "main_class_priority_1": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
+            "main_class_priority_2": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
+            "secondary_class": self.secondary_class.full_name_cz if self.secondary_class else "-",
+            "billing_email": billing_email,
+            "billing_age": billing_age,
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
+            "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
+            "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"], self.billing_currency),
+            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),
+            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
+            "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
+            "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
+            "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
+            "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
+            "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
+            "billing_correction_reason": self.billing_correction_reason,
+            "billing_food_correction": pretty_penize(self.billing_food_correction, self.billing_currency),
+            "billing_food_correction_reason": self.billing_food_correction_reason,
+            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
+            "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
+            "tutor_travel": self.tutor_travel,
+            "tutor_license_plate": self.tutor_license_plate,
+            "tutor_arrival": self.tutor_arrival,
+            "tutor_departure": self.tutor_departure,
+            "tutor_accompanying_names": self.tutor_accompanying_names,
+            "tutor_address": self.tutor_address,
+            "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
+            "tutor_bank_account": self.tutor_bank_account,
+            "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
+            "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "is_locked": "Ano" if self.is_locked else "Ne",
+            "datetime_created": pretty_datetime(self.datetime_created),
+            "parent": self.parent.get_full_name() if self.parent else "-",
+            "children": [
+                {
+                    "id": child.id,
+                    "full_name": child.get_full_name()
+                } for child in self.children
+            ]
+        }
         
 # TODO procistit importy a dat je nahoru
 from datetime import date

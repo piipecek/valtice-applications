@@ -46,6 +46,7 @@ def create_app() -> Flask:
     from .api.guest_api import guest_api
     from .api.org_api import org_api
     from .api.static_sender import static_sender
+    from .api.user_api import user_api
 
 
     app.register_blueprint(guest_views, url_prefix="/")
@@ -55,6 +56,7 @@ def create_app() -> Flask:
     app.register_blueprint(guest_api, url_prefix = "/guest_api")
     app.register_blueprint(org_api, url_prefix = "/org_api")
     app.register_blueprint(static_sender, url_prefix="/static")
+    app.register_blueprint(user_api, url_prefix="/user_api")
 
 
     from .models.role import Role

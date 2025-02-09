@@ -1,5 +1,287 @@
 {% extends "cz_context.html" %}
 
 {% block content %}
-cz account
+<h1>Účet</h1>
+<p>
+    Tento účet se mezi ročníky zachovává. Vaše účast na daném ročníku je daná tím, zda se zapíšete do některé třídy.
+</p>
+<hr>
+{% if is_locked %}
+    <p>
+        Váš účet má uzamčené změny, nejspíše proto, že termín MLŠSH se blíží. Pokud si přejete provést nějaké změny, kontaktujte pořadatele.
+    </p>
+{% else %}
+    <a href="{{url_for('user_views.edit_account')}}">
+        <button class="custom_button" type="button">Upravit údaje</button>
+    </a>
+{% endif %}
+
+<hr>
+<h2>Osobní informace</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Jméno</td>
+                <td id="name" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Příjmení</td>
+                <td id="surname" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Email</td>
+                <td id="email" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Telefon</td>
+                <td id="phone" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student</td>
+                <td id="is_student" colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Valtické informace</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Člen SSH</td>
+                <td id="is_ssh_member" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Účast</td>
+                <td id="is_active_participant" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student ZUŠ Valtice / Mikulov</td>
+                <td id="is_student_of_partner_zus" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Ubytování</td>
+                <td id="accomodation_type" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hudební vzdělání</td>
+                <td id="musical_education" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Nástroj</td>
+                <td id="musical_instrument" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Repertoir</td>
+                <td id="repertoire" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Uživatelská poznámka</td>
+                <td id="comment" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída - volba 1</td>
+                <td id="main_class_priority_1" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Vedlejší třída</td>
+                <td id="secondary_class" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída - volba 2</td>
+                <td id="main_class_priority_2" colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Finance</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Fakturační e-mail</td>
+                <td id="billing_email"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Kategorie</td>
+                <td id="billing_age"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Placeno dne</td>
+                <td id="billing_date_paid"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Celková částka</td>
+                <td id="billing_celkem"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída</td>
+                <td id="billing_hlavni_trida"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Vedlejší třída</td>
+                <td id="billing_vedlejsi_trida"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Ubytování</td>
+                <td id="billing_ubytovani"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Snídaně</td>
+                <td id="billing_snidane"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Obědy</td>
+                <td id="billing_obedy"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Večeře</td>
+                <td id="billing_vecere"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Dar</td>
+                <td id="billing_dar"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Korekce kurzovné</td>
+                <td id="billing_correction"></td>
+                <td id="billing_correction_reason"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Korekce strava</td>
+                <td id="billing_food_correction"></td>
+                <td id="billing_food_correction_reason"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Korekce ubytko</td>
+                <td id="billing_accomodation_correction"></td>
+                <td id="billing_accomodation_correction_reason"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Strava</h2>
+TODO jen pokud má stravu
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Snídaně</td>
+                <td id="strava_snidane"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Obědy</td>
+                <td id="strava_obedy"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Večeře</td>
+                <td id="strava_vecere"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+{% if "tutor" in roles %}
+    <h1>Lektorské informace</h1>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr>
+                    <td class="pravy_text">Způsob dopravy</td>
+                    <td id="tutor_travel"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Registrační značka vozidla</td>
+                    <td id="tutor_license_plate"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Příjezd</td>
+                    <td id="tutor_arrival"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Odjezd</td>
+                    <td id="tutor_departure"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Jména doprovodu</td>
+                    <td id="tutor_accompanying_names"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Adresa</td>
+                    <td id="tutor_address"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Datum narození</td>
+                    <td id="tutor_date_of_birth"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Bankovní účet</td>
+                    <td id="tutor_bank_account"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+{% endif %}
+
+<h2>Přístup k účtu</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Musíte při dalším přihlášení změnit heslo?</td>
+                <td id="must_change_password_upon_login"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Máte ověřený e-mail?</td>
+                <td id="confirmed_email"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Máte uzamčené změny účtu?</td>
+                <td id="is_locked"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Datum vytvoření účtu</td>
+                <td id="datetime_created" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Datum registrace ve Valticích</td>
+                <td id="datetime_registered" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">
+                    Nadřazený účet<br>
+                    <small>Pokud se chcete přihlásit jako nadřazený účet, <a class="link" href="{{url_for('auth_views.logout')}}">nejdříve se odhlašte</a>.</small>
+                </td>
+                <td id="parent" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Spravované účty</td>
+                <td colspan="2">
+                    <form method="post" id="children">
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="module" src="{{url_for('static', filename='js/user/cz_account.js')}}"></script>
+
+
 {% endblock %}
