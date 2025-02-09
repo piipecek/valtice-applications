@@ -1,5 +1,5 @@
 import httpGet from "../http_get.js"
-let data = JSON.parse(httpGet("/user_api/uprava_uctu"))
+let data = JSON.parse(httpGet("/user_api/en_uprava_uctu"))
 
 for (let key in data) {
     if (key.includes("tutor")) {
@@ -20,14 +20,14 @@ for (let key in data) {
         } else {
             for (let child of data[key]) {
                 let child_button = document.createElement("button")
-                child_button.innerText = child["full_name"] + " - osamostatnit"
+                child_button.innerText = child["full_name"] + " - unlink child account"
                 child_button.classList.add("custom_button", "my-1")
                 child_button.type = "button"
                 child_button.name = "unlink_child"
                 child_button.value = child["id"]
 
                 child_button.addEventListener("click", function() {
-                    if (confirm("Opravdu si přejete tento účet osamostatnit?")) {
+                    if (confirm("Are you sure you want to unlink this child account?")) {
                         document.getElementById("unlink_child_id").value = child["id"]
                         document.getElementById("unlink_form").submit()
                     }

@@ -1,5 +1,287 @@
 {% extends "en_context.html" %}
 
 {% block content %}
-en account
+<h1>Account</h1>
+<p>
+    This account is preserved between years. Your participation in a given year is determined by whether you sign up for a class.
+</p>
+<hr>
+{% if is_locked %}
+    <p>
+        Your account has locked changes, most likely because the ISSEM is approaching. If you wish to make any changes, please contact the organizers.
+    </p>
+{% else %}
+    <a href="{{url_for('user_views.en_edit_account')}}">
+        <button class="custom_button" type="button">Edit details</button>
+    </a>
+{% endif %}
+
+<hr>
+<h2>Personal information</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Name</td>
+                <td id="name" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Surname</td>
+                <td id="surname" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Email</td>
+                <td id="email" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Phone</td>
+                <td id="phone" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student</td>
+                <td id="is_student" colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>ISSEM information</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">EMS member</td>
+                <td id="is_ssh_member" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Participation</td>
+                <td id="is_active_participant" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Student of ZUŠ Valtice / Mikulov</td>
+                <td id="is_student_of_partner_zus" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Accomodation</td>
+                <td id="accomodation_type" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Musical education</td>
+                <td id="musical_education" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Musical instrument</td>
+                <td id="musical_instrument" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Repertoire</td>
+                <td id="repertoire" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Comment</td>
+                <td id="comment" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Main class - priority 1</td>
+                <td id="main_class_priority_1" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Secondary class</td>
+                <td id="secondary_class" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Main class - priority 2</td>
+                <td id="main_class_priority_2" colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Billing</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Billing email</td>
+                <td id="billing_email"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Category</td>
+                <td id="billing_age"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Payment date</td>
+                <td id="billing_date_paid"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Total fee</td>
+                <td id="billing_celkem"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Main class</td>
+                <td id="billing_hlavni_trida"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Secondary_class</td>
+                <td id="billing_vedlejsi_trida"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Accomodation</td>
+                <td id="billing_ubytovani"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Breakfast</td>
+                <td id="billing_snidane"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Lunch</td>
+                <td id="billing_obedy"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Dinner</td>
+                <td id="billing_vecere"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Gift</td>
+                <td id="billing_dar"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Course fee correction</td>
+                <td id="billing_correction"></td>
+                <td id="billing_correction_reason"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Food fee correction</td>
+                <td id="billing_food_correction"></td>
+                <td id="billing_food_correction_reason"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Accomodation correction</td>
+                <td id="billing_accomodation_correction"></td>
+                <td id="billing_accomodation_correction_reason"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<h2>Food</h2>
+TODO jen pokud má stravu
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Breakfast</td>
+                <td id="strava_snidane"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Lunch</td>
+                <td id="strava_obedy"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Dinner</td>
+                <td id="strava_vecere"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+{% if "tutor" in roles %}
+    <h2>Tutor information</h2>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr>
+                    <td class="pravy_text">Means of travel</td>
+                    <td id="tutor_travel"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Car license plate</td>
+                    <td id="tutor_license_plate"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Arrival details</td>
+                    <td id="tutor_arrival"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Departure details</td>
+                    <td id="tutor_departure"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Accompanying names</td>
+                    <td id="tutor_accompanying_names"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Adress</td>
+                    <td id="tutor_address"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Date of birth</td>
+                    <td id="tutor_date_of_birth"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Bank account</td>
+                    <td id="tutor_bank_account"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+{% endif %}
+
+<h2>Account</h2>
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Do I have to change password upon next login?</td>
+                <td id="must_change_password_upon_login"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Is my e-mail confirmed?</td>
+                <td id="confirmed_email"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Is my account locked?</td>
+                <td id="is_locked"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Date of account creation</td>
+                <td id="datetime_created" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Time of registration in Valtice</td>
+                <td id="datetime_registered" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">
+                    Parent account<br>
+                    <small id="parent_hint" hidden>If you want to log-in as a parent account, you need to <a class="link" href="{{url_for('auth_views.logout')}}">log-out first</a>.</small>
+                </td>
+                <td id="parent" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Child accounts</td>
+                <td colspan="2">
+                    <form method="post" id="children">
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="module" src="{{url_for('static', filename='js/user/en_account.js')}}"></script>
+
+
 {% endblock %}

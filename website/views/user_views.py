@@ -34,7 +34,15 @@ def en_account():
     if request.method == "GET":
         return render_template("user/en_account.html", roles=get_roles(), is_locked = current_user.is_locked)
     else:
-        return request.form.to_dict()
+        if id := request.form.get("child_id"):
+            child = User.get_by_id(id)
+            if child and child.parent_id == current_user.id:
+                logout_user()
+                child.login()
+                return redirect(url_for("user_views.en_account"))
+            else:
+                flash("You don't have permission for this child", "error")
+                return redirect(url_for("user_views.en_account"))
     
     
 @user_views.route("/edit_account", methods=["GET", "POST"])
@@ -89,4 +97,41 @@ def en_edit_account():
     if request.method == "GET":
         return render_template("user/en_edit_account.html", roles=get_roles(), is_locked=current_user.is_locked)
     else:
-        return request.form.to_dict()
+        if id := request.form.get("unlink_child_id"):
+            child = User.get_by_id(id)
+            if child and child.parent_id == current_user.id:
+                child.parent_id = None
+                child.update()
+                flash("Account unlinked", "success")
+                return redirect(url_for("user_views.en_edit_account"))
+            else:
+                flash("You don't have permission for this child", "error")
+                return redirect(url_for("user_views.en_edit_account"))
+        elif request.form.get("save"):
+            if request.form.get("parent_email"):
+                user = User.get_by_email(request.form.get("parent_email"))
+                if user:
+                    if user == current_user:
+                        flash("You can't be parent to yourself", "error")
+                        return redirect(url_for("user_views.en_edit_account"))
+                    else:
+                        current_user.parent = user
+                        current_user.update()
+                        flash("Parent account added", "success")
+                else:
+                    flash("User with this email doesn't exist", "error")
+            if request.form.get("email") != current_user.email:
+                email = request.form.get("email")
+                if User.get_by_email(email):
+                    flash("User with this email already exists", "error")
+                else:
+                    mail_sender("en_confirm_email", email, current_user.get_reset_token())
+                    current_user.email = email
+                    current_user.confirmed_email = False
+                    current_user.update()
+                    flash("E-mail successfully changed.", "success")
+            current_user.nacist_zmeny_z_en_user_requestu(request)
+            flash("Changes saved", "success")
+            return redirect(url_for("user_views.en_account"))
+        else:
+            return request.form.to_dict()

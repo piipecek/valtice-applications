@@ -557,17 +557,85 @@ class User(Common_methods_db_model, UserMixin):
             "billing_food_correction_reason": self.billing_food_correction_reason,
             "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
-            "tutor_travel": self.tutor_travel,
-            "tutor_license_plate": self.tutor_license_plate,
-            "tutor_arrival": self.tutor_arrival,
-            "tutor_departure": self.tutor_departure,
-            "tutor_accompanying_names": self.tutor_accompanying_names,
-            "tutor_address": self.tutor_address,
+            "tutor_travel": "vlastní" if self.tutor_travel == "own" else "veřejná",
+            "tutor_license_plate": self.tutor_license_plate if self.tutor_license_plate else "-",
+            "tutor_arrival": self.tutor_arrival if self.tutor_arrival else "-",
+            "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
+            "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
+            "tutor_address": self.tutor_address if self.tutor_address else "-",
             "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
-            "tutor_bank_account": self.tutor_bank_account,
+            "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
             "is_locked": "Ano" if self.is_locked else "Ne",
+            "datetime_created": pretty_datetime(self.datetime_created),
+            "parent": self.parent.get_full_name() if self.parent else "-",
+            "children": [
+                {
+                    "id": child.id,
+                    "full_name": child.get_full_name()
+                } for child in self.children
+            ]
+        }
+        
+    def info_pro_en_user_detail(self) -> dict:
+        kalkulace = self.kalkulace()
+        billing_age = "adult"
+        if self.billing_age == "child":
+            billing_age = "child"
+        elif self.billing_age == "youth":
+            billing_age = "youth up to 15 years old"
+            
+        billing_email = self.billing_email if self.billing_email else "main e-mail will be used"
+        if self.parent:
+            billing_email = "e-mail of parent account will be used"
+            
+        return {
+            "name": self.name if self.name else "-",
+            "surname": self.surname if self.surname else "-",
+            "email": self.email,
+            "phone": self.phone if self.phone else "-",
+            "is_student": "Yes" if self.is_student else "No",
+            "is_ssh_member": "Yes" if self.is_ssh_member else "No",
+            "is_active_participant": "active" if self.is_active_participant else "passive",
+            "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
+            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
+            "accomodation_type": self.accomodation_type,
+            "musical_education": self.musical_education if self.musical_education else "-",
+            "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
+            "repertoire": self.repertoire if self.repertoire else "-",
+            "comment": self.comment if self.comment else "-",
+            "main_class_priority_1": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
+            "main_class_priority_2": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
+            "secondary_class": self.secondary_class.full_name_cz if self.secondary_class else "-",
+            "billing_email": billing_email,
+            "billing_age": billing_age,
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
+            "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
+            "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"], self.billing_currency),
+            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),
+            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
+            "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
+            "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
+            "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
+            "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
+            "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
+            "billing_correction_reason": self.billing_correction_reason,
+            "billing_food_correction": pretty_penize(self.billing_food_correction, self.billing_currency),
+            "billing_food_correction_reason": self.billing_food_correction_reason,
+            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
+            "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
+            "tutor_travel": "own" if self.tutor_travel == "own" else "public",
+            "tutor_license_plate": self.tutor_license_plate if self.tutor_license_plate else "-",
+            "tutor_arrival": self.tutor_arrival if self.tutor_arrival else "-",
+            "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
+            "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
+            "tutor_address": self.tutor_address if self.tutor_address else "-",
+            "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
+            "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
+            "must_change_password_upon_login": "Yes" if self.must_change_password_upon_login else "No",
+            "confirmed_email": "Yes" if self.confirmed_email else "No",
+            "is_locked": "Yes" if self.is_locked else "No",
             "datetime_created": pretty_datetime(self.datetime_created),
             "parent": self.parent.get_full_name() if self.parent else "-",
             "children": [
@@ -599,16 +667,96 @@ class User(Common_methods_db_model, UserMixin):
             "billing_gift": self.billing_gift,
             "has_parent": True if self.parent else False,
             "manager_name": self.parent.get_full_name() if self.parent else "",
+            "tutor_travel": self.tutor_travel,
+            "tutor_license_plate": self.tutor_license_plate,
+            "tutor_arrival": self.tutor_arrival,
+            "tutor_departure": self.tutor_departure,
+            "tutor_accompanying_names": self.tutor_accompanying_names,
+            "tutor_address": self.tutor_address,
+            "tutor_date_of_birth": self.tutor_date_of_birth.strftime("%Y-%m-%d") if self.tutor_date_of_birth else None,
+            "tutor_bank_account": self.tutor_bank_account,
             "children": [
                 {
                     "id": child.id,
                     "full_name": child.get_full_name()
                 } for child in self.children
             ],
-        }     
+        }   
+        
+        
+    def info_pro_en_user_upravu(self) -> dict: # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
+        return {
+            "name": self.name if self.name else "",
+            "surname": self.surname if self.surname else "",
+            "email": self.email,
+            "phone": self.phone,
+            "is_student": "Ano" if self.is_student else "Ne",
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "active" if self.is_active_participant else "passive",
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "musical_education": self.musical_education,
+            "musical_instrument": self.musical_instrument,
+            "repertoire": self.repertoire,
+            "comment": self.comment,
+            "billing_email": self.billing_email,
+            "billing_currency": self.billing_currency,
+            "billing_age": self.billing_age,
+            "billing_gift": self.billing_gift,
+            "has_parent": True if self.parent else False,
+            "manager_name": self.parent.get_full_name() if self.parent else "",
+            "tutor_travel": self.tutor_travel,
+            "tutor_license_plate": self.tutor_license_plate,
+            "tutor_arrival": self.tutor_arrival,
+            "tutor_departure": self.tutor_departure,
+            "tutor_accompanying_names": self.tutor_accompanying_names,
+            "tutor_address": self.tutor_address,
+            "tutor_date_of_birth": self.tutor_date_of_birth.strftime("%Y-%m-%d") if self.tutor_date_of_birth else None,
+            "tutor_bank_account": self.tutor_bank_account,
+            "children": [
+                {
+                    "id": child.id,
+                    "full_name": child.get_full_name()
+                } for child in self.children
+            ],
+        }  
     
     
     def nacist_zmeny_z_user_requestu(self, request):
+        self.name = request.form.get("name")
+        self.surname = request.form.get("surname")
+        self.phone = request.form.get("phone")
+        self.is_student = True if request.form.get("is_student") == "Ano" else False
+        self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
+        self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
+        self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
+        self.musical_education = request.form.get("musical_education")
+        self.musical_instrument = request.form.get("musical_instrument")
+        self.repertoire = request.form.get("repertoire")
+        self.comment = request.form.get("comment")
+        
+        self.billing_currency = request.form.get("billing_currency")
+        self.billing_email = request.form.get("billing_email")
+        self.billing_age = request.form.get("billing_age")
+        self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
+        
+        self.tutor_travel = request.form.get("tutor_travel")
+        self.tutor_license_plate = request.form.get("tutor_license_plate")
+        self.tutor_arrival = request.form.get("tutor_arrival")
+        self.tutor_departure = request.form.get("tutor_departure")
+        self.tutor_accompanying_names = request.form.get("tutor_accompanying_names")
+        self.tutor_address = request.form.get("tutor_address")
+        self.tutor_date_of_birth = datetime.strptime(request.form.get("tutor_date_of_birth"), "%Y-%m-%d") if request.form.get("tutor_date_of_birth") else None
+        self.tutor_bank_account = request.form.get("tutor_bank_account")
+        
+        if request.form.get("new_password"):
+            self.password = generate_password_hash(request.form.get("new_password"), method="scrypt")
+        # parent_email je vyresenej ve view
+        # zmena emailu je taky ve view
+        
+        self.update()
+        
+
+    def nacist_zmeny_z_en_user_requestu(self, request): # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
         self.name = request.form.get("name")
         self.surname = request.form.get("surname")
         self.phone = request.form.get("phone")
