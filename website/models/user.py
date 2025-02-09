@@ -790,6 +790,13 @@ class User(Common_methods_db_model, UserMixin):
         
         self.update()
         
+
+    def info_for_tutor(self) -> dict:
+        return {
+            "full_name": self.get_full_name(),
+            "email": self.email,
+            "phone": self.phone
+        }
         
 # TODO procistit importy a dat je nahoru
 from datetime import date

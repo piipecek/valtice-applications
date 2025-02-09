@@ -7,6 +7,7 @@ from website.models.user import User
 from website.models.role import Role
 from website.helpers.settings_manager import get_settings
 import czech_sort
+from flask_login import current_user
 org_api = Blueprint("org_api", __name__)
 
 
@@ -96,3 +97,27 @@ def seznam_lektoru():
 def seznam_lektoru_pro_upravu_tridy():
     tutor_role = Role.get_by_system_name("tutor")
     return json.dumps(User.get_seznam_pro_options_na_uprave_tridy())
+
+@org_api.route("/cz_my_participants")
+@require_role_system_name_on_current_user("tutor")
+def my_participants():
+    result = [
+        {
+            "class_name": trida.full_name_cz,
+            "main_participants": [u.info_for_tutor() for u in trida.main_paticipants_priority_1],
+            "secondary_participants": [u.info_for_tutor() for u in trida.secondary_participants]
+        } for trida in current_user.taught_classes
+    ]
+    return json.dumps(result)
+
+@org_api.route("/en_my_participants")
+@require_role_system_name_on_current_user("tutor")
+def my_participants_en():
+    result = [
+        {
+            "class_name": trida.full_name_en,
+            "main_participants": [u.info_for_tutor() for u in trida.main_paticipants_priority_1],
+            "secondary_participants": [u.info_for_tutor() for u in trida.secondary_participants]
+        } for trida in current_user.taught_classes
+    ]
+    return json.dumps(result)
