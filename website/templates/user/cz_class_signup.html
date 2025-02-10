@@ -1,0 +1,77 @@
+{% extends "cz_context.html" %}
+
+{% block content %}
+
+{% if is_class_signup_allowed %}
+    <h1>Zápis do tříd</h1>
+    <hr>
+    <h2>Hlavní třída</h2>
+    <div id="hlavni_tridy"></div>
+    <hr>
+    <h2>Vedlejší třída</h2>
+    <div id="vedlejsi_tridy"></div>
+    
+    <hr>
+    <div class="class_signup_text">
+        <ul>
+            <li>Zápis do tříd je nyní otevřený.</li>
+            <li>Níže vidíte vysvětlení barev u tříd:</li>
+        </ul>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div>
+                    <div class="trida_available"></div> Třída s volnou kapacitou (6/8)
+                </div>
+                <div>
+                    <div class="trida_full"></div> Plná třída (8/8)
+                </div>
+                <div>
+                    <div class="trida_enrolled"></div> Vaše zapsaná třída (5/8)
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li>Pokud u třídy není zmínka o kapacitě, znamená to, že je třída hromadná.</li>
+            <li>Kliknutím na třídu s volnou kapacituou se do ní zapíšete.</li>
+            <li>Kliknutím na Vaší zapsanou třídu se po potvrzení odhlásíte.</li>
+            <li>O fungování tříd se dočtete TODO v <a class="link" href="{{url_for('guest_views.cz_info')}}">informacích</a>.</li>
+        </ul>
+    </div>
+
+{% else %}
+    <h1>Zápis do tříd nanečisto</h1>
+    <hr>
+    <div class="class_signup_text">
+        <ul>
+            <li>Zápis do tříd v tuto chvíli <strong>není otevřený</strong>, aktuální informace naleznete vždy na <a href="{{url_for('guest_views.cz_dashboard')}}" class="link">domovské stránce</a>.</li>
+            <li>Zápis bude probíhat na této stránce.</li>
+            <li>Níže vidíte příklad toho, jak může zapisování vypadat. Třídy se podle obsazenosti zbarví následovně:</li>
+        </ul>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div>
+                    <div class="trida_available"></div> Třída s volnou kapacitou (6/8)
+                </div>
+                <div>
+                    <div class="trida_full"></div> Plná třída (8/8)
+                </div>
+                <div>
+                    <div class="trida_enrolled"></div> Vaše zapsaná třída (5/8)
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li>Pokud u třídy není zmínka o kapacitě, znamená to, že je třída hromadná.</li>
+            <li>Kliknutím na třídu s volnou kapacituou se do ní zapíšete.</li>
+            <li>Kliknutím na Vaší zapsanou třídu se po potvrzení odhlásíte.</li>
+            <li>O fungování tříd se dočtete TODO v <a class="link" href="{{url_for('guest_views.cz_info')}}">informacích</a>.</li>
+        </ul>
+    </div>
+    <p>
+        TODO Tady může bejt klikačka nanečisto
+    </p>
+{% endif %}
+
+<script type="module" src="{{url_for('static', filename='js/user/cz_class_signup.js')}}"></script>
+
+{% endblock %}

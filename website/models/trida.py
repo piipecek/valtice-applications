@@ -1,5 +1,6 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
+from flask_login import current_user
 
 class Trida(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
@@ -104,3 +105,29 @@ class Trida(Common_methods_db_model):
             "long_name": self.full_name
         }
         
+    def class_capacity_data(self) -> dict:
+        state_main = "available" #available, enrolled, full
+        if current_user in self.main_paticipants_priority_1:
+            state_main = "enrolled"
+        elif not self.is_solo:
+            state_main = "available"
+        elif len(self.main_paticipants_priority_1) >= self.capacity:
+            state_main = "full"
+            
+        state_secondary = "available" #available, enrolled, full
+        if current_user in self.secondary_participants:
+            state_secondary = "enrolled"
+        elif not self.is_solo:
+            state_secondary = "available"
+        elif len(self.secondary_participants) >= self.capacity:
+            state_secondary = "full"
+            
+        return {
+            "id": self.id,
+            "name": self.full_name_cz,
+            "capacity": self.capacity,
+            "places_taken": len(self.main_paticipants_priority_1),
+            "is_solo": self.is_solo,
+            "state_main": state_main,
+            "state_secondary": state_secondary,
+        }

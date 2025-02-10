@@ -33,6 +33,7 @@
 
 {% block right_nav %}
     {% if "prihlasen" in roles %}
+        <a href="{{url_for('user_views.zapis_tridy')}}" class="navbar_link">Zápis do třídy</a>
         <a href="{{url_for('user_views.account')}}" class="navbar_link">Účet</a>
         <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
     {% else %}

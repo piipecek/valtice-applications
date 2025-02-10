@@ -4,6 +4,7 @@ from website.helpers.get_roles import get_roles
 from website.models.user import User
 from website.helpers.require_role import ensure_email_password
 from website.mail_handler import mail_sender
+from website.helpers.settings_manager import is_class_signup_allowed
 
 
 user_views = Blueprint("user_views",__name__)
@@ -135,3 +136,12 @@ def en_edit_account():
             return redirect(url_for("user_views.en_account"))
         else:
             return request.form.to_dict()
+        
+
+@user_views.route("/zapis_tridy", methods=["GET", "POST"])
+@ensure_email_password("cz")
+def zapis_tridy():
+    if request.method == "GET":
+        return render_template("user/cz_class_signup.html", roles=get_roles(), is_class_signup_allowed=is_class_signup_allowed())
+    else:
+        return request.form.to_dict()
