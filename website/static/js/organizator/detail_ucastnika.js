@@ -53,7 +53,6 @@ for (let key in data) {
         continue
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
-            // TODO dodelat tohle, jestli tam nejsou nejaky special cases
             document.getElementById(key).innerText = data[key]
         }
     } else if (key == "taught_classes") {

@@ -22,6 +22,7 @@ class Trida(Common_methods_db_model):
     def __repr__(self):
         return f"Třída | {self.short_name_cz}"
 
+
     def info_pro_seznam_trid(self):
         return {
             "id": self.id,
@@ -29,10 +30,7 @@ class Trida(Common_methods_db_model):
             "tutor_full_name": self.tutor.get_full_name() if self.tutor else "Zatím bez lektora",
             "tutor_id": self.tutor_id,
         }
-    
-    def get_by_full_name(full_name: str) -> "Trida":
-        #TODO tohle se mi nelibi, proc to tu je? je to z nacitani csvcek?
-        return db.session.scalars(db.select(Trida).where(Trida.full_name_cz == full_name)).first()
+        
     
     def info_pro_detail(self):
         if self.age_group == "child":
@@ -67,11 +65,13 @@ class Trida(Common_methods_db_model):
             "secondary_participants_count": len(self.secondary_participants),
         }
     
+    
     def data_pro_upravu_ucastniku(self):
         return {
             "id": self.id,
             "full_name_cz": self.full_name_cz,
         }
+    
     
     def info_pro_upravu(self):
         return {
@@ -85,6 +85,7 @@ class Trida(Common_methods_db_model):
             "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
             "tutor_id": self.tutor_id if self.tutor_id else "-",
         }
+        
         
     def nacist_zmeny_z_requestu(self, request):
         self.short_name_cz = request.form.get("short_name_cz")
@@ -104,6 +105,7 @@ class Trida(Common_methods_db_model):
             "id": self.id,
             "long_name": self.full_name
         }
+        
         
     def class_capacity_data(self) -> dict:
         state_main = "available" #available, enrolled, full

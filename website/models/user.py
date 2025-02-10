@@ -451,7 +451,7 @@ class User(Common_methods_db_model, UserMixin):
             "main_class_id_priority_1": self.main_class_priority_1.id if self.main_class_priority_1 else None,
             "main_class_id_priority_2": self.main_class_priority_2.id if self.main_class_priority_2 else None,
             "secondary_class_id": self.secondary_class.id if self.secondary_class else None,
-            #TODO tady určitě přibudou meals a children
+            #TODO tady určitě přibudou meals
         }
     
     def nacist_zmeny_z_requestu(self, request):
