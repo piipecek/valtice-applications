@@ -6,6 +6,10 @@
     transform: translateX(-50%);
 }
 
+.organiser_spacer{
+    height: 55px;
+}
+
 .logo a img {
     height: 132px;
 }
@@ -135,6 +139,9 @@
 }
 
 @media (max-width:1080px) {
+    .flag_wrapper {
+        padding-right: 0.5rem;
+    }
     .navbar_wrapper {
         width: 90%;
     }
@@ -151,6 +158,16 @@
 }
 
 @media (max-width: 800px) {
+    .flag_wrapper {
+        padding-right: 0.5rem;
+    }
+    .hlavicka_org{
+        height: 0px;
+    }
+    .organiser_spacer{
+        height: 0px;
+    }
+
     .navbar_wrapper_admin {
         position: fixed;
         top: 0;
@@ -159,6 +176,21 @@
         height: 100%;
         z-index: 10;
         background-color: rgb(180, 130, 148);
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        padding: 2rem;
+        transition: right 0.6s ease-out;
+        border-left: 3px solid rgb(255,245,235);
+    }
+    .navbar_wrapper_user{
+        position: fixed;
+        top: 0;
+        right: -60%;
+        width: 60%;
+        height: 100%;
+        z-index: 10;
+        background-color: rgb(209, 138, 154);
         display: flex;
         flex-direction: column;
         justify-content: start;
@@ -180,12 +212,21 @@
         display: flex;
         width: 90%;
         justify-content: end;
-        padding-right: 2rem;
+        align-items: center;
+        padding-right: 0.5rem;
     }
-    .nav_toggle:checked ~ .navbar_wrapper_admin {
+    #admin-nav-toggle:checked ~ .navbar_wrapper_admin {
         right: 0;
     }
-    .nav_toggle:checked ~ .overlay {
+    #admin-nav-toggle:checked ~ .overlay {
+        pointer-events: all;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    #user-nav-toggle:checked ~ .navbar_wrapper_user {
+        right: 0;
+    }
+    #user-nav-toggle:checked ~ .overlay {
         pointer-events: all;
         background-color: rgba(0,0,0,0.5);
     }

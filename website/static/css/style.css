@@ -2,9 +2,6 @@ body {
     background-color: rgb(103,125, 171) !important;
     font-family: 'Noto Serif', serif !important;
 }
-header{
-    background-color: #99D5EC;
-}
 
 .alert{
     width: 100%;
@@ -155,10 +152,6 @@ header{
     padding-right: 2rem;
     padding-left: 2rem;
     padding-bottom: 1rem;
-}
-
-.organiser_spacer{
-    height: 55px;
 }
 
 .message_wrapper{
