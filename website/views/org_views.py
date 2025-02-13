@@ -17,13 +17,6 @@ from website.mail_handler import mail_sender
 org_views = Blueprint("org_views",__name__)
 
 
-@org_views.route("/")
-@org_views.route("/dashboard", methods=["GET","POST"])
-@require_role_system_name_on_current_user("organiser")
-def dashboard():
-    return render_template("organizator/dashboard.html", roles=get_roles(), admins = ", ".join([u.email for u in User.get_all() if Role.get_by_system_name("admin") in u.roles])) 
-
-
 @org_views.route("/", methods=["GET"])
 @org_views.route("/settings", methods=["GET","POST"])
 @require_role_system_name_on_current_user("organiser")
@@ -320,7 +313,7 @@ def udelit_role(id):
 @org_views.route("/docs")
 @require_role_system_name_on_current_user("organiser")
 def docs():
-    return render_template("organizator/docs.html", roles=get_roles())
+    return render_template("organizator/docs.html", roles=get_roles(), admins = ", ".join([u.email for u in User.get_all() if Role.get_by_system_name("admin") in u.roles]))
 
 
 @org_views.route("/tutor", methods=["GET", "POST"])

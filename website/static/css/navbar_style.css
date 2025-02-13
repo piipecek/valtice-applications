@@ -1,6 +1,6 @@
 .logo{
     position: absolute;
-    z-index: 999;
+    z-index: 6;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -34,6 +34,7 @@
     display: flex;
     justify-content: center;
 }
+
 .navbar_wrapper {
     display: flex;
     justify-content: space-between;
@@ -42,6 +43,7 @@
 
 .link_wrapper {
     display: flex;
+    align-items: center;
     gap: 20px;
     padding-right: 2rem;
     padding-left: 2rem;
@@ -51,10 +53,13 @@
     text-transform: uppercase;
     color: rgb(255,245,235);
     font-size: 1.2rem;
-    align-self: center;
     text-decoration: none;
     display: inline-block;
     position: relative;
+}
+
+.navbar_link_small{
+    font-size: 1rem;
 }
 
 .navbar_link:hover {
@@ -88,7 +93,39 @@
     height: 25px;
 }
 
-@media (max-width: 1200px) {
+.hlavicka_org{
+    background-color: rgb(180, 130, 148);
+    width: 100%;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+}
+
+.nav_toggle_icon svg{
+    fill: rgb(255,245,235);
+}
+.nav_toggle{
+    display: none;
+}
+.nav_toggle_icon{
+    display: none;
+}
+.nav_toggle_menu_wrapper{
+    display: none;
+}
+.overlay{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 7;
+    background-color: rgba(0,0,0,0);
+    transition: background-color 0.6s ease-out;
+}
+
+@media (max-width: 1400px) {
     .navbar_wrapper {
         width: 80%;
     }
@@ -97,9 +134,9 @@
     }
 }
 
-@media (max-width: 940px) {
+@media (max-width:1080px) {
     .navbar_wrapper {
-        width: 100%;
+        width: 90%;
     }
     .link_wrapper {
         gap: 10px;
@@ -111,4 +148,46 @@
         padding-right: 0.5rem;
         padding-left: 0.5rem;
     }
+}
+
+@media (max-width: 800px) {
+    .navbar_wrapper_admin {
+        position: fixed;
+        top: 0;
+        right: -60%;
+        width: 60%;
+        height: 100%;
+        z-index: 10;
+        background-color: rgb(180, 130, 148);
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        padding: 2rem;
+        transition: right 0.6s ease-out;
+        border-left: 3px solid rgb(255,245,235);
+    }
+
+    .link_wrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        margin-bottom: 10px;
+    }
+    .nav_toggle_icon{
+        display: block;
+    }
+    .nav_toggle_menu_wrapper{
+        display: flex;
+        width: 90%;
+        justify-content: end;
+        padding-right: 2rem;
+    }
+    .nav_toggle:checked ~ .navbar_wrapper_admin {
+        right: 0;
+    }
+    .nav_toggle:checked ~ .overlay {
+        pointer-events: all;
+        background-color: rgba(0,0,0,0.5);
+    }
+
 }

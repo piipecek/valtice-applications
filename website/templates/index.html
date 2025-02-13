@@ -30,9 +30,8 @@
                 {% endblock %}
             </div>
         </div>
-        <div class="hlavicka_svetla">
+        <!-- <div class="hlavicka_svetla">
             <div class="navbar_wrapper">
-                <!-- jsou tu dva divy, jeden na levo a jeden na pravo od loga -->
                 <div class="link_wrapper">
                     {% block left_nav %}
                     {% endblock %}
@@ -42,7 +41,42 @@
                     {% endblock %}
                 </div>
             </div>
-        </div>
+        </div> -->
+        <!-- tohle neni v contextu protoze org sekce je jen cesky -->
+        {% if "organiser" in roles %} 
+            <div class="hlavicka_org">
+                <input type="checkbox" id="admin-nav-toggle" class="nav_toggle">
+                <label for="admin-nav-toggle" class="overlay"></label>
+                <div class="nav_toggle_menu_wrapper">
+                    <label for="admin-nav-toggle" class="nav_toggle_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#5f6368"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/></svg>
+                    </label>
+                </div>
+                <div class="navbar_wrapper navbar_wrapper_admin">
+                    <label for="admin-nav-toggle" class="nav_toggle_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                    </label>
+                    <div class="link_wrapper">
+                        <a href="{{url_for('org_views.seznam_ucastniku')}}" class="navbar_link navbar_link_small">Účastníci</a>
+                        <a href="{{url_for('org_views.seznam_trid')}}" class="navbar_link navbar_link_small">Třídy</a>
+                        <a href="{{url_for('org_views.seznam_lektoru')}}" class="navbar_link navbar_link_small">Lektoři</a>
+                        {% if "admin" in roles %}
+                            <a href="{{url_for('org_views.organizatori')}}" class="navbar_link navbar_link_small">Pořadatelé a role</a>
+                        {% endif %}
+                    </div>
+                    <div class="link_wrapper">
+                        <a href="{{url_for('org_views.seznamy')}}" class="navbar_link navbar_link_small">Výpisy</a>
+                        {% if "editor" in roles %}
+                            <a href="{{url_for('org_views.ceny')}}" class="navbar_link navbar_link_small">Sazby</a>
+                            <a href="#" class="navbar_link navbar_link_small">Jídla</a>
+                        {% endif %}
+                        <a href="{{url_for('org_views.settings')}}" class="navbar_link navbar_link_small">Nastavení</a>
+                        <a class="navbar_link navbar_link_small" href="{{url_for('org_views.docs')}}">Dokumentace</a>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </header>
 
     <section class="main_section_wrapper">
@@ -54,6 +88,11 @@
                 </div>
             </div>
         {% endfor %}
+        <!-- zajišťuje když je org navbar, aby stránka sjela ještě trochu níž -->
+        {% if "organiser" in roles %} 
+            <div class="organiser_spacer"></div>
+        {% endif %}
+        
         <section class="main_section">
 
             {% block content %}

@@ -157,6 +157,10 @@ header{
     padding-bottom: 1rem;
 }
 
+.organiser_spacer{
+    height: 55px;
+}
+
 .message_wrapper{
     width: 70%;
     padding-left: 2rem;
@@ -232,7 +236,7 @@ hr {
 }
 
 
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
     .main_section {
         width: 80%;
     }
@@ -244,7 +248,7 @@ hr {
     }
 }
 
-@media (max-width: 940px) {
+@media (max-width: 1080px) {
     .main_section {
         width: 90%;
         padding-left: 0.5rem;

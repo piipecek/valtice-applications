@@ -25,9 +25,6 @@
     {% if "tutor" in roles%} 
         <a class="navbar_link" href="{{url_for('org_views.tutor')}}">Lektor</a>
     {% endif %}
-    {% if "organiser" in roles %} 
-        <a class="navbar_link" href="{{url_for('org_views.dashboard')}}">Pořadatelská sekce</a>
-    {% endif %}
 {% endblock %}
 
 
@@ -37,17 +34,16 @@
         <a href="{{url_for('user_views.account')}}" class="navbar_link">Účet</a>
         <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
     {% else %}
-        <a class="navbar_link" href="{{url_for('auth_views.login')}}">Přihlášení</a><br>
+        <a class="navbar_link" href="{{url_for('auth_views.login')}}">Přihlášení</a>
         <a class="navbar_link" href="{{url_for('auth_views.register')}}">Registrace</a>
     {%  endif %}
 {% endblock %}
 
 
+
+
 {% block footer %}
     Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na autora</a><br>
-    {% if "organiser" in roles %}
-        <a class="link" href="{{url_for('org_views.docs')}}">Dokumentace k systému</a><br>
-    {% endif %}
     <a class="link" href="{{url_for('guest_views.cz_info')}}">Informace, GDPR a cookies</a><br>
     <a class="link" href="{{url_for('guest_views.cz_dashboard')}}">Zpět domů</a>
 {% endblock %}
