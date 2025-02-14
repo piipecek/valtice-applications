@@ -40,11 +40,11 @@ with app.app_context():
     Billing(type="ubytovani", display_name="Internát Vinařské školy", system_name="internat").update()
     Billing(type="ubytovani", display_name="Tělocvična", system_name="telocvicna").update()
     
-    Billing(type="strava", display_name="Snídaně SŠ", system_name="snidane_ss").update()
+    Billing(type="strava", display_name="Snídaně VŠ", system_name="snidane_ss").update()
     Billing(type="strava", display_name="Snídaně ZŠ", system_name="snidane_zs").update()
-    Billing(type="strava", display_name="Oběd SŠ", system_name="obed_ss").update()
+    Billing(type="strava", display_name="Oběd VŠ", system_name="obed_ss").update()
     Billing(type="strava", display_name="Oběd ZŠ", system_name="obed_zs").update()
-    Billing(type="strava", display_name="Večeře SŠ", system_name="vecere_ss").update()
+    Billing(type="strava", display_name="Večeře VŠ", system_name="vecere_ss").update()
     Billing(type="strava", display_name="Večeře ZŠ", system_name="vecere_zs").update()
     
     Billing(type="sleva", display_name="Sleva na sourozence", system_name="sleva_sourozenec").update()

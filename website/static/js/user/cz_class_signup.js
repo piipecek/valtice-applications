@@ -119,7 +119,7 @@ for (let trida of tridy_a_kapacity) {
     })
 }
 
-// vedlejší třídy TODO dát nějak tyhle dva for loopy dohro, i když musim mít oddělený objekty a event listenery
+// vedlejší třídy
 for (let trida of tridy_a_kapacity) {
     let trida_div = document.createElement("div")
     vedlejsi_tridy_div.appendChild(trida_div)

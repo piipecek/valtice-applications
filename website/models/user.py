@@ -280,23 +280,61 @@ class User(Common_methods_db_model, UserMixin):
         vedlejsi_trida = calculate_trida(self.secondary_class, self, True)
         
         
-        # # strava
-        #TODO strava jinak
-        # if self.finance_mena == "CZK":
-        #     snidane = self.strava_snidane_zs * Billing.get_by_system_name("snidane_zs").czk + self.strava_snidane_vinarska * Billing.get_by_system_name("snidane_ss").czk
-        #     obedy = self.strava_obed_zs_maso * Billing.get_by_system_name("obed_zs").czk + self.strava_obed_zs_vege * Billing.get_by_system_name("obed_zs").czk + self.strava_obed_vinarska_maso * Billing.get_by_system_name("obed_ss").czk + self.strava_obed_vinarska_vege * Billing.get_by_system_name("obed_ss").czk
-        #     vecere = self.strava_vecere_zs_maso * Billing.get_by_system_name("vecere_zs").czk + self.strava_vecere_zs_vege * Billing.get_by_system_name("vecere_zs").czk + self.strava_vecere_vinarska_maso * Billing.get_by_system_name("vecere_ss").czk + self.strava_vecere_vinarska_vege * Billing.get_by_system_name("vecere_ss").czk
-        # elif self.finance_mena == "EUR":
-        #     snidane = self.strava_snidane_zs * Billing.get_by_system_name("snidane_zs").eur + self.strava_snidane_vinarska * Billing.get_by_system_name("snidane_ss").eur
-        #     obedy = self.strava_obed_zs_maso * Billing.get_by_system_name("obed_zs").eur + self.strava_obed_zs_vege * Billing.get_by_system_name("obed_zs").eur + self.strava_obed_vinarska_maso * Billing.get_by_system_name("obed_ss").eur + self.strava_obed_vinarska_vege * Billing.get_by_system_name("obed_ss").eur
-        #     vecere = self.strava_vecere_zs_maso * Billing.get_by_system_name("vecere_zs").eur + self.strava_vecere_zs_vege * Billing.get_by_system_name("vecere_zs").eur + self.strava_vecere_vinarska_maso * Billing.get_by_system_name("vecere_ss").eur + self.strava_vecere_vinarska_vege * Billing.get_by_system_name("vecere_ss").eur
-        snidane = 11
-        obedy = 22
-        vecere = 33
+        
+        # strava - chatgpt tohle dokaze napsat pomoci dictionaries, to se pouzije kdybych nekdy potreboval pridat neco jako typ
+        if not self.meals:
+            snidane = None
+            obedy = None
+            vecere = None
+        else:
+            snidane = 0
+            obedy = 0
+            vecere = 0
+            for meal_order in self.meal_orders:
+                meal = meal_order.meal
+                
+                if meal.type == "breakfast":
+                    if meal.location == "zs":
+                        if self.billing_currency == "czk":
+                            snidane += meal_order.count * Billing.get_by_system_name("snidane_zs").czk
+                        elif self.billing_currency == "eur":
+                            snidane += meal_order.count * Billing.get_by_system_name("snidane_zs").eur
+                    elif meal.location == "vs":
+                        if self.billing_currency == "czk":
+                            snidane += meal_order.count * Billing.get_by_system_name("snidane_ss").czk
+                        elif self.billing_currency == "eur":
+                            snidane += meal_order.count * Billing.get_by_system_name("snidane_ss").eur
+                elif meal.type == "lunch":
+                    if meal.location == "zs":
+                        if self.billing_currency == "czk":
+                            obedy += meal_order.count * Billing.get_by_system_name("obed_zs").czk
+                        elif self.billing_currency == "eur":
+                            obedy += meal_order.count * Billing.get_by_system_name("obed_zs").eur
+                    elif meal.location == "vs":
+                        if self.billing_currency == "czk":
+                            obedy += meal_order.count * Billing.get_by_system_name("obed_ss").czk
+                        elif self.billing_currency == "eur":
+                            obedy += meal_order.count * Billing.get_by_system_name("obed_ss").eur
+                elif meal.type == "dinner":
+                    if meal.location == "zs":
+                        if self.billing_currency == "czk":
+                            vecere += meal_order.count * Billing.get_by_system_name("vecere_zs").czk
+                        elif self.billing_currency == "eur":
+                            vecere += meal_order.count * Billing.get_by_system_name("vecere_zs").eur
+                    elif meal.location == "vs":
+                        if self.billing_currency == "czk":
+                            vecere += meal_order.count * Billing.get_by_system_name("vecere_ss").czk
+                        elif self.billing_currency == "eur":
+                            vecere += meal_order.count * Billing.get_by_system_name("vecere_ss").eur
+
         
         hlavni_trida_do_sumy = hlavni_trida if hlavni_trida is not None else 0
         vedlejsi_trida_do_sumy = vedlejsi_trida if vedlejsi_trida is not None else 0
         ubytko_do_sumy = ubytko if ubytko is not None else 0
+        snidane = snidane if snidane is not None else 0
+        snidane_do_sumy = snidane if snidane is not None else 0
+        obedy_do_sumy = obedy if obedy is not None else 0
+        vecere_do_sumy = vecere if vecere is not None else 0
         result = {
             "ubytovani": ubytko,
             "prvni_trida": hlavni_trida,
@@ -305,7 +343,7 @@ class User(Common_methods_db_model, UserMixin):
             "obedy": obedy,
             "vecere": vecere,
             "dar": self.billing_gift,
-            "celkem": ubytko_do_sumy + snidane + obedy + vecere + self.billing_gift + hlavni_trida_do_sumy + vedlejsi_trida_do_sumy + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
+            "celkem": ubytko_do_sumy + snidane_do_sumy + obedy_do_sumy + vecere_do_sumy + self.billing_gift + hlavni_trida_do_sumy + vedlejsi_trida_do_sumy + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
         }
         return result
     
