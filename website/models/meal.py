@@ -34,16 +34,9 @@ class Meal(Common_methods_db_model):
     
     
     def get_data_for_admin_seznam(self):
-        typ = "snídaně"
-        if self.type == "lunch":
-            typ = "oběd"
-        elif self.type == "dinner":
-            typ = "večeře"
         return {
             "id": self.id,
-            "type": typ,
-            "location": "základní škola" if self.location == "zs" else "vinařská škola",
-            "is_vegetarian": "Ano" if self.is_vegetarian else "Ne",
+            "popis": self.get_description_cz(),
             "count": sum([meal_order.count for meal_order in self.meal_orders])
         }
     
@@ -66,4 +59,55 @@ class Meal(Common_methods_db_model):
             "type": self.type,
             "location": self.location,
             "is_vegetarian": "ano" if self.is_vegetarian else "ne",
+        }
+        
+    
+    def get_description_cz(self):
+        result = ""
+        if self.type == "breakfast":
+            result += "Snídaně"
+        elif self.type == "lunch":
+            result += "Oběd"
+        else:
+            result += "Večeře"
+        
+        result += " | "
+
+        if self.location == "zs":
+            result += "Základní škola"
+        else:
+            result += "Vinařská škola"
+        
+        if self.is_vegetarian:
+            result += " | Vegetariánské"
+        
+        return result
+
+
+    def get_description_en(self):
+        result = ""
+        if self.type == "breakfast":
+            result += "Breakfast"
+        elif self.type == "lunch":
+            result += "Lunch"
+        else:
+            result += "Dinner"
+        
+        result += " | "
+
+        if self.location == "zs":
+            result += "Primary school"
+        else:
+            result += "Viticulture school"
+        
+        if self.is_vegetarian:
+            result += " | Vegetarian"
+        
+        return result
+    
+    
+    def data_pro_upravu_ucastnika(self):
+        return {
+            "id": self.id,
+            "description": self.get_description_cz(),
         }

@@ -195,24 +195,19 @@
 </div>
 <hr>
 <h2>Strava</h2>
-<div class="table-responsive">
+<div class="table-responsive" id="strava_yes" hidden>
     <table class="table table-hover table-striped">
-        <tbody>
+        <thead>
             <tr>
-                <td class="pravy_text">Snídaně</td>
-                <td id="strava_snidane"></td>
+                <th>Popis</th>
+                <th>Počet sad</th>
             </tr>
-            <tr>
-                <td class="pravy_text">Obědy</td>
-                <td id="strava_obedy"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Večeře</td>
-                <td id="strava_vecere"></td>
-            </tr>
-        </tbody>
+        <tbody id="meals"></tbody>
     </table>
 </div>
+<p id="strava_no" hidden>
+    Tento účastník si stravu zařizuje samostatně.
+</p>
 <hr>
 <h2>Lektorské informace</h2>
 <div class="table-responsive" id="tutor_yes" hidden>
@@ -258,7 +253,7 @@
     </table>
 </div>
 <p id="tutor_no" hidden>
-    s rolí lektora. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">Udělit role</a> tomuto uživateli.
+    Tento uživatel není lektorem. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">udělit role</a>
 </p>
 
 <hr>

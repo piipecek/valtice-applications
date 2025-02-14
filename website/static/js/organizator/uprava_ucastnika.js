@@ -2,6 +2,8 @@ import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
 let data = JSON.parse(httpGet("/org_api/uprava_ucastnika/" + id))
 let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
+let jidla = JSON.parse(httpGet("/org_api/jidla_pro_upravu_ucastnika"))
+
 
 for (let trida of tridy) {
     let option = document.createElement("option")
@@ -52,12 +54,91 @@ for (let key in data) {
         } else {
             document.getElementById("parent_no").hidden = false
         }
+    } else if (key == "meals") {
+        for (let jidlo of data[key]) {
+            add_meal_row(jidlo["meal_id"], jidlo["count"])
+        }
     } else {
         document.getElementById(key).value = data[key]
     }
 }
 
+// smazani uzivatele
 document.getElementById("delete_button").addEventListener("click", () => {
     if(confirm("Opravdu chcete smazat uživatele?")) {
         document.getElementById("delete_form").submit()
 }})
+
+
+// skryvani a zobrazovani formulare pro jidlo
+function update_meals_visibility() {
+    if (document.getElementById("wants_meal").value == "ano") {
+        document.getElementById("strava_yes").hidden = false
+    } else {
+        document.getElementById("strava_yes").hidden = true
+    }
+}
+
+document.getElementById("wants_meal").addEventListener("change", update_meals_visibility)
+update_meals_visibility() // pri nacteni
+
+// nove jidlo a generovani jidel co uz jsou
+
+document.getElementById("add_meal").addEventListener("click", () => {
+    add_meal_row(null, 1)
+})
+
+function add_meal_row(selected_id, count) {
+    let row = document.createElement("div")
+    document.getElementById("meals").appendChild(row)
+    row.classList.add("row", "my-1")
+
+    let col1 = document.createElement("div")
+    row.appendChild(col1)
+    col1.className = "col"
+
+    let col2 = document.createElement("div")
+    row.appendChild(col2)
+    col2.className = "col-auto"
+
+    let col3 = document.createElement("div")
+    row.appendChild(col3)
+    col3.className = "col-auto"
+
+    let meal_select = document.createElement("select")
+    col1.appendChild(meal_select)
+    meal_select.name = "meals"
+    meal_select.className = "form-control"
+
+    let option = document.createElement("option")
+    option.value = "-"
+    option.innerText = "-"
+    meal_select.appendChild(option)
+
+    for (let jidlo of jidla) {
+        let option = document.createElement("option")
+        option.value = jidlo["id"]
+        option.innerText = jidlo["description"]
+        meal_select.appendChild(option)
+    }
+    if (selected_id) {
+        meal_select.value = selected_id
+    }
+
+    let count_input = document.createElement("input")
+    col2.appendChild(count_input)
+    count_input.type = "number"
+    count_input.className = "form-control"
+    count_input.name = "counts"
+    count_input.placeholder = "Počet sad"
+    count_input.value = count
+
+    let remove_button = document.createElement("button")
+    col3.appendChild(remove_button)
+    remove_button.type = "button"
+    remove_button.className = "custom_button"
+    remove_button.innerText = "Odebrat"
+    remove_button.addEventListener("click", () => {
+        row.remove()
+    })
+}

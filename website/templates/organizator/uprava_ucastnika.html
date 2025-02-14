@@ -282,8 +282,24 @@
             </div>
         </div>
         <p hidden id="tutor_no">
-            s rolí lektora. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">Udělit role</a> tomuto uživateli.
+            Tento uživatel není lektorem. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">udělit role</a>
         </p>
+        <hr>
+        <h2>Strava</h2>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Zařizujeme uživateli stravu?</div>
+            <div class="col">
+                <select class="form-control" id="wants_meal" name="wants_meal">
+                    <option value="ano">Ano</option>
+                    <option value="ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div id="strava_yes" hidden>
+            <div id="meals"></div>
+            <button class="custom_button" type="button" id="add_meal">Přidat jídlo</button>
+       </div>
+
 
         <hr>
         <h2>Přístup k účtu</h2>

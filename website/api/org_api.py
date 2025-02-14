@@ -30,45 +30,60 @@ def seznam_ucastniku():
 def detail_ucastnika(id: int):
     return json.dumps(User.get_by_id(id).info_pro_detail())
 
+
 @org_api.route("/uprava_ucastnika/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def uprava_ucastnika(id: int):
     return json.dumps(User.get_by_id(id).info_pro_upravu())
+
 
 @org_api.route("/tridy_pro_upravu_ucastnika")
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_upravu_ucastnika():
     return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all()], key=lambda x: x["full_name_cz"]))
 
+
+@org_api.route("/jidla_pro_upravu_ucastnika")
+@require_role_system_name_on_current_user("organiser")
+def jidla_pro_upravu_ucastnika():
+    return json.dumps([m.data_pro_upravu_ucastnika() for m in sorted(Meal.get_all())])  
+
+
 @org_api.route("/detail_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def detail_tridy(id: int):
     return json.dumps(Trida.get_by_id(id).info_pro_detail())
+
 
 @org_api.route("/uprava_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def uprava_tridy(id: int):
     return json.dumps(Trida.get_by_id(id).info_pro_upravu())
 
+
 @org_api.route("/seznam_trid")
 @require_role_system_name_on_current_user("organiser")
 def seznam_trid():
     return json.dumps(sorted([t.info_pro_seznam_trid() for t in Trida.get_all()], key=lambda x: x["short_name"]))
+
 
 @org_api.route("/ceny")
 @require_role_system_name_on_current_user("organiser")
 def ceny():
     return json.dumps([c.get_data_for_admin() for c in Billing.get_all()])
 
+
 @org_api.route("/tridy_pro_seznamy")
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_seznamy():
     return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: x["long_name"]))
 
+
 @org_api.route("/registrovanych")
 @require_role_system_name_on_current_user("organiser")
 def registrovanych():
     return json.dumps({"pocet": len(list(filter(lambda u: u.datetime_registered, User.get_all())))})
+
 
 @org_api.route("/settings")
 @require_role_system_name_on_current_user("organiser")
@@ -87,17 +102,19 @@ def uzivatele_pro_udeleni_roli():
 def role_uzivatele(id):
     return json.dumps([r.system_name for r in User.get_by_id(id).roles])
 
+
 @org_api.route("/seznam_lektoru")
 @require_role_system_name_on_current_user("organiser")
 def seznam_lektoru():
     tutor_role = Role.get_by_system_name("tutor")
     return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles], key=lambda x: x["surname"]))
 
+
 @org_api.route("/seznam_lektoru_pro_upravu_tridy")
 @require_role_system_name_on_current_user("organiser")
 def seznam_lektoru_pro_upravu_tridy():
-    tutor_role = Role.get_by_system_name("tutor")
     return json.dumps(User.get_seznam_pro_options_na_uprave_tridy())
+
 
 @org_api.route("/cz_my_participants")
 @require_role_system_name_on_current_user("tutor")
@@ -110,6 +127,7 @@ def my_participants():
         } for trida in current_user.taught_classes
     ]
     return json.dumps(result)
+
 
 @org_api.route("/en_my_participants")
 @require_role_system_name_on_current_user("tutor")

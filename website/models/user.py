@@ -4,13 +4,16 @@ from website.models.jointables import user_role_jointable
 from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.role import Role
+from website.models.meal_order import Meal_order
+from website.models.meal import Meal
 from website.helpers.pretty_date import pretty_datetime
 from website.helpers.pretty_penize import pretty_penize
 from datetime import datetime, timedelta, timezone
-from flask import current_app
+from flask import current_app, flash
 from flask_login import UserMixin, login_user
 import jwt
 from werkzeug.security import generate_password_hash
+import sqlalchemy
 
 
 class User(Common_methods_db_model, UserMixin):
@@ -31,13 +34,14 @@ class User(Common_methods_db_model, UserMixin):
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
     datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy priority 1
     datetime_registered = db.Column(db.DateTime)
-    accomodation_type = db.Column(db.String(200), default="own") # own/vs/gym
+    accomodation_type = db.Column(db.String(200), default=None) # own/vs/gym. None znamená. že nemá zájem
     accomodation_count = db.Column(db.Integer, default=0)
     musical_education = db.Column(db.Text)
     musical_instrument = db.Column(db.String(1000))
     repertoire = db.Column(db.Text)
     comment = db.Column(db.Text)
     admin_comment = db.Column(db.Text)
+    meals = db.Column(db.Boolean, default=False)
     
     #billing data
     billing_currency = db.Column(db.String(200), default="czk" ) # czk/eur
@@ -331,6 +335,13 @@ class User(Common_methods_db_model, UserMixin):
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
             "admin_comment": self.admin_comment if self.admin_comment else "-",
+            "wants_meals": self.meals,
+            "meals": [
+                {
+                    "popis": meal_order.meal.get_description_cz(),
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
             "billing_email": billing_email,
             "billing_age": billing_age,
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno",
@@ -377,9 +388,6 @@ class User(Common_methods_db_model, UserMixin):
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
             "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
             "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
-            "strava_snidane": "info o snidanich",
-            "strava_obedy": "info o obedech",
-            "strava_vecere": "info o vecerich",
             "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
             "hlavni_trida_1": {
                 "name": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
@@ -417,7 +425,13 @@ class User(Common_methods_db_model, UserMixin):
             "repertoire": self.repertoire,
             "comment": self.comment,
             "admin_comment": self.admin_comment,
-            
+            "wants_meal": "ano" if self.meals else "ne",
+            "meals": [
+                {
+                    "meal_id": meal_order.meal_id,
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
             "billing_currency": self.billing_currency,
             "billing_email": self.billing_email,
             "billing_age": self.billing_age,
@@ -476,6 +490,22 @@ class User(Common_methods_db_model, UserMixin):
         self.repertoire = request.form.get("repertoire")
         self.comment = request.form.get("comment")
         self.admin_comment = request.form.get("admin_comment")
+        self.meals = True if request.form.get("wants_meal") == "ano" else False
+        if request.form.get("meals"):
+            for mo in self.meal_orders:
+                mo.delete()
+            for meal_id, count in zip(request.form.getlist("meals"), request.form.getlist("counts")):
+                if meal_id == "-":
+                    continue
+                try:
+                    mo = Meal_order(user_id=self.id, meal_id=meal_id, count=count)
+                    mo.update()
+                except sqlalchemy.exc.IntegrityError:
+                    db.session.rollback() # protože tam vadí ten mo pending error
+                    meal = Meal.get_by_id(meal_id)
+                    flash(f"Chyba: jídlo {meal.get_description_cz()} bylo zapsáno více než jednou.", "error")
+                    continue
+        
         self.billing_currency = request.form.get("billing_currency")
         self.billing_email = request.form.get("billing_email")
         self.billing_age = request.form.get("billing_age")
