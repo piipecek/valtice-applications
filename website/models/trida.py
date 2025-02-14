@@ -1,6 +1,7 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
 from flask_login import current_user
+import czech_sort
 
 class Trida(Common_methods_db_model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,9 +58,9 @@ class Trida(Common_methods_db_model):
             "is_solo": "sólová" if self.is_solo else "hromadná",
             "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
             "age_group": age_group,
-            "main_participants_priority_1": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_1, key=lambda u: u.surname)],
-            "main_participants_priority_2": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_2, key=lambda u: u.surname)],
-            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: u.surname)],
+            "main_participants_priority_1": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_1, key=lambda u: czech_sort.key(u.surname))],
+            "main_participants_priority_2": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_2, key=lambda u: czech_sort.key(u.surname))],
+            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname))],
             "main_participants_priority_1_count": len(self.main_paticipants_priority_1),
             "main_participants_priority_2_count": len(self.main_paticipants_priority_2),
             "secondary_participants_count": len(self.secondary_participants),
@@ -69,7 +70,7 @@ class Trida(Common_methods_db_model):
     def data_pro_upravu_ucastniku(self):
         return {
             "id": self.id,
-            "full_name_cz": self.full_name_cz,
+            "full_name_cz": self.full_name_cz if self.full_name_cz else "Chybí český plný název třídy",
         }
     
     
@@ -126,7 +127,7 @@ class Trida(Common_methods_db_model):
             
         return {
             "id": self.id,
-            "name": self.full_name_cz,
+            "name": self.full_name_cz if self.full_name_cz else "Chybí český plný název třídy",
             "capacity": self.capacity,
             "places_taken": len(self.main_paticipants_priority_1),
             "is_solo": self.is_solo,

@@ -3,6 +3,8 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 from website.models.trida import Trida
 from website.models.meal import Meal
+import czech_sort
+
 user_api = Blueprint("user_api", __name__)
 
 
@@ -33,7 +35,7 @@ def en_uprava_uctu():
 @user_api.route("/cz_classes_capacity", methods=["GET"])
 @login_required
 def cz_classes_capacity():
-    return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all()], key=lambda t: t["name"]))
+    return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all()], key=lambda t: czech_sort.key(t["name"])))
 
 
 @user_api.route("/handle_class_click", methods=["POST"])

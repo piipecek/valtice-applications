@@ -182,7 +182,7 @@ class User(Common_methods_db_model, UserMixin):
                     "surname": u.surname
                 }
                 result.append(data)
-        return sorted(result, key=lambda x: (x["surname"] is None, x["surname"] or ""))
+        return sorted(result, key=lambda x: czech_sort.key(x["surname"] if x["surname"] else ""))
     
     
     def login(self):
@@ -434,7 +434,7 @@ class User(Common_methods_db_model, UserMixin):
                     "child_id": child.id,
                     "child_name": child.get_full_name()
                 } for child in self.children
-            ], key=lambda x: x["child_name"]) if self.children else "-",
+            ], key=lambda x: czech_sort.key(x["child-name"])) if self.children else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["prvni_trida"], self.billing_currency),
             "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),

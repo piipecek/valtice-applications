@@ -12,12 +12,6 @@ from flask_login import current_user
 org_api = Blueprint("org_api", __name__)
 
 
-@require_role_system_name_on_current_user("organiser")
-@org_api.route("/tridy_long_names_ids", methods=["GET"])
-def tridy_long_names_ids():
-    return json.dumps(sorted([trida.get_short_name_id_for_seznam() for trida in Trida.get_all()], key=lambda x: x["short_name"]))
-
-
 @org_api.route("/seznam_ucastniku")
 @require_role_system_name_on_current_user("organiser")
 def seznam_ucastniku():
@@ -40,7 +34,7 @@ def uprava_ucastnika(id: int):
 @org_api.route("/tridy_pro_upravu_ucastnika")
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_upravu_ucastnika():
-    return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all()], key=lambda x: x["full_name_cz"]))
+    return json.dumps([t.data_pro_upravu_ucastniku() for t in sorted(Trida.get_all(), key=lambda x: czech_sort.key(x.short_name_cz))])
 
 
 @org_api.route("/detail_tridy/<int:id>")
@@ -58,7 +52,7 @@ def uprava_tridy(id: int):
 @org_api.route("/seznam_trid")
 @require_role_system_name_on_current_user("organiser")
 def seznam_trid():
-    return json.dumps(sorted([t.info_pro_seznam_trid() for t in Trida.get_all()], key=lambda x: x["short_name"]))
+    return json.dumps(sorted([t.info_pro_seznam_trid() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["short_name"])))
 
 
 @org_api.route("/ceny")
@@ -68,6 +62,7 @@ def ceny():
 
 
 @org_api.route("/tridy_pro_seznamy")
+#TODO bude opraveno se seznamy, pridelat czechsort
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_seznamy():
     return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: x["long_name"]))
@@ -101,7 +96,7 @@ def role_uzivatele(id):
 @require_role_system_name_on_current_user("organiser")
 def seznam_lektoru():
     tutor_role = Role.get_by_system_name("tutor")
-    return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles], key=lambda x: x["surname"]))
+    return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles], key=lambda x: czech_sort.key(x["surname"])))
 
 
 @org_api.route("/seznam_lektoru_pro_upravu_tridy")
