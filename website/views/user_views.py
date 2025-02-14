@@ -131,7 +131,7 @@ def en_edit_account():
                     current_user.confirmed_email = False
                     current_user.update()
                     flash("E-mail successfully changed.", "success")
-            current_user.nacist_zmeny_z_en_user_requestu(request)
+            current_user.nacist_zmeny_z_user_requestu(request)
             flash("Changes saved", "success")
             return redirect(url_for("user_views.en_account"))
         else:

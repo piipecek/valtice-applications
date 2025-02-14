@@ -43,12 +43,6 @@ def tridy_pro_upravu_ucastnika():
     return json.dumps(sorted([t.data_pro_upravu_ucastniku() for t in Trida.get_all()], key=lambda x: x["full_name_cz"]))
 
 
-@org_api.route("/jidla_pro_upravu_ucastnika")
-@require_role_system_name_on_current_user("organiser")
-def jidla_pro_upravu_ucastnika():
-    return json.dumps([m.data_pro_upravu_ucastnika() for m in sorted(Meal.get_all())])  
-
-
 @org_api.route("/detail_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def detail_tridy(id: int):

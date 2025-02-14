@@ -1,36 +1,43 @@
 import json
 from flask import Blueprint, request
-from flask_login import current_user
+from flask_login import current_user, login_required
 from website.models.trida import Trida
+from website.models.meal import Meal
 user_api = Blueprint("user_api", __name__)
 
 
 @user_api.route("/ucet", methods=["GET"])
+@login_required
 def ucet():
     return json.dumps(current_user.info_pro_user_detail())
 
 
 @user_api.route("/en_ucet", methods=["GET"])
+@login_required
 def en_ucet():
     return json.dumps(current_user.info_pro_en_user_detail())
 
 
 @user_api.route("/uprava_uctu", methods=["GET"])
+@login_required
 def uprava_uctu():
     return json.dumps(current_user.info_pro_user_upravu())
 
 
 @user_api.route("/en_uprava_uctu", methods=["GET"])
+@login_required
 def en_uprava_uctu():
     return json.dumps(current_user.info_pro_en_user_upravu())
 
 
 @user_api.route("/cz_classes_capacity", methods=["GET"])
+@login_required
 def cz_classes_capacity():
     return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all()], key=lambda t: t["name"]))
 
 
 @user_api.route("/handle_class_click", methods=["POST"])
+@login_required
 def handle_class_click():
     data = json.loads(request.data)
     trida = Trida.get_by_id(data["id"])
@@ -64,3 +71,15 @@ def handle_class_click():
             return json.dumps(trida.class_capacity_data())
     else:
         return json.dumps({"status": "error, nemáš se zapisovat do plný třídy nebo co"}) , 400
+    
+
+@user_api.route("/jidla_pro_upravu_ucastnika")
+@login_required
+def jidla_pro_upravu_ucastnika():
+    return json.dumps([m.data_pro_upravu_ucastnika() for m in sorted(Meal.get_all())])  
+
+
+@user_api.route("/en_jidla_pro_upravu_ucastnika")
+@login_required
+def en_jidla_pro_upravu_ucastnika():
+    return json.dumps([m.en_data_pro_upravu_ucastnika() for m in sorted(Meal.get_all())])  

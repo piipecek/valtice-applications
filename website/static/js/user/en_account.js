@@ -7,6 +7,23 @@ for (let key in data) {
         if (document.getElementById(key)) {
             document.getElementById(key).innerText = data[key]
         }
+    } else if (key == "wants_meals") {
+        if (data[key]) {
+            document.getElementById("strava_yes").hidden = false
+        } else {
+            document.getElementById("strava_no").hidden = false
+        }
+    } else if (key == "meals") {
+        for (let meal of data[key]) {
+            let tr = document.createElement("tr")
+            let td1 = document.createElement("td")
+            td1.innerText = meal["popis"]
+            let td2 = document.createElement("td")
+            td2.innerText = meal["count"]
+            tr.appendChild(td1)
+            tr.appendChild(td2)
+            document.getElementById("meals").appendChild(tr)
+        }
     } else if (key == "children") {
         if (data["children"] == "-") {
             document.getElementById(key).innerText = "-"

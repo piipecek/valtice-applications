@@ -2,7 +2,7 @@ import httpGet from "../http_get.js"
 let id = document.getElementById("id_getter").value
 let data = JSON.parse(httpGet("/org_api/uprava_ucastnika/" + id))
 let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
-let jidla = JSON.parse(httpGet("/org_api/jidla_pro_upravu_ucastnika"))
+let jidla = JSON.parse(httpGet("/user_api/jidla_pro_upravu_ucastnika")) // pouziva se i v user sekci
 
 
 for (let trida of tridy) {

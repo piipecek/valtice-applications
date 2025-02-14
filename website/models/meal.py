@@ -111,3 +111,10 @@ class Meal(Common_methods_db_model):
             "id": self.id,
             "description": self.get_description_cz(),
         }
+    
+    
+    def en_data_pro_upravu_ucastnika(self):
+        return {
+            "id": self.id,
+            "description": self.get_description_en(),
+        }

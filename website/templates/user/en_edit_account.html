@@ -95,6 +95,21 @@
             </div>
         </div>
         <hr>
+        <h2>Food</h2>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Are you interested in the food we offer?</div>
+            <div class="col">
+                <select class="form-control" id="wants_meal" name="wants_meal">
+                    <option value="ano">Yes</option>
+                    <option value="ne">No</option>
+                </select>
+            </div>
+        </div>
+        <div id="strava_yes" hidden>
+            <div id="meals"></div>
+            <button class="custom_button" type="button" id="add_meal">Add meal</button>
+       </div>
+        <hr>
         <h2>Billing</h2>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Currency</div>
@@ -130,6 +145,7 @@
             </div>
         </div>
 
+        
         <hr>
         {% if "tutor" in roles %}
             <h2>Tutor information</h2>

@@ -195,6 +195,23 @@ class User(Common_methods_db_model, UserMixin):
             "id": self.id,
             "email": self.email,
         }
+        
+    
+    def _save_meals(self, request):
+        if request.form.get("meals"):
+            for mo in self.meal_orders:
+                mo.delete()
+            for meal_id, count in zip(request.form.getlist("meals"), request.form.getlist("counts")):
+                if meal_id == "-":
+                    continue
+                try:
+                    mo = Meal_order(user_id=self.id, meal_id=meal_id, count=count)
+                    mo.update()
+                except sqlalchemy.exc.IntegrityError:
+                    db.session.rollback() # protože tam vadí ten mo pending error
+                    meal = Meal.get_by_id(meal_id)
+                    flash(f"Chyba: jídlo {meal.get_description_cz()} bylo zapsáno více než jednou.", "error")
+                    continue
     
     
     def kalkulace(self) -> dict:
@@ -491,20 +508,7 @@ class User(Common_methods_db_model, UserMixin):
         self.comment = request.form.get("comment")
         self.admin_comment = request.form.get("admin_comment")
         self.meals = True if request.form.get("wants_meal") == "ano" else False
-        if request.form.get("meals"):
-            for mo in self.meal_orders:
-                mo.delete()
-            for meal_id, count in zip(request.form.getlist("meals"), request.form.getlist("counts")):
-                if meal_id == "-":
-                    continue
-                try:
-                    mo = Meal_order(user_id=self.id, meal_id=meal_id, count=count)
-                    mo.update()
-                except sqlalchemy.exc.IntegrityError:
-                    db.session.rollback() # protože tam vadí ten mo pending error
-                    meal = Meal.get_by_id(meal_id)
-                    flash(f"Chyba: jídlo {meal.get_description_cz()} bylo zapsáno více než jednou.", "error")
-                    continue
+        self._save_meals(request)
         
         self.billing_currency = request.form.get("billing_currency")
         self.billing_email = request.form.get("billing_email")
@@ -567,6 +571,13 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
+            "wants_meals": True if self.meals else False,
+            "meals": [
+                {
+                    "popis": meal_order.meal.get_description_cz(),
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
             "main_class_priority_1": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
             "main_class_priority_2": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
             "secondary_class": self.secondary_class.full_name_cz if self.secondary_class else "-",
@@ -635,6 +646,13 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
+            "wants_meals": "ano" if self.meals else "ne",
+            "meals": [
+                {
+                    "popis": meal_order.meal.get_description_en(),
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
             "main_class_priority_1": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
             "main_class_priority_2": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
             "secondary_class": self.secondary_class.full_name_cz if self.secondary_class else "-",
@@ -691,6 +709,13 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument,
             "repertoire": self.repertoire,
             "comment": self.comment,
+            "wants_meal": "ano" if self.meals else "ne",
+            "meals": [
+                {
+                    "meal_id": meal_order.meal_id,
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
             "billing_email": self.billing_email,
             "billing_currency": self.billing_currency,
             "billing_age": self.billing_age,
@@ -728,6 +753,13 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument,
             "repertoire": self.repertoire,
             "comment": self.comment,
+            "wants_meal": "ano" if self.meals else "ne",
+            "meals": [
+                {
+                    "meal_id": meal_order.meal_id,
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
             "billing_email": self.billing_email,
             "billing_currency": self.billing_currency,
             "billing_age": self.billing_age,
@@ -764,40 +796,8 @@ class User(Common_methods_db_model, UserMixin):
         self.repertoire = request.form.get("repertoire")
         self.comment = request.form.get("comment")
         
-        self.billing_currency = request.form.get("billing_currency")
-        self.billing_email = request.form.get("billing_email")
-        self.billing_age = request.form.get("billing_age")
-        self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
-        
-        self.tutor_travel = request.form.get("tutor_travel")
-        self.tutor_license_plate = request.form.get("tutor_license_plate")
-        self.tutor_arrival = request.form.get("tutor_arrival")
-        self.tutor_departure = request.form.get("tutor_departure")
-        self.tutor_accompanying_names = request.form.get("tutor_accompanying_names")
-        self.tutor_address = request.form.get("tutor_address")
-        self.tutor_date_of_birth = datetime.strptime(request.form.get("tutor_date_of_birth"), "%Y-%m-%d") if request.form.get("tutor_date_of_birth") else None
-        self.tutor_bank_account = request.form.get("tutor_bank_account")
-        
-        if request.form.get("new_password"):
-            self.password = generate_password_hash(request.form.get("new_password"), method="scrypt")
-        # parent_email je vyresenej ve view
-        # zmena emailu je taky ve view
-        
-        self.update()
-        
-
-    def nacist_zmeny_z_en_user_requestu(self, request): # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
-        self.name = request.form.get("name")
-        self.surname = request.form.get("surname")
-        self.phone = request.form.get("phone")
-        self.is_student = True if request.form.get("is_student") == "Ano" else False
-        self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
-        self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
-        self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
-        self.musical_education = request.form.get("musical_education")
-        self.musical_instrument = request.form.get("musical_instrument")
-        self.repertoire = request.form.get("repertoire")
-        self.comment = request.form.get("comment")
+        self.meals = True if request.form.get("wants_meal") == "ano" else False
+        self._save_meals(request)
         
         self.billing_currency = request.form.get("billing_currency")
         self.billing_email = request.form.get("billing_email")
