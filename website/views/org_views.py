@@ -5,14 +5,16 @@ from flask_login import current_user
 from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.user import User
-from website.helpers.get_roles import get_roles
+from website.models.meal import Meal
 from website.models.role import Role
+from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text
 from website.helpers.export import export
 from website.paths import logo_cz_path, logo_en_path
 from werkzeug.security import generate_password_hash
 from website.mail_handler import mail_sender
+import sqlalchemy
 
 org_views = Blueprint("org_views",__name__)
 
@@ -48,6 +50,19 @@ def settings():
             t.update()
             id = t.id
             return redirect(url_for("org_views.uprava_tridy", id=id))
+        elif request.form.get("nove_jidlo"):
+            m = Meal()
+            m.type = request.form.get("type")
+            m.location = request.form.get("location")
+            m.is_vegetarian = request.form.get("is_vegetarian") == "ano"
+            try:
+                m.update()
+            except sqlalchemy.exc.IntegrityError:
+                flash("Jídlo s těmito parametry už existuje.", category="error")
+                return redirect(url_for("org_views.settings"))
+            id = m.id
+            flash("Jídlo bylo vytvořeno", category="success")
+            return redirect(url_for("org_views.detail_jidla", id=id))
         elif request.form.get("export"):
             bytes = export()
             return send_file(bytes, as_attachment=True, download_name="export.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -338,3 +353,44 @@ def en_tutor():
 @require_role_system_name_on_current_user("organiser")
 def seznam_lektoru():
     return render_template("organizator/seznam_lektoru.html", roles=get_roles())
+
+
+@org_views.route("/seznam_jidel")
+@require_role_system_name_on_current_user("organiser")
+def seznam_jidel():
+    return render_template("organizator/seznam_jidel.html", roles=get_roles())
+
+
+@org_views.route("/detail_jidla/<int:id>", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("organiser")
+def detail_jidla(id:int):
+    if request.method == "GET":
+        return render_template("organizator/detail_jidla.html", id=id, roles=get_roles())
+    else:
+        return request.form.to_dict()
+
+
+@org_views.route("/uprava_jidla/<int:id>", methods=["GET", "POST"])
+@require_role_system_name_on_current_user("editor")
+def uprava_jidla(id:int):
+    if request.method == "GET":
+        return render_template("organizator/uprava_jidla.html", id=id, roles=get_roles())
+    else:
+        if request.form.get("save"):
+            m = Meal.get_by_id(id)
+            m.type = request.form.get("type")
+            m.location = request.form.get("location")
+            m.is_vegetarian = request.form.get("is_vegetarian") == "ano"
+            try:
+                m.update()
+            except sqlalchemy.exc.IntegrityError:
+                flash("Jídlo s těmito parametry už existuje.", category="error")
+                return redirect(url_for("org_views.uprava_jidla", id=id))
+            flash("Jídlo bylo upraveno", category="success")
+            return redirect(url_for("org_views.detail_jidla", id=id))
+        elif request.form.get("delete"):
+            Meal.get_by_id(id).delete()
+            flash("Jídlo bylo smazáno", category="success")
+            return redirect(url_for("org_views.seznam_jidel"))
+        else:
+            return request.form.to_dict()

@@ -1,0 +1,45 @@
+{% extends"cz_context.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+
+<input hidden id="id_getter" value="{{id}}"/>
+
+<h1>Detail jídla</h1>
+<hr>
+<a href="{{url_for('org_views.uprava_jidla', id=id)}}">
+    <button type="button" class="custom_button">Upravit</button>
+
+</a>
+<hr>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <td class="pravy_text">Typ</td>
+                <td id="type" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Lokace</td>
+                <td id="location" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Je vegetariánské?</td>
+                <td id="is_vegetarian" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Počet objednaných sad</td>
+                <td id="count" colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<p>
+    Objednávky ručně můžete přidávat při úpravě účastníka.
+</p>
+
+
+
+<script type="module" src="{{url_for('static', filename='js/organizator/detail_jidla.js')}}"></script>
+
+{% endblock %}

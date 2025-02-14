@@ -1,0 +1,21 @@
+{% extends"cz_context.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<h1>Jídla</h1>
+<hr>
+<p>
+    Jídla jsou řazena takto:
+    <ol>
+        <li>Podle typu: snídaně < oběd < večeře</li>
+        <li>Podle lokace: zš < vš</li>
+        <li>Podle vegetariánství: ne < ano </li>
+    </ol>
+</p>
+
+<form method="post">
+    <div id="parent_div"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/organizator/seznam_jidel.js')}}"></script>
+
+{% endblock %}

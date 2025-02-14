@@ -5,7 +5,6 @@ import TableCreator from "../table_creator.js"
 let lektori = JSON.parse(httpGet("/org_api/seznam_lektoru"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true)
-console.log(lektori)
 tc.make_header(["Jméno", "Telefon", "Vyučované třídy"])
 
 for (let lektor of lektori){

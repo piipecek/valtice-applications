@@ -5,6 +5,7 @@ from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.user import User
 from website.models.role import Role
+from website.models.meal import Meal
 from website.helpers.settings_manager import get_settings
 import czech_sort
 from flask_login import current_user
@@ -121,3 +122,21 @@ def my_participants_en():
         } for trida in current_user.taught_classes
     ]
     return json.dumps(result)
+
+
+@org_api.route("/seznam_jidel")
+@require_role_system_name_on_current_user("organiser")
+def seznam_jidel():
+    return json.dumps([m.get_data_for_admin_seznam() for m in sorted(Meal.get_all())])
+
+
+@org_api.route("/detail_jidla/<int:id>")
+@require_role_system_name_on_current_user("organiser")
+def detail_jidla(id: int):
+    return json.dumps(Meal.get_by_id(id).info_pro_detail())
+
+
+@org_api.route("/uprava_jidla/<int:id>")
+@require_role_system_name_on_current_user("editor")
+def uprava_jidla(id: int):
+    return json.dumps(Meal.get_by_id(id).info_pro_upravu())

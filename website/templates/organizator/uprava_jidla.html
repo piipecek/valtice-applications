@@ -1,0 +1,53 @@
+{% extends"cz_context.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
+<input hidden id="id_getter" value="{{id}}"/>
+<h1>Úprava jídla</h1>
+<hr>
+<form method="post">
+    <a href="{{url_for('org_views.detail_jidla', id=id)}}" class="custom_a_button">Zpět na detail</a>
+    <button type="submit" class="custom_button" name="save" value="whatever">Uložit změny</button>
+    <button type="button" class="btn btn-danger" id="delete_button">Smazat jídlo</button>
+    <hr>
+    <div class="container my-2">
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Typ</div>
+            <div class="col">
+                <select class="form-control" id="type" name="type">
+                    <option value="breakfast">snídaně</option>
+                    <option value="lunch">oběd</option>
+                    <option value="dinner">večeře</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Lokace</div>
+            <div class="col">
+                <select class="form-control" id="location" name="location">
+                    <option value="zs">základní škola</option>
+                    <option value="vs">vinařské učiliště</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Je vegetariánské?</div>
+            <div class="col">
+                <select class="form-control" id="is_vegetarian" name="is_vegetarian">
+                    <option value="ano">Ano</option>
+                    <option value="ne">Ne</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+<p>
+    Objednávky ručně můžete přidávat při úpravě účastníka.
+</p>
+<form method="post" id="delete_form">
+    <input type="hidden" name="delete" value="whatever">
+</form>
+
+
+<script type="module" src="{{url_for('static', filename='js/organizator/uprava_jidla.js')}}"></script>
+
+{% endblock %}

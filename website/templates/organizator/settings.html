@@ -92,6 +92,49 @@
     <small>Úplný název třídy a anglické znění půjde zadat po založení třídy.</small>
 </form>
 <hr>
+<h2>Vytvoření nového jídla</h2>
+<form method="post">
+    <div class="row my-1">
+        <div class="col-sm-2">
+            Typ:
+        </div>
+        <div class="col">
+            <select name="type" class="form-control">
+                <option value="breakfast">snídaně</option>
+                <option value="lunch">oběd</option>
+                <option value="dinner">večeře</option>
+            </select>
+        </div>
+    <div class="col-sm-2"></div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm-2">
+            Lokace:
+        </div>
+        <div class="col">
+            <select name="location" class="form-control">
+                <option value="zs">základní škola</option>
+                <option value="vs">vinařské učiliště</option>
+            </select>
+        </div>
+    <div class="col-sm-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            Je vegetariánské?
+        </div>
+        <div class="col">
+            <select name="is_vegetarian" class="form-control">
+                <option value="ano">ano</option>
+                <option value="ne">ne</option>
+            </select>
+        </div>
+        <div class="col-sm-2 d-flex justify-content-end">
+            <button class="custom_button" name="nove_jidlo" value="whatever" type="submit">Vytvořit</button>
+        </div>
+    </div>
+</form>
+<hr>
 <h2>Český text na úvodní stránce přihláškového systému</h2>
 <form method="post">
     <div class="row">

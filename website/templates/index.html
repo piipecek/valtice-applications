@@ -78,7 +78,7 @@
                         <a href="{{url_for('org_views.seznamy')}}" class="navbar_link navbar_link_small">Výpisy</a>
                         {% if "editor" in roles %}
                             <a href="{{url_for('org_views.ceny')}}" class="navbar_link navbar_link_small">Sazby</a>
-                            <a href="#" class="navbar_link navbar_link_small">Jídla</a>
+                            <a href="{{url_for('org_views.seznam_jidel')}}" class="navbar_link navbar_link_small">Jídla</a>
                         {% endif %}
                         <a href="{{url_for('org_views.settings')}}" class="navbar_link navbar_link_small">Nastavení</a>
                         <a class="navbar_link navbar_link_small" href="{{url_for('org_views.docs')}}">Dokumentace</a>
