@@ -9,7 +9,7 @@ from website.models.meal import Meal
 from website.models.role import Role
 from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.helpers.settings_manager import set_applications_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text
+from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text
 from website.helpers.export import export
 from website.paths import logo_cz_path, logo_en_path
 from werkzeug.security import generate_password_hash
@@ -66,15 +66,25 @@ def settings():
         elif request.form.get("export"):
             bytes = export()
             return send_file(bytes, as_attachment=True, download_name="export.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        elif request.form.get("datum_cas_start"):
-            applications_start_date = request.form.get("applications_start_date")
-            applications_start_time = request.form.get("applications_start_time")
-            if not all([applications_start_date, applications_start_time]):
+        elif request.form.get("datum_cas_primary"):
+            primary_classes_start_date = request.form.get("primary_classes_start_date")
+            primary_classes_start_time = request.form.get("primary_classes_start_time")
+            if not all([primary_classes_start_date, primary_classes_start_time]):
                 flash("Nebyl vyplněn datum nebo čas začátku přihlášek.", category="error")
                 return redirect(url_for("org_views.settings"))
             else:
-                set_applications_start_date_and_time(applications_start_date, applications_start_time)
-                flash("Datum a čas začátku přihlášek byl změněn.", category="success")
+                set_primary_classes_start_date_and_time(primary_classes_start_date, primary_classes_start_time)
+                flash("Datum a čas začátku přihlášek do hlavních tříd byl změněn.", category="success")
+                return redirect(url_for("org_views.settings"))
+        elif request.form.get("datum_cas_secondary"):
+            secondary_classes_start_date = request.form.get("secondary_classes_start_date")
+            secondary_classes_start_time = request.form.get("secondary_classes_start_time")
+            if not all([secondary_classes_start_date, secondary_classes_start_time]):
+                flash("Nebyl vyplněn datum nebo čas začátku přihlášek.", category="error")
+                return redirect(url_for("org_views.settings"))
+            else:
+                set_secondary_classes_start_date_and_time(secondary_classes_start_date, secondary_classes_start_time)
+                flash("Datum a čas začátku přihlášek do vedlejších tříd byl změněn.", category="success")
                 return redirect(url_for("org_views.settings"))
         elif request.form.get("datum_cas_end"):
             applications_end_date = request.form.get("applications_end_date")

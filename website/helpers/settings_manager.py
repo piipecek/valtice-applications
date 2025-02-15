@@ -14,10 +14,17 @@ def save_settings(settings: dict):
         json.dump(settings, f, indent=4)
 
 
-def set_applications_start_date_and_time(date: str, time: str):
+def set_primary_classes_start_date_and_time(date: str, time: str):
     settings = get_settings()
-    settings['applications_start_date'] = date
-    settings['applications_start_time'] = time
+    settings['primary_classes_start_date'] = date
+    settings['primary_classes_start_time'] = time
+    save_settings(settings)
+    
+
+def set_secondary_classes_start_date_and_time(date: str, time: str):
+    settings = get_settings()
+    settings['secondary_classes_start_date'] = date
+    settings['secondary_classes_start_time'] = time
     save_settings(settings)
 
 
@@ -50,7 +57,14 @@ def get_en_frontpage_text() -> str:
     return settings['en_frontpage_text']
 
 
-def is_class_signup_allowed() -> bool:
+def get_class_signup_state() -> str: # primary / secondary / closed
     settings = get_settings()
-    start_date = datetime.strptime(settings['applications_start_date'] + ' ' + settings['applications_start_time'], '%Y-%m-%d %H:%M')
-    return datetime.now() > start_date
+    primary_start_date = datetime.strptime(settings['primary_classes_start_date'] + ' ' + settings['primary_classes_start_time'], '%Y-%m-%d %H:%M')
+    secondary_start_date = datetime.strptime(settings['secondary_classes_start_date'] + ' ' + settings['secondary_classes_start_time'], '%Y-%m-%d %H:%M')
+    applications_end_date = datetime.strptime(settings['applications_end_date'] + ' ' + settings['applications_end_time'], '%Y-%m-%d %H:%M')
+    if datetime.now() < primary_start_date or datetime.now() > applications_end_date:
+        return 'closed'
+    elif datetime.now() < secondary_start_date:
+        return 'primary'
+    else:
+        return 'secondary'

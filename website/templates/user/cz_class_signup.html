@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% if is_class_signup_allowed %}
+{% if class_signup_state == "primary" %}
     <h1>Zápis do tříd</h1>
     <hr>
     <h2>Hlavní třída</h2>
@@ -37,6 +37,9 @@
             <li>O fungování tříd se dočtete TODO v <a class="link" href="{{url_for('guest_views.cz_info')}}">informacích</a>.</li>
         </ul>
     </div>
+{% elif class_signup_state == "secondary" %}
+    <h1>Zápis do vedlejší třídy</h1>
+    <hr>
 
 {% else %}
     <h1>Zápis do tříd nanečisto</h1>

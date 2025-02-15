@@ -1,22 +1,43 @@
 {% extends"cz_context.html" %}
 {% block content %}
-<h2>Datum a čas začátku přihlašování do tříd</h2>
+<h2>Datum a čas začátku přihlašování do hlavních tříd</h2>
 <form method="post">
     <div class="row">
         <div class="col-12 col-sm-1 my-1">
             Datum:
         </div>
         <div class="col-12 col-sm my-1">
-            <input class="form-control" type="date" name="applications_start_date" id="applications_start_date">
+            <input class="form-control" type="date" name="primary_classes_start_date" id="primary_classes_start_date">
         </div>
         <div class="col-12 col-sm-1 my-1">
             Čas:
         </div>
         <div class="col-12 col-sm my-1">
-            <input class="form-control" type="time" name="applications_start_time" id="applications_start_time">
+            <input class="form-control" type="time" name="primary_classes_start_time" id="primary_classes_start_time">
         </div>
         <div class="col-12 col-sm-auto my-1">
-            <button class="custom_button" name="datum_cas_start" value="whatever" type="submit">Uložit</button>
+            <button class="custom_button" name="datum_cas_primary" value="whatever" type="submit">Uložit</button>
+        </div>
+    </div>
+</form>
+<hr>   
+<h2>Datum a čas začátku přihlašování do vedlejších tříd</h2>
+<form method="post">
+    <div class="row">
+        <div class="col-12 col-sm-1 my-1">
+            Datum:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="date" name="secondary_classes_start_date" id="secondary_classes_start_date">
+        </div>
+        <div class="col-12 col-sm-1 my-1">
+            Čas:
+        </div>
+        <div class="col-12 col-sm my-1">
+            <input class="form-control" type="time" name="secondary_classes_start_time" id="secondary_classes_start_time">
+        </div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="custom_button" name="datum_cas_secondary" value="whatever" type="submit">Uložit</button>
         </div>
     </div>
 </form>
