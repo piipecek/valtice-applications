@@ -153,7 +153,7 @@ class User(Common_methods_db_model, UserMixin):
                 {
                     "id": trida.id,
                     "short_name": trida.short_name_cz
-                } for trida in self.taught_classes
+                } for trida in sorted(self.taught_classes, key=lambda x: czech_sort.key(x.short_name_cz))
             ],
         }
         
@@ -411,7 +411,7 @@ class User(Common_methods_db_model, UserMixin):
                 {
                     "id": trida.id,
                     "short_name": trida.short_name_cz
-                } for trida in self.taught_classes
+                } for trida in sorted(self.taught_classes, key=lambda x: czech_sort.key(x.short_name_cz))
             ],
             "tutor_travel": "vlastní" if self.tutor_travel == "own" else "veřejná",
             "tutor_license_plate": self.tutor_license_plate if self.tutor_license_plate else "-",
