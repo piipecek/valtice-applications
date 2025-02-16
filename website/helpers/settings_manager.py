@@ -68,3 +68,16 @@ def get_class_signup_state() -> str: # primary / secondary / closed
         return 'primary'
     else:
         return 'secondary'
+    
+
+def get_user_lock_state() -> bool:
+    settings = get_settings()
+    return settings['users_locked']
+
+
+def toggle_user_lock_state() -> bool:
+    """returns the new state of the user lock"""
+    settings = get_settings()
+    settings['users_locked'] = not settings['users_locked']
+    save_settings(settings)
+    return settings['users_locked']

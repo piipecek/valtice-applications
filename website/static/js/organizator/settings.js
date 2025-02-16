@@ -10,3 +10,11 @@ document.getElementById("applications_end_date").value = settings["applications_
 document.getElementById("applications_end_time").value = settings["applications_end_time"]
 document.getElementById("text_cz").value = settings["cz_frontpage_text"]
 document.getElementById("text_en").value = settings["en_frontpage_text"]
+
+if (settings["users_locked"]) {
+    document.getElementById("lock_state").innerText = "Všichni uživatelé mají zamknuté změny na účtech."
+    document.getElementById("toggle_lock").innerText = "Odemknout změny"
+} else {
+    document.getElementById("lock_state").innerText = "Všichni uživatelé mohou své účty upravovat."
+    document.getElementById("toggle_lock").innerText = "Zamknout změny"
+}
