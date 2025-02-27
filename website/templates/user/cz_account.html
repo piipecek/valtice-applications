@@ -81,17 +81,21 @@
                 <td class="pravy_text">Uživatelská poznámka</td>
                 <td id="comment" colspan="2"></td>
             </tr>
-            <tr>
+            <tr id="primary_class_row" hidden>
                 <td class="pravy_text">Hlavní třída - volba 1</td>
                 <td id="main_class_priority_1" colspan="2"></td>
             </tr>
-            <tr>
+            <tr id="secondary_class_row" hidden>
                 <td class="pravy_text">Vedlejší třída</td>
                 <td id="secondary_class" colspan="2"></td>
             </tr>
-            <tr>
+            <tr id="primary_class_priority_2_row" hidden>
                 <td class="pravy_text">Hlavní třída - volba 2</td>
                 <td id="main_class_priority_2" colspan="2"></td>
+            </tr>
+            <tr id="no_class_row" hidden>
+                <td class="pravy_text">Třídy</td>
+                <td colspan="2">Zde se zobrazují informace o zapsaných třídách pro aktivní účastníky.</td>
             </tr>
         </tbody>
     </table>
@@ -136,14 +140,19 @@
                 <td id="billing_celkem"></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr id="billing_primary_class_row" hidden>
                 <td class="pravy_text">Hlavní třída</td>
                 <td id="billing_hlavni_trida"></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr id="billing_secondary_class_row" hidden>
                 <td class="pravy_text">Vedlejší třída</td>
                 <td id="billing_vedlejsi_trida"></td>
+                <td></td>
+            </tr>
+            <tr id="billing_passive_row" hidden>
+                <td class="pravy_text">Pasivní účast</td>
+                <td id="billing_pasivni_ucast"></td>
                 <td></td>
             </tr>
             <tr>

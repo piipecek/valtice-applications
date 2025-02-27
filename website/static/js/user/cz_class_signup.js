@@ -97,50 +97,55 @@ function update_div_obou_trid(trida) {
     // trida_div.innerHTML += text
 }
 
-// hlavní třídy
-for (let trida of tridy_a_kapacity) {
-    let trida_div = document.createElement("div")
-    hlavni_tridy_div.appendChild(trida_div)
-    trida_div.id = "main_class_" + trida["id"]
-    trida_div.classList.add("trida_div")
 
-    trida_div.dataset.state = trida["state_main"]
-
-    trida_div.addEventListener("click", function() {
-        if (trida_div.dataset.state === "full") {
-            // no nemas klikat na plnou tridu no
-        } else if (trida_div.dataset.state === "enrolled") {
-            if (confirm("Opravdu se chcete z třídy odhlásit?")) {
+// to cele probiha pouze tehdy, pokud ucastnik je aktivni -> ma tam vyrenderovane ty divy
+if (document.getElementById("aktivni_ucast").value === "True") {
+    
+    // hlavní třídy
+    for (let trida of tridy_a_kapacity) {
+        let trida_div = document.createElement("div")
+        hlavni_tridy_div.appendChild(trida_div)
+        trida_div.id = "main_class_" + trida["id"]
+        trida_div.classList.add("trida_div")
+    
+        trida_div.dataset.state = trida["state_main"]
+    
+        trida_div.addEventListener("click", function() {
+            if (trida_div.dataset.state === "full") {
+                // no nemas klikat na plnou tridu no
+            } else if (trida_div.dataset.state === "enrolled") {
+                if (confirm("Opravdu se chcete z třídy odhlásit?")) {
+                    handle_class_click(trida["id"], trida_div.dataset.state, true)
+                }
+            } else {
                 handle_class_click(trida["id"], trida_div.dataset.state, true)
             }
-        } else {
-            handle_class_click(trida["id"], trida_div.dataset.state, true)
-        }
-    })
-}
-
-// vedlejší třídy
-for (let trida of tridy_a_kapacity) {
-    let trida_div = document.createElement("div")
-    vedlejsi_tridy_div.appendChild(trida_div)
-    trida_div.id = "secondary_class_" + trida["id"]
-    trida_div.classList.add("trida_div")
-
-    trida_div.dataset.state = trida["state_secondary"]
-    trida_div.addEventListener("click", function() {
-        if (trida_div.dataset.state === "full") {
-            // no nemas klikat na plnou tridu no
-        } else if (trida_div.dataset.state === "enrolled") {
-            if (confirm("Opravdu se chcete z třídy odhlásit?")) {
+        })
+    }
+    
+    // vedlejší třídy
+    for (let trida of tridy_a_kapacity) {
+        let trida_div = document.createElement("div")
+        vedlejsi_tridy_div.appendChild(trida_div)
+        trida_div.id = "secondary_class_" + trida["id"]
+        trida_div.classList.add("trida_div")
+    
+        trida_div.dataset.state = trida["state_secondary"]
+        trida_div.addEventListener("click", function() {
+            if (trida_div.dataset.state === "full") {
+                // no nemas klikat na plnou tridu no
+            } else if (trida_div.dataset.state === "enrolled") {
+                if (confirm("Opravdu se chcete z třídy odhlásit?")) {
+                    handle_class_click(trida["id"], trida_div.dataset.state, false)
+                }
+            } else {
                 handle_class_click(trida["id"], trida_div.dataset.state, false)
             }
-        } else {
-            handle_class_click(trida["id"], trida_div.dataset.state, false)
-        }
-    })
-}
-
-for (let trida of tridy_a_kapacity) {
-    update_div_obou_trid(trida)
-}
+        })
+    }
+    
+    for (let trida of tridy_a_kapacity) {
+        update_div_obou_trid(trida)
+    }
+}    
 

@@ -222,6 +222,7 @@ hr {
     display: flex;
     align-items: center;
     height: 2.5rem;
+    cursor: pointer;
 }
 
 .trida_available_icon{

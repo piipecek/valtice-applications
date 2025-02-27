@@ -19,6 +19,14 @@ document.getElementById("ubytovani_na_ocich").innerText = data["accomodation_typ
 for (let key in data) {
     if (["name", "surname", "meals_top_visible"].includes(key)) {
         continue
+    } else if (key == "is_active_participant") {
+        document.getElementById(key).innerText = data[key]
+        if (data[key] == "aktivní") {
+            document.getElementById("billing_primary_class_row").hidden = false
+            document.getElementById("billing_secondary_class_row").hidden = false
+        } else{
+            document.getElementById("billing_passive_row").hidden = false
+        }
     } else if (key == "is_tutor") {
         if (data[key]) {
             document.getElementById("tutor_yes").hidden = false
@@ -28,8 +36,13 @@ for (let key in data) {
     } else if (key == "wants_meals") {
         if (data[key]) {
             document.getElementById("strava_yes").hidden = false
+            let food_ids = ["billing_snidane_row", "billing_obedy_row", "billing_vecere_row"]
+            for (let id of food_ids) {
+                document.getElementById(id).hidden = false
+            }
         } else {
             document.getElementById("strava_no").hidden = false
+            document.getElementById("billing_strava_row").hidden = false
         }
     } else if (key == "meals") {
         for (let meal of data[key]) {

@@ -142,3 +142,37 @@ function add_meal_row(selected_id, count) {
         row.remove()
     })
 }
+
+// upozorneni na smazani trid pri pasivni ucasti
+function has_any_classes(data) {
+    return data["main_class_id_priority_1"] || data["main_class_id_priority_2"] || data["secondary_class_id"]
+}
+
+
+let is_active_participant_select = document.getElementById("is_active_participant")
+is_active_participant_select.addEventListener("change", () => {
+    if (is_active_participant_select.value == "passive" && has_any_classes(data)) {
+        if (confirm("Nastavením pasivní účasti budou odhlášeny všechny třídy. Opravdu chcete pokračovat?")) {
+
+        } else {
+            is_active_participant_select.value = "active"
+        }
+    }
+})
+
+// dovoleni uprav tridy pri pasivni ucasti
+
+function update_class_selection_visibility() {
+    let ucast = document.getElementById("is_active_participant").value
+    if (ucast == "passive") {
+        document.getElementById("vyber_trid_dovolen").hidden = true
+        document.getElementById("vyber_trid_zakazan").hidden = false
+    } else {
+        document.getElementById("vyber_trid_dovolen").hidden = false
+        document.getElementById("vyber_trid_zakazan").hidden = true
+    }
+}
+
+update_class_selection_visibility()
+
+document.getElementById("is_active_participant").addEventListener("change", update_class_selection_visibility)

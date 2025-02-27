@@ -140,12 +140,17 @@
                 <td id="billing_celkem"></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr id="billing_passive_row" hidden>
+                <td class="pravy_text">Pasivní účast</td>
+                <td id="billing_pasivni_ucast"></td>
+                <td></td>
+            </tr>
+            <tr id="billing_primary_class_row" hidden>
                 <td class="pravy_text">Hlavní třída</td>
                 <td id="billing_hlavni_trida"></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr id="billing_secondary_class_row" hidden>
                 <td class="pravy_text">Vedlejší třída</td>
                 <td id="billing_vedlejsi_trida"></td>
                 <td></td>
@@ -155,17 +160,23 @@
                 <td id="billing_ubytovani"></td>
                 <td></td>
             </tr>
-            <tr>
+            <!-- ukaze se jen pokud nema stravu -->
+            <tr id="billing_strava_row" hidden>
+                <td class="pravy_text">Strava</td>
+                <td >-</td>
+                <td></td>
+            </tr>
+            <tr id="billing_snidane_row" hidden>
                 <td class="pravy_text">Snídaně</td>
                 <td id="billing_snidane"></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr id="billing_obedy_row" hidden>
                 <td class="pravy_text">Obědy</td>
                 <td id="billing_obedy"></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr id="billing_vecere_row" hidden>
                 <td class="pravy_text">Večeře</td>
                 <td id="billing_vecere"></td>
                 <td></td>

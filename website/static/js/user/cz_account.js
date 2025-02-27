@@ -7,6 +7,18 @@ for (let key in data) {
         if (document.getElementById(key)) {
             document.getElementById(key).innerText = data[key]
         }
+    } else if (key == "is_active_participant") {
+        document.getElementById(key).innerText = data[key]
+        if (data[key] == "aktivní") {
+            document.getElementById("billing_primary_class_row").hidden = false
+            document.getElementById("billing_secondary_class_row").hidden = false
+            document.getElementById("primary_class_row").hidden = false
+            document.getElementById("secondary_class_row").hidden = false
+            document.getElementById("primary_class_priority_2_row").hidden = false
+        } else{
+            document.getElementById("billing_passive_row").hidden = false
+            document.getElementById("no_class_row").hidden = false
+        }
     } else if (key == "wants_meals") {
         if (data[key]) {
             document.getElementById("strava_yes").hidden = false

@@ -54,11 +54,14 @@
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Participation</div>
-            <div class="col">
+            <div class="col" id="zmena_ucasti_povolena" hidden>
                 <select class="form-control" id="is_active_participant" name="is_active_participant">
                     <option value="active">active</option>
                     <option value="passive">passive</option>
                 </select>
+            </div>
+            <div class="col" id="zmena_ucasti_zakazana" hidden>
+                You are an active participant. To change that, you have to leave all of your classes first.
             </div>
         </div>
         <div class="row my-1">

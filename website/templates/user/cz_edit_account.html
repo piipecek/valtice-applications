@@ -54,11 +54,14 @@
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Účast</div>
-            <div class="col">
+            <div class="col" id="zmena_ucasti_povolena" hidden>
                 <select class="form-control" id="is_active_participant" name="is_active_participant">
                     <option value="active">aktivní</option>
                     <option value="passive">pasivní</option>
                 </select>
+            </div>
+            <div class="col" id="zmena_ucasti_zakazana" hidden>
+                Jste aktivním účastníkem. Změnu na pasivní účast můžete provést poté, co se odhlásíte ze všech Vašich tříd.
             </div>
         </div>
         <div class="row my-1">

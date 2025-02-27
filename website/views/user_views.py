@@ -142,6 +142,6 @@ def en_edit_account():
 @ensure_email_password("cz")
 def zapis_tridy():
     if request.method == "GET":
-        return render_template("user/cz_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state())
+        return render_template("user/cz_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)
     else:
         return request.form.to_dict()
