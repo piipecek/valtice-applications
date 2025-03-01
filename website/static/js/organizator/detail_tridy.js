@@ -6,7 +6,7 @@ let data = JSON.parse(httpGet("/org_api/detail_tridy/" + id))
 document.getElementById("name").innerHTML = data["short_name_cz"]
 
 for (let key in data) {
-    if (["main_participants_priority_1", "main_participants_priority_2", "secondary_participants"].includes(key)) {
+    if (["primary_participants", "secondary_participants"].includes(key)) {
         continue
     } else if (key === "tutor") {
         if (data["tutor"]["id"]) {
@@ -23,7 +23,7 @@ for (let key in data) {
     }
 }
 
-for(let ucastnik of data.main_participants_priority_1){
+for(let ucastnik of data.primary_participants){
     let tr = document.createElement("tr")
     let td = document.createElement("td")
     let a = document.createElement("a")
@@ -35,22 +35,7 @@ for(let ucastnik of data.main_participants_priority_1){
     let td2 = document.createElement("td")
     td2.innerText = ucastnik["ucast"]
     tr.appendChild(td2)
-    document.getElementById("main_participants_1").appendChild(tr)
-}
-
-for(let ucastnik of data.main_participants_priority_2){
-    let tr = document.createElement("tr")
-    let td = document.createElement("td")
-    let a = document.createElement("a")
-    a.href = ucastnik["link"]
-    a.innerText = ucastnik["name"]
-    a.classList.add("link")
-    td.appendChild(a)
-    tr.appendChild(td)
-    let td2 = document.createElement("td")
-    td2.innerText = ucastnik["ucast"]
-    tr.appendChild(td2)
-    document.getElementById("main_participants_2").appendChild(tr)
+    document.getElementById("primary_participants").appendChild(tr)
 }
 
 for(let ucastnik of data.secondary_participants){

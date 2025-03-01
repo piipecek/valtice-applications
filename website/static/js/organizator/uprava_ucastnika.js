@@ -9,8 +9,7 @@ for (let trida of tridy) {
     let option = document.createElement("option")
     option.value = trida["id"]
     option.innerText = trida["full_name_cz"]
-    document.getElementById("main_class_id_priority_1").appendChild(option)
-    document.getElementById("main_class_id_priority_2").appendChild(option.cloneNode(true))
+    document.getElementById("primary_class_id").appendChild(option)
     document.getElementById("secondary_class_id").appendChild(option.cloneNode(true))
 }
 
@@ -37,7 +36,7 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]
             document.getElementById("zrusit_registraci_button").hidden = false
         }
-    } else if (["main_class_id_priority_1", "main_class_id_priority_2", "secondary_class_id"].includes(key)) {
+    } else if (["primary_class_id", "secondary_class_id"].includes(key)) {
         if (data[key]) {
             document.getElementById(key).value = data[key]
         } else{
@@ -145,7 +144,7 @@ function add_meal_row(selected_id, count) {
 
 // upozorneni na smazani trid pri pasivni ucasti
 function has_any_classes(data) {
-    return data["main_class_id_priority_1"] || data["main_class_id_priority_2"] || data["secondary_class_id"]
+    return data["primary_class_id"] || data["secondary_class_id"]
 }
 
 

@@ -32,7 +32,7 @@ class User(Common_methods_db_model, UserMixin):
     is_ssh_member = db.Column(db.Boolean, default=False)
     is_active_participant = db.Column(db.Boolean, default=True)
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
-    datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy priority 1
+    datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy
     datetime_registered = db.Column(db.DateTime)
     accomodation_type = db.Column(db.String(200), default=None) # own/vs/gym. None znamená. že nemá zájem
     accomodation_count = db.Column(db.Integer, default=0)
@@ -83,10 +83,8 @@ class User(Common_methods_db_model, UserMixin):
     meal_orders = db.relationship("Meal_order", back_populates="user")        
         
     taught_classes = db.relationship("Trida", back_populates="tutor", foreign_keys="Trida.tutor_id")
-    main_class_id_priority_1 = db.Column(db.Integer, db.ForeignKey("trida.id"))
-    main_class_priority_1 = db.relationship("Trida", back_populates="main_paticipants_priority_1", foreign_keys=[main_class_id_priority_1])
-    main_class_id_priority_2 = db.Column(db.Integer, db.ForeignKey("trida.id"))
-    main_class_priority_2 = db.relationship("Trida", back_populates="main_paticipants_priority_2", foreign_keys=[main_class_id_priority_2])
+    primary_class_id = db.Column(db.Integer, db.ForeignKey("trida.id"))
+    primary_class = db.relationship("Trida", back_populates="primary_participants", foreign_keys=[primary_class_id])
     secondary_class_id = db.Column(db.Integer, db.ForeignKey("trida.id"))
     secondary_class = db.relationship("Trida", back_populates="secondary_participants", foreign_keys=[secondary_class_id])
 
@@ -138,8 +136,8 @@ class User(Common_methods_db_model, UserMixin):
             "surname": self.surname if self.surname else "-",
             "email": self.email if self.email else "-",
             "registrovan": "Registrován" if self.datetime_registered else "-",
-            "hlavni_trida_1": self.main_class_priority_1.short_name_cz if self.main_class_priority_1 else "-",
-            "hlavni_trida_1_id": self.main_class_id_priority_1
+            "hlavni_trida_1": self.primary_class.short_name_cz if self.primary_class else "-",
+            "hlavni_trida_1_id": self.primary_class_id
         }
     
     def info_pro_seznam_lektoru(self) -> dict:
@@ -275,7 +273,7 @@ class User(Common_methods_db_model, UserMixin):
                         return Billing.get_by_system_name("kurzovne").eur
 
         
-        hlavni_trida = calculate_trida(self.main_class_priority_1, self, False)
+        hlavni_trida = calculate_trida(self.primary_class, self, False)
         vedlejsi_trida = calculate_trida(self.secondary_class, self, True)
         
         pasivni_ucast = None
@@ -455,20 +453,14 @@ class User(Common_methods_db_model, UserMixin):
             "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
             "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
             "hlavni_trida_1": {
-                "name": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
-                "link": "/organizator/detail_tridy/" + str(self.main_class_id_priority_1) if self.main_class_priority_1 else None
-            },
-            "hlavni_trida_2": {
-                "name": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
-                "link": "/organizator/detail_tridy/" + str(self.main_class_id_priority_2) if self.main_class_priority_2 else None
+                "name": self.primary_class.full_name_cz if self.primary_class else "-",
+                "link": "/organizator/detail_tridy/" + str(self.primary_class_id) if self.primary_class else None
             },
             "vedlejsi_trida": {
                 "name": self.secondary_class.full_name_cz if self.secondary_class else "-",
                 "link": "/organizator/detail_tridy/" + str(self.secondary_class_id) if self.secondary_class else None
             }
         }
-    
-    
     
     
     def info_pro_upravu(self):
@@ -527,26 +519,22 @@ class User(Common_methods_db_model, UserMixin):
                 "parent_name": self.parent.get_full_name()
             } if self.parent else None,
             
-            "main_class_id_priority_1": self.main_class_priority_1.id if self.main_class_priority_1 else None,
-            "main_class_id_priority_2": self.main_class_priority_2.id if self.main_class_priority_2 else None,
-            "secondary_class_id": self.secondary_class.id if self.secondary_class else None,
-            #TODO tady určitě přibudou meals
+            "primary_class_id": self.primary_class_id if self.primary_class_id else None,
+            "secondary_class_id": self.secondary_class_id if self.secondary_class_id else None,
         }
     
-    def nacist_zmeny_z_requestu(self, request):
+    def nacist_zmeny_z_org_requestu(self, request):
         
-        if request.form.get("main_class_id_priority_1") != self.main_class_id_priority_1:
+        if request.form.get("primary_class_id") != self.primary_class_id:
             self.datetime_class_pick = datetime.now(tz=timezone.utc)
-        if request.form.get("main_class_id_priority_1") == "-":
+        if request.form.get("primary_class_id") == "-":
             self.datetime_class_pick = None
             
         if request.form.get("is_active_participant") == "passive":
-            self.main_class_id_priority_1 = None
-            self.main_class_id_priority_2 = None
+            self.primary_class = None
             self.secondary_class_id = None
         else:
-            self.main_class_id_priority_1 = int(request.form.get("main_class_id_priority_1")) if request.form.get("main_class_id_priority_1") != "-"  else None
-            self.main_class_id_priority_2 = int(request.form.get("main_class_id_priority_2")) if request.form.get("main_class_id_priority_2") != "-"  else None
+            self.primary_class_id = int(request.form.get("primary_class_id")) if request.form.get("primary_class_id") != "-"  else None
             self.secondary_class_id = int(request.form.get("secondary_class_id")) if request.form.get("secondary_class_id") != "-" else None
             
              
@@ -633,8 +621,7 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "main_class_priority_1": self.main_class_priority_1.full_name_cz if self.main_class_priority_1 else "-",
-            "main_class_priority_2": self.main_class_priority_2.full_name_cz if self.main_class_priority_2 else "-",
+            "primary_class": self.primary_class.full_name_cz if self.primary_class else "-",
             "secondary_class": self.secondary_class.full_name_cz if self.secondary_class else "-",
             "billing_email": billing_email,
             "billing_age": billing_age,
@@ -709,8 +696,7 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "main_class_priority_1": self.main_class_priority_1.full_name_en if self.main_class_priority_1 else "-",
-            "main_class_priority_2": self.main_class_priority_2.full_name_en if self.main_class_priority_2 else "-",
+            "primary_class": self.primary_class.full_name_en if self.primary_class else "-",
             "secondary_class": self.secondary_class.full_name_en if self.secondary_class else "-",
             "billing_email": billing_email,
             "billing_age": billing_age,
@@ -754,7 +740,7 @@ class User(Common_methods_db_model, UserMixin):
         
     def info_pro_user_upravu(self) -> dict:
         zmena_ucasti = "povolena"
-        if any([self.main_class_priority_1, self.main_class_priority_2, self.secondary_class]):
+        if any([self.primary_class, self.secondary_class]):
             zmena_ucasti = "zakázána"
         return {
             "name": self.name if self.name else "",
@@ -802,7 +788,7 @@ class User(Common_methods_db_model, UserMixin):
         
     def info_pro_en_user_upravu(self) -> dict: # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
         zmena_ucasti = "povolena"
-        if any([self.main_class_priority_1, self.main_class_priority_2, self.secondary_class]):
+        if any([self.primary_class, self.secondary_class]):
             zmena_ucasti = "zakázána"
         return {
             "name": self.name if self.name else "",

@@ -111,7 +111,7 @@ def my_participants():
     result = [
         {
             "class_name": trida.full_name_cz,
-            "main_participants": [u.info_for_tutor() for u in trida.main_paticipants_priority_1],
+            "primary_participants": [u.info_for_tutor() for u in trida.primary_participants],
             "secondary_participants": [u.info_for_tutor() for u in trida.secondary_participants]
         } for trida in current_user.taught_classes
     ]
@@ -124,7 +124,7 @@ def my_participants_en():
     result = [
         {
             "class_name": trida.full_name_en,
-            "main_participants": [u.info_for_tutor() for u in trida.main_paticipants_priority_1],
+            "primary_participants": [u.info_for_tutor() for u in trida.primary_participants],
             "secondary_participants": [u.info_for_tutor() for u in trida.secondary_participants]
         } for trida in current_user.taught_classes
     ]

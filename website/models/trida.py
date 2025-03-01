@@ -16,8 +16,7 @@ class Trida(Common_methods_db_model):
     
     tutor_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     tutor = db.relationship("User", back_populates="taught_classes", foreign_keys=[tutor_id])
-    main_paticipants_priority_1 = db.relationship("User", back_populates="main_class_priority_1", foreign_keys="User.main_class_id_priority_1")
-    main_paticipants_priority_2 = db.relationship("User", back_populates="main_class_priority_2", foreign_keys="User.main_class_id_priority_2")
+    primary_participants = db.relationship("User", back_populates="primary_class", foreign_keys="User.primary_class_id")
     secondary_participants = db.relationship("User", back_populates="secondary_class", foreign_keys="User.secondary_class_id")
 
     def __repr__(self):
@@ -58,11 +57,9 @@ class Trida(Common_methods_db_model):
             "is_solo": "sólová" if self.is_solo else "hromadná",
             "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
             "age_group": age_group,
-            "main_participants_priority_1": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_1, key=lambda u: czech_sort.key(u.surname))],
-            "main_participants_priority_2": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.main_paticipants_priority_2, key=lambda u: czech_sort.key(u.surname))],
+            "primary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname))],
             "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname))],
-            "main_participants_priority_1_count": len(self.main_paticipants_priority_1),
-            "main_participants_priority_2_count": len(self.main_paticipants_priority_2),
+            "primary_participants_count": len(self.primary_participants),
             "secondary_participants_count": len(self.secondary_participants),
         }
     
@@ -110,11 +107,11 @@ class Trida(Common_methods_db_model):
         
     def class_capacity_data(self) -> dict:
         state_main = "available" #available, enrolled, full
-        if current_user in self.main_paticipants_priority_1:
+        if current_user in self.primary_participants:
             state_main = "enrolled"
         elif not self.is_solo:
             state_main = "available"
-        elif len(self.main_paticipants_priority_1) >= self.capacity:
+        elif len(self.primary_participants) >= self.capacity:
             state_main = "full"
             
         state_secondary = "available" #available, enrolled, full
@@ -129,7 +126,7 @@ class Trida(Common_methods_db_model):
             "id": self.id,
             "name": self.full_name_cz if self.full_name_cz else "Chybí český plný název třídy",
             "capacity": self.capacity,
-            "places_taken": len(self.main_paticipants_priority_1),
+            "places_taken": len(self.primary_participants),
             "is_solo": self.is_solo,
             "state_main": state_main,
             "state_secondary": state_secondary,

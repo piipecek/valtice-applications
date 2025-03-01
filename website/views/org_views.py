@@ -169,7 +169,7 @@ def uprava_ucastnika(id:int):
                 else:
                     flash("Rodič s tímto emailem neexistuje", category="error")
             
-            u.nacist_zmeny_z_requestu(request)
+            u.nacist_zmeny_z_org_requestu(request)
             flash("Změny byly uloženy", category="success")
             return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif request.form.get("zrusit_registraci"):

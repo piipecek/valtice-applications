@@ -19,7 +19,7 @@ if (tridy.length == 0) {
         
         let main_class_table = new TableCreator(main_class_div)
         main_class_table.make_header(["Name", "Email", "Phone"])
-        for (let participant of trida.main_participants) {
+        for (let participant of trida.primary_participants) {
             main_class_table.make_row([participant.full_name, participant.email, participant.phone])
         }
         
