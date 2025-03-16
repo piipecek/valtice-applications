@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from flask import Blueprint, render_template, request, flash, redirect, url_for, send_file
-from flask_login import current_user
+from flask_login import current_user, logout_user
 from website.models.trida import Trida
 from website.models.billing import Billing
 from website.models.user import User
@@ -148,6 +148,12 @@ def detail_ucastnika(id:int):
             return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif request.form.get("edit_button"):
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
+        elif request.form.get("log_in_as"):
+            u = User.get_by_id(id)
+            logout_user()
+            u.login()
+            flash(f"Jste přihlášen jako {u.get_full_name()}. Pro pokračování s původním účtem se odhlašte a znovu přihlašte.", category="success")
+            return redirect(url_for("user_views.account"))
         return request.form.to_dict()
     
     

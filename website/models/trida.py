@@ -29,6 +29,7 @@ class Trida(Common_methods_db_model):
             "short_name": self.short_name_cz,
             "tutor_full_name": self.tutor.get_full_name() if self.tutor else "Zatím bez lektora",
             "tutor_id": self.tutor_id,
+            "pocet_ucastniku": str(len(self.primary_participants) + len(self.secondary_participants)) + "/" + str(self.capacity),
         }
         
     
@@ -126,7 +127,7 @@ class Trida(Common_methods_db_model):
             "id": self.id,
             "name": self.full_name_cz if self.full_name_cz else "Chybí český plný název třídy",
             "capacity": self.capacity,
-            "places_taken": len(self.primary_participants),
+            "places_taken": len(self.primary_participants) + len(self.secondary_participants),
             "is_solo": self.is_solo,
             "state_main": state_main,
             "state_secondary": state_secondary,

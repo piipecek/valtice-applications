@@ -32,10 +32,23 @@ def en_uprava_uctu():
     return json.dumps(current_user.info_pro_en_user_upravu())
 
 
-@user_api.route("/cz_classes_capacity", methods=["GET"])
+@user_api.route("/cz_primary_classes_capacity", methods=["GET"])
 @login_required
-def cz_classes_capacity():
+def cz_primary_classes_capacity():
     return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all()], key=lambda t: czech_sort.key(t["name"])))
+
+@user_api.route("/cz_secondary_classes_capacity", methods=["GET"])
+@login_required
+def cz_secondary_classes_capacity():
+    tridy = Trida.get_all()
+    tridy_na_vyber = []
+    for trida in tridy:
+        if len(trida.primary_participants) >= trida.capacity:
+            continue
+        if current_user in trida.primary_participants:
+            continue
+        tridy_na_vyber.append(trida)
+    return json.dumps(sorted([t.class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
 
 
 @user_api.route("/handle_class_click", methods=["POST"])
@@ -55,7 +68,7 @@ def handle_class_click():
     elif data["state"] == "available":
         if data["main_class"]:
             if current_user in trida.secondary_participants:
-                return json.dumps({"status": "Nelze si zapsat do této třídy, už jste v ní zapsaní jako vedlejší účastník. Nejdříve se ze třídy odhlašte."}), 400
+                return json.dumps({"status": "Nelze se zapsat do této třídy, už jste v ní zapsaní jako vedlejší účastník. Pro změnu hlavní třídy kontaktujte organizátory."}), 400
             if current_user.primary_class is not None:
                 return json.dumps({"status": "Nelze si zapsat do této třídy, už jste zapsaní do jiné hlavní třídy. Nejdříve se odhlašte z této třídy."}), 400
             if trida.is_solo and len(trida.primary_participants) >= trida.capacity:
@@ -67,7 +80,7 @@ def handle_class_click():
             if current_user in trida.primary_participants:
                 return json.dumps({"status": "Nelze si zapst tuto vedlejší třídu, už jste v ní zapsaní jako hlavní účastník. Nejdříve se ze třídy odhlašte."}), 400
             if current_user.secondary_class_id is not None:
-                return json.dumps({"status": "Nelze si zapsat do této třídy, už jste zapsaní do jiné vedlejší třídy. Nejdříve se odhlašte z této třídy."}), 400
+                return json.dumps({"status": "Nelze se zapsat do této třídy, už jste zapsaní do jiné vedlejší třídy. Nejdříve se odhlašte z této třídy."}), 400
             trida.secondary_participants.append(current_user)
             trida.update()
             return json.dumps(trida.class_capacity_data())

@@ -5,7 +5,7 @@ import TableCreator from "../table_creator.js"
 let tridy = JSON.parse(httpGet("/org_api/seznam_trid"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true)
-tc.make_header(["Název", "Lektor"])
+tc.make_header(["Název", "Lektor", "Počet účastníků"])
 
 for (let trida of tridy){
     let a = document.createElement("a")
@@ -24,5 +24,5 @@ for (let trida of tridy){
         links_span.appendChild(lektor_a)
     }
 
-    tc.make_row([a, links_span])
+    tc.make_row([a, links_span, trida["pocet_ucastniku"]])
 }
