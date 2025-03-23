@@ -7,7 +7,11 @@ let vedlejsi_tridy_div = document.getElementById("vedlejsi_tridy")
 
 
 function handle_class_click(class_id, state, is_main) { // state: "enrolled", "available", "full". is_main: true/false
-    let url = "/user_api/handle_class_click"
+    if (state === "full") {
+        alert("Třída je plná")
+        return
+    }
+    let url = "/user_api/handle_cz_class_click"
     let data = {
         "id": class_id,
         "state": state,
@@ -21,7 +25,8 @@ function handle_class_click(class_id, state, is_main) { // state: "enrolled", "a
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 let response = JSON.parse(xhr.responseText)
-                update_div_trid(response)
+                alert(response["status"])
+                update_div_trid(response["data"])
             } else {
                 let text = JSON.parse(xhr.responseText)["status"]
                 alert(text)
@@ -32,7 +37,6 @@ function handle_class_click(class_id, state, is_main) { // state: "enrolled", "a
 
 
 function update_div_trid(trida) {
-    console.log(trida)
     for (let typ of ["main", "secondary"]) {
         let id = typ + "_class_" + trida["id"]
         if (document.getElementById(id)) {
@@ -81,7 +85,7 @@ if (document.getElementById("aktivni_ucast").value === "True") {
         
             trida_div.addEventListener("click", function() {
                 if (trida_div.dataset.state === "full") {
-                    // no nemas klikat na plnou tridu no
+                    handle_class_click(trida["id"], trida_div.dataset.state, true)
                 } else if (trida_div.dataset.state === "enrolled") {
                     if (confirm("Opravdu se chcete z třídy odhlásit?")) {
                         handle_class_click(trida["id"], trida_div.dataset.state, true)
@@ -107,7 +111,7 @@ if (document.getElementById("aktivni_ucast").value === "True") {
             trida_div.dataset.state = trida["state_secondary"]
             trida_div.addEventListener("click", function() {
                 if (trida_div.dataset.state === "full") {
-                    // no nemas klikat na plnou tridu no
+                    handle_class_click(trida["id"], trida_div.dataset.state, false)
                 } else if (trida_div.dataset.state === "enrolled") {
                     if (confirm("Opravdu se chcete z třídy odhlásit?")) {
                         handle_class_click(trida["id"], trida_div.dataset.state, false)

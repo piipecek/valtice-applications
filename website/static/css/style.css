@@ -246,6 +246,26 @@ hr {
     width: 2rem;
 }
 
+.attention-message{
+    background-color: rgb(180, 130, 148);
+    color: rgb(255,245,235);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.tutor-participant-div {
+    border: 2px solid rgb(103, 125, 171);
+    border-radius: 0.3rem;
+    padding: 0.5rem;
+    background-color: white;
+    margin-top: 0.5rem;
+}
+.tutor-name-label {
+    font-weight: bold;
+}
+
 
 @media (max-width: 1400px) {
     .main_section {

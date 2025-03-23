@@ -46,5 +46,4 @@ def mail_sender(mail_identifier, target, data=None) -> None:
     except gaierror:
         flash(f"Gaierror, pravděpodobně nejsi online. E-mail se neposlal. Mail identifier: {mail_identifier}, target: {target}", category="info")
     except SMTPRecipientsRefused:
-        #TODO udelat error log asi
         flash(f"SMTPRecipientsRefused, e-mail se nepodařilo odeslat. Kontaktujte organizátory.", category="info")

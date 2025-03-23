@@ -70,7 +70,7 @@ for (let key in data) {
         } else {
             document.getElementById(key).innerText = "-"
         }
-    } else if(["hlavni_trida_1", "hlavni_trida_2", "vedlejsi_trida"].includes(key)){
+    } else if(["hlavni_trida", "vedlejsi_trida"].includes(key)){
         if (data[key]["link"]) {
             let a = document.createElement("a")
             a.href = data[key]["link"]

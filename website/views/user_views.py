@@ -75,7 +75,12 @@ def edit_account():
                         flash("Nadřazený účet přidán", "success")
                 else:
                     flash("Uživatel s tímto e-mailem neexistuje", "error")
-            if request.form.get("email") != current_user.email:
+            if request.form.get("email") in ["", None]:
+                if current_user.parent:
+                    pass
+                else:
+                    flash("E-mail je povinný, byl Vám ponechán e-mail beze změny", "info")
+            elif request.form.get("email") != current_user.email:
                 email = request.form.get("email")
                 if User.get_by_email(email):
                     flash("Uživatel s tímto e-mailem již existuje", "error")
@@ -121,7 +126,12 @@ def en_edit_account():
                         flash("Parent account added", "success")
                 else:
                     flash("User with this email doesn't exist", "error")
-            if request.form.get("email") != current_user.email:
+            if request.form.get("email") in ["", None]:
+                if current_user.parent:
+                    pass
+                else:
+                    flash("E-mail is mandatory, your previous e-mail was not changed.", "info")
+            elif request.form.get("email") != current_user.email:
                 email = request.form.get("email")
                 if User.get_by_email(email):
                     flash("User with this email already exists", "error")

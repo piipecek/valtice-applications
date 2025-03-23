@@ -5,7 +5,7 @@ import TableCreator from "../table_creator.js"
 let lektori = JSON.parse(httpGet("/org_api/seznam_lektoru"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true)
-tc.make_header(["Jméno", "Telefon", "Vyučované třídy"])
+tc.make_header(["Jméno", "Telefon", "E-mail", "Vyučované třídy"])
 
 for (let lektor of lektori){
     let a = document.createElement("a")
@@ -26,5 +26,5 @@ for (let lektor of lektori){
         }
         links_span.lastChild.remove()
     }
-    tc.make_row([a, lektor["phone"], links_span])
+    tc.make_row([a, lektor["phone"], lektor["email"], links_span])
 }

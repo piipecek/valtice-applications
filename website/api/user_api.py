@@ -51,7 +51,7 @@ def cz_secondary_classes_capacity():
     return json.dumps(sorted([t.class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
 
 
-@user_api.route("/handle_class_click", methods=["POST"])
+@user_api.route("/handle_cz_class_click", methods=["POST"])
 @login_required
 def handle_class_click():
     data = json.loads(request.data)
@@ -64,7 +64,10 @@ def handle_class_click():
         else:
             current_user.secondary_class_id = None
             current_user.update()
-        return json.dumps(trida.class_capacity_data())
+        return json.dumps({
+            "status": f"Úspěšně jste se odhlásili z třídy {trida.short_name_cz}.",
+            "data": trida.class_capacity_data()
+        })
     elif data["state"] == "available":
         if data["main_class"]:
             if current_user in trida.secondary_participants:
@@ -75,7 +78,10 @@ def handle_class_click():
                 return json.dumps({"status": "Třída je již plná, obnovte tuto stránku zapište se do jiné."}), 400
             trida.primary_participants.append(current_user)
             trida.update()
-            return json.dumps(trida.class_capacity_data())
+            return json.dumps({
+                "status": f"Úspěšně jste byli zapsáni do třídy {trida.short_name_cz}.",
+                "data": trida.class_capacity_data()
+            })
         else:
             if current_user in trida.primary_participants:
                 return json.dumps({"status": "Nelze si zapst tuto vedlejší třídu, už jste v ní zapsaní jako hlavní účastník. Nejdříve se ze třídy odhlašte."}), 400
@@ -83,7 +89,10 @@ def handle_class_click():
                 return json.dumps({"status": "Nelze se zapsat do této třídy, už jste zapsaní do jiné vedlejší třídy. Nejdříve se odhlašte z této třídy."}), 400
             trida.secondary_participants.append(current_user)
             trida.update()
-            return json.dumps(trida.class_capacity_data())
+            return json.dumps({
+                "status": f"Úspěšně jste byli zapsáni do třídy {trida.short_name_cz}.",
+                "data": trida.class_capacity_data()
+            })
     else:
         return json.dumps({"status": "error, nemáš se zapisovat do plný třídy nebo co"}) , 400
     

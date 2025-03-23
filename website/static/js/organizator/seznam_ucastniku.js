@@ -11,10 +11,10 @@ ucastnici.forEach(element => {
     jmeno_a.innerText = element["full_name"]
     jmeno_a.setAttribute("class", "jmeno-a")
     let trida_span = document.createElement("span")
-    if (element["hlavni_trida_1_id"]) {
+    if (element["hlavni_trida_id"]) {
         let trida_a = document.createElement("a")
-        trida_a.href = "/organizator/detail_tridy/" + element["hlavni_trida_1_id"]
-        trida_a.innerText = element["hlavni_trida_1"]
+        trida_a.href = "/organizator/detail_tridy/" + element["hlavni_trida_id"]
+        trida_a.innerText = element["hlavni_trida"]
         trida_a.classList.add("link")
         trida_span.appendChild(trida_a)
     } else {

@@ -134,10 +134,10 @@ class User(Common_methods_db_model, UserMixin):
             "id": self.id,
             "full_name": full_name if full_name else "-",
             "surname": self.surname if self.surname else "-",
-            "email": self.email if self.email else "-",
+            "email": self.email if self.email else self.parent.email,
             "registrovan": "Registrován" if self.datetime_registered else "-",
-            "hlavni_trida_1": self.primary_class.short_name_cz if self.primary_class else "-",
-            "hlavni_trida_1_id": self.primary_class_id
+            "hlavni_trida": self.primary_class.short_name_cz if self.primary_class else "-",
+            "hlavni_trida_id": self.primary_class_id
         }
     
     def info_pro_seznam_lektoru(self) -> dict:
@@ -147,6 +147,7 @@ class User(Common_methods_db_model, UserMixin):
             "full_name": full_name if full_name else "-",
             "surname": self.surname if self.surname else "-",
             "phone": self.phone if self.phone else "-",
+            "email": self.email,
             "taught_classes":[
                 {
                     "id": trida.id,
@@ -452,7 +453,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
             "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
             "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
-            "hlavni_trida_1": {
+            "hlavni_trida": {
                 "name": self.primary_class.full_name_cz if self.primary_class else "-",
                 "link": "/organizator/detail_tridy/" + str(self.primary_class_id) if self.primary_class else None
             },
@@ -876,7 +877,9 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "full_name": self.get_full_name(),
             "email": self.email,
-            "phone": self.phone
+            "phone": self.phone,
+            "education": self.musical_education,
+            "repertoire": self.repertoire,
         }
         
 # TODO procistit importy a dat je nahoru
