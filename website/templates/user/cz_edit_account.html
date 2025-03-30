@@ -38,18 +38,12 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Student</div>
+            <div class="col-2 d-flex align-items-center">Student VŠ</div>
             <div class="col">
                 <select class="form-control" id="is_student" name="is_student">
                     <option value="Ano">Ano</option>
                     <option value="Ne">Ne</option>
                 </select>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">Jste studentem VŠ?</span>
-                </div>
             </div>
         </div>
         <hr>
@@ -80,6 +74,12 @@
             <div class="col" id="zmena_ucasti_zakazana" hidden>
                 Jste aktivním účastníkem. Změnu na pasivní účast můžete provést poté, co se odhlásíte ze všech Vašich tříd.
             </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Pasivní účast TODO popis k čemu je.</span>
+                </div>
+            </div>
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Student ZUŠ Valtice/Mikulov</div>
@@ -107,12 +107,23 @@
             <div class="col">
                 <input type="text" class="form-control" id="repertoire" name="repertoire">
             </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Repertoir můžete zpětně doplnit, až jej budete znát.</span>
+                </div>
+            </div>
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Uživatelská poznámka</div>
             <div class="col">
                 <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-                <small>Do užvatelské poznámky můžete psát například jména preferovaných spolubydlících na internátu VŠ.</small>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Do užvatelské poznámky můžete psát například jména preferovaných spolubydlících na internátu VŠ, nebo libovolnou jinou zprávu.</span>
+                </div>
             </div>
         </div>
         <hr>
@@ -122,13 +133,13 @@
             <div class="col-4">
                 <select class="form-control" id="accomodation_type" name="accomodation_type">
                     <option selected value="-">Zatím nevybráno</option>
-                    <option value="own">Nemá zájem</option>
+                    <option value="own">Zařizuji samostatně</option>
                     <option value="gym">Tělocvična</option>
                     <option value="vs">Internát vinařské školy</option>
                 </select>
             </div>
             <div class="col">
-                <input type="number" step="0.5" class="form-control" id="accomodation_count" name="accomodation_count">
+                <input type="number" step="1" class="form-control" id="accomodation_count" name="accomodation_count">
             </div>
         </div>
         <hr>
@@ -163,7 +174,7 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Email pro odeslání kalkulace</div>
+            <div class="col-2 d-flex align-items-center">Email pro odeslání kalkulace TODO tohle zmizí</div>
             <div class="col">
                 <input type="email" class="form-control" id="billing_email" name="billing_email">
             </div>
@@ -178,8 +189,13 @@
                     <option value="adult">Dospělý</option>
                 </select>
             </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Ovlivňuje také třídy, které jsou na výběr.</span>
+                </div>
+            </div>
         </div>
-        <small>Ovlivňuje také třídy, které jsou na výběr.</small>
         <div class="attention-message">
             <p>
                 Největšími spojenci valtické letní školy jste pro nás Vy – účastníci kurzů. Nabízíme Vám proto možnost přispět na vznik MLŠSH, a to přímo v rámci přihlášky. Vámi zvolenou částku připočteme do kalkulace ceny kurzu. Nemáte-li možnost nás podpořit finančně, držte nám alespoň palce. I to se počítá! 😊
@@ -263,6 +279,12 @@
             <div class="col-2 d-flex align-items-center">Přidat nadřazený účet</div>
             <div class="col">
                 <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Pokud například v jedné rodině spravuje Valtice jedna osoba, může si takto účty pospojovat. Nadřazený účet může spravovat své prpojené účty.</span>
+                </div>
             </div>
         </div>
         <div class="row my-1" id="yes_parent" hidden>

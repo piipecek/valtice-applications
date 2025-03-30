@@ -23,7 +23,12 @@
             <div class="col-2 d-flex align-items-center">Email</div>
             <div class="col">
                 <input type="text" class="form-control" id="email" name="email">
-                <small>We will send you a confirmation message after you change your email.</small>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">We will send you a confirmation message after you change your email.</span>
+                </div>
             </div>
         </div>
         <div class="row my-1">
@@ -33,7 +38,7 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Student</div>
+            <div class="col-2 d-flex align-items-center">University student</div>
             <div class="col">
                 <select class="form-control" id="is_student" name="is_student">
                     <option value="Ano">Yes</option>
@@ -51,6 +56,12 @@
                     <option value="Ne">No</option>
                 </select>
             </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">The Early music society is a non-profit organization that organizes the ISSEM. More information about EMS and membership can be found on the <a class="link" target="_blank" href="http://ssh.early-music.cz">website</a>.</span>
+                </div>
+            </div>
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Participation</div>
@@ -62,6 +73,12 @@
             </div>
             <div class="col" id="zmena_ucasti_zakazana" hidden>
                 You are an active participant. To change that, you have to leave all of your classes first.
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">TODO popis pasivní účasti v EN</span>
+                </div>
             </div>
         </div>
         <div class="row my-1">
@@ -90,12 +107,23 @@
             <div class="col">
                 <input type="text" class="form-control" id="repertoire" name="repertoire">
             </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">You may fill in the repertoire later, when you know it.</span>
+                </div>
+            </div>
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Comment</div>
             <div class="col">
                 <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-                <small>You can include names of preferred roommates in your user notes.</small>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">You can write the names of preferred roommates in the dormitory, or any other message.</span>
+                </div>
             </div>
         </div>
         <hr>
@@ -105,13 +133,13 @@
             <div class="col-4">
                 <select class="form-control" id="accomodation_type" name="accomodation_type">
                     <option selected value="-">Not picked yet</option>
-                    <option value="own">Not interested</option>
+                    <option value="own">Managed by myself</option>
                     <option value="gym">Gym</option>
                     <option value="vs">Viticulture school</option>
                 </select>
             </div>
             <div class="col">
-                <input type="number" step="0.5" class="form-control" id="accomodation_count" name="accomodation_count">
+                <input type="number" step="1" class="form-control" id="accomodation_count" name="accomodation_count">
             </div>
         </div>
         <hr>
@@ -160,6 +188,12 @@
                     <option value="youth">Youth up to 15 years old</option>
                     <option value="adult">Adult</option>
                 </select>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="custom-tooltip custom-tooltip-left">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">The category also affects the classes you can pick from.</span>
+                </div>
             </div>
         </div>
         <small>The category also affects the classes you can pick from.</small>
@@ -246,6 +280,12 @@
             <div class="col-2 d-flex align-items-center">Add a parent account</div>
             <div class="col">
                 <input type="text" class="form-control" name="parent_email" placeholder="parent's email">
+            </div>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <div class="custom-tooltip custom-tooltip-left">
+                <i class="fa-solid fa-circle-info"></i>
+                <span class="custom-tooltiptext">If, for example, one person manages the Valtice in one family, they can connect their accounts like this. The parent account can manage its connected accounts.</span>
             </div>
         </div>
         <div class="row my-1" id="yes_parent" hidden>
