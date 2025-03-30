@@ -132,3 +132,29 @@ class Trida(Common_methods_db_model):
             "state_main": state_main,
             "state_secondary": state_secondary,
         }
+    
+    
+    def en_class_capacity_data(self) -> dict:
+        state_main = "available"
+        if current_user in self.primary_participants:
+            state_main = "enrolled"
+        elif not self.is_solo:
+            state_main = "available"
+        elif len(self.primary_participants) >= self.capacity:
+            state_main = "full"
+        state_secondary = "available"
+        if current_user in self.secondary_participants:
+            state_secondary = "enrolled"
+        elif not self.is_solo:
+            state_secondary = "available"
+        elif len(self.secondary_participants) >= self.capacity:
+            state_secondary = "full"
+        return {
+            "id": self.id,
+            "name": self.full_name_en if self.full_name_en else "The full name of the class is missing",
+            "capacity": self.capacity,
+            "places_taken": len(self.primary_participants) + len(self.secondary_participants),
+            "is_solo": self.is_solo,
+            "state_main": state_main,
+            "state_secondary": state_secondary,
+        }

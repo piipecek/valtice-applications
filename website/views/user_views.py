@@ -155,3 +155,11 @@ def zapis_tridy():
         return render_template("user/cz_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)
     else:
         return request.form.to_dict()
+    
+@user_views.route("/en_zapis_tridy", methods=["GET", "POST"])
+@ensure_email_password("en")
+def en_zapis_tridy():
+    if request.method == "GET":
+        return render_template("user/en_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)
+    else:
+        return request.form.to_dict()

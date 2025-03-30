@@ -38,6 +38,7 @@ def en_uprava_uctu():
 def cz_primary_classes_capacity():
     return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all()], key=lambda t: czech_sort.key(t["name"])))
 
+
 @user_api.route("/cz_secondary_classes_capacity", methods=["GET"])
 @login_required
 def cz_secondary_classes_capacity():
@@ -50,6 +51,26 @@ def cz_secondary_classes_capacity():
             continue
         tridy_na_vyber.append(trida)
     return json.dumps(sorted([t.class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
+
+
+@user_api.route("/en_primary_classes_capacity", methods=["GET"])
+@login_required
+def en_primary_classes_capacity():
+    return json.dumps(sorted([t.en_class_capacity_data() for t in Trida.get_all()], key=lambda t: czech_sort.key(t["name"])))
+
+
+@user_api.route("/en_secondary_classes_capacity", methods=["GET"])
+@login_required
+def en_secondary_classes_capacity():
+    tridy = Trida.get_all()
+    tridy_na_vyber = []
+    for trida in tridy:
+        if len(trida.primary_participants) >= trida.capacity:
+            continue
+        if current_user in trida.primary_participants:
+            continue
+        tridy_na_vyber.append(trida)
+    return json.dumps(sorted([t.en_class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
 
 
 @user_api.route("/handle_cz_class_click", methods=["POST"])
@@ -76,7 +97,7 @@ def handle_class_click():
             if current_user.primary_class is not None:
                 return json.dumps({"status": "Nelze si zapsat do této třídy, už jste zapsaní do jiné hlavní třídy. Nejdříve se odhlašte z této třídy."}), 400
             if trida.is_solo and len(trida.primary_participants) >= trida.capacity:
-                return json.dumps({"status": "Třída je již plná, obnovte tuto stránku zapište se do jiné."}), 400
+                return json.dumps({"status": "Třída je již plná, obnovte tuto stránku a zapište se do jiné."}), 400
             trida.primary_participants.append(current_user)
             trida.update()
             current_user.datetime_class_pick = datetime.now()
@@ -98,6 +119,54 @@ def handle_class_click():
             })
     else:
         return json.dumps({"status": "error, nemáš se zapisovat do plný třídy nebo co"}) , 400
+    
+
+@user_api.route("/handle_en_class_click", methods=["POST"])
+@login_required
+def handle_en_class_click():
+    data = json.loads(request.data)
+    trida = Trida.get_by_id(data["id"])
+    
+    if data["state"] == "enrolled":
+        if data["main_class"]:
+            current_user.primary_class = None
+            current_user.update()
+        else:
+            current_user.secondary_class_id = None
+            current_user.update()
+        return json.dumps({
+            "status": f"You have successfully unenrolled from class {trida.short_name_en}.",
+            "data": trida.en_class_capacity_data()
+        })
+    elif data["state"] == "available":
+        if data["main_class"]:
+            if current_user in trida.secondary_participants:
+                return json.dumps({"status": "You cannot enroll in this class, you are already enrolled as a secondary participant. Please contact the organizers to change your main class."}), 400
+            if current_user.primary_class is not None:
+                return json.dumps({"status": "You cannot enroll in this class, you are already enrolled in another main class. Please unenroll from this class first."}), 400
+            if trida.is_solo and len(trida.primary_participants) >= trida.capacity:
+                return json.dumps({"status": "This class is already full, please refresh this page and enroll in another one."}), 400
+            trida.primary_participants.append(current_user)
+            trida.update()
+            current_user.datetime_class_pick = datetime.now()
+            current_user.update()
+            return json.dumps({
+                "status": f"You have successfully enrolled in class {trida.short_name_en}.",
+                "data": trida.en_class_capacity_data()
+            })
+        else:
+            if current_user in trida.primary_participants:
+                return json.dumps({"status": "You cannot enroll in this secondary class, you are already enrolled as a main participant. Please unenroll from this class first."}), 400
+            if current_user.secondary_class_id is not None:
+                return json.dumps({"status": "You cannot enroll in this class, you are already enrolled in another secondary class. Please unenroll from this class first."}), 400
+            trida.secondary_participants.append(current_user)
+            trida.update()
+            return json.dumps({
+                "status": f"You have successfully enrolled in class {trida.short_name_en}.",
+                "data": trida.en_class_capacity_data()
+            })
+    else:
+        return json.dumps({"status": "error, you should not be enrolling in a full class or something"}) , 400
     
 
 @user_api.route("/jidla_pro_upravu_ucastnika")

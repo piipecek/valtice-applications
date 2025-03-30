@@ -30,6 +30,7 @@
 
 {% block right_nav %}
     {% if "prihlasen" in roles %}
+        <a href="{{url_for('user_views.en_zapis_tridy')}}" class="navbar_link">Class enrollment</a>
         <a href="{{url_for('user_views.en_account')}}" class="navbar_link">Account</a>
         <a href="{{url_for('auth_views.en_logout')}}" class="navbar_link">Log out</a>
     {% else %}
@@ -41,6 +42,6 @@
 
 {% block footer %}
     Found a bug? <a class="link" target="_blank" href="https://t.me/piipecek">Contact the author</a><br>
-    <a class="link" href="{{url_for('guest_views.en_info')}}">About cookies and data protection</a><br>
+    <a class="link" href="{{url_for('guest_views.en_info')}}">General information, cookies and data protection</a><br>
     <a class="link" href="{{url_for('guest_views.en_dashboard')}}">Home</a>
 {% endblock %}

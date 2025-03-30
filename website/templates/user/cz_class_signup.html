@@ -46,8 +46,6 @@
             <div id="vedlejsi_tridy"></div>
 
         {% else %}
-            <h1>Zápis do tříd nanečisto</h1>
-            <hr>
             <div class="class_signup_text">
                 <ul>
                     <li>Zápis do tříd v tuto chvíli <strong>není otevřený</strong>, aktuální informace naleznete vždy na <a href="{{url_for('guest_views.cz_dashboard')}}" class="link">domovské stránce</a>.</li>
@@ -74,9 +72,6 @@
                     <li>O fungování tříd se dočtete TODO v <a class="link" href="{{url_for('guest_views.cz_info')}}">informacích</a>.</li>
                 </ul>
             </div>
-            <p>
-                TODO Tady může bejt klikačka nanečisto
-            </p>
         {% endif %}
     {% else %}
         <h1>Zápis do třídy</h1>

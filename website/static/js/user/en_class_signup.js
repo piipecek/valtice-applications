@@ -1,17 +1,17 @@
 import httpGet from "../http_get.js"
 
-let primary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/cz_primary_classes_capacity"))
-let secondary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/cz_secondary_classes_capacity"))
+let primary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/en_primary_classes_capacity"))
+let secondary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/en_secondary_classes_capacity"))
 let hlavni_tridy_div = document.getElementById("hlavni_tridy")
 let vedlejsi_tridy_div = document.getElementById("vedlejsi_tridy")
 
 
 function handle_class_click(class_id, state, is_main) { // state: "enrolled", "available", "full". is_main: true/false
     if (state === "full") {
-        alert("Třída je plná")
+        alert("This class is full.")
         return
     }
-    let url = "/user_api/handle_cz_class_click"
+    let url = "/user_api/handle_en_class_click"
     let data = {
         "id": class_id,
         "state": state,
@@ -87,7 +87,7 @@ if (document.getElementById("aktivni_ucast").value === "True") {
                 if (trida_div.dataset.state === "full") {
                     handle_class_click(trida["id"], trida_div.dataset.state, true)
                 } else if (trida_div.dataset.state === "enrolled") {
-                    if (confirm("Opravdu se chcete z třídy odhlásit?")) {
+                    if (confirm("Do you really wish to unsubscribe from the class?")) {
                         handle_class_click(trida["id"], trida_div.dataset.state, true)
                     }
                 } else {
@@ -102,7 +102,7 @@ if (document.getElementById("aktivni_ucast").value === "True") {
     } else if (vedlejsi_tridy_div) {
         // vedlejší třídy
         if (secondary_tridy_a_kapacity.length === 0) {
-            vedlejsi_tridy_div.innerText = "Nejsou tu žádné dostupné vedlejší třídy."
+            vedlejsi_tridy_div.innerText = "There are no secondary classes available."
         } else {
             for (let trida of secondary_tridy_a_kapacity) {
                 let trida_div = document.createElement("div")
@@ -116,7 +116,7 @@ if (document.getElementById("aktivni_ucast").value === "True") {
                     if (trida_div.dataset.state === "full") {
                         handle_class_click(trida["id"], trida_div.dataset.state, false)
                     } else if (trida_div.dataset.state === "enrolled") {
-                        if (confirm("Opravdu se chcete z třídy odhlásit?")) {
+                        if (confirm("Do you really wish to unsubscribe from the class?")) {
                             handle_class_click(trida["id"], trida_div.dataset.state, false)
                         }
                     } else {
@@ -129,6 +129,5 @@ if (document.getElementById("aktivni_ucast").value === "True") {
             }
         }
     }
-
 }    
 
