@@ -10,6 +10,8 @@ document.getElementById("applications_end_date").value = settings["applications_
 document.getElementById("applications_end_time").value = settings["applications_end_time"]
 document.getElementById("text_cz").value = settings["cz_frontpage_text"]
 document.getElementById("text_en").value = settings["en_frontpage_text"]
+document.getElementById("vs_capacity").value = settings["vs_capacity"]
+document.getElementById("gym_capacity").value = settings["gym_capacity"]
 
 if (settings["users_locked"]) {
     document.getElementById("lock_state").innerText = "Všichni uživatelé mají zamknuté změny na účtech."

@@ -57,6 +57,14 @@ for (let key in data) {
         for (let jidlo of data[key]) {
             add_meal_row(jidlo["meal_id"], jidlo["count"])
         }
+    } else if (key == "accomodation_type") {
+        console.log(data[key])
+        
+        if (data[key]) {
+            document.getElementById("accomodation_type").value = data[key]
+        } else {
+            // bude tam default select
+        }
     } else {
         document.getElementById(key).value = data[key]
     }

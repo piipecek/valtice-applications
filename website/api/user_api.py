@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from website.models.trida import Trida
 from website.models.meal import Meal
 import czech_sort
+from datetime import datetime
 
 user_api = Blueprint("user_api", __name__)
 
@@ -78,6 +79,8 @@ def handle_class_click():
                 return json.dumps({"status": "Třída je již plná, obnovte tuto stránku zapište se do jiné."}), 400
             trida.primary_participants.append(current_user)
             trida.update()
+            current_user.datetime_class_pick = datetime.now()
+            current_user.update()
             return json.dumps({
                 "status": f"Úspěšně jste byli zapsáni do třídy {trida.short_name_cz}.",
                 "data": trida.class_capacity_data()

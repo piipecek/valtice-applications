@@ -81,3 +81,9 @@ def toggle_user_lock_state() -> bool:
     settings['users_locked'] = not settings['users_locked']
     save_settings(settings)
     return settings['users_locked']
+
+def set_both_capacities(vs, gym):
+    settings = get_settings()
+    settings['vs_capacity'] = vs
+    settings['gym_capacity'] = gym
+    save_settings(settings)

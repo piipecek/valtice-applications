@@ -8,9 +8,10 @@ from website.models.meal_order import Meal_order
 from website.models.meal import Meal
 from website.helpers.pretty_date import pretty_datetime
 from website.helpers.pretty_penize import pretty_penize
+from website.helpers.settings_manager import get_settings
 from datetime import datetime, timedelta, timezone
 from flask import current_app, flash
-from flask_login import UserMixin, login_user
+from flask_login import UserMixin, login_user, current_user
 import jwt
 from werkzeug.security import generate_password_hash
 import sqlalchemy
@@ -360,6 +361,8 @@ class User(Common_methods_db_model, UserMixin):
         # ubytovani
         if self.accomodation_type == "own":
             ubytovani = "vlastní"
+        elif self.accomodation_type is None:
+            ubytovani = "Zatím nevybráno"
         elif self.accomodation_type == "vs":
             ubytovani = f"vinařská škola: {self.accomodation_count}"
         else:
@@ -547,7 +550,7 @@ class User(Common_methods_db_model, UserMixin):
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
-        self.accomodation_type = request.form.get("accomodation_type")
+        self.accomodation_type = request.form.get("accomodation_type") if request.form.get("accomodation_type") != "-" else None
         self.accomodation_count = int(request.form.get("accomodation_count")) if request.form.get("accomodation_count") else 0
         self.musical_education = request.form.get("musical_education")
         self.musical_instrument = request.form.get("musical_instrument")
@@ -599,7 +602,47 @@ class User(Common_methods_db_model, UserMixin):
         billing_email = self.billing_email if self.billing_email else "bude použit hlavní e-mail"
         if self.parent:
             billing_email = "bude použit e-mail nadřazeného účtu"
-            
+        
+        #ubytovani
+        settings = get_settings()
+        if not self.accomodation_type:
+            accomodation_message = "Ubytování zatím není vybráno."
+        elif self.accomodation_type == "own":
+            accomodation_message = "Ubytování máte vlastní."
+        else:
+            if self.primary_class is None:
+                if self.accomodation_type == "gym":
+                    
+                    accomodation_message = f"Máte zájem o ubytování v tělocvičně, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
+                elif self.accomodation_type == "vs":
+                    accomodation_message = f"Máte zájem o ubytování na vinařské škole, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
+            else:
+                users = sorted(filter(lambda x: x.primary_class_id, User.get_all()), key=lambda x: x.datetime_class_pick)
+                mist_vycerpano_gym = 0
+                mist_vycerpano_vs = 0
+                for user in users:
+                    user: User
+                    if user == current_user:
+                        break
+                    if user.accomodation_type == "gym" and user.primary_class:
+                        mist_vycerpano_gym += user.accomodation_count
+                    elif user.accomodation_type == "vs" and user.primary_class:
+                        mist_vycerpano_vs += user.accomodation_count
+                if self.accomodation_type == "gym":
+                    poradi_list = []
+                    for i in range(user.accomodation_count):
+                        poradi_list.append(f"{mist_vycerpano_gym+i+1}/{settings['gym_capacity']}")
+                    poradi_display = ", ".join(poradi_list)
+                    accomodation_message = f"Máte zájem o ubytování v tělocvičně. Pořadí Vašich míst ve frontě je: {poradi_display}."
+                if self.accomodation_type == "vs":
+                    poradi_list = []
+                    for i in range(user.accomodation_count):
+                        poradi_list.append(f"{mist_vycerpano_vs+i+1}/{settings['vs_capacity']}")
+                    poradi_display = ", ".join(poradi_list)
+                    accomodation_message = f"Máte zájem o ubytování na vinařské škole. Pořadí Vašich míst ve frontě je: {poradi_display}."
+
+
+
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
@@ -610,7 +653,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
-            "accomodation_type": self.accomodation_type,
+            "accomodation_message": accomodation_message,
             "musical_education": self.musical_education if self.musical_education else "-",
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
@@ -675,6 +718,46 @@ class User(Common_methods_db_model, UserMixin):
         if self.parent:
             billing_email = "e-mail of parent account will be used"
             
+        
+         #ubytovani
+        settings = get_settings()
+        if not self.accomodation_type:
+            accomodation_message = "The accomodation is not picked yet."
+        elif self.accomodation_type == "own":
+            accomodation_message = "You take care of accomodation yourself."
+        else:
+            if self.primary_class is None:
+                if self.accomodation_type == "gym":
+                    
+                    accomodation_message = f"You are interested in accomodation in the gym, for {self.accomodation_count} people. You will be placed into the queue after you pick a class."
+                elif self.accomodation_type == "vs":
+                    accomodation_message = f"You are interested in accomodation in the viticulture school, for {self.accomodation_count} people. You will be placed into the queue after you pick a class."
+            else:
+                users = sorted(filter(lambda x: x.primary_class_id, User.get_all()), key=lambda x: x.datetime_class_pick)
+                mist_vycerpano_gym = 0
+                mist_vycerpano_vs = 0
+                for user in users:
+                    user: User
+                    if user == current_user:
+                        break
+                    if user.accomodation_type == "gym" and user.primary_class:
+                        mist_vycerpano_gym += user.accomodation_count
+                    elif user.accomodation_type == "vs" and user.primary_class:
+                        mist_vycerpano_vs += user.accomodation_count
+                if self.accomodation_type == "gym":
+                    poradi_list = []
+                    for i in range(user.accomodation_count):
+                        poradi_list.append(f"{mist_vycerpano_gym+i+1}/{settings['gym_capacity']}")
+                    poradi_display = ", ".join(poradi_list)
+                    accomodation_message = f"You are interested in accomodation in the gym. Your place in the queue is: {poradi_display}."
+                if self.accomodation_type == "vs":
+                    poradi_list = []
+                    for i in range(user.accomodation_count):
+                        poradi_list.append(f"{mist_vycerpano_vs+i+1}/{settings['vs_capacity']}")
+                    poradi_display = ", ".join(poradi_list)
+                    accomodation_message = f"You are interested in accomodation in the viticulture school. Your place in the queue is: {poradi_display}."
+
+            
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
@@ -685,7 +768,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
-            "accomodation_type": self.accomodation_type,
+            "accomodation_message": accomodation_message,
             "musical_education": self.musical_education if self.musical_education else "-",
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
@@ -753,6 +836,8 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "accomodation_type": self.accomodation_type,
+            "accomodation_count": self.accomodation_count,
             "musical_education": self.musical_education,
             "musical_instrument": self.musical_instrument,
             "repertoire": self.repertoire,
@@ -801,6 +886,8 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "accomodation_type": self.accomodation_type,
+            "accomodation_count": self.accomodation_count,
             "musical_education": self.musical_education,
             "musical_instrument": self.musical_instrument,
             "repertoire": self.repertoire,
@@ -843,6 +930,8 @@ class User(Common_methods_db_model, UserMixin):
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
+        self.accomodation_type = request.form.get("accomodation_type") if request.form.get("accomodation_type") != "-" else None
+        self.accomodation_count = int(request.form.get("accomodation_count")) if request.form.get("accomodation_count") else 0
         self.musical_education = request.form.get("musical_education")
         self.musical_instrument = request.form.get("musical_instrument")
         self.repertoire = request.form.get("repertoire")

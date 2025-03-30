@@ -202,6 +202,29 @@
 </form>
 <hr>
 
+<h2>Nastavení kapacity ubytování</h2>
+<form method="post">
+    <button class="custom_button" name="capacity" value="whatever" type="submit">Uložit kapacity</button>
+    <div class="row my-1">
+        <div class="col-sm-4">
+            Kapacita internátu:
+        </div>
+        <div class="col">
+            <input class="form-control" type="number" name="vs_capacity" id="vs_capacity" min="0">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm-4">
+            Kapacita tělocvičny:
+        </div>
+        <div class="col">
+            <input class="form-control" type="number" name="gym_capacity" id="gym_capacity" min="0">
+        </div>
+    </div>
+</form>
+
+<hr>
+
 <h2>Nahrání nového loga ročníku</h2>
 <form method="post" enctype="multipart/form-data">
     <div class="row">
