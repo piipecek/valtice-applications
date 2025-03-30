@@ -77,9 +77,9 @@ def register():
                 return redirect(url_for("auth_views.register"))
             else:
                 u = User(email=email, password=generate_password_hash(password, method="scrypt"))
-                mail_sender(mail_identifier="confirm_email", target=email, data=u.get_reset_token())
                 u.update()
                 u.login()
+                mail_sender(mail_identifier="confirm_email", target=email, data=u.get_reset_token())
                 return redirect(url_for("auth_views.confirm_mail"))
         else:
             email = request.form.get("email_child")
@@ -133,9 +133,9 @@ def en_register():
                 return redirect(url_for("auth_views.en_register"))
             else:
                 u = User(email=email, password=generate_password_hash(password, method="scrypt"))
-                mail_sender(mail_identifier="en_confirm_email", target=email, data=u.get_reset_token())
                 u.update()
                 u.login()
+                mail_sender(mail_identifier="en_confirm_email", target=email, data=u.get_reset_token())
                 return redirect(url_for("auth_views.en_confirm_mail"))
         else:
             email = request.form.get("email_child")

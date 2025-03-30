@@ -1,0 +1,36 @@
+/* převzato z 3D Portálu */
+
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltiptext {
+    visibility: hidden;
+    background-color: rgb(180, 130, 148);
+    color: #fff;
+    text-align: center;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    z-index: 1;
+    position: absolute;
+    width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: 0.1s ease;
+}
+
+/* Tooltip on hover */
+.custom-tooltip:hover .custom-tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    transition: 0.1s ease 0.1s;
+}
+
+/* Tooltip at the left */
+.custom-tooltip-left .custom-tooltiptext {
+    bottom: 0;
+    transform: translateX(-110%) translateY(-50%);
+    /* transform: translateX(-110%); */
+}

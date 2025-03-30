@@ -58,7 +58,6 @@ for (let key in data) {
             add_meal_row(jidlo["meal_id"], jidlo["count"])
         }
     } else if (key == "accomodation_type") {
-        console.log(data[key])
         
         if (data[key]) {
             document.getElementById("accomodation_type").value = data[key]

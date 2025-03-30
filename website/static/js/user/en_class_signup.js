@@ -109,7 +109,6 @@ if (document.getElementById("aktivni_ucast").value === "True") {
                 vedlejsi_tridy_div.appendChild(trida_div)
                 trida_div.id = "secondary_class_" + trida["id"]
                 trida_div.classList.add("trida_div")
-                console.log(trida_div.id)
             
                 trida_div.dataset.state = trida["state_secondary"]
                 trida_div.addEventListener("click", function() {

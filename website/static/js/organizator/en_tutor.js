@@ -3,7 +3,6 @@ import TableCreator from "../table_creator.js"
 
 
 let tridy = JSON.parse(httpGet("/org_api/en_my_participants"))
-console.log(tridy)
 
 let parent_div = document.getElementById("parent_div")
 
@@ -71,5 +70,3 @@ if (tridy.length == 0) {
 
     }
 }
-
-console.log(tridy)
