@@ -2,8 +2,11 @@ import httpGet from "../http_get.js"
 
 let primary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/en_primary_classes_capacity"))
 let secondary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/en_secondary_classes_capacity"))
+let time_exclusive_classes_a_kapacity = JSON.parse(httpGet("/user_api/en_time_exclusive_classes_capacity"))
 let hlavni_tridy_div = document.getElementById("hlavni_tridy")
 let vedlejsi_tridy_div = document.getElementById("vedlejsi_tridy")
+let time_exclusive_classes_div = document.getElementById("time_exclusive_classes_div")
+let time_exclusive_classes = document.getElementById("time_exclusive_classes")
 
 
 function handle_class_click(class_id, state, is_main) { // state: "enrolled", "available", "full". is_main: true/false
@@ -37,7 +40,7 @@ function handle_class_click(class_id, state, is_main) { // state: "enrolled", "a
 
 
 function update_div_trid(trida) {
-    for (let typ of ["main", "secondary"]) {
+    for (let typ of ["main", "secondary", "time_exclusive"]) {
         let id = typ + "_class_" + trida["id"]
         if (document.getElementById(id)) {
 
@@ -126,6 +129,33 @@ if (document.getElementById("aktivni_ucast").value === "True") {
             for (let trida of secondary_tridy_a_kapacity) {
                 update_div_trid(trida)
             }
+        }
+    }
+    
+    if (time_exclusive_classes_a_kapacity.length > 0) {
+        time_exclusive_classes_div.hidden = false
+        for (let trida of time_exclusive_classes_a_kapacity) {
+            let trida_div = document.createElement("div")
+            time_exclusive_classes.appendChild(trida_div)
+            trida_div.id = "time_exclusive_class_" + trida["id"]
+            trida_div.classList.add("trida_div")
+        
+            trida_div.dataset.state = trida["state_time_exclusive"]
+        
+            trida_div.addEventListener("click", function() {
+                if (trida_div.dataset.state === "full") {
+                    handle_class_click(trida["id"], trida_div.dataset.state, false)
+                } else if (trida_div.dataset.state === "enrolled") {
+                    if (confirm("Do you really wish to unsubscribe from the class?")) {
+                        handle_class_click(trida["id"], trida_div.dataset.state, false)
+                    }
+                } else {
+                    handle_class_click(trida["id"], trida_div.dataset.state, false)
+                }
+            })
+        }
+        for (let trida of time_exclusive_classes_a_kapacity) {
+            update_div_trid(trida)
         }
     }
 }    

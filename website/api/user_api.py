@@ -36,7 +36,16 @@ def en_uprava_uctu():
 @user_api.route("/cz_primary_classes_capacity", methods=["GET"])
 @login_required
 def cz_primary_classes_capacity():
-    return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all() if t.age_group != "child"], key=lambda t: czech_sort.key(t["name"])))
+    tridy = Trida.get_all()
+    tridy_na_vyber = []
+    for trida in tridy:
+        if (current_user.is_under_16 and trida.age_group == "adult") or (not current_user.is_under_16 and trida.age_group == "child"):
+            continue
+        if trida.is_time_exclusive:
+            continue
+        tridy_na_vyber.append(trida)
+    return json.dumps(sorted([t.class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
+
 
 
 @user_api.route("/cz_secondary_classes_capacity", methods=["GET"])
@@ -49,6 +58,24 @@ def cz_secondary_classes_capacity():
             continue
         if current_user in trida.primary_participants:
             continue
+        if (current_user.is_under_16 and trida.age_group == "adult") or (not current_user.is_under_16 and trida.age_group == "child"):
+            continue
+        if trida.is_time_exclusive:
+            continue
+        tridy_na_vyber.append(trida)
+    return json.dumps(sorted([t.class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
+
+
+@user_api.route("/cz_time_exclusive_classes_capacity", methods=["GET"])
+@login_required
+def cz_time_exclusive_classes_capacity():
+    tridy = Trida.get_all()
+    tridy_na_vyber = []
+    for trida in tridy:
+        if not trida.is_time_exclusive:
+            continue
+        if (current_user.is_under_16 and trida.age_group == "adult") or (not current_user.is_under_16 and trida.age_group == "child"):
+            continue
         tridy_na_vyber.append(trida)
     return json.dumps(sorted([t.class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
 
@@ -56,7 +83,15 @@ def cz_secondary_classes_capacity():
 @user_api.route("/en_primary_classes_capacity", methods=["GET"])
 @login_required
 def en_primary_classes_capacity():
-    return json.dumps(sorted([t.en_class_capacity_data() for t in Trida.get_all()], key=lambda t: czech_sort.key(t["name"])))
+    tridy = Trida.get_all()
+    tridy_na_vyber = []
+    for trida in tridy:
+        if (current_user.is_under_16 and trida.age_group == "adult") or (not current_user.is_under_16 and trida.age_group == "child"):
+            continue
+        if trida.is_time_exclusive:
+            continue
+        tridy_na_vyber.append(trida)
+    return json.dumps(sorted([t.en_class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
 
 
 @user_api.route("/en_secondary_classes_capacity", methods=["GET"])
@@ -68,6 +103,24 @@ def en_secondary_classes_capacity():
         if len(trida.primary_participants) >= trida.capacity:
             continue
         if current_user in trida.primary_participants:
+            continue
+        if (current_user.is_under_16 and trida.age_group == "adult") or (not current_user.is_under_16 and trida.age_group == "child"):
+            continue
+        if trida.is_time_exclusive:
+            continue
+        tridy_na_vyber.append(trida)
+    return json.dumps(sorted([t.en_class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))
+
+
+@user_api.route("/en_time_exclusive_classes_capacity", methods=["GET"])
+@login_required
+def en_time_exclusive_classes_capacity():
+    tridy = Trida.get_all()
+    tridy_na_vyber = []
+    for trida in tridy:
+        if not trida.is_time_exclusive:
+            continue
+        if (current_user.is_under_16 and trida.age_group == "adult") or (not current_user.is_under_16 and trida.age_group == "child"):
             continue
         tridy_na_vyber.append(trida)
     return json.dumps(sorted([t.en_class_capacity_data() for t in tridy_na_vyber], key=lambda t: czech_sort.key(t["name"])))

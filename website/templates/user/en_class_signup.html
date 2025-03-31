@@ -2,82 +2,68 @@
 
 {% block content %}
 <input type="hidden" id="aktivni_ucast" value="{{aktivni_ucast}}">
-    {% if aktivni_ucast %}
+    {% if not aktivni_ucast %}
+        <h1>Class enrollment</h1>
+        <hr>
+        <p>
+            As a passive participant, you do not have to enroll in any class. If your intention is to participate actively, please change this on your account.
+        </p>
+    {% else %}
         {% if class_signup_state == "primary" %}
             <h1>Class enrollment</h1>
             <hr>
             <h2>Main class</h2>
             <div id="hlavni_tridy"></div>
             <hr>
-            TODO tady možná bude třeba třída zpěvu při bohoslužbě?
-            
-            <hr>
-            <div class="class_signup_text">
-                <ul>
-                    <li>Class enrollment is now open.</li>
-                    <li>You can see the explanation of class colors below:</li>
-                </ul>
-                <div class="d-flex justify-content-center">
-                    <div>
-                        <div class="trida_div">
-                            <i class="fa-solid fa-caret-right trida_available_icon"></i> Class with free capacity (6/8)
-                        </div>
-                        <div class="trida_div">
-                            <i class="fa-solid fa-circle-minus trida_full_icon"></i> Full class (8/8)
-                        </div>
-                        <div class="trida_div">
-                            <i class="fa-regular fa-square-check trida_enrolled_icon"></i> The class you are successfully enroleld in (5/8)
-                        </div>
-                    </div>
-                </div>
-                <ul>
-                    <li>If there is no mention of maximum capacity, it means that the class is a mass class.</li>
-                    <li>Clicking on a class with free capacity will enroll you in it.</li>
-                    <li>Clicking on your enrolled class will unsubscribe you from it after confirmation.</li>
-                    <li>You can learn more about how classes work TODO on the <a class="link" href="{{url_for('guest_views.en_info')}}">general information page</a>.</li>                </ul>
-            </div>
         {% elif class_signup_state == "secondary" %}
             <h1>Secondary class enrollment</h1>
             <p>
-                The enrollment period for main classes is now over.
+                The enrollment period for main classes is now over. Make sure that the classes you choose fit your schedule.
             </p>
-            <hr>
             <div id="vedlejsi_tridy"></div>
-
-        {% else %}
-            <div class="class_signup_text">
-                <ul>
-                    <li>Class enrollment is currently <strong>not open</strong>, you can find the latest information on the <a href="{{url_for('guest_views.en_dashboard')}}" class="link">home page</a>.</li>
-                    <li>Enrollment will take place on this page.</li>
-                    <li>Below you can see an example of what enrollment might look like. Classes are colored according to occupancy as follows:</li>
-                </ul>
-                <div class="d-flex justify-content-center">
-                    <div>
-                        <div class="trida_div">
-                            <i class="fa-solid fa-caret-right trida_available_icon"></i> Class with free capacity (6/8)
-                        </div>
-                        <div class="trida_div">
-                            <i class="fa-solid fa-circle-minus trida_full_icon"></i> Full class (8/8)
-                        </div>
-                        <div class="trida_div">
-                            <i class="fa-regular fa-square-check trida_enrolled_icon"></i> The class you are successfully enroleld in (5/8)
-                        </div>
-                    </div>
-                </div>
-                <ul>
-                    <li>If there is no mention of maximum capacity, it means that the class can take any number of people.</li>
-                    <li>Clicking on a class with free capacity will enroll you in it.</li>
-                    <li>Clicking on your enrolled class will unsubscribe you from it after confirmation.</li>
-                    <li>You can learn more about how classes work TODO on the <a class="link" href="{{url_for('guest_views.en_info')}}">general information page</a>.</li>
-                </ul>
+        {% endif %}
+        {% if class_signup_state in ["primary", "secondary"] %}
+            <div id="time_exclusive_classes_div" hidden> 
+                <hr>
+                <h2>Time-exclusive classes</h2>
+                <p>
+                    These classes take place at a time that does not overlap with any other class.
+                </p>
+                <div id="time_exclusive_classes"></div>
             </div>
         {% endif %}
-    {% else %}
-        <h1>Class enrollment</h1>
         <hr>
-        <p>
-            As a passive participant, you do not have to enroll in any class. If your intention is to participate actively, please change this on your account.
-        </p>
+        <div class="class_signup_text">
+            <ul>
+                {% if class_signup_state in ["primary", "secondary"] %}
+                    <li>The class enrollment period is currently <strong>open</strong>.</li>
+                {% else %}
+                    <li>the class enrollment period is currently <strong>not open</strong>, you can find the latest information on the <a href="{{url_for('guest_views.en_dashboard')}}" class="link">home page</a>.</li>
+                    <li>Enrollment will take place on this page.</li>
+                {% endif %}
+                
+                <li>Below you can see an example of what enrollment might look like. Classes are colored according to occupancy as follows:</li>
+            </ul>
+            <div class="d-flex justify-content-center">
+                <div>
+                    <div class="trida_div">
+                        <i class="fa-solid fa-caret-right trida_available_icon"></i> Class with free capacity (6/8)
+                    </div>
+                    <div class="trida_div">
+                        <i class="fa-solid fa-circle-minus trida_full_icon"></i> Full class (8/8)
+                    </div>
+                    <div class="trida_div">
+                        <i class="fa-regular fa-square-check trida_enrolled_icon"></i> The class you are successfully enrolled in (37)
+                    </div>
+                </div>
+            </div>
+            <ul>
+                <li>If there is no mention of maximum capacity, it means that the class can take any number of people.</li>
+                <li>Clicking on a class with free capacity will enroll you in it.</li>
+                <li>Clicking on your enrolled class will unsubscribe you from it after confirmation.</li>
+                <li>You can learn more about how classes work TODO on the <a class="link" href="{{url_for('guest_views.en_info')}}">general information page</a>.</li>
+            </ul>
+        </div>
     {% endif %}
 
 

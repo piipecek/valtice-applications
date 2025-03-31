@@ -370,7 +370,7 @@ class User(Common_methods_db_model, UserMixin):
         for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"]):
             zaznam = trida.full_name_cz + ": " + pretty_penize(calc, self.billing_currency)
             billing_vedlejsi_tridy_list.append(zaznam)
-        billing_vedlejsi_tridy = "<br>".join(billing_vedlejsi_tridy_list)
+        billing_vedlejsi_tridy = "\n".join(billing_vedlejsi_tridy_list)
         
         return {
             "name": self.name if self.name else "-",
@@ -647,12 +647,12 @@ class User(Common_methods_db_model, UserMixin):
                 } for meal_order in sorted(self.meal_orders)
             ],
             "primary_class": self.primary_class.full_name_cz if self.primary_class else "-",
-            "secondary_classes": "<br>".join([trida.full_name_cz] for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))) if self.secondary_classes else "-",
+            "secondary_classes": "\n".join([trida.full_name_cz for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))]) if self.secondary_classes else "-",
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_tridy": "<br>".join([trida.full_name_cz + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
+            "billing_vedlejsi_tridy": "\n".join([trida.full_name_cz + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
@@ -751,12 +751,12 @@ class User(Common_methods_db_model, UserMixin):
                 } for meal_order in sorted(self.meal_orders)
             ],
             "primary_class": self.primary_class.full_name_en if self.primary_class else "-",
-            "secondary_classes": "<br>".join([trida.full_name_en] for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_en))) if self.secondary_classes else "-",
+            "secondary_classes": "\n".join([trida.full_name_en for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_en))]) if self.secondary_classes else "-",
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_tridy": "<br>".join([trida.full_name_en + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
+            "billing_vedlejsi_tridy": "\n".join([trida.full_name_en + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),

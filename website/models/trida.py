@@ -134,6 +134,16 @@ class Trida(Common_methods_db_model):
         elif len(self.secondary_participants) >= self.capacity:
             state_secondary = "full"
             
+        state_time_exclusive = "available" #available, enrolled, full
+        if current_user in self.secondary_participants: # time exclusive tridy jsou vzdy jako vedlejsi
+            state_time_exclusive = "enrolled"
+        elif not self.is_solo:
+            state_time_exclusive = "available"
+        elif len(self.secondary_participants) >= self.capacity:
+            state_time_exclusive = "full"
+            
+            
+            
         return {
             "id": self.id,
             "name": self.full_name_cz if self.full_name_cz else "Chybí český plný název třídy",
@@ -142,6 +152,7 @@ class Trida(Common_methods_db_model):
             "is_solo": self.is_solo,
             "state_main": state_main,
             "state_secondary": state_secondary,
+            "state_time_exclusive": state_time_exclusive
         }
     
     
@@ -153,6 +164,7 @@ class Trida(Common_methods_db_model):
             state_main = "available"
         elif len(self.primary_participants) >= self.capacity:
             state_main = "full"
+        
         state_secondary = "available"
         if current_user in self.secondary_participants:
             state_secondary = "enrolled"
@@ -160,6 +172,15 @@ class Trida(Common_methods_db_model):
             state_secondary = "available"
         elif len(self.secondary_participants) >= self.capacity:
             state_secondary = "full"
+        
+        state_time_exclusive = "available" #available, enrolled, full
+        if current_user in self.secondary_participants: # time exclusive tridy jsou vzdy jako vedlejsi
+            state_time_exclusive = "enrolled"
+        elif not self.is_solo:
+            state_time_exclusive = "available"
+        elif len(self.secondary_participants) >= self.capacity:
+            state_time_exclusive = "full"
+            
         return {
             "id": self.id,
             "name": self.full_name_en if self.full_name_en else "The full name of the class is missing",
@@ -168,4 +189,5 @@ class Trida(Common_methods_db_model):
             "is_solo": self.is_solo,
             "state_main": state_main,
             "state_secondary": state_secondary,
+            "state_time_exclusive": state_time_exclusive
         }
