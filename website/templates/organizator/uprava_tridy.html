@@ -61,9 +61,9 @@
             <div class="col-3 d-flex align-items-center">Věková skupina</div>
             <div class="col">
                 <select class="form-control" id="age_group" name="age_group">
-                    <option value="child">dětská</option>
-                    <option value="youth">pro mládež do 15 let</option>
-                    <option value="adult">dospělá</option>
+                    <option value="child">Pro děti do 15 let včetně</option>
+                    <option value="adult">Pro účastníky od 16 let</option>
+                    <option value="both">Smíšená - pro děti i dospělé</option>
                 </select>
             </div>
         </div>
@@ -71,6 +71,15 @@
             <div class="col-3 d-flex align-items-center">Je zdarma jako vedlejší?</div>
             <div class="col">
                 <select class="form-control" id="is_free_as_secondary" name="is_free_as_secondary">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Je časově exkluzivní?</div>
+            <div class="col">
+                <select class="form-control" id="is_time_exclusive" name="is_time_exclusive">
                     <option value="Ano">Ano</option>
                     <option value="Ne">Ne</option>
                 </select>

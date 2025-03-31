@@ -36,7 +36,7 @@ def en_uprava_uctu():
 @user_api.route("/cz_primary_classes_capacity", methods=["GET"])
 @login_required
 def cz_primary_classes_capacity():
-    return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all()], key=lambda t: czech_sort.key(t["name"])))
+    return json.dumps(sorted([t.class_capacity_data() for t in Trida.get_all() if t.age_group != "child"], key=lambda t: czech_sort.key(t["name"])))
 
 
 @user_api.route("/cz_secondary_classes_capacity", methods=["GET"])
@@ -84,7 +84,7 @@ def handle_class_click():
             current_user.primary_class = None
             current_user.update()
         else:
-            current_user.secondary_class_id = None
+            current_user.secondary_classes.remove(trida)
             current_user.update()
         return json.dumps({
             "status": f"Úspěšně jste se odhlásili z třídy {trida.short_name_cz}.",
@@ -109,8 +109,6 @@ def handle_class_click():
         else:
             if current_user in trida.primary_participants:
                 return json.dumps({"status": "Nelze si zapst tuto vedlejší třídu, už jste v ní zapsaní jako hlavní účastník. Nejdříve se ze třídy odhlašte."}), 400
-            if current_user.secondary_class_id is not None:
-                return json.dumps({"status": "Nelze se zapsat do této třídy, už jste zapsaní do jiné vedlejší třídy. Nejdříve se odhlašte z této třídy."}), 400
             trida.secondary_participants.append(current_user)
             trida.update()
             return json.dumps({
@@ -132,7 +130,7 @@ def handle_en_class_click():
             current_user.primary_class = None
             current_user.update()
         else:
-            current_user.secondary_class_id = None
+            current_user.secondary_classes.remove(trida)
             current_user.update()
         return json.dumps({
             "status": f"You have successfully unenrolled from class {trida.short_name_en}.",
@@ -157,8 +155,6 @@ def handle_en_class_click():
         else:
             if current_user in trida.primary_participants:
                 return json.dumps({"status": "You cannot enroll in this secondary class, you are already enrolled as a main participant. Please unenroll from this class first."}), 400
-            if current_user.secondary_class_id is not None:
-                return json.dumps({"status": "You cannot enroll in this class, you are already enrolled in another secondary class. Please unenroll from this class first."}), 400
             trida.secondary_participants.append(current_user)
             trida.update()
             return json.dumps({

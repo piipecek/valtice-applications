@@ -44,6 +44,16 @@
                 </select>
             </div>
         </div>
+        <div class="row my-1">
+            <div class="col-2 d-flex align-items-center">Věková kategorie</div>
+            <div class="col">
+                <select class="form-control" id="age_category" name="age_category">
+                    <option value="child">Do 15 let včetně</option>
+                    <option value="adult">16 a více let</option>
+                </select>
+            </div>
+        </div>
+        <small>Ovlivňuje také třídy, které jsou na výběr.</small>
         <hr>
         <h2>Valtické informace</h2>
         <div class="row my-1">
@@ -129,18 +139,12 @@
         <div id="vyber_trid_dovolen" hidden>
             <div class="row my-1">
                 <div class="col-2 d-flex align-items-center">Hlavní třída</div>
-                <div class="col">
-                    <select class="form-control" id="primary_class_id" name="primary_class_id">
-                        <option value="-">-</option>
-                    </select>
+                <div class="col" id="main_class_div">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Vedlejší třída</div>
-                <div class="col">
-                    <select class="form-control" id="secondary_class_id" name="secondary_class_id">
-                        <option value="-">-</option>
-                    </select>
+                <div class="col-2 d-flex align-items-center">Vedlejší třídy</div>
+                <div class="col" id="secondary_classes_div">
                 </div>
             </div>
         </div>
@@ -152,7 +156,7 @@
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Vedlejší třída</div>
+                <div class="col-2 d-flex align-items-center">Vedlejší třídy</div>
                 <div class="col">
                     Účastník s pasivní účastní nemůže být členem třídy.
                 </div>
@@ -169,24 +173,6 @@
                 </select>
             </div>
         </div>
-        <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Email pro odeslání kalkulace</div>
-            <div class="col">
-                <input type="email" class="form-control" id="billing_email" name="billing_email">
-            </div>
-        </div>
-        <small>Pokud je e-mail ponechaný prázdný, bude použit mail účtu.</small>
-        <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Kategorie</div>
-            <div class="col">
-                <select class="form-control" id="billing_age" name="billing_age">
-                    <option value="child">Dítě</option>
-                    <option value="youth">Mládež do 15 let</option>
-                    <option value="adult">Dospělý</option>
-                </select>
-            </div>
-        </div>
-        <small>Ovlivňuje také třídy, které jsou na výběr.</small>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Datum zaplacení</div>
             <div class="col">

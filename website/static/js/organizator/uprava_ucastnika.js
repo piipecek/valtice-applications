@@ -4,13 +4,24 @@ let data = JSON.parse(httpGet("/org_api/uprava_ucastnika/" + id))
 let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
 let jidla = JSON.parse(httpGet("/user_api/jidla_pro_upravu_ucastnika")) // pouziva se i v user sekci
 
+let secondary_classes_div = document.getElementById("secondary_classes_div")
 
-for (let trida of tridy) {
+function generate_class_picker(name) {
+    let select = document.createElement("select")
+    select.className = "form-control"
+    select.name = name
+    for (let trida of tridy) {
+        let option = document.createElement("option")
+        option.value = trida["id"]
+        option.innerText = trida["full_name_cz"]
+        select.appendChild(option)
+    }
     let option = document.createElement("option")
-    option.value = trida["id"]
-    option.innerText = trida["full_name_cz"]
-    document.getElementById("primary_class_id").appendChild(option)
-    document.getElementById("secondary_class_id").appendChild(option.cloneNode(true))
+    option.value = "-"
+    option.innerText = "-"
+    select.appendChild(option)
+    select.value = "-"
+    return select
 }
 
 let full_name = data["name"] + " " + data["surname"]
@@ -36,12 +47,45 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]
             document.getElementById("zrusit_registraci_button").hidden = false
         }
-    } else if (["primary_class_id", "secondary_class_id"].includes(key)) {
-        if (data[key]) {
-            document.getElementById(key).value = data[key]
-        } else{
-            document.getElementById(key).value = "-"
+    } else if (key == "primary_class_id") {
+        let select = generate_class_picker("primary_class_id")
+        select.value = data[key]
+        document.getElementById("primary_class_div").appendChild(select)
+    } else if (key == "secondary_classes") {
+        for (let i = 0; i < data[key].length; i++) {
+            let select = generate_class_picker("secondary_classes")
+            select.value = data[key][i]
+            secondary_classes_div.appendChild(select)
+            let remove_button = document.createElement("button")
+            remove_button.type = "button"
+            remove_button.className = "custom_button"
+            remove_button.innerText = "Odebrat"
+            remove_button.addEventListener("click", () => {
+                select.remove()
+                remove_button.remove()
+            })
+            secondary_classes_div.appendChild(remove_button)
+            secondary_classes_div.appendChild(document.createElement("br"))
         }
+        let add_button = document.createElement("button")
+        add_button.type = "button"
+        add_button.className = "custom_button"
+        add_button.innerText = "Přidat třídu"
+        add_button.addEventListener("click", () => {
+            let select = generate_class_picker("secondary_classes")
+            secondary_classes_div.appendChild(select)
+            let remove_button = document.createElement("button")
+            remove_button.type = "button"
+            remove_button.className = "custom_button"
+            remove_button.innerText = "Odebrat"
+            remove_button.addEventListener("click", () => {
+                select.remove()
+                remove_button.remove()
+            })
+            secondary_classes_div.appendChild(remove_button)
+            secondary_classes_div.appendChild(document.createElement("br"))
+        })
+        secondary_classes_div.appendChild(add_button)
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).value = data[key]
@@ -151,7 +195,7 @@ function add_meal_row(selected_id, count) {
 
 // upozorneni na smazani trid pri pasivni ucasti
 function has_any_classes(data) {
-    return data["primary_class_id"] || data["secondary_class_id"]
+    return data["primary_class_id"] || data["secondary_classes"].length > 0
 }
 
 

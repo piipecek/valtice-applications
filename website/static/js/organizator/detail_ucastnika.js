@@ -70,7 +70,7 @@ for (let key in data) {
         } else {
             document.getElementById(key).innerText = "-"
         }
-    } else if(["hlavni_trida", "vedlejsi_trida"].includes(key)){
+    } else if(key == "hlavni_trida") {
         if (data[key]["link"]) {
             let a = document.createElement("a")
             a.href = data[key]["link"]
@@ -81,6 +81,15 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]["name"]
         }
         continue
+    } else if (key == "vedlejsi_tridy") {
+        for (let vedlejsi_trida of data[key]) {
+            let a = document.createElement("a")
+            a.href = vedlejsi_trida["link"]
+            a.innerText = vedlejsi_trida["name"]
+            a.classList.add("link")
+            document.getElementById(key).appendChild(a)
+            document.getElementById(key).appendChild(document.createElement("br"))
+        }
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).innerText = data[key]

@@ -1,7 +1,7 @@
 from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
 from website.models.jointables import user_role_jointable
-from website.models.trida import Trida
+from website.models.trida import Trida, user_secondary_class_jointable
 from website.models.billing import Billing
 from website.models.role import Role
 from website.models.meal_order import Meal_order
@@ -25,6 +25,7 @@ class User(Common_methods_db_model, UserMixin):
     email = db.Column(db.String(200))
     phone = db.Column(db.String(200))
     is_student = db.Column(db.Boolean, default=False)
+    is_under_16 = db.Column(db.Boolean, default=False)
     
     #automatic data
     datetime_created = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
@@ -35,7 +36,8 @@ class User(Common_methods_db_model, UserMixin):
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
     datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy
     datetime_registered = db.Column(db.DateTime)
-    accomodation_type = db.Column(db.String(200), default=None) # own/vs/gym. None znamená. že nemá zájem
+    datetime_calculation_email = db.Column(db.DateTime) # TODO je to v db modelu ale jeste to neni nikam propojeny
+    accomodation_type = db.Column(db.String(200), default=None) # own/vs/gym. None znamená, že ještě nepicknul
     accomodation_count = db.Column(db.Integer, default=0)
     musical_education = db.Column(db.Text)
     musical_instrument = db.Column(db.String(1000))
@@ -46,8 +48,6 @@ class User(Common_methods_db_model, UserMixin):
     
     #billing data
     billing_currency = db.Column(db.String(200), default="czk" ) # czk/eur
-    billing_email = db.Column(db.String(200))
-    billing_age = db.Column(db.String(200), default="adult") # child/youth/adult
     billing_date_paid = db.Column(db.Date)
     billing_gift = db.Column(db.Integer, default=0)
     billing_correction = db.Column(db.Integer, default=0)
@@ -86,8 +86,7 @@ class User(Common_methods_db_model, UserMixin):
     taught_classes = db.relationship("Trida", back_populates="tutor", foreign_keys="Trida.tutor_id")
     primary_class_id = db.Column(db.Integer, db.ForeignKey("trida.id"))
     primary_class = db.relationship("Trida", back_populates="primary_participants", foreign_keys=[primary_class_id])
-    secondary_class_id = db.Column(db.Integer, db.ForeignKey("trida.id"))
-    secondary_class = db.relationship("Trida", back_populates="secondary_participants", foreign_keys=[secondary_class_id])
+    secondary_classes = db.relationship("Trida",secondary=user_secondary_class_jointable, back_populates="secondary_participants")
 
     
     def __repr__(self) -> str:
@@ -248,12 +247,7 @@ class User(Common_methods_db_model, UserMixin):
                 else:
                     return calculate_trida(trida, self, False) # napr. zapsana solo trida jako vedlejsi trida, pocita se to znova aby byly slevy apod.
             else:
-                if self.billing_age == "child":
-                    if self.billing_currency == "czk":
-                        return Billing.get_by_system_name("kurzovne_deti").czk
-                    elif self.billing_currency == "eur":
-                        return Billing.get_by_system_name("kurzovne_deti").eur
-                elif self.billing_age == "youth":
+                if self.is_under_16:
                     if self.billing_currency == "czk":
                         return Billing.get_by_system_name("kurzovne_deti").czk
                     elif self.billing_currency == "eur":
@@ -276,7 +270,9 @@ class User(Common_methods_db_model, UserMixin):
 
         
         hlavni_trida = calculate_trida(self.primary_class, self, False)
-        vedlejsi_trida = calculate_trida(self.secondary_class, self, True)
+        vedlejsi_tridy = []
+        for trida in self.secondary_classes:
+            vedlejsi_tridy.append(calculate_trida(trida, self, True))
         
         pasivni_ucast = None
         if not self.is_active_participant:
@@ -337,7 +333,7 @@ class User(Common_methods_db_model, UserMixin):
         
         pasivni_ucast_do_sumy = pasivni_ucast if pasivni_ucast is not None else 0
         hlavni_trida_do_sumy = hlavni_trida if hlavni_trida is not None else 0
-        vedlejsi_trida_do_sumy = vedlejsi_trida if vedlejsi_trida is not None else 0
+        vedlejsi_tridy_do_sumy = sum(vedlejsi_tridy) if vedlejsi_tridy else 0
         ubytko_do_sumy = ubytko if ubytko is not None else 0
         snidane = snidane if snidane is not None else 0
         snidane_do_sumy = snidane if snidane is not None else 0
@@ -347,12 +343,12 @@ class User(Common_methods_db_model, UserMixin):
             "ubytovani": ubytko,
             "pasivni_ucast": pasivni_ucast,
             "hlavni_trida": hlavni_trida,
-            "vedlejsi_trida": vedlejsi_trida,
+            "vedlejsi_tridy": vedlejsi_tridy,
             "snidane": snidane,
             "obedy": obedy,
             "vecere": vecere,
             "dar": self.billing_gift,
-            "celkem": ubytko_do_sumy + snidane_do_sumy + obedy_do_sumy + vecere_do_sumy + self.billing_gift + pasivni_ucast_do_sumy + hlavni_trida_do_sumy + vedlejsi_trida_do_sumy + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
+            "celkem": ubytko_do_sumy + snidane_do_sumy + obedy_do_sumy + vecere_do_sumy + self.billing_gift + pasivni_ucast_do_sumy + hlavni_trida_do_sumy + vedlejsi_tridy_do_sumy + self.billing_correction + self.billing_food_correction + self.billing_accomodation_correction
         }
         return result
     
@@ -367,21 +363,15 @@ class User(Common_methods_db_model, UserMixin):
             ubytovani = f"vinařská škola: {self.accomodation_count}"
         else:
             ubytovani = f"tělocvična: {self.accomodation_count}"
-            
-        # billing kategorie
-        if self.billing_age == "child":
-            billing_age = "dítě"
-        elif self.billing_age == "youth":
-            billing_age = "mládež do 15 let"
-        else:
-            billing_age = "dospělý"
-            
-        billing_email = self.billing_email if self.billing_email else "bude použit hlavní e-mail"
-        if self.parent:
-            billing_email = "bude použit e-mail rodiče"
-
                 
         kalkulace = self.kalkulace()
+        
+        billing_vedlejsi_tridy_list = []
+        for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"]):
+            zaznam = trida.full_name_cz + ": " + pretty_penize(calc, self.billing_currency)
+            billing_vedlejsi_tridy_list.append(zaznam)
+        billing_vedlejsi_tridy = "<br>".join(billing_vedlejsi_tridy_list)
+        
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
@@ -389,6 +379,7 @@ class User(Common_methods_db_model, UserMixin):
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "is_student": "Ano" if self.is_student else "Ne",
+            "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
             "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "Zatím nevybráno",
             "datetime_created": pretty_datetime(self.datetime_created),
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
@@ -408,8 +399,6 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "billing_email": billing_email,
-            "billing_age": billing_age,
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno",
             "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
             "billing_correction_reason": self.billing_correction_reason if self.billing_correction_reason else "-",
@@ -449,7 +438,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),
+            "billing_vedlejsi_tridy": billing_vedlejsi_tridy,
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
@@ -460,10 +449,12 @@ class User(Common_methods_db_model, UserMixin):
                 "name": self.primary_class.full_name_cz if self.primary_class else "-",
                 "link": "/organizator/detail_tridy/" + str(self.primary_class_id) if self.primary_class else None
             },
-            "vedlejsi_trida": {
-                "name": self.secondary_class.full_name_cz if self.secondary_class else "-",
-                "link": "/organizator/detail_tridy/" + str(self.secondary_class_id) if self.secondary_class else None
-            }
+            "vedlejsi_tridy":[
+                {
+                    "name": trida.full_name_cz,
+                    "link": "/organizator/detail_tridy/" + str(trida.id)
+                } for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))
+            ]
         }
     
     
@@ -474,6 +465,7 @@ class User(Common_methods_db_model, UserMixin):
             "email": self.email,
             "phone": self.phone,
             "is_student": "Ano" if self.is_student else "Ne",
+            "age_category": "child" if self.is_under_16 else "adult",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
@@ -494,8 +486,6 @@ class User(Common_methods_db_model, UserMixin):
                 } for meal_order in sorted(self.meal_orders)
             ],
             "billing_currency": self.billing_currency,
-            "billing_email": self.billing_email,
-            "billing_age": self.billing_age,
             "billing_date_paid": self.billing_date_paid.strftime("%Y-%m-%d") if self.billing_date_paid else None,
             "billing_correction": self.billing_correction,
             "billing_correction_reason": self.billing_correction_reason,
@@ -524,7 +514,7 @@ class User(Common_methods_db_model, UserMixin):
             } if self.parent else None,
             
             "primary_class_id": self.primary_class_id if self.primary_class_id else None,
-            "secondary_class_id": self.secondary_class_id if self.secondary_class_id else None,
+            "secondary_classes": [trida.id for trida in self.secondary_classes],
         }
     
     def nacist_zmeny_z_org_requestu(self, request):
@@ -536,10 +526,10 @@ class User(Common_methods_db_model, UserMixin):
             
         if request.form.get("is_active_participant") == "passive":
             self.primary_class = None
-            self.secondary_class_id = None
+            self.secondary_classes = []
         else:
             self.primary_class_id = int(request.form.get("primary_class_id")) if request.form.get("primary_class_id") != "-"  else None
-            self.secondary_class_id = int(request.form.get("secondary_class_id")) if request.form.get("secondary_class_id") != "-" else None
+            self.secondary_classes = [int(sc) for sc in request.form.getlist("secondary_classes")]
             
              
         self.name = request.form.get("name")
@@ -547,6 +537,7 @@ class User(Common_methods_db_model, UserMixin):
         self.email = request.form.get("email")
         self.phone = request.form.get("phone")
         self.is_student = True if request.form.get("is_student") == "Ano" else False
+        self.is_under_16 = True if request.form.get("age_category") == "child" else False
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
@@ -561,8 +552,6 @@ class User(Common_methods_db_model, UserMixin):
         self._save_meals(request)
         
         self.billing_currency = request.form.get("billing_currency")
-        self.billing_email = request.form.get("billing_email")
-        self.billing_age = request.form.get("billing_age")
         self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
         self.billing_date_paid = datetime.strptime(request.form.get("billing_date_paid"), "%Y-%m-%d") if request.form.get("billing_date_paid") else None
         self.billing_correction = int(request.form.get("billing_correction")) if request.form.get("billing_correction") else 0
@@ -593,15 +582,7 @@ class User(Common_methods_db_model, UserMixin):
         
     def info_pro_user_detail(self) -> dict:
         kalkulace = self.kalkulace()
-        billing_age = "dospělý"
-        if self.billing_age == "child":
-            billing_age = "dítě"
-        elif self.billing_age == "youth":
-            billing_age = "mládež do 15 let"
             
-        billing_email = self.billing_email if self.billing_email else "bude použit hlavní e-mail"
-        if self.parent:
-            billing_email = "bude použit e-mail nadřazeného účtu"
         
         #ubytovani
         settings = get_settings()
@@ -642,13 +623,13 @@ class User(Common_methods_db_model, UserMixin):
                     accomodation_message = f"Máte zájem o ubytování na vinařské škole. Pořadí Vašich míst ve frontě je: {poradi_display}."
 
 
-
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "is_student": "Ano" if self.is_student else "Ne",
+            "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
@@ -666,14 +647,12 @@ class User(Common_methods_db_model, UserMixin):
                 } for meal_order in sorted(self.meal_orders)
             ],
             "primary_class": self.primary_class.full_name_cz if self.primary_class else "-",
-            "secondary_class": self.secondary_class.full_name_cz if self.secondary_class else "-",
-            "billing_email": billing_email,
-            "billing_age": billing_age,
+            "secondary_classes": "<br>".join([trida.full_name_cz] for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))) if self.secondary_classes else "-",
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),
+            "billing_vedlejsi_tridy": "<br>".join([trida.full_name_cz + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
@@ -708,16 +687,6 @@ class User(Common_methods_db_model, UserMixin):
         
     def info_pro_en_user_detail(self) -> dict:
         kalkulace = self.kalkulace()
-        billing_age = "adult"
-        if self.billing_age == "child":
-            billing_age = "child"
-        elif self.billing_age == "youth":
-            billing_age = "youth up to 15 years old"
-            
-        billing_email = self.billing_email if self.billing_email else "main e-mail will be used"
-        if self.parent:
-            billing_email = "e-mail of parent account will be used"
-            
         
          #ubytovani
         settings = get_settings()
@@ -764,6 +733,7 @@ class User(Common_methods_db_model, UserMixin):
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "is_student": "Yes" if self.is_student else "No",
+            "age_category": "Up to and including 15 years" if self.is_under_16 else "16 years and older",
             "is_ssh_member": "Yes" if self.is_ssh_member else "No",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
@@ -781,14 +751,12 @@ class User(Common_methods_db_model, UserMixin):
                 } for meal_order in sorted(self.meal_orders)
             ],
             "primary_class": self.primary_class.full_name_en if self.primary_class else "-",
-            "secondary_class": self.secondary_class.full_name_en if self.secondary_class else "-",
-            "billing_email": billing_email,
-            "billing_age": billing_age,
+            "secondary_classes": "<br>".join([trida.full_name_en] for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_en))) if self.secondary_classes else "-",
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_trida": pretty_penize(kalkulace["vedlejsi_trida"], self.billing_currency),
+            "billing_vedlejsi_tridy": "<br>".join([trida.full_name_en + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
@@ -824,7 +792,7 @@ class User(Common_methods_db_model, UserMixin):
         
     def info_pro_user_upravu(self) -> dict:
         zmena_ucasti = "povolena"
-        if any([self.primary_class, self.secondary_class]):
+        if any([self.primary_class, self.secondary_classes]):
             zmena_ucasti = "zakázána"
         return {
             "name": self.name if self.name else "",
@@ -832,6 +800,7 @@ class User(Common_methods_db_model, UserMixin):
             "email": self.email,
             "phone": self.phone,
             "is_student": "Ano" if self.is_student else "Ne",
+            "age_category": "child" if self.is_under_16 else "adult",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
@@ -849,9 +818,7 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "billing_email": self.billing_email,
             "billing_currency": self.billing_currency,
-            "billing_age": self.billing_age,
             "billing_gift": self.billing_gift,
             "has_parent": True if self.parent else False,
             "manager_name": self.parent.get_full_name() if self.parent else "",
@@ -874,7 +841,7 @@ class User(Common_methods_db_model, UserMixin):
         
     def info_pro_en_user_upravu(self) -> dict: # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
         zmena_ucasti = "povolena"
-        if any([self.primary_class, self.secondary_class]):
+        if any([self.primary_class, self.secondary_classes]):
             zmena_ucasti = "zakázána"
         return {
             "name": self.name if self.name else "",
@@ -882,6 +849,7 @@ class User(Common_methods_db_model, UserMixin):
             "email": self.email,
             "phone": self.phone,
             "is_student": "Ano" if self.is_student else "Ne",
+            "age_category": "child" if self.is_under_16 else "adult",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
@@ -899,9 +867,7 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "billing_email": self.billing_email,
             "billing_currency": self.billing_currency,
-            "billing_age": self.billing_age,
             "billing_gift": self.billing_gift,
             "has_parent": True if self.parent else False,
             "manager_name": self.parent.get_full_name() if self.parent else "",
@@ -927,6 +893,7 @@ class User(Common_methods_db_model, UserMixin):
         self.surname = request.form.get("surname")
         self.phone = request.form.get("phone")
         self.is_student = True if request.form.get("is_student") == "Ano" else False
+        self.is_under_16 = True if request.form.get("age_category") == "child" else False
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
@@ -941,8 +908,6 @@ class User(Common_methods_db_model, UserMixin):
         self._save_meals(request)
         
         self.billing_currency = request.form.get("billing_currency")
-        self.billing_email = request.form.get("billing_email")
-        self.billing_age = request.form.get("billing_age")
         self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
         
         self.tutor_travel = request.form.get("tutor_travel")
