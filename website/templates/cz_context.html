@@ -7,7 +7,7 @@
 
 {% block logo %}
     <div class="logo">
-        <a href="https://www.early-music.cz/aktualni-rocnik/">
+        <a href="{{cz_url}}">
             <img src="{{url_for('static', filename='img/logo_cz.png')}}" alt="Valtické logo">
         </a>
     </div>
@@ -45,5 +45,6 @@
 {% block footer %}
     Našli jste chybu? <a class="link" target="_blank" href="https://t.me/piipecek">Kontakt na autora</a><br>
     <a class="link" href="{{url_for('guest_views.cz_info')}}">Informace, GDPR a cookies</a><br>
-    <a class="link" href="{{url_for('guest_views.cz_dashboard')}}">Zpět domů</a>
+    <a class="link" href="{{url_for('guest_views.cz_dashboard')}}">Zpět na úvodní stránku přihláškového systému</a><br>
+    <a class="link" href="https://www.early-music.cz">Zpět na stránky MLŠSH</a>
 {% endblock %}

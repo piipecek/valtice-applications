@@ -7,7 +7,7 @@
 
 {% block logo %}
     <div class="logo">
-        <a href="https://www.early-music.cz/en/about-issem/current-year/">
+        <a href="{{en_url}}">
             <img src="{{url_for('static', filename='img/logo_en.png')}}" alt="Valtické logo">
         </a>
     </div>
@@ -43,5 +43,6 @@
 {% block footer %}
     Found a bug? <a class="link" target="_blank" href="https://t.me/piipecek">Contact the author</a><br>
     <a class="link" href="{{url_for('guest_views.en_info')}}">General information, cookies and data protection</a><br>
-    <a class="link" href="{{url_for('guest_views.en_dashboard')}}">Home</a>
+    <a class="link" href="{{url_for('guest_views.en_dashboard')}}">Back to application portal homepage</a><br>
+    <a class="link" href="https://www.early-music.cz">Back to ISSEM website</a>
 {% endblock %}

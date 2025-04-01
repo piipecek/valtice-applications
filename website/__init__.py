@@ -84,5 +84,12 @@ def create_app() -> Flask:
     @app.errorhandler(401)
     def not_authorised(e):
         return render_template("guest/not_authorised.html", roles=get_roles()), 401
+    
+    @app.context_processor
+    def inject_globals():
+        return dict(
+            cz_url = os.environ.get("CZ_HOME_URL"),
+            en_url = os.environ.get("EN_HOME_URL")
+        )
 
     return app
