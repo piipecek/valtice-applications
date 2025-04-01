@@ -66,35 +66,21 @@ def settings():
         elif request.form.get("export"):
             bytes = export()
             return send_file(bytes, as_attachment=True, download_name="export.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        elif request.form.get("datum_cas_primary"):
+        elif request.form.get("dates"):
             primary_classes_start_date = request.form.get("primary_classes_start_date")
             primary_classes_start_time = request.form.get("primary_classes_start_time")
-            if not all([primary_classes_start_date, primary_classes_start_time]):
-                flash("Nebyl vyplněn datum nebo čas začátku přihlášek.", category="error")
+            secondary_classes_start_date = request.form.get("secondary_classes_start_date")
+            secondary_classes_start_time = request.form.get("secondary_classes_start_time")
+            applications_end_date = request.form.get("applications_end_date")
+            applications_end_time = request.form.get("applications_end_time")
+            if not all([primary_classes_start_date, primary_classes_start_time, secondary_classes_start_date, secondary_classes_start_time, applications_end_date, applications_end_time]):
+                flash("Nebyl vyplněn datum nebo čas jednoho z termínů.", category="error")
                 return redirect(url_for("org_views.settings"))
             else:
                 set_primary_classes_start_date_and_time(primary_classes_start_date, primary_classes_start_time)
-                flash("Datum a čas začátku přihlášek do hlavních tříd byl změněn.", category="success")
-                return redirect(url_for("org_views.settings"))
-        elif request.form.get("datum_cas_secondary"):
-            secondary_classes_start_date = request.form.get("secondary_classes_start_date")
-            secondary_classes_start_time = request.form.get("secondary_classes_start_time")
-            if not all([secondary_classes_start_date, secondary_classes_start_time]):
-                flash("Nebyl vyplněn datum nebo čas začátku přihlášek.", category="error")
-                return redirect(url_for("org_views.settings"))
-            else:
                 set_secondary_classes_start_date_and_time(secondary_classes_start_date, secondary_classes_start_time)
-                flash("Datum a čas začátku přihlášek do vedlejších tříd byl změněn.", category="success")
-                return redirect(url_for("org_views.settings"))
-        elif request.form.get("datum_cas_end"):
-            applications_end_date = request.form.get("applications_end_date")
-            applications_end_time = request.form.get("applications_end_time")
-            if not all([applications_end_date, applications_end_time]):
-                flash("Nebyl vyplněn datum nebo čas konce přihlášek.", category="error")
-                return redirect(url_for("org_views.settings"))
-            else:
                 set_applications_end_date_and_time(applications_end_date, applications_end_time)
-                flash("Datum a čas konce přihlášek byl změněn.", category="success")
+                flash("Datum a čas začátku přihlášek do hlavních tříd byl změněn.", category="success")
                 return redirect(url_for("org_views.settings"))
         elif request.form.get("nahrat_logo_cz"):
             if "logo_cz" in request.files and request.files["logo_cz"].filename:

@@ -1,7 +1,7 @@
 {% extends"cz_context.html" %}
 {% block content %}
-<h2>Datum a čas začátku přihlašování do hlavních tříd</h2>
 <form method="post">
+    <h2>Datum a čas začátku přihlašování do hlavních tříd</h2>
     <div class="row">
         <div class="col-12 col-sm-1 my-1">
             Datum:
@@ -15,14 +15,8 @@
         <div class="col-12 col-sm my-1">
             <input class="form-control" type="time" name="primary_classes_start_time" id="primary_classes_start_time">
         </div>
-        <div class="col-12 col-sm-auto my-1">
-            <button class="custom_button" name="datum_cas_primary" value="whatever" type="submit">Uložit</button>
-        </div>
     </div>
-</form>
-<hr>   
-<h2>Datum a čas začátku přihlašování do vedlejších tříd</h2>
-<form method="post">
+    <h2>Datum a čas začátku přihlašování do vedlejších tříd</h2>
     <div class="row">
         <div class="col-12 col-sm-1 my-1">
             Datum:
@@ -36,14 +30,8 @@
         <div class="col-12 col-sm my-1">
             <input class="form-control" type="time" name="secondary_classes_start_time" id="secondary_classes_start_time">
         </div>
-        <div class="col-12 col-sm-auto my-1">
-            <button class="custom_button" name="datum_cas_secondary" value="whatever" type="submit">Uložit</button>
-        </div>
     </div>
-</form>
-<hr>   
-<h2>Uzavření přihlašování</h2>
-<form method="post">
+    <h2>Uzavření přihlašování</h2>
     <div class="row">
         <div class="col-12 col-sm-1 my-1">
             Datum:
@@ -57,9 +45,9 @@
         <div class="col-12 col-sm my-1">
             <input class="form-control" type="time" name="applications_end_time" id="applications_end_time">
         </div>
-        <div class="col-12 col-sm-auto my-1">
-            <button class="custom_button" name="datum_cas_end" value="whatever" type="submit">Uložit</button>
-        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="custom_button" name="dates" value="whatever" type="submit">Uložit časy</button>
     </div>
 </form>
 <hr>
