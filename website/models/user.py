@@ -514,7 +514,7 @@ class User(Common_methods_db_model, UserMixin):
             } if self.parent else None,
             
             "primary_class_id": self.primary_class_id if self.primary_class_id else None,
-            "secondary_classes": [trida.id for trida in self.secondary_classes],
+            "secondary_classes": [trida.id for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))],
         }
     
     def nacist_zmeny_z_org_requestu(self, request):
@@ -529,7 +529,11 @@ class User(Common_methods_db_model, UserMixin):
             self.secondary_classes = []
         else:
             self.primary_class_id = int(request.form.get("primary_class_id")) if request.form.get("primary_class_id") != "-"  else None
-            self.secondary_classes = [int(sc) for sc in request.form.getlist("secondary_classes")]
+            self.secondary_classes = []
+            for id in request.form.getlist("secondary_classes"):
+                trida = Trida.get_by_id(id)
+                if trida not in self.secondary_classes:
+                    self.secondary_classes.append(trida)
             
              
         self.name = request.form.get("name")

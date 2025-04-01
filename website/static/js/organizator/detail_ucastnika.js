@@ -90,6 +90,9 @@ for (let key in data) {
             document.getElementById(key).appendChild(a)
             document.getElementById(key).appendChild(document.createElement("br"))
         }
+        if (data[key].length == 0) {
+            document.getElementById(key).innerText = "-"
+        }
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).innerText = data[key]

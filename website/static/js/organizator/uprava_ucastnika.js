@@ -5,6 +5,8 @@ let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
 let jidla = JSON.parse(httpGet("/user_api/jidla_pro_upravu_ucastnika")) // pouziva se i v user sekci
 
 let secondary_classes_div = document.getElementById("secondary_classes_div")
+let add_secondary_class_button = document.getElementById("add_secondary_class")
+
 
 function generate_class_picker(name) {
     let select = document.createElement("select")
@@ -24,6 +26,30 @@ function generate_class_picker(name) {
     return select
 }
 
+function generate_secondary_class_row() {
+    let row = document.createElement("div")
+    row.classList.add("row", "my-1")
+    let col1 = document.createElement("div")
+    row.appendChild(col1)
+    col1.className = "col"
+    let col2 = document.createElement("div")
+    row.appendChild(col2)
+    col2.className = "col-auto"
+
+    let select = generate_class_picker("secondary_classes")
+    col1.appendChild(select)
+    let remove_button = document.createElement("button")
+    remove_button.type = "button"
+    remove_button.className = "custom_button"
+    remove_button.innerText = "Odebrat"
+    remove_button.addEventListener("click", () => {
+        row.remove()
+    })
+    col2.appendChild(remove_button)
+    return row
+}
+
+
 let full_name = data["name"] + " " + data["surname"]
 if (full_name.trim() == "") {
     full_name = "beze jména"
@@ -36,6 +62,14 @@ if (data["is_tutor"]) {
 } else {
     document.getElementById("tutor_no").hidden = false
 }
+
+
+add_secondary_class_button.addEventListener("click", () => {
+    let row = generate_secondary_class_row()
+    secondary_classes_div.appendChild(row)
+    let select = row.children[0].children[0]
+    select.value = "-"
+})
 
 
 for (let key in data) {
@@ -53,39 +87,12 @@ for (let key in data) {
         document.getElementById("primary_class_div").appendChild(select)
     } else if (key == "secondary_classes") {
         for (let i = 0; i < data[key].length; i++) {
-            let select = generate_class_picker("secondary_classes")
+            let row = generate_secondary_class_row()
+            document.getElementById("secondary_classes_div").appendChild(row)
+            let select = row.children[0].children[0]
+            console.log(data[key][i])
             select.value = data[key][i]
-            secondary_classes_div.appendChild(select)
-            let remove_button = document.createElement("button")
-            remove_button.type = "button"
-            remove_button.className = "custom_button"
-            remove_button.innerText = "Odebrat"
-            remove_button.addEventListener("click", () => {
-                select.remove()
-                remove_button.remove()
-            })
-            secondary_classes_div.appendChild(remove_button)
-            secondary_classes_div.appendChild(document.createElement("br"))
         }
-        let add_button = document.createElement("button")
-        add_button.type = "button"
-        add_button.className = "custom_button"
-        add_button.innerText = "Přidat třídu"
-        add_button.addEventListener("click", () => {
-            let select = generate_class_picker("secondary_classes")
-            secondary_classes_div.appendChild(select)
-            let remove_button = document.createElement("button")
-            remove_button.type = "button"
-            remove_button.className = "custom_button"
-            remove_button.innerText = "Odebrat"
-            remove_button.addEventListener("click", () => {
-                select.remove()
-                remove_button.remove()
-            })
-            secondary_classes_div.appendChild(remove_button)
-            secondary_classes_div.appendChild(document.createElement("br"))
-        })
-        secondary_classes_div.appendChild(add_button)
     } else if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).value = data[key]
