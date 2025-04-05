@@ -15,8 +15,15 @@ org_api = Blueprint("org_api", __name__)
 @org_api.route("/seznam_ucastniku")
 @require_role_system_name_on_current_user("organiser")
 def seznam_ucastniku():
-    sorted_users = sorted([u for u in User.get_all() if len(u.roles) == 0], key=lambda u: czech_sort.key(u.info_pro_seznam()["surname"]))
-    return json.dumps([u.info_pro_seznam() for u in sorted_users])
+    sorted_users = sorted([u for u in User.get_all() if len(u.roles) == 0 and u.is_this_year_participant], key=lambda u: czech_sort.key(u.info_pro_seznam_ucastniku()["surname"]))
+    return json.dumps([u.info_pro_seznam_ucastniku() for u in sorted_users])
+
+
+@org_api.route("/seznam_uctu")
+@require_role_system_name_on_current_user("organiser")
+def seznam_uctu():
+    sorted_users = sorted([u for u in User.get_all() if len(u.roles) == 0], key=lambda u: czech_sort.key(u.info_pro_seznam_ucastniku()["surname"]))
+    return json.dumps([u.info_pro_seznam_uctu() for u in sorted_users])
 
 
 @org_api.route("/detail_ucastnika/<int:id>")

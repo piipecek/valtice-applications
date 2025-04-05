@@ -12,6 +12,8 @@ document.getElementById("text_cz").value = settings["cz_frontpage_text"]
 document.getElementById("text_en").value = settings["en_frontpage_text"]
 document.getElementById("vs_capacity").value = settings["vs_capacity"]
 document.getElementById("gym_capacity").value = settings["gym_capacity"]
+let end_of_issem_form = document.getElementById("end_of_issem_form")
+let end_of_issem_button = document.getElementById("end_of_issem")
 
 if (settings["users_locked"]) {
     document.getElementById("lock_state").innerText = "Všichni uživatelé mají zamknuté změny na účtech."
@@ -20,3 +22,9 @@ if (settings["users_locked"]) {
     document.getElementById("lock_state").innerText = "Všichni uživatelé mohou své účty upravovat."
     document.getElementById("toggle_lock").innerText = "Zamknout změny"
 }
+
+end_of_issem_button.addEventListener("click", function () {
+    if (confirm("Opravdu chcete ukončit ročník? Ujistěte se, že máte uložený export ročníku.")) {
+        end_of_issem_form.submit()
+    }
+})

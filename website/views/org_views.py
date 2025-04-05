@@ -11,6 +11,7 @@ from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
 from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, set_both_capacities
 from website.helpers.export import export
+from website.helpers.end_of_issem_manager import end_of_issem
 from website.paths import logo_cz_path, logo_en_path
 from werkzeug.security import generate_password_hash
 from website.mail_handler import mail_sender
@@ -117,6 +118,10 @@ def settings():
             set_both_capacities(request.form.get("vs_capacity"), request.form.get("gym_capacity")) 
             flash("Kapacity byly změněny", category="success")
             return redirect(url_for("org_views.settings")) 
+        elif request.form.get("end_of_issem"):
+            end_of_issem()
+            flash("Konec ročníku úspěšně proveden, těšíme se za rok!", category="success")
+            return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()
     
@@ -210,6 +215,15 @@ def uprava_ucastnika(id:int):
 def seznam_ucastniku():
     if request.method == "GET":
         return render_template("organizator/seznam_ucastniku.html", roles=get_roles(current_user))
+    else:
+        return request.form.to_dict()
+    
+
+@org_views.route("/seznam_uctu", methods=["GET","POST"])
+@require_role_system_name_on_current_user("organiser")
+def seznam_uctu():
+    if request.method == "GET":
+        return render_template("organizator/seznam_uctu.html", roles=get_roles(current_user))
     else:
         return request.form.to_dict()
     

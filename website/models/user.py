@@ -6,7 +6,7 @@ from website.models.billing import Billing
 from website.models.role import Role
 from website.models.meal_order import Meal_order
 from website.models.meal import Meal
-from website.helpers.pretty_date import pretty_datetime
+from website.helpers.pretty_date import pretty_datetime, pretty_date
 from website.helpers.pretty_penize import pretty_penize
 from website.helpers.settings_manager import get_settings
 from datetime import datetime, timedelta, timezone
@@ -15,6 +15,7 @@ from flask_login import UserMixin, login_user, current_user
 import jwt
 from werkzeug.security import generate_password_hash
 import sqlalchemy
+from datetime import datetime
 
 
 class User(Common_methods_db_model, UserMixin):
@@ -31,6 +32,7 @@ class User(Common_methods_db_model, UserMixin):
     datetime_created = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
     
     #valtice data
+    is_this_year_participant = db.Column(db.Boolean, default=True) # pri registraci se je to nebude ptat na letosek zejo, to ma efekt az za rok
     is_ssh_member = db.Column(db.Boolean, default=False)
     is_active_participant = db.Column(db.Boolean, default=True)
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
@@ -128,7 +130,7 @@ class User(Common_methods_db_model, UserMixin):
         return f"{self.name} {self.surname}"
     
     
-    def info_pro_seznam(self) -> dict:
+    def info_pro_seznam_ucastniku(self) -> dict:
         full_name = self.get_full_name()
         return {
             "id": self.id,
@@ -139,6 +141,17 @@ class User(Common_methods_db_model, UserMixin):
             "hlavni_trida": self.primary_class.short_name_cz if self.primary_class else "-",
             "hlavni_trida_id": self.primary_class_id
         }
+        
+    
+    def info_pro_seznam_uctu(self) -> dict:
+        full_name = self.get_full_name()
+        return {
+            "id": self.id,
+            "full_name": full_name if full_name else "-",
+            "email": self.email if self.email else self.parent.email,
+            "datum": pretty_date(self.datetime_created)
+        }
+    
     
     def info_pro_seznam_lektoru(self) -> dict:
         full_name = self.get_full_name()
@@ -383,6 +396,7 @@ class User(Common_methods_db_model, UserMixin):
             "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "Zatím nevybráno",
             "datetime_created": pretty_datetime(self.datetime_created),
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "Zatím neregistrován",
@@ -466,6 +480,7 @@ class User(Common_methods_db_model, UserMixin):
             "phone": self.phone,
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "child" if self.is_under_16 else "adult",
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
@@ -513,7 +528,7 @@ class User(Common_methods_db_model, UserMixin):
                 "parent_name": self.parent.get_full_name()
             } if self.parent else None,
             
-            "primary_class_id": self.primary_class_id if self.primary_class_id else None,
+            "primary_class_id": self.primary_class_id if self.primary_class_id else "-",
             "secondary_classes": [trida.id for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))],
         }
     
@@ -542,6 +557,7 @@ class User(Common_methods_db_model, UserMixin):
         self.phone = request.form.get("phone")
         self.is_student = True if request.form.get("is_student") == "Ano" else False
         self.is_under_16 = True if request.form.get("age_category") == "child" else False
+        self.is_this_year_participant = True if request.form.get("is_this_year_participant") == "Ano" else False
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
@@ -634,6 +650,7 @@ class User(Common_methods_db_model, UserMixin):
             "phone": self.phone if self.phone else "-",
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
@@ -686,7 +703,7 @@ class User(Common_methods_db_model, UserMixin):
                     "id": child.id,
                     "full_name": child.get_full_name()
                 } for child in self.children
-            ]
+            ] if len(self.children) > 0 else "-",
         }
         
     def info_pro_en_user_detail(self) -> dict:
@@ -739,6 +756,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_student": "Yes" if self.is_student else "No",
             "age_category": "Up to and including 15 years" if self.is_under_16 else "16 years and older",
             "is_ssh_member": "Yes" if self.is_ssh_member else "No",
+            "is_this_year_participant": "Yes" if self.is_this_year_participant else "No",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
@@ -790,7 +808,7 @@ class User(Common_methods_db_model, UserMixin):
                     "id": child.id,
                     "full_name": child.get_full_name()
                 } for child in self.children
-            ]
+            ] if len(self.children) > 0 else "-",
         }
         
         
@@ -839,7 +857,7 @@ class User(Common_methods_db_model, UserMixin):
                     "id": child.id,
                     "full_name": child.get_full_name()
                 } for child in self.children
-            ],
+            ]
         }   
         
         
@@ -888,7 +906,7 @@ class User(Common_methods_db_model, UserMixin):
                     "id": child.id,
                     "full_name": child.get_full_name()
                 } for child in self.children
-            ],
+            ]
         }  
     
     

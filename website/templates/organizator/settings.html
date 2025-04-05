@@ -250,6 +250,25 @@
     </div>
 </form>
 
+<hr>
+
+<h2>Příprava systému na další ročník</h2>
+<form method="post" id="end_of_issem_form">
+    <div class="row">
+        <div class="col">
+            TODO tohle ještě dodělat a domyslet, co všechno se má stát. Zatím se děje tohle:
+            <ul>
+                <li>Nechá to všechny uživatele a třídy</li>
+                <li>Promaže to všechny spojení účastníků do tříd</li>
+                <li>U všech stávajících účastníků to nastaví, že se dalšího ročníku defaultně neúčastní</li>
+            </ul>
+        </div>
+        <div class="col-auto">
+            <button class="custom_button" id="end_of_issem" type="button">Provést</button>
+            <input type="hidden" name="end_of_issem" value="whatever">
+        </div>
+    </div>
+</form>
 <script type="module" src="{{url_for('static', filename='js/organizator/settings.js')}}"></script>
 
 {% endblock %}

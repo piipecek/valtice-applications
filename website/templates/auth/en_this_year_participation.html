@@ -1,0 +1,17 @@
+{% extends"en_context.html" %}
+
+{% block content %}
+<h1>Participation on the following ISSEM</h1>
+<hr>
+<p>
+    <ul>
+        <li>We need to distinguish between active participants and those who will not participate this year, as accounts remain active throughout the year.</li>
+        <li>If you are interested in participating in this year's ISSEM, please proceed.</li>
+    </ul>
+    <form method="post">
+        <button type="submit" name="participates" value="yes" class="custom_button">Proceed</button>
+        <hr>
+        <button type="submit" name="participates" value="no" class="custom_button">I am not going to participate this year</button>
+    </form>
+</p>
+{% endblock %}

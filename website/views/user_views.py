@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, logout_user
 from website.helpers.get_roles import get_roles
 from website.models.user import User
-from website.helpers.require_role import ensure_email_password
+from website.helpers.require_role import ensure_email_password_participant
 from website.mail_handler import mail_sender
 from website.helpers.settings_manager import get_class_signup_state
 
@@ -11,7 +11,7 @@ user_views = Blueprint("user_views",__name__)
 
 
 @user_views.route("/account", methods=["GET", "POST"])
-@ensure_email_password("cz")
+@ensure_email_password_participant("cz")
 def account():
     if request.method == "GET":
         return render_template("user/cz_account.html", roles=get_roles(), is_locked = current_user.is_locked)
@@ -30,7 +30,7 @@ def account():
     
     
 @user_views.route("/en_account", methods=["GET", "POST"])
-@ensure_email_password("en")
+@ensure_email_password_participant("en")
 def en_account():
     if request.method == "GET":
         return render_template("user/en_account.html", roles=get_roles(), is_locked = current_user.is_locked)
@@ -47,7 +47,7 @@ def en_account():
     
     
 @user_views.route("/edit_account", methods=["GET", "POST"])
-@ensure_email_password("cz")
+@ensure_email_password_participant("cz")
 def edit_account():
     if request.method == "GET":
         return render_template("user/cz_edit_account.html", roles=get_roles())
@@ -98,7 +98,7 @@ def edit_account():
 
 
 @user_views.route("/en_edit_account", methods=["GET", "POST"])
-@ensure_email_password("en")
+@ensure_email_password_participant("en")
 def en_edit_account():
     if request.method == "GET":
         return render_template("user/en_edit_account.html", roles=get_roles(), is_locked=current_user.is_locked)
@@ -149,7 +149,7 @@ def en_edit_account():
         
 
 @user_views.route("/zapis_tridy", methods=["GET", "POST"])
-@ensure_email_password("cz")
+@ensure_email_password_participant("cz")
 def zapis_tridy():
     if request.method == "GET":
         return render_template("user/cz_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)
@@ -157,7 +157,7 @@ def zapis_tridy():
         return request.form.to_dict()
     
 @user_views.route("/en_zapis_tridy", methods=["GET", "POST"])
-@ensure_email_password("en")
+@ensure_email_password_participant("en")
 def en_zapis_tridy():
     if request.method == "GET":
         return render_template("user/en_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)

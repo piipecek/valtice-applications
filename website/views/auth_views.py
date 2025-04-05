@@ -25,7 +25,7 @@ def login():
         if user and check_password_hash(user.password, password):
             user.login()
             flash("úspěšné přihlášení", category="success")
-            return redirect(url_for("guest_views.cz_dashboard"))
+            return redirect(url_for("user_views.account"))
         else:
             flash("E-mail nebo heslo byly špatně", category="error")
             return redirect(url_for("auth_views.login"))
@@ -47,7 +47,7 @@ def en_login():
         if user and check_password_hash(user.password, password):
             user.login()
             flash("Login successful", category="success")
-            return redirect(url_for("guest_views.en_dashboard"))
+            return redirect(url_for("user_views.en_account"))
         else:
             flash("Email or password incorrect", category="error")
             return redirect(url_for("auth_views.en_login"))
@@ -67,7 +67,7 @@ def register():
             password = request.form.get("password")
             confirm = request.form.get("confirm")
             if password != confirm:
-                -flash("Hesla se neshodují.", category="error")
+                flash("Hesla se neshodují.", category="error")
                 return redirect(url_for("auth_views.register"))
             elif len(password) == 0 or len(email) == 0:
                 flash("E-mail a heslo nesmí být prázdné.", category="error")
@@ -79,7 +79,6 @@ def register():
                 u = User(email=email, password=generate_password_hash(password, method="scrypt"))
                 u.update()
                 u.login()
-                mail_sender(mail_identifier="confirm_email", target=email, data=u.get_reset_token())
                 return redirect(url_for("auth_views.confirm_mail"))
         else:
             email = request.form.get("email_child")
@@ -103,7 +102,6 @@ def register():
             if (all([email, password])):
                 u.email = email
                 u.password = generate_password_hash(password, method="scrypt")
-                mail_sender(mail_identifier="confirm_email", target=email, data=u.get_reset_token())
                 u.update()
                 return redirect(url_for("auth_views.confirm_mail"))
             else:
@@ -135,7 +133,6 @@ def en_register():
                 u = User(email=email, password=generate_password_hash(password, method="scrypt"))
                 u.update()
                 u.login()
-                mail_sender(mail_identifier="en_confirm_email", target=email, data=u.get_reset_token())
                 return redirect(url_for("auth_views.en_confirm_mail"))
         else:
             email = request.form.get("email_child")
@@ -160,7 +157,6 @@ def en_register():
                 u.email = email
                 u.password = generate_password_hash(password, method="scrypt")
                 u.update()
-                mail_sender(mail_identifier="en_confirm_email", target=email, data=u.get_reset_token())
                 return redirect(url_for("auth_views.en_confirm_mail"))
             else:
                 return redirect(url_for("user_views.en_account"))
@@ -172,6 +168,7 @@ def confirm_mail():
     if current_user.confirmed_email:
         return redirect(url_for("user_views.account"))
     if request.method == "GET":
+        mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
         return render_template("auth/cz_confirm_mail.html", email = current_user.email, roles = get_roles())
     else:
         if request.form.get("again"):
@@ -188,6 +185,7 @@ def en_confirm_mail():
     if current_user.confirmed_email:
         return redirect(url_for("user_views.en_account"))
     if request.method == "GET":
+        mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
         return render_template("auth/en_confirm_mail.html", email = current_user.email, roles = get_roles())
     else:
         if request.form.get("again"):
@@ -366,3 +364,43 @@ def en_change_password():
             return request.form.to_dict()
 
 
+@auth_views.route("/this_year_participation", methods=["GET", "POST"])
+@login_required
+def this_year_participation():
+    if current_user.is_this_year_participant:
+        return redirect(url_for("guest_views.cz_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/cz_this_year_participation.html", roles=get_roles())
+    else:
+        if status := request.form.get("participates"):
+            if status == "yes":
+                current_user.is_this_year_participant = True
+                current_user.update()
+                flash("Zájem na tomto ročníku byl zaznamenán, děkujeme.", category="success")
+                return redirect(url_for("user_views.account"))
+            elif status == "no":
+                flash("Váš účet stále bude existovat, ale bez zájmu o letošní ročník Vás dál nemůžeme pustit.", category="info")
+                return redirect(url_for("auth_views.this_year_participation"))
+        else:
+            return request.form.to_dict()
+        
+    
+@auth_views.route("/en_this_year_participation", methods=["GET", "POST"])
+@login_required
+def en_this_year_participation():
+    if current_user.is_this_year_participant:
+        return redirect(url_for("guest_views.en_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/en_this_year_participation.html", roles=get_roles())
+    else:
+        if status := request.form.get("participates"):
+            if status == "yes":
+                current_user.is_this_year_participant = True
+                current_user.update()
+                flash("We noted your interest in this year's ISSEM, thank you.", category="success")
+                return redirect(url_for("user_views.en_account"))
+            elif status == "no":
+                flash("Your account will still exist, but without interest in this year's ISSEM we cannot let you in.", category="info")
+                return redirect(url_for("auth_views.en_this_year_participation"))
+        else:
+            return request.form.to_dict()

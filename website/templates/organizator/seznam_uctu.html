@@ -1,0 +1,16 @@
+{% extends"cz_context.html" %}
+
+{% block content %}
+<form method="post">
+    <h1>Seznam všech účtů</h1>
+    <hr>
+    <p>
+        Zobrazují se tu všechny účty, které se kdy na MLŠSH registrovaly. Seznam účastníků pro letošní ročník naleznete <a class="link" href="{{url_for('org_views.seznam_ucastniku')}}">zde</a>.
+    </p>
+    <hr>
+    <div id="parent_div"></div>
+</form>
+
+<script type="module" src="{{url_for('static', filename='js/organizator/seznam_uctu.js')}}"></script>
+
+{% endblock %}

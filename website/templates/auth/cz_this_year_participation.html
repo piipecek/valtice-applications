@@ -1,0 +1,17 @@
+{% extends"cz_context.html" %}
+
+{% block content %}
+<h1>Účast na nadcházejícím ročníku</h1>
+<hr>
+<p>
+    <ul>
+        <li>Potože účty zůstávají založené přes rok, potřebujeme odlišit aktivní účastníky od těch, kteří už letos nepojednou.</li>
+        <li>Máte-li tedy nezávazný zájem se letos MLŠSH účastnit, pokračujte dále.</li>
+    </ul>
+    <form method="post">
+        <button type="submit" name="participates" value="yes" class="custom_button">Pokračovat</button>
+        <hr>
+        <button type="submit" name="participates" value="no" class="custom_button">Nemám zájem se nadcházejícího ročníku účastnit</button>
+    </form>
+</p>
+{% endblock %}

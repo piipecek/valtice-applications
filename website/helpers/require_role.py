@@ -31,11 +31,12 @@ def require_role_system_name_on_current_user(role_system_name: str, user = curre
     return what_should_i_name_this
 
 
-def ensure_email_password(language): # cz/en
+def ensure_email_password_participant(language): # cz/en
     #chatgpt written
     """
     Decorator to ensure that the current user has a confirmed email
-    and does not need to change their password upon login.
+    and does not need to change their password upon login
+    and paarticipate in this year.
     If they do not have an email at all, they are a kid and are free to go.
     """
     def what_should_i_name_this(original_function):
@@ -61,7 +62,11 @@ def ensure_email_password(language): # cz/en
                     return redirect(url_for("auth_views.change_password"))
                 else:
                     return redirect(url_for("auth_views.en_change_password"))
-            
+            elif not current_user.is_this_year_participant:
+                if language == "cz":
+                    return redirect(url_for("auth_views.this_year_participation"))
+                else:
+                    return redirect(url_for("auth_views.en_this_year_participation"))
             return original_function(*args, **kwargs)
         return wrapper
     return what_should_i_name_this
