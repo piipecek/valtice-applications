@@ -35,3 +35,5 @@ function update_capacity_visibility() {
 }
 
 has_capacity_select.addEventListener("change", update_capacity_visibility)
+
+update_capacity_visibility()

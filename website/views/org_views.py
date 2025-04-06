@@ -272,6 +272,10 @@ def detail_tridy(id:int):
 @org_views.route("/uprava_tridy/<int:id>", methods=["GET","POST"])
 @require_role_system_name_on_current_user("editor")
 def uprava_tridy(id:int):
+    trida = Trida.get_by_id(id)
+    if trida is None:
+        flash("Třída s tímto ID neexistuje", category="error")
+        return redirect(url_for("org_views.seznam_trid"))
     if request.method == "GET":
         return render_template("organizator/uprava_tridy.html", id=id, roles=get_roles(current_user))
     else:
@@ -279,8 +283,6 @@ def uprava_tridy(id:int):
             t = Trida.get_by_id(id)
             t.nacist_zmeny_z_requestu(request)
             flash("Změny byly uloženy", category="success")
-            return redirect(url_for("org_views.detail_tridy", id=id))
-        elif request.form.get("zpet"):
             return redirect(url_for("org_views.detail_tridy", id=id))
         elif request.form.get("delete"):
             t = Trida.get_by_id(id)

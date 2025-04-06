@@ -19,7 +19,7 @@ class Trida(Common_methods_db_model):
     full_name_en = db.Column(db.String(1000))
     capacity = db.Column(db.Integer, default=8)
     has_capacity = db.Column(db.Boolean, default=True)
-    secondary_billing_behavior = db.Column(db.String(300)) # full, free, ensemble
+    secondary_billing_behavior = db.Column(db.String(300), default="full") # full, free, ensemble
     is_time_exclusive = db.Column(db.Boolean, default=False)
     age_group = db.Column(db.String(300), default="adult") # child, adult, both
     
@@ -73,8 +73,8 @@ class Trida(Common_methods_db_model):
             "secondary_billing_behavior": secondary_billing_behavior,
             "is_time_exclusive": "Ano" if self.is_time_exclusive else "Ne",
             "age_group": age_group,
-            "primary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname))],
-            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname))],
+            "primary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
+            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
             "primary_participants_count": len(self.primary_participants),
             "secondary_participants_count": len(self.secondary_participants),
         }

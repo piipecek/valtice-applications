@@ -195,7 +195,7 @@ class User(Common_methods_db_model, UserMixin):
                     "surname": u.surname
                 }
                 result.append(data)
-        return sorted(result, key=lambda x: czech_sort.key(x["surname"] if x["surname"] else ""))
+        return sorted(result, key=lambda x: czech_sort.key(x["surname"] or ""))
     
     
     def login(self):
