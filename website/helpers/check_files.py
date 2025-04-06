@@ -27,6 +27,7 @@ def check_settings_file() -> None:
                     "en_frontpage_text": "This text has to be edited from the admin section.",
                     "users_locked": False,
                     "vs_capacity": 0,
-                    "gym_capacity": 0
+                    "gym_capacity": 0,
+                    "bank_account": "000000000/0000",
                 }
                 , f, indent=4)

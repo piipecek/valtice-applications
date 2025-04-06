@@ -12,6 +12,7 @@ document.getElementById("text_cz").value = settings["cz_frontpage_text"]
 document.getElementById("text_en").value = settings["en_frontpage_text"]
 document.getElementById("vs_capacity").value = settings["vs_capacity"]
 document.getElementById("gym_capacity").value = settings["gym_capacity"]
+document.getElementById("bank_account").value = settings["bank_account"]
 let end_of_issem_form = document.getElementById("end_of_issem_form")
 let end_of_issem_button = document.getElementById("end_of_issem")
 

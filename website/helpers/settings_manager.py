@@ -87,3 +87,8 @@ def set_both_capacities(vs, gym):
     settings['vs_capacity'] = vs
     settings['gym_capacity'] = gym
     save_settings(settings)
+    
+def set_bank_account(account: str):
+    settings = get_settings()
+    settings['bank_account'] = account
+    save_settings(settings)

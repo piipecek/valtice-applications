@@ -5,7 +5,7 @@ from website.models.user import User
 from website.helpers.require_role import ensure_email_password_participant
 from website.mail_handler import mail_sender
 from website.helpers.settings_manager import get_class_signup_state
-
+from datetime import datetime
 
 user_views = Blueprint("user_views",__name__)
 
@@ -25,6 +25,16 @@ def account():
             else:
                 flash("Nemáte právo na toto dítě", "error")
                 return redirect(url_for("user_views.account"))
+        elif request.form.get("send_calc"):
+            if current_user.parent:
+                target = current_user.parent.email
+            else:
+                target = current_user.email
+            mail_sender(mail_identifier="send_calculation", target=target, data=current_user.info_for_calculation_email())
+            current_user.datetime_calculation_email = datetime.now()
+            current_user.update()
+            flash("E-mail s platebními údaji byl odeslán", category="success")
+            return redirect(url_for("user_views.account", id=id))
         else:
             return request.form.to_dict()
     
@@ -44,6 +54,18 @@ def en_account():
             else:
                 flash("You don't have permission for this child", "error")
                 return redirect(url_for("user_views.en_account"))
+        elif request.form.get("send_calc"):
+            if current_user.parent:
+                target = current_user.parent.email
+            else:
+                target = current_user.email
+            mail_sender(mail_identifier="en_send_calculation", target=target, data=current_user.info_for_calculation_email())
+            current_user.datetime_calculation_email = datetime.now()
+            current_user.update()
+            flash("E-mail with payment details was sent", category="success")
+            return redirect(url_for("user_views.en_account", id=id))
+        else:
+            return request.form.to_dict()
     
     
 @user_views.route("/edit_account", methods=["GET", "POST"])

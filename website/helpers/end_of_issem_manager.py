@@ -6,4 +6,6 @@ def end_of_issem():
         u.primary_class = None
         u.secondary_classes = []
         u.is_this_year_participant = False
+        u.datetime_calculation_email = None
         u.update()
+        # TOOO domyslet co se tu vsechno musi promazavat 

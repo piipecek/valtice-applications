@@ -9,7 +9,8 @@ from website.models.meal import Meal
 from website.models.role import Role
 from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, set_both_capacities
+from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, set_both_capacities, set_bank_account
+from website.helpers.pretty_penize import pretty_penize
 from website.helpers.export import export
 from website.helpers.end_of_issem_manager import end_of_issem
 from website.paths import logo_cz_path, logo_en_path
@@ -122,6 +123,10 @@ def settings():
             end_of_issem()
             flash("Konec ročníku úspěšně proveden, těšíme se za rok!", category="success")
             return redirect(url_for("org_views.settings"))
+        elif request.form.get("bank_account_button"):
+            set_bank_account(request.form.get("bank_account"))
+            flash("Číslo účtu bylo uloženo.", category="success")
+            return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()
     
@@ -129,14 +134,14 @@ def settings():
 @org_views.route("/detail_ucastnika/<int:id>", methods=["GET","POST"])
 @require_role_system_name_on_current_user("organiser")
 def detail_ucastnika(id:int):
+    u = User.get_by_id(id)
     if request.method == "GET":
-        if User.get_by_id(id) is None:
+        if u is None:
             flash("Uživatel s tímto ID neexistuje", category="error")
             return redirect(url_for("org_views.seznam_ucastniku"))
         return render_template("organizator/detail_ucastnika.html", id=id, roles=get_roles(current_user))
     else:
         if request.form.get("zaregistrovat"):
-            u = User.get_by_id(id)
             u.datetime_registered = datetime.now()
             u.update()
             flash("Uživatel byl zaregistrován", category="success")
@@ -144,11 +149,23 @@ def detail_ucastnika(id:int):
         elif request.form.get("edit_button"):
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         elif request.form.get("log_in_as"):
-            u = User.get_by_id(id)
             logout_user()
             u.login()
             flash(f"Jste přihlášen jako {u.get_full_name()}. Pro pokračování s původním účtem se odhlašte a znovu přihlašte.", category="success")
             return redirect(url_for("user_views.account"))
+        elif lang := request.form.get("send_calc"):
+            if u.parent:
+                target = u.parent.email
+            else:
+                target = u.email
+            if lang == "cz":
+                mail_sender(mail_identifier="send_calculation", target=target, data=u.info_for_calculation_email())
+            else:
+                mail_sender(mail_identifier="en_send_calculation", target=target, data=u.info_for_en_calculation_email())
+            u.datetime_calculation_email = datetime.now()
+            u.update()
+            flash("Email s platebními údaji byl odeslán", category="success")
+            return redirect(url_for("org_views.detail_ucastnika", id=id))
         return request.form.to_dict()
     
     

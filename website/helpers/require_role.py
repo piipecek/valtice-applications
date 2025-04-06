@@ -42,14 +42,14 @@ def ensure_email_password_participant(language): # cz/en
     def what_should_i_name_this(original_function):
         @wraps(original_function)
         def wrapper(*args, **kwargs):
-            if current_user.email is None:
-                pass
-            
-            elif not current_user.is_authenticated:
+            if not current_user.is_authenticated:
                 if language == "cz":
                     return redirect(url_for("auth_views.login"))
                 else:
                     return redirect(url_for("auth_views.en_login"))
+            
+            if current_user.email is None:
+                pass
             
             elif not current_user.confirmed_email:
                 if language == "cz":

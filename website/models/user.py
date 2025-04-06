@@ -10,7 +10,7 @@ from website.helpers.pretty_date import pretty_datetime, pretty_date
 from website.helpers.pretty_penize import pretty_penize
 from website.helpers.settings_manager import get_settings
 from datetime import datetime, timedelta, timezone
-from flask import current_app, flash
+from flask import current_app, flash, url_for
 from flask_login import UserMixin, login_user, current_user
 import jwt
 from werkzeug.security import generate_password_hash
@@ -38,7 +38,7 @@ class User(Common_methods_db_model, UserMixin):
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
     datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy
     datetime_registered = db.Column(db.DateTime)
-    datetime_calculation_email = db.Column(db.DateTime) # TODO je to v db modelu ale jeste to neni nikam propojeny
+    datetime_calculation_email = db.Column(db.DateTime)
     accomodation_type = db.Column(db.String(200), default=None) # own/vs/gym. None znamená, že ještě nepicknul
     accomodation_count = db.Column(db.Integer, default=0)
     musical_education = db.Column(db.Text)
@@ -385,6 +385,10 @@ class User(Common_methods_db_model, UserMixin):
             billing_vedlejsi_tridy_list.append(zaznam)
         billing_vedlejsi_tridy = "\n".join(billing_vedlejsi_tridy_list)
         
+        last_billing_email_message = "Účastník zatím nedostal e-mail o platbě."
+        if self.datetime_calculation_email:
+            last_billing_email_message = f"Účastník dostal e-mail o platbě naposledy {pretty_datetime(self.datetime_calculation_email)}."
+        
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
@@ -458,6 +462,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
             "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
             "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
+            "last_billing_email_message": last_billing_email_message,
             "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
             "hlavni_trida": {
                 "name": self.primary_class.full_name_cz if self.primary_class else "-",
@@ -956,6 +961,27 @@ class User(Common_methods_db_model, UserMixin):
             "phone": self.phone,
             "education": self.musical_education,
             "repertoire": self.repertoire,
+        }
+        
+    
+    def info_for_calculation_email(self) -> dict:
+        print(url_for("user_views.account", _external=True))
+        return {
+            "rok": datetime.now().year,
+            "url": url_for("user_views.account", _external=True),
+            "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
+            "bank_account": get_settings()["bank_account"],
+            "zprava_pro_prijemce": self.get_full_name()
+        }
+    
+    
+    def info_for_en_calculation_email(self) -> dict:
+        return {
+            "rok": datetime.now().year,
+            "url": url_for("user_views.en_account", _external=True),
+            "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
+            "bank_account": get_settings()["bank_account"],
+            "zprava_pro_prijemce": self.get_full_name()
         }
         
 # TODO procistit importy a dat je nahoru
