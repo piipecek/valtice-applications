@@ -43,18 +43,18 @@
             </div>
         </div>
         <div class="row my-1">
+            <div class="col-3 d-flex align-items-center">Má třída maximální kapacitu?</div>
+            <div class="col">
+                <select class="form-control" id="has_capacity" name="has_capacity">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+        </div>
+        <div class="row my-1" id="capacity_row">
             <div class="col-3 d-flex align-items-center">Kapacita</div>
             <div class="col">
                 <input type="number" class="form-control" id="capacity" name="capacity">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col-3 d-flex align-items-center">Typ třídy</div>
-            <div class="col">
-                <select class="form-control" id="is_solo" name="is_solo">
-                    <option value="Ano">sólová</option>
-                    <option value="Ne">hromadná - kapacita nehraje roli</option>
-                </select>
             </div>
         </div>
         <div class="row my-1">
@@ -68,11 +68,12 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-3 d-flex align-items-center">Je zdarma jako vedlejší?</div>
+            <div class="col-3 d-flex align-items-center">Jak se platí jako druhá třída?</div>
             <div class="col">
-                <select class="form-control" id="is_free_as_secondary" name="is_free_as_secondary">
-                    <option value="Ano">Ano</option>
-                    <option value="Ne">Ne</option>
+                <select class="form-control" id="secondary_billing_behavior" name="secondary_billing_behavior">
+                    <option value="full">Plně placená</option>
+                    <option value="ensemble">Placená jako komorní a ansámblová</option>
+                    <option value="free">Zdarma</option>
                 </select>
             </div>
         </div>

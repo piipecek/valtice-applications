@@ -18,10 +18,10 @@ class Trida(Common_methods_db_model):
     short_name_en = db.Column(db.String(300))
     full_name_en = db.Column(db.String(1000))
     capacity = db.Column(db.Integer, default=8)
-    is_solo = db.Column(db.Boolean, default=True)
-    is_free_as_secondary = db.Column(db.Boolean, default=False)
+    has_capacity = db.Column(db.Boolean, default=True)
+    secondary_billing_behavior = db.Column(db.String(300)) # full, free, ensemble
     is_time_exclusive = db.Column(db.Boolean, default=False)
-    age_group = db.Column(db.String(300), default="adult") #child, adult, both
+    age_group = db.Column(db.String(300), default="adult") # child, adult, both
     
     tutor_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     tutor = db.relationship("User", back_populates="taught_classes", foreign_keys=[tutor_id])
@@ -34,7 +34,7 @@ class Trida(Common_methods_db_model):
 
     def info_pro_seznam_trid(self):
         pocet_ucastniku = str(len(self.primary_participants) + len(self.secondary_participants)) + "/" + str(self.capacity)
-        if not self.is_solo:
+        if not self.has_capacity:
             pocet_ucastniku = str(len(self.primary_participants) + len(self.secondary_participants))
         return {
             "id": self.id,
@@ -53,6 +53,13 @@ class Trida(Common_methods_db_model):
         elif self.age_group == "both":
             age_group = "Smíšená - pro děti i dospělé"
             
+        secondary_billing_behavior = "Zdarma"
+        if self.secondary_billing_behavior == "full":
+            secondary_billing_behavior = "Plně placená"
+        elif self.secondary_billing_behavior == "ensemble":
+            secondary_billing_behavior = "Placená jako komorní a ansámblová"
+            
+            
         return {
             "tutor": {
                 "name": self.tutor.get_full_name() if self.tutor else "Zatím bez lektora",
@@ -62,9 +69,8 @@ class Trida(Common_methods_db_model):
             "full_name_cz": self.full_name_cz if self.full_name_cz else "-",
             "short_name_en": self.short_name_en if self.short_name_en else "-",
             "full_name_en": self.full_name_en if self.full_name_en else "-",
-            "capacity": self.capacity if self.capacity else "-",
-            "is_solo": "sólová" if self.is_solo else "hromadná",
-            "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
+            "capacity": "ne" if not self.has_capacity else f"ano: {self.capacity}",
+            "secondary_billing_behavior": secondary_billing_behavior,
             "is_time_exclusive": "Ano" if self.is_time_exclusive else "Ne",
             "age_group": age_group,
             "primary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname))],
@@ -87,10 +93,10 @@ class Trida(Common_methods_db_model):
             "full_name_cz": self.full_name_cz,
             "short_name_en": self.short_name_en,
             "full_name_en": self.full_name_en,
+            "has_capacity": "Ano" if self.has_capacity else "Ne",
             "capacity": self.capacity,
             "age_group": self.age_group,
-            "is_solo": "Ano" if self.is_solo else "Ne",
-            "is_free_as_secondary": "Ano" if self.is_free_as_secondary else "Ne",
+            "secondary_billing_behavior": self.secondary_billing_behavior,
             "is_time_exclusive": "Ano" if self.is_time_exclusive else "Ne",
             "tutor_id": self.tutor_id if self.tutor_id else "-",
         }
@@ -101,10 +107,10 @@ class Trida(Common_methods_db_model):
         self.full_name_cz = request.form.get("full_name_cz")
         self.short_name_en = request.form.get("short_name_en")
         self.full_name_en = request.form.get("full_name_en")
+        self.has_capacity = request.form.get("has_capacity") == "Ano"
         self.capacity = int(request.form.get("capacity"))
         self.age_group = request.form.get("age_group")
-        self.is_solo = request.form.get("is_solo") == "Ano"
-        self.is_free_as_secondary = request.form.get("is_free_as_secondary") == "Ano"
+        self.secondary_billing_behavior = request.form.get("secondary_billing_behavior")
         self.is_time_exclusive = request.form.get("is_time_exclusive") == "Ano"
         self.tutor_id = int(request.form.get("tutor_id")) if request.form.get("tutor_id") != "-" else None
         self.update()
@@ -121,7 +127,7 @@ class Trida(Common_methods_db_model):
         state_main = "available" #available, enrolled, full
         if current_user in self.primary_participants:
             state_main = "enrolled"
-        elif not self.is_solo:
+        elif not self.has_capacity:
             state_main = "available"
         elif len(self.primary_participants) >= self.capacity:
             state_main = "full"
@@ -129,7 +135,7 @@ class Trida(Common_methods_db_model):
         state_secondary = "available" #available, enrolled, full
         if current_user in self.secondary_participants:
             state_secondary = "enrolled"
-        elif not self.is_solo:
+        elif not self.has_capacity:
             state_secondary = "available"
         elif len(self.secondary_participants) >= self.capacity:
             state_secondary = "full"
@@ -137,7 +143,7 @@ class Trida(Common_methods_db_model):
         state_time_exclusive = "available" #available, enrolled, full
         if current_user in self.secondary_participants: # time exclusive tridy jsou vzdy jako vedlejsi
             state_time_exclusive = "enrolled"
-        elif not self.is_solo:
+        elif not self.has_capacity:
             state_time_exclusive = "available"
         elif len(self.secondary_participants) >= self.capacity:
             state_time_exclusive = "full"
@@ -149,7 +155,7 @@ class Trida(Common_methods_db_model):
             "name": self.full_name_cz if self.full_name_cz else "Chybí český plný název třídy",
             "capacity": self.capacity,
             "places_taken": len(self.primary_participants) + len(self.secondary_participants),
-            "is_solo": self.is_solo,
+            "has_capacity": self.has_capacity,
             "state_main": state_main,
             "state_secondary": state_secondary,
             "state_time_exclusive": state_time_exclusive
@@ -160,7 +166,7 @@ class Trida(Common_methods_db_model):
         state_main = "available"
         if current_user in self.primary_participants:
             state_main = "enrolled"
-        elif not self.is_solo:
+        elif not self.has_capacity:
             state_main = "available"
         elif len(self.primary_participants) >= self.capacity:
             state_main = "full"
@@ -168,7 +174,7 @@ class Trida(Common_methods_db_model):
         state_secondary = "available"
         if current_user in self.secondary_participants:
             state_secondary = "enrolled"
-        elif not self.is_solo:
+        elif not self.has_capacity:
             state_secondary = "available"
         elif len(self.secondary_participants) >= self.capacity:
             state_secondary = "full"
@@ -176,7 +182,7 @@ class Trida(Common_methods_db_model):
         state_time_exclusive = "available" #available, enrolled, full
         if current_user in self.secondary_participants: # time exclusive tridy jsou vzdy jako vedlejsi
             state_time_exclusive = "enrolled"
-        elif not self.is_solo:
+        elif not self.has_capacity:
             state_time_exclusive = "available"
         elif len(self.secondary_participants) >= self.capacity:
             state_time_exclusive = "full"
@@ -186,7 +192,7 @@ class Trida(Common_methods_db_model):
             "name": self.full_name_en if self.full_name_en else "The full name of the class is missing",
             "capacity": self.capacity,
             "places_taken": len(self.primary_participants) + len(self.secondary_participants),
-            "is_solo": self.is_solo,
+            "has_capacity": self.has_capacity,
             "state_main": state_main,
             "state_secondary": state_secondary,
             "state_time_exclusive": state_time_exclusive

@@ -251,9 +251,9 @@ class User(Common_methods_db_model, UserMixin):
             if trida is None:
                 return None
             if je_vedlejsi:
-                if trida.is_free_as_secondary: # napr. zapsanej sbor jako vedlejsi trida
+                if trida.secondary_billing_behavior == "free": # napr. zapsanej sbor jako vedlejsi trida
                     return 0
-                elif not trida.is_solo: # napr. zapsana Poppy Holden jako vedlejsi trida
+                elif trida.secondary_billing_behavior == "ensemble":
                     if self.billing_currency == "czk":
                         return Billing.get_by_system_name("ansambly").czk
                     elif self.billing_currency == "eur":

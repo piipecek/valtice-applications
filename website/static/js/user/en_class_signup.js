@@ -63,7 +63,7 @@ function update_div_trid(trida) {
             }
 
             let text = trida["name"]
-            if (trida["is_solo"]) {
+            if (trida["has_capacity"]) {
                 text += " (" + trida["places_taken"] +  "/" + trida["capacity"] + ")"
             } else {
                 text += " (" + trida["places_taken"] + ")"

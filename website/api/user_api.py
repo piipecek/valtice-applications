@@ -149,7 +149,7 @@ def handle_class_click():
                 return json.dumps({"status": "Nelze se zapsat do této třídy, už jste v ní zapsaní jako vedlejší účastník. Pro změnu hlavní třídy kontaktujte organizátory."}), 400
             if current_user.primary_class is not None:
                 return json.dumps({"status": "Nelze si zapsat do této třídy, už jste zapsaní do jiné hlavní třídy. Nejdříve se odhlašte z této třídy."}), 400
-            if trida.is_solo and len(trida.primary_participants) >= trida.capacity:
+            if trida.has_capacity and len(trida.primary_participants) >= trida.capacity:
                 return json.dumps({"status": "Třída je již plná, obnovte tuto stránku a zapište se do jiné."}), 400
             trida.primary_participants.append(current_user)
             trida.update()
@@ -195,7 +195,7 @@ def handle_en_class_click():
                 return json.dumps({"status": "You cannot enroll in this class, you are already enrolled as a secondary participant. Please contact the organizers to change your main class."}), 400
             if current_user.primary_class is not None:
                 return json.dumps({"status": "You cannot enroll in this class, you are already enrolled in another main class. Please unenroll from this class first."}), 400
-            if trida.is_solo and len(trida.primary_participants) >= trida.capacity:
+            if trida.has_capacity and len(trida.primary_participants) >= trida.capacity:
                 return json.dumps({"status": "This class is already full, please refresh this page and enroll in another one."}), 400
             trida.primary_participants.append(current_user)
             trida.update()
