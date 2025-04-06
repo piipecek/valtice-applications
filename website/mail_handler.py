@@ -47,6 +47,11 @@ def mail_sender(mail_identifier, target, data=None) -> None:
                         sender="application@early-music.cz",
                         recipients=[target])
             msg.html = render_template("mails/en_calculation.html", data=data)
+        elif mail_identifier == "succesful_payment":
+            msg = Message("Úspěšná platba na MLŠSH / Successful payment on ISSEM",
+                          sender="application@early-music.cz",
+                          recipients=[target])
+            msg.html = render_template("mails/successful_payment.html")
         mail.send(msg)
     except gaierror:
         flash(f"Gaierror, pravděpodobně nejsi online. E-mail se neposlal. Mail identifier: {mail_identifier}, target: {target}", category="info")

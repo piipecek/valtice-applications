@@ -16,6 +16,7 @@ import jwt
 from werkzeug.security import generate_password_hash
 import sqlalchemy
 from datetime import datetime
+from website.mail_handler import mail_sender
 
 
 class User(Common_methods_db_model, UserMixin):
@@ -554,6 +555,14 @@ class User(Common_methods_db_model, UserMixin):
                 trida = Trida.get_by_id(id)
                 if trida not in self.secondary_classes:
                     self.secondary_classes.append(trida)
+                    
+        if self.billing_date_paid is None and request.form.get("billing_date_paid"):
+            if self.parent:
+                target = self.parent.email
+            else:
+                target = self.email
+            mail_sender(mail_identifier="succesful_payment", target=target)
+
             
              
         self.name = request.form.get("name")
