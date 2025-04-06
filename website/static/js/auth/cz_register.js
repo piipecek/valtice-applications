@@ -8,6 +8,10 @@ let registrace = document.getElementById('registrace');
 let registrace_nebylo_15 = document.getElementById('registrace_nebylo_15');
 let jak_vypada_heslo = document.getElementById('jak_vypada_heslo');
 
+let create_account_button_1 = document.getElementById('create_account_button_1');
+let create_account_button_2 = document.getElementById('create_account_button_2');
+form = document.getElementById('form');
+
 let email_odpovedne = document.getElementById('email_odpovedne');
 
 bylo_15_button.addEventListener('click', function() {
@@ -31,3 +35,15 @@ under_15_pokracovat.addEventListener('click', function() {
         jak_vypada_heslo.hidden = false;
     }
 })
+
+function disableButtonAfterClick(button) {
+    button.addEventListener('click', function(event) {
+        if (!button.disabled) {
+            button.disabled = true;
+            form.submit();
+        }
+    });
+}
+
+disableButtonAfterClick(create_account_button_1);
+disableButtonAfterClick(create_account_button_2);

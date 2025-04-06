@@ -1,6 +1,7 @@
 from flask import abort, redirect, url_for
 from flask_login import current_user
 from functools import wraps
+from website.mail_handler import mail_sender
 
 def require_role_system_name_on_current_user(role_system_name: str, user = current_user):
     """Můj pokus o napsání login_required decoratoru
@@ -53,8 +54,10 @@ def ensure_email_password_participant(language): # cz/en
             
             elif not current_user.confirmed_email:
                 if language == "cz":
+                    mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
                     return redirect(url_for("auth_views.confirm_mail"))
                 else:
+                    mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
                     return redirect(url_for("auth_views.en_confirm_mail"))
             
             elif current_user.must_change_password_upon_login:

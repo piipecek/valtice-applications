@@ -79,6 +79,7 @@ def register():
                 u = User(email=email, password=generate_password_hash(password, method="scrypt"))
                 u.update()
                 u.login()
+                mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
                 return redirect(url_for("auth_views.confirm_mail"))
         else:
             email = request.form.get("email_child")
@@ -103,6 +104,7 @@ def register():
                 u.email = email
                 u.password = generate_password_hash(password, method="scrypt")
                 u.update()
+                mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
                 return redirect(url_for("auth_views.confirm_mail"))
             else:
                 return redirect(url_for("user_views.account"))
@@ -133,6 +135,7 @@ def en_register():
                 u = User(email=email, password=generate_password_hash(password, method="scrypt"))
                 u.update()
                 u.login()
+                mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
                 return redirect(url_for("auth_views.en_confirm_mail"))
         else:
             email = request.form.get("email_child")
@@ -157,6 +160,7 @@ def en_register():
                 u.email = email
                 u.password = generate_password_hash(password, method="scrypt")
                 u.update()
+                mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
                 return redirect(url_for("auth_views.en_confirm_mail"))
             else:
                 return redirect(url_for("user_views.en_account"))
@@ -168,7 +172,6 @@ def confirm_mail():
     if current_user.confirmed_email:
         return redirect(url_for("user_views.account"))
     if request.method == "GET":
-        mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
         return render_template("auth/cz_confirm_mail.html", email = current_user.email, roles = get_roles())
     else:
         if request.form.get("again"):
@@ -185,7 +188,6 @@ def en_confirm_mail():
     if current_user.confirmed_email:
         return redirect(url_for("user_views.en_account"))
     if request.method == "GET":
-        mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
         return render_template("auth/en_confirm_mail.html", email = current_user.email, roles = get_roles())
     else:
         if request.form.get("again"):

@@ -93,6 +93,13 @@ body {
     color: rgb(255,245,235);
 }
 
+.custom_button:disabled{
+    background-color: rgb(180, 130, 148);
+    border: 2px solid rgb(180, 130, 148);
+    color: rgb(255,245,235);
+    cursor: not-allowed;
+}
+
 .custom_a_button{
     background-color: rgb(209, 138, 154);
     border: 2px solid rgb(209, 138, 154);
