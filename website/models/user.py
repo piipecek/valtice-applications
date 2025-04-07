@@ -30,7 +30,7 @@ class User(Common_methods_db_model, UserMixin):
     is_under_16 = db.Column(db.Boolean, default=False)
     
     #automatic data
-    datetime_created = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc))
+    datetime_created = db.Column(db.DateTime, default=datetime.now)
     
     #valtice data
     is_this_year_participant = db.Column(db.Boolean, default=True) # pri registraci se je to nebude ptat na letosek zejo, to ma efekt az za rok
@@ -137,7 +137,7 @@ class User(Common_methods_db_model, UserMixin):
             "id": self.id,
             "full_name": full_name if full_name else "-",
             "surname": self.surname if self.surname else "-",
-            "email": self.email if self.email else self.parent.email,
+            "email": self.email if self.email else self.parent.email if self.parent else "-",
             "registrovan": "Registrován" if self.datetime_registered else "-",
             "hlavni_trida": self.primary_class.short_name_cz if self.primary_class else "-",
             "hlavni_trida_id": self.primary_class_id
@@ -149,7 +149,7 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "id": self.id,
             "full_name": full_name if full_name else "-",
-            "email": self.email if self.email else self.parent.email,
+            "email": self.email if self.email else self.parent.email if self.parent else "-",
             "datum": pretty_date(self.datetime_created)
         }
     
