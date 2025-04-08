@@ -24,7 +24,7 @@ class User(Common_methods_db_model, UserMixin):
     # personal data
     name = db.Column(db.String(200))
     surname = db.Column(db.String(200))
-    email = db.Column(db.String(200))
+    email = db.Column(db.String(200), unique=True)
     phone = db.Column(db.String(200))
     is_student = db.Column(db.Boolean, default=False)
     is_under_16 = db.Column(db.Boolean, default=False)
