@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_mail import Mail
 from .helpers.check_files import check_data_folder, check_settings_file
 from .paths import dotenv_path
@@ -87,9 +87,22 @@ def create_app() -> Flask:
     
     @app.context_processor
     def inject_globals():
+        cz_lektor_tridy_title = ""
+        en_lektor_tridy_title = ""
+        if current_user.is_authenticated:
+            if len(current_user.taught_classes) <= 1:
+                cz_lektor_tridy_title = "Moje třída"
+                en_lektor_tridy_title = "My class"
+            else:
+                cz_lektor_tridy_title = "Moje třídy"
+                en_lektor_tridy_title = "My classes"
+                
         return dict(
             cz_url = os.environ.get("CZ_HOME_URL"),
-            en_url = os.environ.get("EN_HOME_URL")
+            en_url = os.environ.get("EN_HOME_URL"),
+            name = current_user.get_full_name() if current_user.is_authenticated else None,
+            cz_lektor_tridy_title = cz_lektor_tridy_title,
+            en_lektor_tridy_title = en_lektor_tridy_title,
         )
 
     return app

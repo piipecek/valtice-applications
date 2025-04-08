@@ -45,7 +45,7 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Telefon", participant.phone))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
-            participant_div.appendChild(row_factory("Repertoir", participant.repertoire))
+            participant_div.appendChild(row_factory("Repertoár", participant.repertoire))
         }
 
         parent_div.appendChild(document.createElement("hr"))
@@ -65,7 +65,7 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Telefon", participant.phone))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
-            participant_div.appendChild(row_factory("Repertoir", participant.repertoire))
+            participant_div.appendChild(row_factory("Repertoár", participant.repertoire))
         }
 
     }

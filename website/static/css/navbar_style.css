@@ -48,6 +48,14 @@
 .link_wrapper {
     display: flex;
     align-items: center;
+    gap: 15px;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+
+.left_link_wrapper{
+    display: flex;
+    align-items: center;
     gap: 20px;
     padding-right: 2rem;
     padding-left: 2rem;
@@ -211,9 +219,12 @@
     .nav_toggle_menu_wrapper{
         display: flex;
         width: 90%;
-        justify-content: end;
+        justify-content: space-between;
         align-items: center;
         padding-right: 0.5rem;
+    }
+    .icons_wrapper{
+        display: flex;
     }
     #admin-nav-toggle:checked ~ .navbar_wrapper_admin {
         right: 0;

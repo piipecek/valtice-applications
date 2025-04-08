@@ -27,7 +27,7 @@ nebylo_15_button.addEventListener('click', function() {
 
 under_15_pokracovat.addEventListener('click', function() {
     if (email_odpovedne.value == "") {
-        alert("Vyplňte prosím email odpovědné osoby.");
+        alert("Vyplňte prosím e-mail odpovědné osoby.");
         return;
     } else {
         under_15.hidden = true;

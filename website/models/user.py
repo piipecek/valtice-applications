@@ -936,7 +936,7 @@ class User(Common_methods_db_model, UserMixin):
         if request.form.get("new_password"):
             self.password = generate_password_hash(request.form.get("new_password"), method="scrypt")
         # parent_email je vyresenej ve view
-        # zmena emailu je taky ve view
+        # zmena e-mailu je taky ve view
         
         self.update()
         

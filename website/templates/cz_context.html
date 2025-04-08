@@ -21,22 +21,34 @@
 {% endblock %}
 
 
-{% block left_nav %}
-    {% if "tutor" in roles%} 
-        <a class="navbar_link" href="{{url_for('org_views.tutor')}}">Lektor</a>
+{% block name_link %}
+    {% if "prihlasen" in roles %}
+        <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name}}</a>
+    {% endif %}
+{% endblock %}
+
+{% block name_link_2 %}
+    {% if "prihlasen" in roles %}
+        <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name}}</a>
     {% endif %}
 {% endblock %}
 
 
 {% block right_nav %}
-    {% if "prihlasen" in roles %}
+    {% if "tutor" in roles%} 
+        <a class="navbar_link" href="{{url_for('org_views.tutor')}}">{{cz_lektor_tridy_title}}</a>
+    {% endif %}
+    {% if "tutor" in roles and "prihlasen" in roles and roles|length == 2 %}
+    {% elif "prihlasen" in roles %}
         <a href="{{url_for('user_views.zapis_tridy')}}" class="navbar_link">Zápis do třídy</a>
+    {% endif %}
+    {% if "prihlasen" in roles %}
         <a href="{{url_for('user_views.account')}}" class="navbar_link">Účet</a>
         <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
     {% else %}
         <a class="navbar_link" href="{{url_for('auth_views.login')}}">Přihlášení</a>
         <a class="navbar_link" href="{{url_for('auth_views.register')}}">Registrace</a>
-    {%  endif %}
+    {% endif %}
 {% endblock %}
 
 
