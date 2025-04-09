@@ -7,6 +7,7 @@ from flask_login import LoginManager, current_user
 from flask_mail import Mail
 from .helpers.check_files import check_data_folder, check_settings_file
 from .paths import dotenv_path
+from .helpers.settings_manager import is_class_signup_closed, is_secondary_class_signup_open, is_primary_class_signup_open
 
 db = SQLAlchemy()
 cors = CORS()
@@ -103,6 +104,11 @@ def create_app() -> Flask:
             name = current_user.get_full_name() if current_user.is_authenticated else None,
             cz_lektor_tridy_title = cz_lektor_tridy_title,
             en_lektor_tridy_title = en_lektor_tridy_title,
+            aktivni_ucast = current_user.is_active_participant if current_user.is_authenticated else None,
+            is_class_signup_closed = is_class_signup_closed(),
+            is_primary_class_signup_open = is_primary_class_signup_open(),
+            is_secondary_class_signup_open = is_secondary_class_signup_open(),
+            is_under_16 = current_user.is_under_16 if current_user.is_authenticated else None,
         )
 
     return app

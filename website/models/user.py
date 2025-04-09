@@ -808,12 +808,25 @@ class User(Common_methods_db_model, UserMixin):
         zmena_ucasti = "povolena"
         if any([self.primary_class, self.secondary_classes]):
             zmena_ucasti = "zakázána"
+            
+        zmena_kategorie = "povolena"
+        tridy = []
+        if self.primary_class:
+            tridy.append(self.primary_class)
+        for t in self.secondary_classes:
+            tridy.append(t)
+        for trida in tridy:
+            if trida.age_group != "both":
+                zmena_kategorie = "zakázána"
+                break
+        
         return {
             "name": self.name if self.name else "",
             "surname": self.surname if self.surname else "",
             "email": self.email,
             "phone": self.phone,
             "is_student": "Ano" if self.is_student else "Ne",
+            "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
@@ -857,12 +870,25 @@ class User(Common_methods_db_model, UserMixin):
         zmena_ucasti = "povolena"
         if any([self.primary_class, self.secondary_classes]):
             zmena_ucasti = "zakázána"
+            
+        zmena_kategorie = "povolena"
+        tridy = []
+        if self.primary_class:
+            tridy.append(self.primary_class)
+        for t in self.secondary_classes:
+            tridy.append(t)
+        for trida in tridy:
+            if trida.age_group != "both":
+                zmena_kategorie = "zakázána"
+                break
+        
         return {
             "name": self.name if self.name else "",
             "surname": self.surname if self.surname else "",
             "email": self.email,
             "phone": self.phone,
             "is_student": "Ano" if self.is_student else "Ne",
+            "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",

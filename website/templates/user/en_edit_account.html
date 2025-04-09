@@ -48,11 +48,18 @@
         </div>
         <div class="row my-1">
             <div class="col-2 d-flex align-items-center">Category</div>
-            <div class="col">
-                <select class="form-control" id="age_category" name="age_category">
-                <option value="child">Up to and including 15 years</option>
-                    <option value="adult">16 years and more</option>
-                </select>
+            <div class="col" id="zmena_kategorie_povolena" hidden>
+                <div class="col">
+                    <select class="form-control" id="age_category" name="age_category">
+                    <option value="child">Up to and including 15 years</option>
+                        <option value="adult">16 years and more</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col" id="zmena_kategorie_zakazana" hidden>
+                <div class="col">
+                    You are currently signed up for classes that match your age category. If you want to change the age category, you must first unsubscribe from these classes.
+                </div>
             </div>
             <div class="col-auto d-flex align-items-center">
                 <div class="custom-tooltip custom-tooltip-left">

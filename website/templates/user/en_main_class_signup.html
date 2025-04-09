@@ -1,0 +1,51 @@
+{% extends "en_context.html" %}
+
+{% block content %}
+
+    {% if is_primary_class_signup_open %}
+        <h1>Main class enrollment</h1>
+        <hr>
+        <div id="tridy"></div>
+    {% endif %}
+
+    {% if is_class_signup_closed %}
+        TODO Tady bude napsaný, jaké třídy jsou přihlášené.
+    {% endif %}
+
+    <hr>
+    <div class="class_signup_text">
+        <ul>
+            {% if is_primary_class_signup_open %}
+                <li>The main class enrollment period is currently <strong>open</strong>.</li>
+            {% else %}
+                <li>The main class enrollment period is currently <strong>not open</strong>, you can find the latest information on the <a href="{{url_for('guest_views.en_dashboard')}}" class="link">home page</a>.</li>
+                <li>Enrollment will take place on this page.</li>
+            {% endif %}
+            
+            <li>Below you can see an example of what enrollment might look like. Classes are colored according to occupancy as follows:</li>
+        </ul>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-caret-right trida_available_icon"></i> Class with free capacity (6/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-circle-minus trida_full_icon"></i> Full class (8/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-regular fa-square-check trida_enrolled_icon"></i> The class you are successfully enrolled in (37)
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li>If there is no mention of maximum capacity, it means that the class can take any number of people.</li>
+            <li>Clicking on a class with free capacity will enroll you in it.</li>
+            <li>Clicking on your enrolled class will unsubscribe you from it after confirmation.</li>
+            <li>You can learn more about how classes work on the <a class="link" href="{{url_for('guest_views.en_info')}}#classes">general information page</a>.</li>
+        </ul>
+    </div>
+
+
+    <script type="module" src="{{url_for('static', filename='js/user/en_main_class_signup.js')}}"></script>
+
+{% endblock %}

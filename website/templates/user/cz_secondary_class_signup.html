@@ -1,0 +1,64 @@
+{% extends "cz_context.html" %}
+
+{% block content %}
+
+    <!-- v dalsim ifu se ptam na primary, protoze spolecne s primarnima se tu oteviraj i bezkapacitni a casove exkluzivni -->
+    {% if is_primary_class_signup_open %}
+        <h1>Zápis do vedlejších tříd</h1>
+        <hr>
+        <h2>Třídy s kapacitou</h2>
+        {% if is_secondary_class_signup_open %}
+            <div id="solo_secondary_classes"></div>
+        {% else %}
+            <p>V tuto chvíli není možné zapisovat do vedlejších tříd s kapacitou. Tato možnost bude brzy otevřena.</p>
+        {% endif %}
+        <hr>
+        <h2>Třídy bez kapacity</h2>
+        <div id="no_capacity_secondary_classes"></div>
+        <hr>
+        <h2>Časově exkluzivní třídy</h2>
+        <p>Tyto třídy si můžete zapsat navíc, probíhají v čase, který nekoliduje s žádnou jinou třídou.</p>
+        <div id="time_exclusive_classes_div"></div>
+    {% endif %}
+
+    {% if is_class_signup_closed %}
+        TODO Tady bude napsaný, jaké třídy jsou přihlášené.
+    {% endif %}
+
+    <hr>
+
+    <div class="class_signup_text">
+        <ul>
+            {% if is_primary_class_signup_open %}
+                <li>Zápis do vedlejších tříd je v tuto chvíli <strong>otevřený</strong>.
+            {% else %}
+                <li>Zápis do vedlejších tříd v tuto chvíli <strong>není otevřený</strong>, aktuální informace naleznete vždy na <a href="{{url_for('guest_views.cz_dashboard')}}" class="link">domovské stránce</a>.</li>
+                <li>Zápis bude probíhat na této stránce.</li>
+            {% endif %}
+            
+            <li>Níže vidíte příklad toho, jak může zapisování vypadat. Třídy se podle obsazenosti zbarví následovně:</li>
+        </ul>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-caret-right trida_available_icon"></i> Třída s volnou kapacitou (6/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-circle-minus trida_full_icon"></i> Plná třída (8/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-regular fa-square-check trida_enrolled_icon"></i> Vaše zapsaná třída (37)
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li>Pokud u třídy není zmínka o maximální kapacitě, znamená to, že je třída hromadná.</li>
+            <li>Kliknutím na třídu s volnou kapacitou se do ní zapíšete.</li>
+            <li>Kliknutím na Vaší zapsanou třídu se po potvrzení odhlásíte.</li>
+            <li>O fungování tříd se dočtete v <a class="link" href="{{url_for('guest_views.cz_info')}}#classes">informacích</a>.</li>
+        </ul>
+    </div>
+
+    <script type="module" src="{{url_for('static', filename='js/user/cz_secondary_class_signup.js')}}"></script>
+
+{% endblock %}

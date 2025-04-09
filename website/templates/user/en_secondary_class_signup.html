@@ -1,0 +1,63 @@
+{% extends "cz_context.html" %}
+
+{% block content %}
+
+    <!-- v dalsim ifu se ptam na primary, protoze spolecne s primarnima se tu oteviraj i bezkapacitni a casove exkluzivni -->
+    {% if is_primary_class_signup_open %}
+        <h1>Secondary class enrollment</h1>
+        <hr>
+        <h2>Classes with limited capacity</h2>
+        {% if is_secondary_class_signup_open %}
+            <div id="solo_secondary_classes"></div>
+        {% else %}
+            <p>It is not possible to enroll in secondary classes with capacity right now. This option will be opened soon.</p>
+        {% endif %}
+        <hr>
+        <h2>Classes with unlimited capacity</h2>
+        <div id="no_capacity_secondary_classes"></div>
+        <hr>
+        <h2>Time exclusive classes</h2>
+        <p>These classes can be enrolled in addition, they take place at a time that does not collide with any other class.</p>
+        <div id="time_exclusive_classes_div"></div>
+    {% endif %}
+
+    {% if is_class_signup_closed %}
+        TODO Tady bude napsaný, jaké třídy jsou přihlášené.
+    {% endif %}
+
+    <hr>
+    <div class="class_signup_text">
+        <ul>
+            {% if is_primary_class_signup_open %}
+                <li>The secondary class enrollment period is currently <strong>open</strong>.</li>
+            {% else %}
+                <li>The secondary class enrollment period is currently <strong>not open</strong>, you can find the latest information on the <a href="{{url_for('guest_views.en_dashboard')}}" class="link">home page</a>.</li>
+                <li>Enrollment will take place on this page.</li>
+            {% endif %}
+            
+            <li>Below you can see an example of what enrollment might look like. Classes are colored according to occupancy as follows:</li>
+        </ul>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-caret-right trida_available_icon"></i> Class with free capacity (6/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-circle-minus trida_full_icon"></i> Full class (8/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-regular fa-square-check trida_enrolled_icon"></i> The class you are successfully enrolled in (37)
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li>If there is no mention of maximum capacity, it means that the class can take any number of people.</li>
+            <li>Clicking on a class with free capacity will enroll you in it.</li>
+            <li>Clicking on your enrolled class will unsubscribe you from it after confirmation.</li>
+            <li>You can learn more about how classes work on the <a class="link" href="{{url_for('guest_views.en_info')}}#classes">general information page</a>.</li>
+        </ul>
+    </div>
+
+    <script type="module" src="{{url_for('static', filename='js/user/cz_secondary_class_signup.js')}}"></script>
+
+{% endblock %}

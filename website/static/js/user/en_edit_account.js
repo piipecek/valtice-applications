@@ -16,6 +16,14 @@ for (let key in data) {
             document.getElementById("zmena_ucasti_povolena").hidden = true
             document.getElementById("zmena_ucasti_zakazana").hidden = false
         }
+    } else if (key == "zmena_kategorie") {
+        if (data[key] == "povolena") {
+            document.getElementById("zmena_kategorie_povolena").hidden = false
+            document.getElementById("zmena_kategorie_zakazana").hidden = true
+        } else {
+            document.getElementById("zmena_kategorie_povolena").hidden = true
+            document.getElementById("zmena_kategorie_zakazana").hidden = false
+        }
     } else if (key == "has_parent") {
         if (data[key]) {
             document.getElementById("yes_parent").hidden = false

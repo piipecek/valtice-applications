@@ -366,6 +366,9 @@ def udelit_role(id):
             else:
                 user.roles = nove_role_objekty
                 user.update()
+            if Role.get_by_system_name("tutor") not in user.roles:
+                user.taught_classes = []
+                user.update()
             flash("Role byly upraveny.", category="success")
             return redirect(url_for("org_views.organizatori", id=id))
         else:    

@@ -4,8 +4,8 @@ from website.helpers.get_roles import get_roles
 from website.models.user import User
 from website.helpers.require_role import ensure_email_password_participant
 from website.mail_handler import mail_sender
-from website.helpers.settings_manager import get_class_signup_state
 from datetime import datetime
+
 
 user_views = Blueprint("user_views",__name__)
 
@@ -170,18 +170,49 @@ def en_edit_account():
             return request.form.to_dict()
         
 
-@user_views.route("/zapis_tridy", methods=["GET", "POST"])
+@user_views.route("/zapis_hlavni_tridy", methods=["GET", "POST"])
 @ensure_email_password_participant("cz")
-def zapis_tridy():
+def zapis_hlavni_tridy():
+    if not current_user.is_active_participant:
+        flash("Pasivní účastníci se nemohou registrovat do tříd", "error")
+        return redirect(url_for("user_views.account"))
     if request.method == "GET":
-        return render_template("user/cz_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)
+        return render_template("user/cz_main_class_signup.html", roles=get_roles())
+    else:
+        return request.form.to_dict()
+
+
+@user_views.route("/zapis_vedlejsi_tridy", methods=["GET", "POST"])
+@ensure_email_password_participant("cz")
+def zapis_vedlejsi_tridy():
+    if not current_user.is_active_participant:
+        flash("Pasivní účastníci se nemohou registrovat do tříd", "error")
+        return redirect(url_for("user_views.account"))
+    if request.method == "GET":
+        return render_template("user/cz_secondary_class_signup.html", roles=get_roles())
+    else:
+        return request.form.to_dict()
+
+    
+@user_views.route("/en_zapis_hlavni_tridy", methods=["GET", "POST"])
+@ensure_email_password_participant("en")
+def en_zapis_hlavni_tridy():
+    if not current_user.is_active_participant:
+        flash("Passive participants cannot register for classes", "error")
+        return redirect(url_for("user_views.en_account"))
+    if request.method == "GET":
+        return render_template("user/en_main_class_signup.html", roles=get_roles())
     else:
         return request.form.to_dict()
     
-@user_views.route("/en_zapis_tridy", methods=["GET", "POST"])
+    
+@user_views.route("/en_zapis_vedlejsi_tridy", methods=["GET", "POST"])
 @ensure_email_password_participant("en")
-def en_zapis_tridy():
+def en_zapis_vedlejsi_tridy():
+    if not current_user.is_active_participant:
+        flash("Passive participants cannot register for classes", "error")
+        return redirect(url_for("user_views.en_account"))
     if request.method == "GET":
-        return render_template("user/en_class_signup.html", roles=get_roles(), class_signup_state=get_class_signup_state(), aktivni_ucast = current_user.is_active_participant)
+        return render_template("user/en_secondary_class_signup.html", roles=get_roles())
     else:
         return request.form.to_dict()

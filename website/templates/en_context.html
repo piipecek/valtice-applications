@@ -40,7 +40,10 @@
     {% endif %}
     {% if "tutor" in roles and "prihlasen" in roles and roles|length == 2 %}
     {% elif "prihlasen" in roles %}
-        <a href="{{url_for('user_views.en_zapis_tridy')}}" class="navbar_link">Class enrollment</a>
+        <a href="{{url_for('user_views.en_zapis_hlavni_tridy')}}" class="navbar_link">Main class</a>
+        {% if not is_under_16 %}
+            <a href="{{url_for('user_views.en_zapis_vedlejsi_tridy')}}" class="navbar_link">Secondary class</a>
+        {% endif %}
     {% endif %}
     {% if "prihlasen" in roles %}
         <a href="{{url_for('user_views.en_account')}}" class="navbar_link">Account</a>

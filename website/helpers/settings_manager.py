@@ -57,17 +57,24 @@ def get_en_frontpage_text() -> str:
     return settings['en_frontpage_text']
 
 
-def get_class_signup_state() -> str: # primary / secondary / closed
+def is_primary_class_signup_open() -> bool:
     settings = get_settings()
     primary_start_date = datetime.strptime(settings['primary_classes_start_date'] + ' ' + settings['primary_classes_start_time'], '%Y-%m-%d %H:%M')
+    applications_end_date = datetime.strptime(settings['applications_end_date'] + ' ' + settings['applications_end_time'], '%Y-%m-%d %H:%M')
+    return primary_start_date < datetime.now() < applications_end_date
+
+
+def is_secondary_class_signup_open() -> bool:
+    settings = get_settings()
     secondary_start_date = datetime.strptime(settings['secondary_classes_start_date'] + ' ' + settings['secondary_classes_start_time'], '%Y-%m-%d %H:%M')
     applications_end_date = datetime.strptime(settings['applications_end_date'] + ' ' + settings['applications_end_time'], '%Y-%m-%d %H:%M')
-    if datetime.now() < primary_start_date or datetime.now() > applications_end_date:
-        return 'closed'
-    elif datetime.now() < secondary_start_date:
-        return 'primary'
-    else:
-        return 'secondary'
+    return secondary_start_date < datetime.now() < applications_end_date
+
+
+def is_class_signup_closed() -> bool:
+    settings = get_settings()
+    applications_end_date = datetime.strptime(settings['applications_end_date'] + ' ' + settings['applications_end_time'], '%Y-%m-%d %H:%M')
+    return datetime.now() > applications_end_date
     
 
 def get_user_lock_state() -> bool:

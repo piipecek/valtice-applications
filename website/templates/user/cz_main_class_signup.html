@@ -1,0 +1,50 @@
+{% extends "cz_context.html" %}
+
+{% block content %}
+
+    {% if is_primary_class_signup_open %}
+        <h1>Zápis do hlavní třídy</h1>
+        <hr>
+        <div id="tridy"></div>
+    {% endif %}
+
+    {% if is_class_signup_closed %}
+        TODO Tady bude napsaný, jaké třídy jsou přihlášené.
+    {% endif %}
+    
+    <hr>
+    <div class="class_signup_text">
+        <ul>
+            {% if is_primary_class_signup_open %}
+                <li>Zápis do hlavní třídy je v tuto chvíli <strong>otevřený</strong>.
+            {% else %}
+                <li>Zápis do hlavní třídy v tuto chvíli <strong>není otevřený</strong>, aktuální informace naleznete vždy na <a href="{{url_for('guest_views.cz_dashboard')}}" class="link">domovské stránce</a>.</li>
+                <li>Zápis bude probíhat na této stránce.</li>
+            {% endif %}
+            
+            <li>Níže vidíte příklad toho, jak může zapisování vypadat. Třídy se podle obsazenosti zbarví následovně:</li>
+        </ul>
+        <div class="d-flex justify-content-center">
+            <div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-caret-right trida_available_icon"></i> Třída s volnou kapacitou (6/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-solid fa-circle-minus trida_full_icon"></i> Plná třída (8/8)
+                </div>
+                <div class="trida_div">
+                    <i class="fa-regular fa-square-check trida_enrolled_icon"></i> Vaše zapsaná třída (37)
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li>Pokud u třídy není zmínka o maximální kapacitě, znamená to, že je třída hromadná.</li>
+            <li>Kliknutím na třídu s volnou kapacitou se do ní zapíšete.</li>
+            <li>Kliknutím na Vaší zapsanou třídu se po potvrzení odhlásíte.</li>
+            <li>O fungování tříd se dočtete v <a class="link" href="{{url_for('guest_views.cz_info')}}#classes">informacích</a>.</li>
+        </ul>
+    </div>
+
+    <script type="module" src="{{url_for('static', filename='js/user/cz_main_class_signup.js')}}"></script>
+
+{% endblock %}

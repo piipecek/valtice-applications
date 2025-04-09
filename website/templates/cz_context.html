@@ -39,8 +39,11 @@
         <a class="navbar_link" href="{{url_for('org_views.tutor')}}">{{cz_lektor_tridy_title}}</a>
     {% endif %}
     {% if "tutor" in roles and "prihlasen" in roles and roles|length == 2 %}
-    {% elif "prihlasen" in roles %}
-        <a href="{{url_for('user_views.zapis_tridy')}}" class="navbar_link">Zápis do třídy</a>
+    {% elif "prihlasen" in roles and aktivni_ucast %}
+        <a href="{{url_for('user_views.zapis_hlavni_tridy')}}" class="navbar_link">Hlavní třída</a>
+        {% if not is_under_16 %}
+            <a href="{{url_for('user_views.zapis_vedlejsi_tridy')}}" class="navbar_link">Vedlejší třída</a>
+        {% endif %}
     {% endif %}
     {% if "prihlasen" in roles %}
         <a href="{{url_for('user_views.account')}}" class="navbar_link">Účet</a>
@@ -50,8 +53,6 @@
         <a class="navbar_link" href="{{url_for('auth_views.register')}}">Registrace</a>
     {% endif %}
 {% endblock %}
-
-
 
 
 {% block footer %}
