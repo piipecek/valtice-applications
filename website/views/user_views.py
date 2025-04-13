@@ -156,6 +156,11 @@ def edit_account():
                     current_user.confirmed_email = False
                     current_user.update()
                     flash("E-mail úspěšně změněn.", "success")
+            if request.form.get("child_first_name"):
+                u = User()
+                u.name = request.form.get("child_first_name")
+                u.parent = current_user
+                u.update()
             current_user.nacist_zmeny_z_user_requestu(request)
             flash("Změny uloženy", "success")
             return redirect(url_for("user_views.account"))
@@ -207,6 +212,11 @@ def en_edit_account():
                     current_user.confirmed_email = False
                     current_user.update()
                     flash("E-mail successfully changed.", "success")
+            if request.form.get("child_first_name"):
+                u = User()
+                u.name = request.form.get("child_first_name")
+                u.parent = current_user
+                u.update()
             current_user.nacist_zmeny_z_user_requestu(request)
             flash("Changes saved", "success")
             return redirect(url_for("user_views.en_account"))
