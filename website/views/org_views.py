@@ -151,7 +151,7 @@ def detail_ucastnika(id:int):
         elif request.form.get("log_in_as"):
             logout_user()
             u.login()
-            flash(f"Jste přihlášen jako {u.get_full_name()}. Pro pokračování s původním účtem se odhlašte a znovu přihlašte.", category="success")
+            flash(f"Jste přihlášen jako {u.get_full_name('cz')}. Pro pokračování s původním účtem se odhlašte a znovu přihlašte.", category="success")
             return redirect(url_for("user_views.account"))
         elif lang := request.form.get("send_calc"):
             if u.parent:

@@ -122,17 +122,47 @@ class User(Common_methods_db_model, UserMixin):
         return User.get_by_id(data["user_id"])
     
 
-    def get_full_name(self) -> str:
-        
+    def get_full_name(self, lang) -> str:
         if self.name is None and self.surname is None:
-            return "Beze jména"
+            if lang == "cz":
+                return "Zatím beze jména"
+            else:
+                return "Not yet named"
         elif f"{self.name} {self.surname}".strip() == "":
-            return "Beze jména"
+            if lang == "cz":
+                return "Zatím beze jména"
+            else:
+                return "Not yet named"
         return f"{self.name} {self.surname}"
+
+        
+    
+    
+    def is_valid_parent(self) -> dict:
+        if self.parent:
+            return {
+                "valid": False,
+                "message_cz": "Tento e-mail nemůže být použit, protože je sám zařazený pod jiného uživatele.",
+                "message_en": "This e-mail cannot be used as a parent because it itself has a parent.",
+                "status": 409
+            }
+        if self.is_under_16:
+            return {
+                "valid": False,
+                "message_cz": "Tento e-mail nemůže být použit, protože je sám mladší 16 let.",
+                "message_en": "This e-mail cannot be used as a parent because it is itself under 16 years old.",
+                "status": 409
+            }
+        return {
+            "valid": True,
+            "message_cz": None,
+            "message_en": None,
+            "status": 200
+        }
     
     
     def info_pro_seznam_ucastniku(self) -> dict:
-        full_name = self.get_full_name()
+        full_name = self.get_full_name("cz")
         return {
             "id": self.id,
             "full_name": full_name if full_name else "-",
@@ -145,7 +175,7 @@ class User(Common_methods_db_model, UserMixin):
         
     
     def info_pro_seznam_uctu(self) -> dict:
-        full_name = self.get_full_name()
+        full_name = self.get_full_name("cz")
         return {
             "id": self.id,
             "full_name": full_name if full_name else "-",
@@ -155,7 +185,7 @@ class User(Common_methods_db_model, UserMixin):
     
     
     def info_pro_seznam_lektoru(self) -> dict:
-        full_name = self.get_full_name()
+        full_name = self.get_full_name("cz")
         return {
             "id": self.id,
             "full_name": full_name if full_name else "-",
@@ -178,7 +208,7 @@ class User(Common_methods_db_model, UserMixin):
                 "id": u.id,
                 "email": u.email,
                 "role": ", ".join([r.display_name for r in sorted(u.roles)]),
-                "name": u.get_full_name()
+                "name": u.get_full_name("cz")
             }
             result.append(data)
         return result
@@ -191,7 +221,7 @@ class User(Common_methods_db_model, UserMixin):
             if tutor_role in u.roles:
                 data = {
                     "id": u.id,
-                    "full_name": u.get_full_name(),
+                    "full_name": u.get_full_name("cz"),
                     "surname": u.surname
                 }
                 result.append(data)
@@ -448,7 +478,7 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
-            "full_name": self.get_full_name(),
+            "full_name": self.get_full_name("cz"),
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "is_student": "Ano" if self.is_student else "Ne",
@@ -501,12 +531,12 @@ class User(Common_methods_db_model, UserMixin):
             "roles": ", ".join([r.display_name for r in sorted(self.roles)]) if self.roles else "-",
             "parent": {
                 "parent_id": self.parent_id,
-                "parent_name": self.parent.get_full_name()
+                "parent_name": self.parent.get_full_name("cz")
             } if self.parent else "-",
             "children": sorted([
                 {
                     "child_id": child.id,
-                    "child_name": child.get_full_name()
+                    "child_name": child.get_full_name("cz")
                 } for child in self.children
             ], key=lambda x: czech_sort.key(x["child_name"])) if self.children else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
@@ -586,7 +616,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_locked": "Ano" if self.is_locked else "Ne",
             "parent": {
                 "parent_id": self.parent_id,
-                "parent_name": self.parent.get_full_name()
+                "parent_name": self.parent.get_full_name("cz")
             } if self.parent else None,
             
             "primary_class_id": self.primary_class_id if self.primary_class_id else "-",
@@ -727,11 +757,11 @@ class User(Common_methods_db_model, UserMixin):
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
             "is_locked": "Ano" if self.is_locked else "Ne",
             "datetime_created": pretty_datetime(self.datetime_created),
-            "parent": self.parent.get_full_name() if self.parent else "-",
+            "parent": self.parent.get_full_name("cz") if self.parent else "-",
             "children": [
                 {
                     "id": child.id,
-                    "full_name": child.get_full_name()
+                    "full_name": child.get_full_name("cz")
                 } for child in self.children
             ] if len(self.children) > 0 else "-",
         }
@@ -794,11 +824,11 @@ class User(Common_methods_db_model, UserMixin):
             "confirmed_email": "Yes" if self.confirmed_email else "No",
             "is_locked": "Yes" if self.is_locked else "No",
             "datetime_created": pretty_datetime(self.datetime_created),
-            "parent": self.parent.get_full_name() if self.parent else "-",
+            "parent": self.parent.get_full_name("en") if self.parent else "-",
             "children": [
                 {
                     "id": child.id,
-                    "full_name": child.get_full_name()
+                    "full_name": child.get_full_name("en")
                 } for child in self.children
             ] if len(self.children) > 0 else "-",
         }
@@ -848,7 +878,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_currency": self.billing_currency,
             "billing_gift": self.billing_gift,
             "has_parent": True if self.parent else False,
-            "manager_name": self.parent.get_full_name() if self.parent else "",
+            "manager_name": self.parent.get_full_name("cz") if self.parent else "",
             "tutor_travel": self.tutor_travel,
             "tutor_license_plate": self.tutor_license_plate,
             "tutor_arrival": self.tutor_arrival,
@@ -860,7 +890,7 @@ class User(Common_methods_db_model, UserMixin):
             "children": [
                 {
                     "id": child.id,
-                    "full_name": child.get_full_name()
+                    "full_name": child.get_full_name("cz")
                 } for child in self.children
             ]
         }   
@@ -910,7 +940,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_currency": self.billing_currency,
             "billing_gift": self.billing_gift,
             "has_parent": True if self.parent else False,
-            "manager_name": self.parent.get_full_name() if self.parent else "",
+            "manager_name": self.parent.get_full_name("en") if self.parent else "",
             "tutor_travel": self.tutor_travel,
             "tutor_license_plate": self.tutor_license_plate,
             "tutor_arrival": self.tutor_arrival,
@@ -922,7 +952,7 @@ class User(Common_methods_db_model, UserMixin):
             "children": [
                 {
                     "id": child.id,
-                    "full_name": child.get_full_name()
+                    "full_name": child.get_full_name("en")
                 } for child in self.children
             ]
         }  
@@ -969,7 +999,8 @@ class User(Common_methods_db_model, UserMixin):
 
     def info_for_tutor(self) -> dict:
         return {
-            "full_name": self.get_full_name(),
+            "full_name_cz": self.get_full_name("cz"),
+            "full_name_en": self.get_full_name("en"),
             "email": self.email,
             "phone": self.phone,
             "education": self.musical_education,
@@ -984,7 +1015,7 @@ class User(Common_methods_db_model, UserMixin):
             "url": url_for("user_views.account", _external=True),
             "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
             "bank_account": get_settings()["bank_account"],
-            "zprava_pro_prijemce": self.get_full_name()
+            "zprava_pro_prijemce": self.get_full_name("cz")
         }
     
     
@@ -994,7 +1025,7 @@ class User(Common_methods_db_model, UserMixin):
             "url": url_for("user_views.en_account", _external=True),
             "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
             "bank_account": get_settings()["bank_account"],
-            "zprava_pro_prijemce": self.get_full_name()
+            "zprava_pro_prijemce": self.get_full_name("en")
         }
         
 # TODO procistit importy a dat je nahoru

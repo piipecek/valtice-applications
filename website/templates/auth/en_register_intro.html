@@ -1,0 +1,23 @@
+{% extends"en_context.html" %}
+{%block content%}
+
+    <h1>ISSEM registration - introduction</h1>
+    <hr>
+
+    <p>
+        You are probably wondering about the changes since the last years. Everything is explained on <a class="link" href="{{url_for('guest_views.cz_info')}}">this page</a>.
+    </p>
+    
+    <div class="row">
+        <div class="col-sm d-flex justify-content-center align-items-center">
+            <a href="{{url_for('auth_views.en_register_adult')}}">
+                <button type="button" class="register_button">I'm 16 years old or more</button>
+            </a>
+        </div>
+        <div class="col-sm d-flex justify-content-center align-items-center">
+            <a href="{{url_for('auth_views.en_register_child')}}">
+                <button type="button" class="register_button">I'm not 16 yet | I want to create an account for my child</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

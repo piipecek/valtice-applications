@@ -39,7 +39,7 @@ class Trida(Common_methods_db_model):
         return {
             "id": self.id,
             "short_name": self.short_name_cz,
-            "tutor_full_name": self.tutor.get_full_name() if self.tutor else "Zatím bez lektora",
+            "tutor_full_name": self.tutor.get_full_name("cz") if self.tutor else "Zatím bez lektora",
             "tutor_id": self.tutor_id,
             "pocet_ucastniku": pocet_ucastniku
         }
@@ -62,7 +62,7 @@ class Trida(Common_methods_db_model):
             
         return {
             "tutor": {
-                "name": self.tutor.get_full_name() if self.tutor else "Zatím bez lektora",
+                "name": self.tutor.get_full_name("cz") if self.tutor else "Zatím bez lektora",
                 "id": self.tutor_id,
             },
             "short_name_cz": self.short_name_cz,
@@ -73,8 +73,8 @@ class Trida(Common_methods_db_model):
             "secondary_billing_behavior": secondary_billing_behavior,
             "is_time_exclusive": "Ano" if self.is_time_exclusive else "Ne",
             "age_group": age_group,
-            "primary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
-            "secondary_participants": [{"name": u.get_full_name(), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
+            "primary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
+            "secondary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
             "primary_participants_count": len(self.primary_participants),
             "secondary_participants_count": len(self.secondary_participants),
         }

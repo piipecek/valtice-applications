@@ -23,13 +23,13 @@
 
 {% block name_link %}
     {% if "prihlasen" in roles %}
-        <a href="{{url_for('user_views.en_account')}}" class="navbar_link">{{name}}</a>
+        <a href="{{url_for('user_views.en_account')}}" class="navbar_link">{{name_en}}</a>
     {% endif %}
 {% endblock %}
 
 {% block name_link_2 %}
     {% if "prihlasen" in roles %}
-        <a href="{{url_for('user_views.en_account')}}" class="navbar_link">{{name}}</a>
+        <a href="{{url_for('user_views.en_account')}}" class="navbar_link">{{name_en}}</a>
     {% endif %}
 {% endblock %}
 
@@ -50,7 +50,7 @@
         <a href="{{url_for('auth_views.en_logout')}}" class="navbar_link">Log out</a>
     {% else %}
         <a class="navbar_link" href="{{url_for('auth_views.en_login')}}">Log in</a><br>
-        <a class="navbar_link" href="{{url_for('auth_views.en_register')}}">Register</a>
+        <a class="navbar_link" href="{{url_for('auth_views.en_register_intro')}}">Register</a>
     {% endif %}
 {% endblock %}
 

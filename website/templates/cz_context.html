@@ -16,20 +16,20 @@
 
 {% block flag %}
     <a href="{{url_for('guest_views.en_dashboard')}}" class="flag">
-        <img src="{{url_for('static', filename='img/ikonky/united-kingdom.png')}}" alt="CZ">
+        <img src="{{url_for('static', filename='img/ikonky/united-kingdom.png')}}" alt="EN">
     </a>
 {% endblock %}
 
 
 {% block name_link %}
     {% if "prihlasen" in roles %}
-        <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name}}</a>
+        <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name_cz}}</a>
     {% endif %}
 {% endblock %}
 
 {% block name_link_2 %}
     {% if "prihlasen" in roles %}
-        <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name}}</a>
+        <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name_cz}}</a>
     {% endif %}
 {% endblock %}
 
@@ -50,7 +50,7 @@
         <a href="{{url_for('auth_views.logout')}}" class="navbar_link">Odhlásit se</a>
     {% else %}
         <a class="navbar_link" href="{{url_for('auth_views.login')}}">Přihlášení</a>
-        <a class="navbar_link" href="{{url_for('auth_views.register')}}">Registrace</a>
+        <a class="navbar_link" href="{{url_for('auth_views.register_intro')}}">Registrace</a>
     {% endif %}
 {% endblock %}
 

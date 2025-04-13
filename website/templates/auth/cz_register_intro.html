@@ -1,0 +1,22 @@
+{% extends"cz_context.html" %}
+{%block content%}
+
+    <h1>Registrace na MLŠSH - úvod</h1>
+    <hr>
+    <p>
+        Před registrací máte jistě několik otázek ohledně změn od minulých ročníků. Vše je přehledně vysvětleno na <a class="link" href="{{url_for('guest_views.cz_info')}}">této stránce</a>.
+    </p>
+    
+    <div class="row">
+        <div class="col-sm d-flex justify-content-center align-items-center">
+            <a href="{{url_for('auth_views.register_adult')}}">
+                <button type="button" class="register_button">Je mi 16 let nebo více</button>
+            </a>
+        </div>
+        <div class="col-sm d-flex justify-content-center align-items-center">
+            <a href="{{url_for('auth_views.register_child')}}">
+                <button type="button" class="register_button">Je mi méně než 16 let / registruji účastníka, kterému je méně než 16 let</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

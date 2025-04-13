@@ -101,7 +101,8 @@ def create_app() -> Flask:
         return dict(
             cz_url = os.environ.get("CZ_HOME_URL"),
             en_url = os.environ.get("EN_HOME_URL"),
-            name = current_user.get_full_name() if current_user.is_authenticated else None,
+            name_cz = current_user.get_full_name("cz") if current_user.is_authenticated else None,
+            name_en = current_user.get_full_name("en") if current_user.is_authenticated else None,
             cz_lektor_tridy_title = cz_lektor_tridy_title,
             en_lektor_tridy_title = en_lektor_tridy_title,
             aktivni_ucast = current_user.is_active_participant if current_user.is_authenticated else None,

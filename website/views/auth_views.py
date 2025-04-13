@@ -51,119 +51,175 @@ def en_login():
         else:
             flash("Email or password incorrect", category="error")
             return redirect(url_for("auth_views.en_login"))
-		
+            
 
-
-@auth_views.route("/register", methods=["GET","POST"])
-def register():
+@auth_views.route("/register_intro", methods=["GET"])
+def register_intro():
     if current_user.is_authenticated:
         return redirect(url_for("guest_views.cz_dashboard"))
     if request.method == "GET":
-        return render_template("auth/cz_register.html", roles = get_roles())
+        return render_template("auth/cz_register_intro.html", roles = get_roles())
     else:
-        email_odpovedne = request.form.get("email_odpovedne")
-        if email_odpovedne == "":
-            email = request.form.get("email")
-            password = request.form.get("password")
-            confirm = request.form.get("confirm")
-            if password != confirm:
-                flash("Hesla se neshodují.", category="error")
-                return redirect(url_for("auth_views.register"))
-            elif len(password) == 0 or len(email) == 0:
-                flash("E-mail a heslo nesmí být prázdné.", category="error")
-                return redirect(url_for("auth_views.register"))
-            elif u:=User.get_by_email(email=email):
-                flash("Uživatel s tímto e-mailem již existuje.", category="error")
-                return redirect(url_for("auth_views.register"))
-            else:
-                u = User(email=email, password=generate_password_hash(password, method="scrypt"))
-                u.update()
-                u.login()
-                mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
-                return redirect(url_for("auth_views.confirm_mail"))
-        else:
-            email = request.form.get("email_child")
-            password = request.form.get("password_child")
-            confirm = request.form.get("confirm_child")
-            parent = User.get_by_email(email=email_odpovedne)
-            if password != confirm:
-                flash("Hesla se neshodují.", category="error")
-                return redirect(url_for("auth_views.register"))
-            if u := User.get_by_email(email=email) and email != "":
-                flash("Uživatel s tímto e-mailem již existuje.", category="error")
-                return redirect(url_for("auth_views.register"))
-            if parent is None:
-                flash("E-mail odpovědné osoby nebyl nalezen.", category="error")
-                return redirect(url_for("auth_views.register"))
-            u = User()
-            u.parent = parent
-            mail_sender(mail_identifier="cz_new_child", target=email_odpovedne)
-            u.update()
-            u.login()
-            if (all([email, password])):
-                u.email = email
-                u.password = generate_password_hash(password, method="scrypt")
-                u.update()
-                mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
-                return redirect(url_for("auth_views.confirm_mail"))
-            else:
-                return redirect(url_for("user_views.account"))
+        return request.form.to_dict()
 
-@auth_views.route("/en_register", methods=["GET","POST"])
-def en_register():
+
+@auth_views.route("/register_adult", methods=["GET", "POST"])
+def register_adult():
+    if current_user.is_authenticated:
+        return redirect(url_for("guest_views.cz_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/cz_register_adult.html", roles=get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm = request.form.get("confirm")
+        if password != confirm:
+            flash("Hesla se neshodují.", category="error")
+            return redirect(url_for("auth_views.register_adult"))
+        elif len(password) == 0 or len(email) == 0:
+            flash("E-mail a heslo nesmí být prázdné.", category="error")
+            return redirect(url_for("auth_views.register_adult"))
+        elif User.get_by_email(email=email):
+            flash("Uživatel s tímto e-mailem již existuje.", category="error")
+            return redirect(url_for("auth_views.register_adult"))
+        else:
+            user = User(email=email, password=generate_password_hash(password, method="scrypt"))
+            user.update()
+            user.login()
+            mail_sender(mail_identifier="confirm_email", target=user.email, data=user.get_reset_token())
+            flash("Registrace byla úspěšná. Ověřte prosím svůj e-mail.", category="success")
+            return redirect(url_for("auth_views.confirm_mail"))
+        
+        
+
+@auth_views.route("/register_child", methods=["GET", "POST"])
+def register_child():
+    if current_user.is_authenticated:
+        return redirect(url_for("guest_views.cz_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/cz_register_child.html", roles=get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm = request.form.get("confirm")
+        parent_email = request.form.get("email_odpovedne")
+        parent = User.get_by_email(email=parent_email)
+        if password != confirm:
+            flash("Hesla se neshodují.", category="error")
+            return redirect(url_for("auth_views.register_child"))
+        if User.get_by_email(email=email) and email != "":
+            flash("Uživatel s tímto e-mailem již existuje.", category="error")
+            return redirect(url_for("auth_views.register_child"))
+        if parent is None:
+            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
+            # nastane to, když uživatel přepíše e-mail odpovědné osoby
+            flash("E-mail odpovědné osoby nebyl nalezen.", category="error")
+            return redirect(url_for("auth_views.register_child"))
+        if not parent.is_valid_parent()["valid"]:
+            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
+            # nastane to, když uživatel přepíše e-mail odpovědné osoby
+            flash("Tato odpovědná osoba nemůže být rodičem.", category="error")
+            return redirect(url_for("auth_views.register_child"))
+        
+        user = User()
+        user.parent = parent
+        mail_sender(mail_identifier="cz_new_child", target=parent_email)
+        user.is_under_16 = True
+        user.update()
+        user.login()
+        if (all([email, password])):
+            user.email = email
+            user.password = generate_password_hash(password, method="scrypt")
+            user.update()
+            mail_sender(mail_identifier="confirm_email", target=user.email, data=user.get_reset_token())
+            flash("Registrace byla úspěšná. Ověřte prosím svůj e-mail.", category="success")
+            return redirect(url_for("auth_views.confirm_mail"))
+        else:
+            return redirect(url_for("user_views.account"))
+
+
+@auth_views.route("/en_register_intro", methods=["GET"])
+def en_register_intro():
     if current_user.is_authenticated:
         return redirect(url_for("guest_views.en_dashboard"))
     if request.method == "GET":
-        return render_template("auth/en_register.html", roles = get_roles())
+        return render_template("auth/en_register_intro.html", roles = get_roles())
     else:
-        #the form names are same as in the czech version, so the same code can be used
-        email_odpovedne = request.form.get("email_odpovedne")
-        if email_odpovedne == "":
-            email = request.form.get("email")
-            password = request.form.get("password")
-            confirm = request.form.get("confirm")
-            if password != confirm:
-                -flash("Passwords do not match.", category="error")
-                return redirect(url_for("auth_views.en_register"))
-            elif len(password) == 0 or len(email) == 0:
-                flash("Email and password must not be empty.", category="error")
-                return redirect(url_for("auth_views.en_register"))
-            elif u:=User.get_by_email(email=email):
-                flash("User with this email already exists.", category="error")
-                return redirect(url_for("auth_views.en_register"))
-            else:
-                u = User(email=email, password=generate_password_hash(password, method="scrypt"))
-                u.update()
-                u.login()
-                mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
-                return redirect(url_for("auth_views.en_confirm_mail"))
+        return request.form.to_dict()
+    
+    
+@auth_views.route("/en_register_adult", methods=["GET", "POST"])
+def en_register_adult():
+    if current_user.is_authenticated:
+        return redirect(url_for("guest_views.en_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/en_register_adult.html", roles=get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm = request.form.get("confirm")
+        if password != confirm:
+            flash("Passwords do not match.", category="error")
+            return redirect(url_for("auth_views.en_register_adult"))
+        elif len(password) == 0 or len(email) == 0:
+            flash("E-mail and password must not be empty.", category="error")
+            return redirect(url_for("auth_views.en_register_adult"))
+        elif User.get_by_email(email=email):
+            flash("User with this e-mail already exists.", category="error")
+            return redirect(url_for("auth_views.en_register_adult"))
         else:
-            email = request.form.get("email_child")
-            password = request.form.get("password_child")
-            confirm = request.form.get("confirm_child")
-            parent = User.get_by_email(email=email_odpovedne)
-            if password != confirm:
-                flash("Passwords do not match.", category="error")
-                return redirect(url_for("auth_views.en_register"))
-            if u := User.get_by_email(email=email) and email != "":
-                flash("User with this email already exists.", category="error")
-                return redirect(url_for("auth_views.en_register"))
-            if parent is None:
-                flash("Email of the responsible person was not found.", category="error")
-                return redirect(url_for("auth_views.en_register"))
-            u = User()
-            u.parent = parent
-            mail_sender(mail_identifier="en_new_child", target=email_odpovedne)
-            u.update()
-            u.login()
-            if (all([email, password])):
-                u.email = email
-                u.password = generate_password_hash(password, method="scrypt")
-                u.update()
-                mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
-                return redirect(url_for("auth_views.en_confirm_mail"))
-            else:
-                return redirect(url_for("user_views.en_account"))
+            user = User(email=email, password=generate_password_hash(password, method="scrypt"))
+            user.update()
+            user.login()
+            mail_sender(mail_identifier="en_confirm_email", target=user.email, data=user.get_reset_token())
+            flash("Registration was successful. Please verify your e-mail.", category="success")
+            return redirect(url_for("auth_views.en_confirm_mail"))
+        
+    
+@auth_views.route("/en_register_child", methods=["GET", "POST"])
+def en_register_child():
+    if current_user.is_authenticated:
+        return redirect(url_for("guest_views.en_dashboard"))
+    if request.method == "GET":
+        return render_template("auth/en_register_child.html", roles=get_roles())
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm = request.form.get("confirm")
+        parent_email = request.form.get("email_odpovedne")
+        parent = User.get_by_email(email=parent_email)
+        if password != confirm:
+            flash("Passwords do not match.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
+        if User.get_by_email(email=email) and email != "":
+            flash("User with this e-mail already exists.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
+        if parent is None:
+            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
+            # nastane to, když uživatel přepíše e-mail odpovědné osoby
+            flash("Responsible person's e-mail was not found.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
+        if not parent.is_valid_parent()["valid"]:
+            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
+            # nastane to, když uživatel přepíše e-mail odpovědné osoby
+            flash("This responsible person cannot be a parent.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
+        
+        user = User()
+        user.parent = parent
+        mail_sender(mail_identifier="en_new_child", target=parent_email)
+        user.is_under_16 = True
+        user.update()
+        user.login()
+        if (all([email, password])):
+            user.email = email
+            user.password = generate_password_hash(password, method="scrypt")
+            user.update()
+            mail_sender(mail_identifier="en_confirm_email", target=user.email, data=user.get_reset_token())
+            flash("Registration was successful. Please verify your e-mail.", category="success")
+            return redirect(url_for("auth_views.en_confirm_mail"))
+        else:
+            return redirect(url_for("user_views.en_account"))
 
 
 @auth_views.route("/confirm_mail", methods=["GET", "POST"])

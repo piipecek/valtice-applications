@@ -40,8 +40,9 @@ if (tridy.length == 0) {
             let participant_div = document.createElement("div")
             parent_div.appendChild(participant_div)
             participant_div.classList.add("tutor-participant-div")
-            
-            participant_div.appendChild(row_factory("Jméno", participant.full_name))
+            console.log(participant)
+            console.log(participant.full_name_cz)
+            participant_div.appendChild(row_factory("Jméno", participant.full_name_cz))
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Telefon", participant.phone))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
@@ -61,7 +62,7 @@ if (tridy.length == 0) {
             parent_div.appendChild(participant_div)
             participant_div.classList.add("tutor-participant-div")
             
-            participant_div.appendChild(row_factory("Jméno", participant.full_name))
+            participant_div.appendChild(row_factory("Jméno", participant.full_name_cz))
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Telefon", participant.phone))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
