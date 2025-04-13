@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from website.models.user import User
 from website.helpers.get_roles import get_roles
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -303,17 +303,19 @@ def en_confirm_email(token):
 @auth_views.route("/logout")
 @login_required
 def logout():
-	logout_user()
-	flash("Odhlášení proběhlo úspěšně.", category="info")
-	return redirect(url_for("guest_views.cz_dashboard"))
+    session.clear() # musí být před logout_user()
+    logout_user()
+    flash("Odhlášení proběhlo úspěšně.", category="info")
+    return redirect(url_for("guest_views.cz_dashboard"))
 
 
 @auth_views.route("/en_logout")
 @login_required
 def en_logout():
-	logout_user()
-	flash("Log out successful.", category="info")
-	return redirect(url_for("guest_views.en_dashboard"))
+    session.clear()
+    logout_user()
+    flash("Log out successful.", category="info")
+    return redirect(url_for("guest_views.en_dashboard"))
 
 
 @auth_views.route("/reset_password", methods=["GET","POST"])

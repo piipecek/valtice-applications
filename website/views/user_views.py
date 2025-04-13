@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, logout_user
 from website.helpers.get_roles import get_roles
 from website.models.user import User
@@ -19,6 +19,7 @@ def account():
         if id := request.form.get("child_id"):
             child = User.get_by_id(id)
             if child and child.parent_id == current_user.id:
+                session["parent_id"] = current_user.id
                 logout_user()
                 child.login()
                 return redirect(url_for("user_views.account"))
@@ -37,6 +38,27 @@ def account():
             return redirect(url_for("user_views.account", id=id))
         else:
             return request.form.to_dict()
+
+
+@user_views.route("/return_to_parent", methods=["GET"])
+def return_to_parent():
+    parent_id = session.pop("parent_id", None)
+    if parent_id:
+        parent = User.get_by_id(parent_id)
+        if parent:
+            if current_user.parent == parent:
+                logout_user()
+                parent.login()
+                return redirect(url_for("user_views.account"))
+            else:
+                flash("Nemáte právo se vrátit k tomuto rodiči", "error")
+                return redirect(url_for("user_views.account"))
+        else:
+            flash("Rodič s tímto ID neexistuje, přihlaste se znovu.", "error")
+            return redirect(url_for("user_views.account"))
+    else:
+        flash("Někde se ztratilo ID rodiče, přihlaste se znovu.", "error")
+        return redirect(url_for("user_views.account"))
     
     
 @user_views.route("/en_account", methods=["GET", "POST"])
@@ -48,6 +70,7 @@ def en_account():
         if id := request.form.get("child_id"):
             child = User.get_by_id(id)
             if child and child.parent_id == current_user.id:
+                session["parent_id"] = current_user.id
                 logout_user()
                 child.login()
                 return redirect(url_for("user_views.en_account"))
@@ -66,6 +89,27 @@ def en_account():
             return redirect(url_for("user_views.en_account", id=id))
         else:
             return request.form.to_dict()
+        
+        
+@user_views.route("/en_return_to_parent", methods=["GET"])
+def en_return_to_parent():
+    parent_id = session.pop("parent_id", None)
+    if parent_id:
+        parent = User.get_by_id(parent_id)
+        if parent:
+            if current_user.parent == parent:
+                logout_user()
+                parent.login()
+                return redirect(url_for("user_views.en_account"))
+            else:
+                flash("You don't have permission to return to this parent", "error")
+                return redirect(url_for("user_views.en_account"))
+        else:
+            flash("Parent with this ID doesn't exist, please log in again.", "error")
+            return redirect(url_for("user_views.en_account"))
+    else:
+        flash("Somewhere the parent's ID was lost, please log in again.", "error")
+        return redirect(url_for("user_views.en_account"))
     
     
 @user_views.route("/edit_account", methods=["GET", "POST"])

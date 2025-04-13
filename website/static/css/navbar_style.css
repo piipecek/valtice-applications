@@ -212,6 +212,12 @@
         padding-right: 0.5rem;
         padding-left: 100px;
     }
+    .mobile_name_wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
     .icons_wrapper{
         display: flex;
     }

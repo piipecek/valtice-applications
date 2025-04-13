@@ -28,6 +28,9 @@
 {% endblock %}
 
 {% block name_link_2 %}
+    {% if session.parent_id %}
+        <a href="{{url_for('user_views.return_to_parent')}}" class="navbar_link">Zpět jako rodič</a>
+    {% endif %}
     {% if "prihlasen" in roles %}
         <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name_cz}}</a>
     {% endif %}

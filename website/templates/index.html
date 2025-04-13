@@ -107,7 +107,7 @@
         {% endif %}
         <!-- musi bejt v main, jinak to skace za header -->
         {% for category, message in get_flashed_messages(with_categories=True) %} 
-            <div class="alert alertcolor-{{category}} d-flex justify-content-center">
+            <div class="alert alertcolor-{{category}} d-flex justify-content-center pl-5">
                 <div class="message_wrapper">
                     {{message}}
                 </div>
@@ -115,7 +115,6 @@
         {% endfor %}
         
         <section class="main_section">
-
             {% block content %}
             {% endblock %}
 
