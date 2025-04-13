@@ -8,7 +8,6 @@ guest_views = Blueprint("guest_views",__name__)
 @guest_views.route("/")
 @guest_views.route("/dashboard")
 def cz_dashboard():
-    flash("Welcome to the dashboard!", "success")
     return render_template("guest/cz_dashboard.html", roles=get_roles(current_user))
 
 @guest_views.route("/en/")
