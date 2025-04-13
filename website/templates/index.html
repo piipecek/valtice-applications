@@ -25,12 +25,16 @@
 
 <body>
     <header class="valtce_header">
-        {% block logo %}
-        {% endblock %}
         <div class="hlavicka_tmava">
-            <div class="flag_wrapper">
-                {% block flag %}
-                {% endblock %}
+            <div class="navbar_wrapper">
+                <div class="logo_wrapper">
+                    {% block logo %}
+                    {% endblock %}
+                </div>
+                <div class="flag_wrapper">
+                    {% block flag %}
+                    {% endblock %}
+                </div>
             </div>
         </div>
         <div class="hlavicka_svetla">

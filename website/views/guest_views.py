@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash
 from flask_login import current_user
 from website.helpers.get_roles import get_roles
 
@@ -8,6 +8,7 @@ guest_views = Blueprint("guest_views",__name__)
 @guest_views.route("/")
 @guest_views.route("/dashboard")
 def cz_dashboard():
+    flash("Welcome to the dashboard!", "success")
     return render_template("guest/cz_dashboard.html", roles=get_roles(current_user))
 
 @guest_views.route("/en/")
