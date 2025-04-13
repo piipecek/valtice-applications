@@ -20,10 +20,20 @@
     <p>
         You will receive a notification at this email that a child has been assigned to it.
     </p>
-    <div class="d-flex justify-content-center my-2">
-        <button type="button" class="custom_button" id="continue_button">Continue</button>
+    <div class="row">
+        <div class="col-auto">
+            Should the child have their own email and password?
+        </div>
+        <div class="col">
+            <select class="form-select" id="child_select" name="child_select">
+                <option value="" selected disabled>select</option>
+                <option value="ano">Yes, I want them to have their own email and password.</option>
+                <option value="ne">No, I want the account to be managed only through the account of the responsible person.</option>
+            </select>
+        </div>
     </div>
     <div id="registrace_details" hidden>
+        <hr>
         <div class="row my-1">
             <div class="col-sm-3">
                 You may or may not fill in the child's email:
@@ -68,8 +78,13 @@
             <img class="xkcd" src="https://imgs.xkcd.com/comics/password_strength.png" alt="xkcd password strength">
         </div>
     </div>
+    <div id="vytvorit_ucet_div" hidden>
+        <div class="d-flex justify-content-center my-2">
+            <button type="button" class="custom_button" id="create_account_button_2">Vytvořit dětský účet</button>
+        </div>
+    </div>
 </form>
 
-<script type="module" src="{{url_for('static', filename='js/auth/en_register_child.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/auth/register_child.js')}}"></script>
 
 {% endblock %}

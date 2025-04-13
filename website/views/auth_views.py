@@ -90,7 +90,6 @@ def register_adult():
             flash("Registrace byla úspěšná. Ověřte prosím svůj e-mail.", category="success")
             return redirect(url_for("auth_views.confirm_mail"))
         
-        
 
 @auth_views.route("/register_child", methods=["GET", "POST"])
 def register_child():
@@ -102,40 +101,51 @@ def register_child():
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
+        should_have_email_password = True if request.form.get("child_select") == "ano" else False
         parent_email = request.form.get("email_odpovedne")
         parent = User.get_by_email(email=parent_email)
-        if password != confirm:
-            flash("Hesla se neshodují.", category="error")
-            return redirect(url_for("auth_views.register_child"))
-        if User.get_by_email(email=email) and email != "":
-            flash("Uživatel s tímto e-mailem již existuje.", category="error")
-            return redirect(url_for("auth_views.register_child"))
         if parent is None:
-            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
-            # nastane to, když uživatel přepíše e-mail odpovědné osoby
             flash("E-mail odpovědné osoby nebyl nalezen.", category="error")
             return redirect(url_for("auth_views.register_child"))
-        if not parent.is_valid_parent()["valid"]:
-            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
-            # nastane to, když uživatel přepíše e-mail odpovědné osoby
-            flash("Tato odpovědná osoba nemůže být rodičem.", category="error")
+        if parent.is_under_16:
+            flash("Odpovědná osoba musí být starší 16 let.", category="error")
+            return redirect(url_for("auth_views.register_child"))
+        if parent.parent:
+            flash("Odpovědná osoba je sama připojena jako dítě.", category="error")
             return redirect(url_for("auth_views.register_child"))
         
-        user = User()
-        user.parent = parent
-        mail_sender(mail_identifier="cz_new_child", target=parent_email)
-        user.is_under_16 = True
-        user.update()
-        user.login()
-        if (all([email, password])):
+        if not should_have_email_password:
+            user = User()
+            user.parent = parent
+            mail_sender(mail_identifier="cz_new_child", target=parent_email)
+            user.is_under_16 = True
+            user.update()
+            user.login()
+            flash("Registrace byla úspěšná. Můžete pokračovat vyplňováním osobních údajů.", category="success")
+            return redirect(url_for("user_views.account"))
+        else:
+            if password != confirm:
+                flash("Hesla se neshodují.", category="error")
+                return redirect(url_for("auth_views.register_child"))
+            if len(password) == 0 or len(email) == 0:
+                flash("Pokud chcete mít e-mail a heslo, nesmí být prázdné.", category="error")
+                return redirect(url_for("auth_views.register_child"))
+            if User.get_by_email(email=email):
+                flash("Uživatel s tímto e-mailem již existuje.", category="error")
+                return redirect(url_for("auth_views.register_child"))
+        
+            user = User()
+            user.parent = parent
+            user.is_under_16 = True
             user.email = email
             user.password = generate_password_hash(password, method="scrypt")
             user.update()
+            mail_sender(mail_identifier="cz_new_child", target=parent_email)
             mail_sender(mail_identifier="confirm_email", target=user.email, data=user.get_reset_token())
+            user.login()
             flash("Registrace byla úspěšná. Ověřte prosím svůj e-mail.", category="success")
             return redirect(url_for("auth_views.confirm_mail"))
-        else:
-            return redirect(url_for("user_views.account"))
+
 
 
 @auth_views.route("/en_register_intro", methods=["GET"])
@@ -175,7 +185,7 @@ def en_register_adult():
             flash("Registration was successful. Please verify your e-mail.", category="success")
             return redirect(url_for("auth_views.en_confirm_mail"))
         
-    
+        
 @auth_views.route("/en_register_child", methods=["GET", "POST"])
 def en_register_child():
     if current_user.is_authenticated:
@@ -186,40 +196,50 @@ def en_register_child():
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
+        should_have_email_password = True if request.form.get("child_select") == "ano" else False
         parent_email = request.form.get("email_odpovedne")
         parent = User.get_by_email(email=parent_email)
-        if password != confirm:
-            flash("Passwords do not match.", category="error")
-            return redirect(url_for("auth_views.en_register_child"))
-        if User.get_by_email(email=email) and email != "":
-            flash("User with this e-mail already exists.", category="error")
-            return redirect(url_for("auth_views.en_register_child"))
         if parent is None:
-            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
-            # nastane to, když uživatel přepíše e-mail odpovědné osoby
-            flash("Responsible person's e-mail was not found.", category="error")
+            flash("Responsible person's e-mail not found.", category="error")
             return redirect(url_for("auth_views.en_register_child"))
-        if not parent.is_valid_parent()["valid"]:
-            # tohle by nemělo nikdy nastat, protože tohle je kontrolováno už v prvním requestu
-            # nastane to, když uživatel přepíše e-mail odpovědné osoby
-            flash("This responsible person cannot be a parent.", category="error")
+        if parent.is_under_16:
+            flash("Responsible person must be older than 16 years.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
+        if parent.parent:
+            flash("Responsible person is connected as a child themselves.", category="error")
             return redirect(url_for("auth_views.en_register_child"))
         
-        user = User()
-        user.parent = parent
-        mail_sender(mail_identifier="en_new_child", target=parent_email)
-        user.is_under_16 = True
-        user.update()
-        user.login()
-        if (all([email, password])):
+        if not should_have_email_password:
+            user = User()
+            user.parent = parent
+            mail_sender(mail_identifier="en_new_child", target=parent_email)
+            user.is_under_16 = True
+            user.update()
+            user.login()
+            flash("Registration was successful. You can continue filling in personal details.", category="success")
+            return redirect(url_for("user_views.en_account"))
+        else:
+            if password != confirm:
+                flash("Passwords do not match.", category="error")
+                return redirect(url_for("auth_views.en_register_child"))
+            if len(password) == 0 or len(email) == 0:
+                flash("If you want to have an e-mail and password, they must not be empty.", category="error")
+                return redirect(url_for("auth_views.en_register_child"))
+            if User.get_by_email(email=email):
+                flash("User with this e-mail already exists.", category="error")
+                return redirect(url_for("auth_views.en_register_child"))
+        
+            user = User()
+            user.parent = parent
+            user.is_under_16 = True
             user.email = email
             user.password = generate_password_hash(password, method="scrypt")
             user.update()
+            mail_sender(mail_identifier="en_new_child", target=parent_email)
             mail_sender(mail_identifier="en_confirm_email", target=user.email, data=user.get_reset_token())
+            user.login()
             flash("Registration was successful. Please verify your e-mail.", category="success")
             return redirect(url_for("auth_views.en_confirm_mail"))
-        else:
-            return redirect(url_for("user_views.en_account"))
 
 
 @auth_views.route("/confirm_mail", methods=["GET", "POST"])

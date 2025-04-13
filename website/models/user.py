@@ -121,44 +121,30 @@ class User(Common_methods_db_model, UserMixin):
             return None
         return User.get_by_id(data["user_id"])
     
+    def get_full_name(self, lang: str) -> str:
+        def is_blank(s):
+            return s is None or s.strip() == ""
 
-    def get_full_name(self, lang) -> str:
-        if self.name is None and self.surname is None:
-            if lang == "cz":
-                return "Zatím beze jména"
-            else:
-                return "Not yet named"
-        elif f"{self.name} {self.surname}".strip() == "":
-            if lang == "cz":
-                return "Zatím beze jména"
-            else:
-                return "Not yet named"
-        return f"{self.name} {self.surname}"
+        has_name = not is_blank(self.name)
+        has_surname = not is_blank(self.surname)
 
-        
-    
-    
-    def is_valid_parent(self) -> dict:
+        if has_name or has_surname:
+            return f"{self.name or ''} {self.surname or ''}".strip()
+
+        if self.email:
+            return self.email
+
         if self.parent:
-            return {
-                "valid": False,
-                "message_cz": "Tento e-mail nemůže být použit, protože je sám zařazený pod jiného uživatele.",
-                "message_en": "This e-mail cannot be used as a parent because it itself has a parent.",
-                "status": 409
-            }
-        if self.is_under_16:
-            return {
-                "valid": False,
-                "message_cz": "Tento e-mail nemůže být použit, protože je sám mladší 16 let.",
-                "message_en": "This e-mail cannot be used as a parent because it is itself under 16 years old.",
-                "status": 409
-            }
-        return {
-            "valid": True,
-            "message_cz": None,
-            "message_en": None,
-            "status": 200
-        }
+            parent_name = f"{self.parent.name or ''} {self.parent.surname or ''}".strip()
+            if parent_name:
+                suffix = "'s child" if lang != "cz" else " - dítě"
+                return f"{parent_name}{suffix}"
+            if self.parent.email:
+                suffix = "'s child" if lang != "cz" else " - dítě"
+                return f"{self.parent.email}{suffix}"
+
+        # tohle by nemělo nastat, cuz rodič dycky má email
+        return "Zatím beze jména" if lang == "cz" else "Not yet named"
     
     
     def info_pro_seznam_ucastniku(self) -> dict:

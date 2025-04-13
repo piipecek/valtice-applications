@@ -20,10 +20,20 @@
     <p>
         Na tento e-mail přijde oznámení o tom, že k němu bylo přiřazené dítě.
     </p>
-    <div class="d-flex justify-content-center my-2">
-        <button type="button" class="custom_button" id="continue_button">Pokračovat</button>
+    <div class="row">
+        <div class="col-auto">
+            Má mít dítě vlastní e-mail a heslo?
+        </div>
+        <div class="col">
+            <select class="form-select" id="child_select" name="child_select">
+                <option value="" selected disabled>vyberte</option>
+                <option value="ano">Ano, chci, aby mělo vlastní e-mail a heslo.</option>
+                <option value="ne">Ne, chci, aby byl účet spravovaný pouze přes účet odpovědné osoby.</option>
+            </select>
+        </div>
     </div>
     <div id="registrace_details" hidden>
+        <hr>
         <div class="row my-1">
             <div class="col-sm-3">
                 E-mail dětského účastníka můžete nebo nemusíte vyplňovat.
@@ -68,8 +78,13 @@
             <img class="xkcd" src="https://imgs.xkcd.com/comics/password_strength.png" alt="xkcd password strength">
         </div>
     </div>
+    <div id="vytvorit_ucet_div" hidden>
+        <div class="d-flex justify-content-center my-2">
+            <button type="button" class="custom_button" id="create_account_button_2">Vytvořit dětský účet</button>
+        </div>
+    </div>
 </form>
 
-<script type="module" src="{{url_for('static', filename='js/auth/cz_register_child.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/auth/register_child.js')}}"></script>
 
 {% endblock %}
