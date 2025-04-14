@@ -706,7 +706,7 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
-            "wants_meals": True if self.meals else False,
+            "wants_meals": self.meals,
             "meals": [
                 {
                     "popis": meal_order.meal.get_description_cz(),
@@ -773,7 +773,7 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
-            "wants_meals": "ano" if self.meals else "ne",
+            "wants_meals": self.meals,
             "meals": [
                 {
                     "popis": meal_order.meal.get_description_en(),
