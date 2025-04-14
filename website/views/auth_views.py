@@ -296,7 +296,7 @@ def en_confirm_email(token):
     else:
         user.confirmed_email = True
         user.update()
-        flash("Email successfully verified.", category="success")
+        flash("E-mail successfully verified.", category="success")
         return redirect(url_for("user_views.en_account"))
     
 

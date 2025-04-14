@@ -2,6 +2,7 @@ from website.paths import settings_path
 import json
 from datetime import datetime
 from website.helpers.pretty_date import pretty_date
+from flask import request
 
 
 def get_settings() -> dict:
@@ -95,7 +96,14 @@ def set_both_capacities(vs, gym):
     settings['gym_capacity'] = gym
     save_settings(settings)
     
-def set_bank_account(account: str):
+def set_bank_details(request):
     settings = get_settings()
-    settings['bank_account'] = account
+    settings["czk_bank_account"] = request.form.get("czk_bank_account")
+    settings["eur_bank_account"] = request.form.get("eur_bank_account")
+    settings["czk_iban"] = request.form.get("czk_iban")
+    settings["eur_iban"] = request.form.get("eur_iban")
+    settings["czk_bic"] = request.form.get("czk_bic")
+    settings["eur_bic"] = request.form.get("eur_bic")
+    settings["czk_address"] = request.form.get("czk_address")
+    settings["eur_address"] = request.form.get("eur_address")
     save_settings(settings)

@@ -996,21 +996,30 @@ class User(Common_methods_db_model, UserMixin):
     
     def info_for_calculation_email(self) -> dict:
         print(url_for("user_views.account", _external=True))
+        settings = get_settings()
         return {
             "rok": datetime.now().year,
             "url": url_for("user_views.account", _external=True),
             "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
-            "bank_account": get_settings()["bank_account"],
+            "bank_account": settings["czk_bank_account"] if self.billing_currency == "czk" else settings["eur_bank_account"],
+            "iban": settings["czk_iban"] if self.billing_currency == "czk" else settings["eur_iban"],
+            "bic": settings["czk_bic"] if self.billing_currency == "czk" else settings["eur_bic"],
+            "address": settings["czk_address"] if self.billing_currency == "czk" else settings["eur_address"],
             "zprava_pro_prijemce": self.get_full_name("cz")
+            
         }
     
     
     def info_for_en_calculation_email(self) -> dict:
+        settings = get_settings()
         return {
             "rok": datetime.now().year,
             "url": url_for("user_views.en_account", _external=True),
             "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
-            "bank_account": get_settings()["bank_account"],
+            "bank_account": settings["czk_bank_account"] if self.billing_currency == "czk" else settings["eur_bank_account"],
+            "iban": settings["czk_iban"] if self.billing_currency == "czk" else settings["eur_iban"],
+            "bic": settings["czk_bic"] if self.billing_currency == "czk" else settings["eur_bic"],
+            "address": settings["czk_address"] if self.billing_currency == "czk" else settings["eur_address"],
             "zprava_pro_prijemce": self.get_full_name("en")
         }
         

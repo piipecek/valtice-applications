@@ -159,7 +159,7 @@
 <form method="post">
     <div class="row">
         <div class="col-12 col-sm my-1">
-            <textarea class="form-control" name="text_cz" rows="5" id="text_cz"></textarea>
+            <textarea class="form-control" name="cz_frontpage_text" rows="5" id="cz_frontpage_text"></textarea>
         </div>
         <div class="col-12 col-sm-auto my-1">
             <button class="custom_button" name="text_cz" value="whatever" type="submit">Uložit</button>
@@ -182,7 +182,7 @@
 <form method="post">
     <div class="row">
         <div class="col-12 col-sm my-1">
-            <textarea class="form-control" name="text_en" rows="5" id="text_en"></textarea>
+            <textarea class="form-control" name="en_frontpage_text" rows="5" id="en_frontpage_text"></textarea>
         </div>
         <div class="col-12 col-sm-auto my-1">
             <button class="custom_button" name="text_en" value="whatever" type="submit">Uložit</button>
@@ -241,17 +241,74 @@
 </form>
 <hr>
 
-<h2>Nastavení čísla účtu</h2>
+<h2>Nastavení platebních údajů</h2>
 <form method="post">
     <p>
-        Toto číslo účtu se pošle v e-mailu účastníkům.
+        Tyto údaje se pošlou účastníkům v e-mailu s kalkulací podle toho, zda zvolili za svou měnu koruny nebo eura.
     </p>
+    <button class="custom_button my-2" name="bank_details_button" value="whatever" type="submit">Uložit</button>
     <div class="row">
-        <div class="col">
-            <input class="form-control" type="text" name="bank_account" id="bank_account">
+        <div class="col-sm">
+            Číslo účtu pro platbu v korunách:
         </div>
-        <div class="col-auto">
-            <button class="custom_button" name="bank_account_button" value="whatever" type="submit">Uložit</button>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="czk_bank_account" id="czk_bank_account">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            IBAN pro platbu v korunách:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="czk_iban" id="czk_iban">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            BIC pro platbu v korunách:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="czk_bic" id="czk_bic">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            Adresa pro platbu v korunách:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="czk_address" id="czk_address">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            Číslo účtu pro platbu v eurech:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="eur_bank_account" id="eur_bank_account">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            IBAN pro platbu v eurech:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="eur_iban" id="eur_iban">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            BIC pro platbu v eurech:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="eur_bic" id="eur_bic">
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm">
+            Adresa pro platbu v eurech:
+        </div>
+        <div class="col-sm">
+            <input class="form-control" type="text" name="eur_address" id="eur_address">
         </div>
     </div>
 </form>

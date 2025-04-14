@@ -9,8 +9,7 @@ from website.models.meal import Meal
 from website.models.role import Role
 from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, set_both_capacities, set_bank_account
-from website.helpers.pretty_penize import pretty_penize
+from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, set_both_capacities, set_bank_details
 from website.helpers.export import export
 from website.helpers.end_of_issem_manager import end_of_issem
 from website.paths import logo_cz_path, logo_en_path
@@ -101,11 +100,11 @@ def settings():
                 flash("Soubor nebyl nahrán", category="error")
             return redirect(url_for("org_views.settings"))
         elif request.form.get("text_cz") is not None: # aby to vzalo i prazdny
-            set_cz_frontpage_text(request.form.get("text_cz"))
+            set_cz_frontpage_text(request.form.get("cz_frontpage_text"))
             flash("Text byl změněn", category="success")
             return redirect(url_for("org_views.settings"))
         elif request.form.get("text_en") is not None: # aby to vzalo i prazdny
-            set_en_frontpage_text(request.form.get("text_en"))
+            set_en_frontpage_text(request.form.get("en_frontpage_text"))
             flash("Text byl změněn", category="success")
             return redirect(url_for("org_views.settings"))
         elif request.form.get("toggle_lock"):
@@ -123,9 +122,9 @@ def settings():
             end_of_issem()
             flash("Konec ročníku úspěšně proveden, těšíme se za rok!", category="success")
             return redirect(url_for("org_views.settings"))
-        elif request.form.get("bank_account_button"):
-            set_bank_account(request.form.get("bank_account"))
-            flash("Číslo účtu bylo uloženo.", category="success")
+        elif request.form.get("bank_details_button"):
+            set_bank_details(request)
+            flash("Bankovní údaje byly uloženy.", category="success")
             return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()
@@ -164,7 +163,7 @@ def detail_ucastnika(id:int):
                 mail_sender(mail_identifier="en_send_calculation", target=target, data=u.info_for_en_calculation_email())
             u.datetime_calculation_email = datetime.now()
             u.update()
-            flash("Email s platebními údaji byl odeslán", category="success")
+            flash("E-mail s platebními údaji byl odeslán", category="success")
             return redirect(url_for("org_views.detail_ucastnika", id=id))
         return request.form.to_dict()
     
@@ -217,12 +216,12 @@ def uprava_ucastnika(id:int):
         elif request.form.get("send_cz_reset_email"):
             u = User.get_by_id(id)
             mail_sender(mail_identifier="reset_password", target=u.email, data=u.get_reset_token())
-            flash("Email s odkazem na změnu hesla byl odeslán", category="success")
+            flash("E-mail s odkazem na změnu hesla byl odeslán", category="success")
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         elif request.form.get("send_en_reset_email"):
             u = User.get_by_id(id)
             mail_sender(mail_identifier="en_reset_password", target=u.email, data=u.get_reset_token())
-            flash("Email s odkazem na změnu hesla byl odeslán", category="success")
+            flash("E-mail s odkazem na změnu hesla byl odeslán", category="success")
             return redirect(url_for("org_views.uprava_ucastnika", id=id))
         return request.form.to_dict()
     
