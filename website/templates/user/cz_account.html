@@ -246,38 +246,53 @@
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="pravy_text">Jste letošním účastníkem?</td>
+                <td class="d-flex justify-content-between">Jste letošním účastníkem?
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">Při dalším ročníku byste byli tázáni, zda si přejete účastnit znovu, protože účty se zachovávají.</span>
+                    </div>
+                </td>
                 <td id="is_this_year_participant"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Musíte při dalším přihlášení změnit heslo?</td>
+                <td>Musíte při dalším přihlášení změnit heslo?</td>
                 <td id="must_change_password_upon_login"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Máte ověřený e-mail?</td>
+                <td>Máte ověřený e-mail?</td>
                 <td id="confirmed_email"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Máte uzamčené změny účtu?</td>
+                <td class="d-flex justify-content-between">Máte uzamčené změny účtu?
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">Než ročník započne, uzamkneme změnu některých údajů na všech účtech.</span>
+                    </div>
+                </td>
                 <td id="is_locked"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Datum vytvoření účtu</td>
+                <td>Datum vytvoření účtu</td>
                 <td id="datetime_created" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Datum registrace ve Valticích</td>
+                <td class="d-flex justify-content-between">Datum registrace ve Valticích
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">Po příjezdu do Valtic se musíte odprezentovat.</span>
+                    </div>
+                </td>
                 <td id="datetime_registered" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">
+                <td>
                     Nadřazený účet<br>
                     <small id="parent_hint" hidden>Pokud se chcete přihlásit jako nadřazený účet, <a class="link" href="{{url_for('auth_views.logout')}}">nejdříve se odhlašte</a>.</small>
                 </td>
                 <td id="parent" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Spravované účty</td>
+                <td>Spravované účty</td>
                 <td colspan="2">
                     <form method="post" id="children">
                     </form>

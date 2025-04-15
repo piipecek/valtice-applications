@@ -99,11 +99,11 @@ function add_meal_row(selected_id, count) {
 
     let col1 = document.createElement("div")
     row.appendChild(col1)
-    col1.className = "col"
+    col1.className = "col-sm"
 
     let col2 = document.createElement("div")
     row.appendChild(col2)
-    col2.className = "col-auto"
+    col2.className = "col"
 
     let col3 = document.createElement("div")
     row.appendChild(col3)

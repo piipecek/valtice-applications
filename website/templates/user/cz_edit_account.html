@@ -8,37 +8,36 @@
     <div class="container my-2">
         <h2>Osobní informace</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Jméno</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Jméno</div>
             <div class="col">
                 <input type="text" class="form-control" id="name" name="name">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Příjmení</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Příjmení</div>
             <div class="col">
                 <input type="text" class="form-control" id="surname" name="surname">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Email</div>
-            <div class="col">
-                <input type="text" class="form-control" id="email" name="email">
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Email
+                <div class="custom-tooltip">
                     <i class="fa-solid fa-circle-info"></i>
                     <span class="custom-tooltiptext">Po změně e-mailu Vám zašleme ověřovací zprávu.</span>
                 </div>
             </div>
+            <div class="col">
+                <input type="text" class="form-control" id="email" name="email">
+            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Telefon</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Telefon</div>
             <div class="col">
                 <input type="text" class="form-control" id="phone" name="phone">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Student VŠ</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Student VŠ</div>
             <div class="col">
                 <select class="form-select" id="is_student" name="is_student">
                     <option value="Ano">Ano</option>
@@ -47,7 +46,12 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Věková kategorie</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Věková kategorie
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Ovlivňuje také cenovou kalkulaci.</span>
+                </div>
+            </div>
             <div class="col" id="zmena_kategorie_povolena" hidden>
                 <div class="col">
                     <select class="form-select" id="age_category" name="age_category">
@@ -61,32 +65,30 @@
                     Máte nyní přihášené třídy, které odpovídají Vaší věkové kategorii. Pokud chcete změnit věkovou kategorii, musíte se z těchto tříd nejdříve odhlásit.
                 </div>
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">Ovlivňuje také cenovou kalkulaci.</span>
-                </div>
-            </div>
         </div>
         <hr>
         <h2>Valtické informace</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Člen SSH</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Člen SSH
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Společnost pro starou hudbu je nezisková organizace, která MLŠSH organizuje. Více informací o SSH a o členství najdete na <a class="link" target="_blank" href="http://ssh.early-music.cz">webových stránkách</a>. </span>
+                </div>
+            </div>
             <div class="col">
                 <select class="form-select" id="is_ssh_member" name="is_ssh_member">
                     <option value="Ano">Ano</option>
                     <option value="Ne">Ne</option>
                 </select>
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">Společnost pro starou hudbu je nezisková organizace, která MLŠSH organizuje. Více informací o SSH a o členství najdete na <a class="link" target="_blank" href="http://ssh.early-music.cz">webových stránkách</a>. </span>
-                </div>
-            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Účast</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Účast
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Aktivní účast je zamýšlena pro běžné účastníky tříd. Pasivní účast slouží dvěma účelům: 1) Doprovodná osoba dětských účastníků musí být účastníkem. 2) Přátelé MLŠSH mohou navštěvovat hodiny a tím školu podpořit.</span>
+                </div>
+            </div>
             <div class="col" id="zmena_ucasti_povolena" hidden>
                 <select class="form-select" id="is_active_participant" name="is_active_participant">
                     <option value="active">aktivní</option>
@@ -96,15 +98,9 @@
             <div class="col" id="zmena_ucasti_zakazana" hidden>
                 Jste aktivním účastníkem. Změnu na pasivní účast můžete provést poté, co se odhlásíte ze všech Vašich tříd.
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">Pasivní účast TODO popis k čemu je.</span>
-                </div>
-            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Student ZUŠ Valtice/Mikulov</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Student ZUŠ Valtice/Mikulov</div>
             <div class="col">
                 <select class="form-select" id="is_student_of_partner_zus" name="is_student_of_partner_zus">
                     <option value="Ano">Ano</option>
@@ -113,46 +109,44 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Hudební vzdělání</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Hudební vzdělání</div>
             <div class="col">
                 <input type="text" class="form-control" id="musical_education" name="musical_education">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Nástroj</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Nástroj</div>
             <div class="col">
                 <input type="text" class="form-control" id="musical_instrument" name="musical_instrument">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Repertoár</div>
-            <div class="col">
-                <input type="text" class="form-control" id="repertoire" name="repertoire">
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Repertoár
+                <div class="custom-tooltip">
                     <i class="fa-solid fa-circle-info"></i>
                     <span class="custom-tooltiptext">Repertoár můžete zpětně doplnit, až jej budete znát.</span>
                 </div>
             </div>
+            <div class="col">
+                <input type="text" class="form-control" id="repertoire" name="repertoire">
+            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Uživatelská poznámka</div>
-            <div class="col">
-                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Uživatelská poznámka
+                <div class="custom-tooltip">
                     <i class="fa-solid fa-circle-info"></i>
                     <span class="custom-tooltiptext">Do užvatelské poznámky můžete psát například jména preferovaných spolubydlících na internátu VŠ, nebo libovolnou jinou zprávu.</span>
                 </div>
+            </div>
+            <div class="col">
+                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
             </div>
         </div>
         <hr>
         <h2>Ubytování</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Ubytování, počet lidí</div>
-            <div class="col-4">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Ubytování, počet lidí</div>
+            <div class="col">
                 <select class="form-select" id="accomodation_type" name="accomodation_type">
                     <option selected value="-">Zatím nevybráno</option>
                     <option value="own">Zařizuji samostatně</option>
@@ -167,7 +161,7 @@
         <hr>
         <h2>Strava</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Máte zájem o stravu?</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Máte zájem o stravu?</div>
             <div class="col">
                 <select class="form-select" id="wants_meal" name="wants_meal">
                     <option value="ano">Ano</option>
@@ -187,7 +181,7 @@
         <hr>
         <h2>Finance</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Měna</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Měna</div>
             <div class="col">
                 <select class="form-select" id="billing_currency" name="billing_currency">
                     <option value="czk">CZK</option>
@@ -204,7 +198,7 @@
             </p>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Finanční dar</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Finanční dar</div>
             <div class="col">
                 <input type="number" class="form-control" id="billing_gift" name="billing_gift">
             </div>
@@ -215,7 +209,7 @@
         {% if "tutor" in roles %}
             <h2>Lektorské informace</h2>
             <div class="row my-1" id="tutor_yes">
-                <div class="col-2 d-flex align-items-center">Způsob dopravy</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Způsob dopravy</div>
                 <div class="col">
                     <select class="form-select" id="tutor_travel" name="tutor_travel">
                         <option value="own">vlastní</option>
@@ -224,43 +218,43 @@
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Registrační značka vozidla</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Registrační značka vozidla</div>
                 <div class="col">
                     <input type="text" class="form-control" id="tutor_license_plate" name="tutor_license_plate">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Příjezd</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Příjezd</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_arrival" name="tutor_arrival">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Odjezd</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Odjezd</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_departure" name="tutor_departure">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Jména doprovodu</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Jména doprovodu</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_accompanying_names" name="tutor_accompanying_names">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Adresa</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Adresa</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_address" name="tutor_address">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Datum narození</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Datum narození</div>
                 <div class="col">
                 <input type="date" class="form-control" id="tutor_date_of_birth" name="tutor_date_of_birth">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Číslo bankovního účtu</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Číslo bankovního účtu</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_bank_account" name="tutor_bank_account">
                 </div>
@@ -269,21 +263,20 @@
         {% endif %}
         <h2>Přístup k účtu</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Nové heslo</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Nové heslo</div>
             <div class="col">
                 <input type="text" class="form-control" id="new_password" name="new_password">
             </div>
         </div>
         <div class="row my-1" id="no_parent" hidden>
-            <div class="col-2 d-flex align-items-center">Přidat nadřazený účet</div>
-            <div class="col">
-                <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Přidat nadřazený účet
+                <div class="custom-tooltip">
                     <i class="fa-solid fa-circle-info"></i>
                     <span class="custom-tooltiptext">Pokud například v jedné rodině spravuje Valtice jedna osoba, může si takto účty pospojovat. Nadřazený účet může spravovat své prpojené účty.</span>
                 </div>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
             </div>
         </div>
         <div class="row my-1" id="yes_parent" hidden>
@@ -292,13 +285,13 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Přidat podřízený účet</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Přidat podřízený účet</div>
             <div class="col">
                 <input type="text" class="form-control" name="child_first_name" placeholder="křestní jméno">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2">Spravované účty</div>
+            <div class="col-sm-3">Spravované účty</div>
             <div class="col" id="children">
             </div>
         </div>

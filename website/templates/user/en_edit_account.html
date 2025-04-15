@@ -8,37 +8,36 @@
     <div class="container my-2">
         <h2>Personal information</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Name</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Name</div>
             <div class="col">
                 <input type="text" class="form-control" id="name" name="name">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Surname</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Surname</div>
             <div class="col">
                 <input type="text" class="form-control" id="surname" name="surname">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Email</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Email
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">After changing the email, we will send you a verification message.</span>
+                </div>
+            </div>
             <div class="col">
                 <input type="text" class="form-control" id="email" name="email">
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">We will send you a confirmation message after you change your email.</span>
-                </div>
-            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Phone</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Phone</div>
             <div class="col">
                 <input type="text" class="form-control" id="phone" name="phone">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">University student</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">University student</div>
             <div class="col">
                 <select class="form-select" id="is_student" name="is_student">
                     <option value="Ano">Yes</option>
@@ -47,7 +46,12 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Category</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Category
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">It also affects the price calculation.</span>
+                </div>
+            </div>
             <div class="col" id="zmena_kategorie_povolena" hidden>
                 <div class="col">
                     <select class="form-select" id="age_category" name="age_category">
@@ -61,32 +65,30 @@
                     You are currently signed up for classes that match your age category. If you want to change the age category, you must first unsubscribe from these classes.
                 </div>
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">The category also affects the price calculation.</span>
-                </div>
-            </div>
         </div>
         <hr>
         <h2>ISSEM information</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">EMS member</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">EMS member
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">The Early Music Society is a non-profit organization that organizes the ISSEM. More information about EMS and membership can be found on the <a class="link" target="_blank" href="http://ssh.early-music.cz">website</a>.</span>
+                </div>
+            </div>
             <div class="col">
                 <select class="form-select" id="is_ssh_member" name="is_ssh_member">
                     <option value="Ano">Yes</option>
                     <option value="Ne">No</option>
                 </select>
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">The Early music society is a non-profit organization that organizes the ISSEM. More information about EMS and membership can be found on the <a class="link" target="_blank" href="http://ssh.early-music.cz">website</a>.</span>
-                </div>
-            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Participation</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Participation
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">Active participation is intended for those who want to take part in the classes. Passive participation serves two purposes: 1) The accompanying person of child participants must be a participant. 2) Friends of ISSEM can attend classes and thus support the school.</span>
+                </div>
+            </div>
             <div class="col" id="zmena_ucasti_povolena" hidden>
                 <select class="form-select" id="is_active_participant" name="is_active_participant">
                     <option value="active">active</option>
@@ -96,15 +98,9 @@
             <div class="col" id="zmena_ucasti_zakazana" hidden>
                 You are an active participant. To change that, you have to leave all of your classes first.
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">TODO popis pasivní účasti v EN</span>
-                </div>
-            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Student of ZUŠ Valtice/Mikulov</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Student of ZUŠ Valtice/Mikulov</div>
             <div class="col">
                 <select class="form-select" id="is_student_of_partner_zus" name="is_student_of_partner_zus">
                     <option value="Ano">Yes</option>
@@ -113,45 +109,43 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Musical education</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Musical education</div>
             <div class="col">
                 <input type="text" class="form-control" id="musical_education" name="musical_education">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Musical instrument</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Musical instrument</div>
             <div class="col">
                 <input type="text" class="form-control" id="musical_instrument" name="musical_instrument">
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Repertoire</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Repertoire
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">You can fill in the repertoire later, when you know it.</span>
+                </div>
+            </div>
             <div class="col">
                 <input type="text" class="form-control" id="repertoire" name="repertoire">
             </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">You may fill in the repertoire later, when you know it.</span>
-                </div>
-            </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Comment</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Comment
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">You can write, for example, the names of preferred roommates in the dormitory of the university, or any other message.</span>
+                </div>
+            </div>
             <div class="col">
                 <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <div class="custom-tooltip custom-tooltip-left">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">You can write the names of preferred roommates in the dormitory, or any other message.</span>
-                </div>
             </div>
         </div>
         <hr>
         <h2>Accomodation</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Accomodation type, number of people</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Accomodation type, number of people</div>
             <div class="col-4">
                 <select class="form-select" id="accomodation_type" name="accomodation_type">
                     <option selected value="-">Not picked yet</option>
@@ -167,7 +161,7 @@
         <hr>
         <h2>Food</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Are you interested in the food we offer?</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Are you interested in the food we offer?</div>
             <div class="col">
                 <select class="form-select" id="wants_meal" name="wants_meal">
                     <option value="ano">Yes</option>
@@ -187,7 +181,7 @@
         <hr>
         <h2>Billing</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Currency</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Currency</div>
             <div class="col">
                 <select class="form-select" id="billing_currency" name="billing_currency">
                     <option value="czk">CZK</option>
@@ -204,7 +198,7 @@
             </p>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Financial gift</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Financial gift</div>
             <div class="col">
                 <input type="number" class="form-control" id="billing_gift" name="billing_gift">
             </div>
@@ -215,7 +209,7 @@
         {% if "tutor" in roles %}
             <h2>Tutor information</h2>
             <div class="row my-1" id="tutor_yes">
-                <div class="col-2 d-flex align-items-center">Means of travel</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Means of travel</div>
                 <div class="col">
                     <select class="form-select" id="tutor_travel" name="tutor_travel">
                         <option value="own">own</option>
@@ -224,43 +218,43 @@
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Car license plate</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Car license plate</div>
                 <div class="col">
                     <input type="text" class="form-control" id="tutor_license_plate" name="tutor_license_plate">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Arrival details</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Arrival details</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_arrival" name="tutor_arrival">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Departure details</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Departure details</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_departure" name="tutor_departure">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Accompanying names</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Accompanying names</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_accompanying_names" name="tutor_accompanying_names">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Address</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Address</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_address" name="tutor_address">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Date of birth</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Date of birth</div>
                 <div class="col">
                 <input type="date" class="form-control" id="tutor_date_of_birth" name="tutor_date_of_birth">
                 </div>
             </div>
             <div class="row my-1">
-                <div class="col-2 d-flex align-items-center">Bank account number</div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Bank account number</div>
                 <div class="col">
                 <input type="text" class="form-control" id="tutor_bank_account" name="tutor_bank_account">
                 </div>
@@ -269,21 +263,20 @@
         {% endif %}
         <h2>Account</h2>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">New password</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">New password</div>
             <div class="col">
                 <input type="text" class="form-control" id="new_password" name="new_password">
             </div>
         </div>
         <div class="row my-1" id="no_parent" hidden>
-            <div class="col-2 d-flex align-items-center">Add a parent account</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a parent account
+                <div class="custom-tooltip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="custom-tooltiptext">If, for example, one person manages the Valtice in one family, they can connect the accounts like this. The parent account can manage its connected accounts.</span>
+                </div>
+            </div>
             <div class="col">
                 <input type="text" class="form-control" name="parent_email" placeholder="parent's email">
-            </div>
-        </div>
-        <div class="col-auto d-flex align-items-center">
-            <div class="custom-tooltip custom-tooltip-left">
-                <i class="fa-solid fa-circle-info"></i>
-                <span class="custom-tooltiptext">If, for example, one person manages the Valtice in one family, they can connect their accounts like this. The parent account can manage its connected accounts.</span>
             </div>
         </div>
         <div class="row my-1" id="yes_parent" hidden>
@@ -292,7 +285,7 @@
             </div>
         </div>
         <div class="row my-1">
-            <div class="col-2 d-flex align-items-center">Add a child account</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a child account</div>
             <div class="col">
                 <input type="text" class="form-control" name="child_first_name" placeholder="first name">
             </div>

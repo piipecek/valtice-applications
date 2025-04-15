@@ -247,38 +247,53 @@
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="pravy_text">Do I participate this year?</td>
+                <td class="d-flex justify-content-between">Do I participate this year?
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">In the next year, you will be asked if you want to participate again, because accounts are preserved.</span>
+                    </div>
+                </td>
                 <td id="is_this_year_participant"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Do I have to change password upon next login?</td>
+                <td class="d-flex justify-content-between">Do I have to change password upon next login?</td>
                 <td id="must_change_password_upon_login"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Is my e-mail confirmed?</td>
+                <td class="d-flex justify-content-between">Is my e-mail confirmed?</td>
                 <td id="confirmed_email"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Is my account locked?</td>
+                <td class="d-flex justify-content-between">Is my account locked?
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">We will lock the ability to change some account details before the ISSEM begins.</span>
+                    </div>
+                </td>
                 <td id="is_locked"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Date of account creation</td>
+                <td class="d-flex justify-content-between">Date of account creation</td>
                 <td id="datetime_created" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Time of registration in Valtice</td>
+                <td class="d-flex justify-content-between">Time of registration in Valtice
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">You must present yourself at the arrival to Valtice.</span>
+                    </div>
+                </td>
                 <td id="datetime_registered" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">
+                <td class="d-flex justify-content-between">
                     Parent account<br>
                     <small id="parent_hint" hidden>If you want to log-in as a parent account, you need to <a class="link" href="{{url_for('auth_views.logout')}}">log-out first</a>.</small>
                 </td>
                 <td id="parent" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Child accounts</td>
+                <td>Child accounts</td>
                 <td colspan="2">
                     <form method="post" id="children">
                     </form>

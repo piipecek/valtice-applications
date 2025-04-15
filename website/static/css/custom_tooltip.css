@@ -15,10 +15,10 @@
     z-index: 1;
     position: absolute;
     width: 300px;
-    left: 50%;
-    transform: translateX(-50%);
     opacity: 0;
     transition: 0.1s ease;
+    left: 100%; /* position to the right of the icon */
+    top: 0;
 }
 
 /* Tooltip on hover */
@@ -28,9 +28,13 @@
     transition: 0.1s ease 0.1s;
 }
 
-/* Tooltip at the left */
-.custom-tooltip-left .custom-tooltiptext {
-    bottom: 0;
-    transform: translateX(-110%) translateY(-50%);
-    /* transform: translateX(-110%); */
+@media (max-width: 700px) {
+    .custom-tooltiptext {
+        left: 50vw;
+        top: 50%;
+        transform: translate(-50%, -20%);
+        position: fixed;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
 }
