@@ -17,14 +17,9 @@ child_select.addEventListener('change', function() {
 })
 
 
-function disableButtonAfterClick(button) {
-    button.addEventListener('click', function(event) {
-        if (!button.disabled) {
-            button.disabled = true;
-            form.submit();
-        }
-    });
-}
-
-disableButtonAfterClick(create_account_button);
-disableButtonAfterClick(create_account_button_2);
+form.addEventListener('submit', function(event) {
+    if (form.checkValidity()) {
+        create_account_button.disabled = true;
+        create_account_button_2.disabled = true;
+    }
+})
