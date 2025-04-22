@@ -19,7 +19,7 @@
                 <li>The main class enrollment period is currently <strong>open</strong>.</li>
             {% else %}
                 <li>The main class enrollment period is currently <strong>not open</strong>, you can find the latest information on the <a href="{{url_for('guest_views.en_dashboard')}}" class="link">home page</a>.</li>
-                <li>Enrollment will take place on this page.</li>
+                <li>Enrollment will take place on this page. If you are waiting for the enrollment to open, you need to <a class="link" href="{{url_for('user_views.en_zapis_hlavni_tridy')}}">reload this page</a>.</li>
             {% endif %}
             
             <li>Below you can see an example of what enrollment might look like. Classes are colored according to occupancy as follows:</li>

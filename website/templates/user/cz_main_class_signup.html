@@ -19,7 +19,7 @@
                 <li>Zápis do hlavní třídy je v tuto chvíli <strong>otevřený</strong>.
             {% else %}
                 <li>Zápis do hlavní třídy v tuto chvíli <strong>není otevřený</strong>, aktuální informace naleznete vždy na <a href="{{url_for('guest_views.cz_dashboard')}}" class="link">domovské stránce</a>.</li>
-                <li>Zápis bude probíhat na této stránce.</li>
+                <li>Zápis bude probíhat na této stránce. Pokud čekáte na otevření zápisu, je nutné <a class="link" href="{{url_for('user_views.zapis_hlavni_tridy')}}">načíst tuto stránku znovu</a>.</li>
             {% endif %}
             
             <li>Níže vidíte příklad toho, jak může zapisování vypadat. Třídy se podle obsazenosti zbarví následovně:</li>

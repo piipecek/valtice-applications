@@ -81,7 +81,7 @@ def settings():
                 set_primary_classes_start_date_and_time(primary_classes_start_date, primary_classes_start_time)
                 set_secondary_classes_start_date_and_time(secondary_classes_start_date, secondary_classes_start_time)
                 set_applications_end_date_and_time(applications_end_date, applications_end_time)
-                flash("Datum a čas začátku přihlášek do hlavních tříd byl změněn.", category="success")
+                flash("Datum a čas začátku přihlášek do tříd byl změněn.", category="success")
                 return redirect(url_for("org_views.settings"))
         elif request.form.get("nahrat_logo_cz"):
             if "logo_cz" in request.files and request.files["logo_cz"].filename:
