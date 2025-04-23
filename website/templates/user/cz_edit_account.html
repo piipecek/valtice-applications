@@ -144,7 +144,7 @@
         </div>
         <hr>
         <h2>Ubytování</h2>
-        <div class="row my-1">
+        <div class="row my-1" id="zmena_ubytka_povolena" hidden>
             <div class="col-sm-3 d-flex align-items-center justify-content-between">Ubytování, počet lidí</div>
             <div class="col">
                 <select class="form-select" id="accomodation_type" name="accomodation_type">
@@ -158,6 +158,11 @@
                 <input type="number" step="1" class="form-control" id="accomodation_count" name="accomodation_count">
             </div>
         </div>
+        <div class="row my-1" id="zmena_ubytka_zakazana" hidden>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Ubytování</div>
+            <div class="col">
+                Protože máte už přihlášené třídy, nemůžete měnit ubytování. Pokud chcete změnit ubytování, musíte se nejdříve odhlásit ze všech tříd, nebo kontaktovat organizátory.
+            </div> 
         <hr>
         <h2>Strava</h2>
         <div class="row my-1">

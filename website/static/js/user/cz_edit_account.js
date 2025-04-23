@@ -8,6 +8,14 @@ for (let key in data) {
         if (document.getElementById(key)) {
             document.getElementById(key).value = data[key]
         }
+    } else if (key == "zmena_ubytka") {
+        if (data[key] == "povolena") {
+            document.getElementById("zmena_ubytka_povolena").hidden = false
+            document.getElementById("zmena_ubytka_zakazana").hidden = true
+        } else {
+            document.getElementById("zmena_ubytka_povolena").hidden = true
+            document.getElementById("zmena_ubytka_zakazana").hidden = false
+    }
     } else if (key == "zmena_letosni_ucasti") {
         if (data[key] == "povolena") {
             document.getElementById("zmena_letosni_ucasti_povolena").hidden = false

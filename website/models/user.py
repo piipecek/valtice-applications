@@ -121,7 +121,7 @@ class User(Common_methods_db_model, UserMixin):
             return None
         return User.get_by_id(data["user_id"])
     
-    def get_full_name(self, lang: str) -> str:
+    def get_full_name(self, lang: str = "cz") -> str:
         def is_blank(s):
             return s is None or s.strip() == ""
 
@@ -383,7 +383,25 @@ class User(Common_methods_db_model, UserMixin):
         return result
     
     
+    def _get_first_enrolled_child(self):
+        # pokud jsem doprovod, zjistit, ktery z mejch deti se kliklo jako prvni
+        if self.children:
+            children = sorted(filter(lambda y: y.primary_class_id, self.children), key=lambda x: x.datetime_class_pick)
+            return children[0] if children else None       
+        return None
+    
+    
+    def _kolik_mista_zabiram(self):
+        # vrati to muj accomodation_count + accomodation_count myho doprovodu, pokud jsem first enrolled child
+        result = self.accomodation_count
+        if self.parent:
+            rozhodujici_dite = self.parent._get_first_enrolled_child()
+            if rozhodujici_dite and rozhodujici_dite == self and not self.parent.is_active_participant:
+                result += self.parent.accomodation_count
+        return result
+    
     def ubytovani(self) -> dict:
+        # tohle je vystup
         result = {
             "accomodation_message_cz": None,
             "accomodation_message_en": None,
@@ -391,6 +409,7 @@ class User(Common_methods_db_model, UserMixin):
         }
         
         settings = get_settings()
+        
         if not self.accomodation_type:
             result["accomodation_message_cz"] = "Ubytování zatím není vybráno."
             result["accomodation_message_en"] = "Accommodation not selected yet."
@@ -398,43 +417,98 @@ class User(Common_methods_db_model, UserMixin):
             result["accomodation_message_cz"] = "Ubytování máte vlastní."
             result["accomodation_message_en"] = "You have your own accommodation."
         else:
-            if self.primary_class is None:
-                if self.accomodation_type == "gym":
-                    result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
-                    result["accomodation_message_en"] = f"You are interested in accommodation in the gym, number of places: {self.accomodation_count}. But you will be placed in the queue only after signing up for the class."
-                elif self.accomodation_type == "vs":
-                    result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
-                    result["accomodation_message_en"] = f"You are interested in accommodation at the wine school, number of places: {self.accomodation_count}. But you will be placed in the queue only after signing up for the class."
+            if not self.is_active_participant:
+                # moje volba mista ubytovani nema roli, je to podle meho doprovodu
+                # pokud nejsem doprovod, nemam narok na ubytovani
+                if len(self.children) == 0:
+                    result["accomodation_message_cz"] = "Nemáte nárok na ubytování, protože nejste aktivní účastník a nejste doprovod dětského účastníka."
+                    result["accomodation_message_en"] = "You are not entitled to accommodation because you are not an active participant and you are not the parent of a child participant."
+                    return result
+                else:
+                    # pokud jsem doprovod, zjistit, ktery z mejch deti se kliklo jako prvni a pripocitat se k nemu
+                    # je tu trochu duplikace kodu o par radku niz, hmm
+                    users = sorted(filter(lambda x: x.primary_class_id, User.get_all()), key=lambda x: x.datetime_class_pick)
+                    mist_vycerpano_gym = 0
+                    mist_vycerpano_vs = 0
+                    rozhodujici_dite: User = self._get_first_enrolled_child()
+                    if not rozhodujici_dite:
+                        result["accomodation_message_cz"] = "Máte zájem o ubytování, ale do fronty budete zařazeni, teprve až se do třídy přihlásí jeden z Vašich podřízených účtů."
+                        result["accomodation_message_en"] = "You are interested in accommodation, but you will be placed in the queue only after one of your child accounts signs up for the class."
+                    else:
+                        for user in users:
+                            user: User
+                            if user == rozhodujici_dite:
+                                break
+                            if user.accomodation_type == "gym" and user.primary_class:
+                                mist_vycerpano_gym += user._kolik_mista_zabiram()
+                            elif user.accomodation_type == "vs" and user.primary_class:
+                                mist_vycerpano_vs += user._kolik_mista_zabiram()
+                        if rozhodujici_dite.accomodation_type == "gym":
+                            poradi_list = []
+                            for i in range(rozhodujici_dite.accomodation_count + self.accomodation_count):
+                                if mist_vycerpano_gym+i+1 < int(settings["gym_capacity"]):
+                                    result["fits"] = True
+                                poradi_list.append(f"{mist_vycerpano_gym+i+1}/{settings['gym_capacity']}")
+                            poradi_display = ", ".join(poradi_list)
+                            result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně společně s účtem, který doprovádíte. Pořadí vašich míst ve frontě je: {poradi_display}."
+                            result["accomodation_message_en"] = f"You are interested in accommodation in the gym together with the account you are accompanying. The order of your places in the queue is: {poradi_display}."
+                        elif rozhodujici_dite.accomodation_type == "vs":
+                            poradi_list = []
+                            for i in range(rozhodujici_dite.accomodation_count + self.accomodation_count):
+                                if mist_vycerpano_vs+i+1 < int(settings["vs_capacity"]):
+                                    result["fits"] = True
+                                poradi_list.append(f"{mist_vycerpano_vs+i+1}/{settings['vs_capacity']}")
+                            poradi_display = ", ".join(poradi_list)
+                            result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole společně s účtem, který doprovázíte. Pořadí vašich míst ve frontě je: {poradi_display}."
+                            result["accomodation_message_en"] = f"You are interested in accommodation at the wine school together with the account you are accompanying. The order of your places in the queue is: {poradi_display}."
+                        else:
+                            if not rozhodujici_dite.accomodation_type:
+                                result["accomodation_message_cz"] = "Vaše dítě si ještě nevybralo ubytování a vy jste s ním z důvodu pasivní účasti."
+                                result["accomodation_message_en"] = "Your child has not yet chosen accommodation and you are with them due to passive participation."
+                            elif rozhodujici_dite.accomodation_type == "own":
+                                result["accomodation_message_cz"] = "Ubytování máte společně s dítětem vlastní."
+                                result["accomodation_message_en"] = "You and your child have your own accommodation."
+                        
             else:
-                users = sorted(filter(lambda x: x.primary_class_id, User.get_all()), key=lambda x: x.datetime_class_pick)
-                mist_vycerpano_gym = 0
-                mist_vycerpano_vs = 0
-                for user in users:
-                    user: User
-                    if user == current_user:
-                        break
-                    if user.accomodation_type == "gym" and user.primary_class:
-                        mist_vycerpano_gym += user.accomodation_count
-                    elif user.accomodation_type == "vs" and user.primary_class:
-                        mist_vycerpano_vs += user.accomodation_count
-                if self.accomodation_type == "gym":
-                    poradi_list = []
-                    for i in range(user.accomodation_count):
-                        if mist_vycerpano_gym+i+1 < int(settings["gym_capacity"]):
-                            result["fits"] = True
-                        poradi_list.append(f"{mist_vycerpano_gym+i+1}/{settings['gym_capacity']}")
-                    poradi_display = ", ".join(poradi_list)
-                    result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně. Pořadí Vašich míst ve frontě je: {poradi_display}."
-                    result["accomodation_message_en"] = f"You are interested in accommodation in the gym. The order of your places in the queue is: {poradi_display}."
-                if self.accomodation_type == "vs":
-                    poradi_list = []
-                    for i in range(user.accomodation_count):
-                        if mist_vycerpano_vs+i+1 < int(settings["vs_capacity"]):
-                            result["fits"] = True
-                        poradi_list.append(f"{mist_vycerpano_vs+i+1}/{settings['vs_capacity']}")
-                    poradi_display = ", ".join(poradi_list)
-                    result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole. Pořadí Vašich míst ve frontě je: {poradi_display}."
-                    result["accomodation_message_en"] = f"You are interested in accommodation at the wine school. The order of your places in the queue is: {poradi_display}."
+                
+                if self.primary_class is None:
+                    if self.accomodation_type == "gym":
+                        result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
+                        result["accomodation_message_en"] = f"You are interested in accommodation in the gym, number of places: {self.accomodation_count}. But you will be placed in the queue only after signing up for the class."
+                    elif self.accomodation_type == "vs":
+                        result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
+                        result["accomodation_message_en"] = f"You are interested in accommodation at the wine school, number of places: {self.accomodation_count}. But you will be placed in the queue only after signing up for the class."
+                else:
+                    users = sorted(filter(lambda x: x.primary_class_id, User.get_all()), key=lambda x: x.datetime_class_pick)
+                    mist_vycerpano_gym = 0
+                    mist_vycerpano_vs = 0
+                    # nactu pocet zabranejch mist az do my pozice
+                    for user in users:
+                        user: User
+                        if user == current_user:
+                            break
+                        if user.accomodation_type == "gym" and user.primary_class:
+                            mist_vycerpano_gym += user._kolik_mista_zabiram() # tady ubiram schvalne za dite i za doprovod
+                        elif user.accomodation_type == "vs" and user.primary_class:
+                            mist_vycerpano_vs += user._kolik_mista_zabiram() 
+                    if self.accomodation_type == "gym":
+                        poradi_list = []
+                        for i in range(user.accomodation_count): # tady iteruju schvalne jen pres sebe, pac doprovod to ma reseny vejs
+                            if mist_vycerpano_gym+i+1 < int(settings["gym_capacity"]):
+                                result["fits"] = True
+                            poradi_list.append(f"{mist_vycerpano_gym+i+1}/{settings['gym_capacity']}")
+                        poradi_display = ", ".join(poradi_list)
+                        result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně. Pořadí Vašich míst ve frontě je: {poradi_display}."
+                        result["accomodation_message_en"] = f"You are interested in accommodation in the gym. The order of your places in the queue is: {poradi_display}."
+                    if self.accomodation_type == "vs":
+                        poradi_list = []
+                        for i in range(user.accomodation_count):
+                            if mist_vycerpano_vs+i+1 < int(settings["vs_capacity"]):
+                                result["fits"] = True
+                            poradi_list.append(f"{mist_vycerpano_vs+i+1}/{settings['vs_capacity']}")
+                        poradi_display = ", ".join(poradi_list)
+                        result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole. Pořadí Vašich míst ve frontě je: {poradi_display}."
+                        result["accomodation_message_en"] = f"You are interested in accommodation at the wine school. The order of your places in the queue is: {poradi_display}."
         return result
     
     
@@ -476,6 +550,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "Zatím neregistrován",
+            "accomodation_message": self.ubytovani()["accomodation_message_cz"],
             "accomodation_type": ubytovani,
             "musical_education": self.musical_education if self.musical_education else "-",
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
@@ -850,6 +925,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "zmena_ubytka": zmena_ucasti,
             "accomodation_type": self.accomodation_type,
             "accomodation_count": self.accomodation_count,
             "musical_education": self.musical_education,
@@ -914,6 +990,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "zmena_ubytka": zmena_ucasti,
             "accomodation_type": self.accomodation_type,
             "accomodation_count": self.accomodation_count,
             "musical_education": self.musical_education,
@@ -1000,7 +1077,6 @@ class User(Common_methods_db_model, UserMixin):
         
     
     def info_for_calculation_email(self) -> dict:
-        print(url_for("user_views.account", _external=True))
         settings = get_settings()
         return {
             "rok": datetime.now().year,
