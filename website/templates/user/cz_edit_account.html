@@ -263,6 +263,18 @@
         {% endif %}
         <h2>Přístup k účtu</h2>
         <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Jste letošním účastníkem?</div>
+            <div class="col" id="zmena_letosni_ucasti_povolena" hidden>
+                <select class="form-select" id="is_this_year_participant" name="is_this_year_participant">
+                    <option value="Ano">Ano</option>
+                    <option value="Ne">Ne</option>
+                </select>
+            </div>
+            <div class="col" id="zmena_letosni_ucasti_zakazana" hidden>
+                Již máte přihlášené některé třídy. Pokud se letos nechcete účastnit, musíte se nejdříve odhlásit ze všech tříd.
+            </div>
+        </div>
+        <div class="row my-1">
             <div class="col-sm-3 d-flex align-items-center justify-content-between">Nové heslo</div>
             <div class="col">
                 <input type="text" class="form-control" id="new_password" name="new_password">

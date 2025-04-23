@@ -1,4 +1,4 @@
-from flask import abort, redirect, url_for
+from flask import abort, redirect, url_for, flash
 from flask_login import current_user
 from functools import wraps
 from website.mail_handler import mail_sender
@@ -67,9 +67,9 @@ def ensure_email_password_participant(language): # cz/en
                     return redirect(url_for("auth_views.en_change_password"))
             elif not current_user.is_this_year_participant:
                 if language == "cz":
-                    return redirect(url_for("auth_views.this_year_participation"))
+                    flash("Nejste letošním účastníkem. Pokud se chcete letos MLŠSH účastnit, proveďte tuto změnu na svém účtu.", category="error")
                 else:
-                    return redirect(url_for("auth_views.en_this_year_participation"))
+                    flash("You are not this year's participant. If you want to participate this year, please change it in your account.", category="error")
             return original_function(*args, **kwargs)
         return wrapper
     return what_should_i_name_this

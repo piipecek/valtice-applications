@@ -116,7 +116,12 @@ def time_exclusive_secondary_classes_capacity():
 def handle_class_click():
     data = json.loads(request.data)
     trida = Trida.get_by_id(data["id"])
-    
+
+    if not current_user.is_this_year_participant:
+        return json.dumps({
+            "cz_status": "Nejste letošním účastníkem, nemůžete se zapisovat do tříd.",
+            "en_status": "You are not this year's participant, you cannot enroll in classes."
+            }), 400
     if data["state"] == "enrolled":
         if data["main_class"]:
             current_user.primary_class = None

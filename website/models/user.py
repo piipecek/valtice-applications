@@ -844,6 +844,8 @@ class User(Common_methods_db_model, UserMixin):
             "is_student": "Ano" if self.is_student else "Ne",
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
+            "zmena_letosni_ucasti": zmena_ucasti, # zmena aaktivni a pasivni je take podminena zadnejma tridama
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
@@ -906,6 +908,8 @@ class User(Common_methods_db_model, UserMixin):
             "is_student": "Ano" if self.is_student else "Ne",
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
+            "zmena_letosni_ucasti": zmena_ucasti, # zmena aaktivni a pasivni je take podminena zadnejma tridama
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
@@ -950,6 +954,7 @@ class User(Common_methods_db_model, UserMixin):
         self.phone = request.form.get("phone")
         self.is_student = True if request.form.get("is_student") == "Ano" else False
         self.is_under_16 = True if request.form.get("age_category") == "child" else False
+        self.is_this_year_participant = True if request.form.get("is_this_year_participant") == "Ano" else False
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False

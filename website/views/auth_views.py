@@ -25,7 +25,10 @@ def login():
         if user and check_password_hash(user.password, password):
             user.login()
             flash("úspěšné přihlášení", category="success")
-            return redirect(url_for("user_views.account"))
+            if user.is_this_year_participant:
+                return redirect(url_for("user_views.account"))
+            else:
+                return redirect(url_for("auth_views.this_year_participation"))
         else:
             flash("E-mail nebo heslo byly špatně", category="error")
             return redirect(url_for("auth_views.login"))
@@ -47,7 +50,10 @@ def en_login():
         if user and check_password_hash(user.password, password):
             user.login()
             flash("Login successful", category="success")
-            return redirect(url_for("user_views.en_account"))
+            if user.is_this_year_participant:
+                return redirect(url_for("user_views.en_account"))
+            else:
+                return redirect(url_for("auth_views.en_this_year_participation"))
         else:
             flash("Email or password incorrect", category="error")
             return redirect(url_for("auth_views.en_login"))
@@ -459,8 +465,7 @@ def this_year_participation():
                 flash("Zájem na tomto ročníku byl zaznamenán, děkujeme.", category="success")
                 return redirect(url_for("user_views.account"))
             elif status == "no":
-                flash("Váš účet stále bude existovat, ale bez zájmu o letošní ročník Vás dál nemůžeme pustit.", category="info")
-                return redirect(url_for("auth_views.this_year_participation"))
+                return redirect(url_for("user_views.account"))
         else:
             return request.form.to_dict()
         
@@ -480,7 +485,6 @@ def en_this_year_participation():
                 flash("We noted your interest in this year's ISSEM, thank you.", category="success")
                 return redirect(url_for("user_views.en_account"))
             elif status == "no":
-                flash("Your account will still exist, but without interest in this year's ISSEM we cannot let you in.", category="info")
-                return redirect(url_for("auth_views.en_this_year_participation"))
+                return redirect(url_for("user_views.en_account"))
         else:
             return request.form.to_dict()
