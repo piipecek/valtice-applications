@@ -102,6 +102,8 @@ def set_bank_details(request):
     settings["eur_bank_account"] = request.form.get("eur_bank_account")
     settings["czk_iban"] = request.form.get("czk_iban")
     settings["eur_iban"] = request.form.get("eur_iban")
+    settings["czk_swift"] = request.form.get("czk_swift")
+    settings["eur_swift"] = request.form.get("eur_swift")
     settings["czk_bic"] = request.form.get("czk_bic")
     settings["eur_bic"] = request.form.get("eur_bic")
     settings["czk_address"] = request.form.get("czk_address")
