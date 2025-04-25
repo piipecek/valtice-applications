@@ -1,6 +1,4 @@
 import httpGet from "../http_get.js"
-import TableCreator from "../table_creator.js"
-
 
 let tridy = JSON.parse(httpGet("/org_api/cz_my_participants"))
 
@@ -11,11 +9,11 @@ function row_factory(label, value) {
     let row = document.createElement("div")
     row.classList.add("row")
     let label_div = document.createElement("div")
-    label_div.classList.add("col-sm-2")
+    label_div.classList.add("col-sm-3")
     label_div.innerText = label
     label_div.classList.add("tutor-name-label")
     let value_div = document.createElement("div")
-    value_div.classList.add("col-sm-10")
+    value_div.classList.add("col-sm")
     value_div.innerText = value
     row.appendChild(label_div)
     row.appendChild(value_div)
@@ -45,8 +43,10 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("Jméno", participant.full_name_cz))
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Telefon", participant.phone))
+            participant_div.appendChild(row_factory("Věk", participant.age))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
             participant_div.appendChild(row_factory("Repertoár", participant.repertoire))
+            participant_div.appendChild(row_factory("Čas přihlášení do třídy", participant.datetime_class_pick))
         }
 
         parent_div.appendChild(document.createElement("hr"))
@@ -65,8 +65,10 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("Jméno", participant.full_name_cz))
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Telefon", participant.phone))
+            participant_div.appendChild(row_factory("Věk", participant.age))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
             participant_div.appendChild(row_factory("Repertoár", participant.repertoire))
+            participant_div.appendChild(row_factory("Čas přihlášení do třídy", participant.datetime_class_pick))
         }
 
     }

@@ -9,13 +9,12 @@ from website.models.meal import Meal
 from website.helpers.pretty_date import pretty_datetime, pretty_date
 from website.helpers.pretty_penize import pretty_penize
 from website.helpers.settings_manager import get_settings
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from flask import current_app, flash, url_for
 from flask_login import UserMixin, login_user, current_user
 import jwt
 from werkzeug.security import generate_password_hash
 import sqlalchemy
-from datetime import datetime
 from website.mail_handler import mail_sender
 
 
@@ -104,7 +103,7 @@ class User(Common_methods_db_model, UserMixin):
         reset_token = jwt.encode(
             {
                 "user_id": self.id,
-                "exp": datetime.now(tz=timezone.utc) + timedelta(seconds=expires_sec)
+                "exp": datetime.now(tz=timezone.utc) + timedelta(seconds=expires_sec) # tady je utc spravne, verifikace ho taky pouziva
             },
             current_app.config["SECRET_KEY"],
             algorithm="HS256"
@@ -385,7 +384,8 @@ class User(Common_methods_db_model, UserMixin):
     
     def _get_first_enrolled_child(self):
         # pokud jsem doprovod, zjistit, ktery z mejch deti se kliklo jako prvni
-        if self.children:
+        all_children = [c for c in self.children if c.is_under_16]
+        if all_children:
             children = sorted(filter(lambda y: y.primary_class_id, self.children), key=lambda x: x.datetime_class_pick)
             return children[0] if children else None       
         return None
@@ -399,6 +399,7 @@ class User(Common_methods_db_model, UserMixin):
             if rozhodujici_dite and rozhodujici_dite == self and not self.parent.is_active_participant:
                 result += self.parent.accomodation_count
         return result
+    
     
     def ubytovani(self) -> dict:
         # tohle je vystup
@@ -420,7 +421,8 @@ class User(Common_methods_db_model, UserMixin):
             if not self.is_active_participant:
                 # moje volba mista ubytovani nema roli, je to podle meho doprovodu
                 # pokud nejsem doprovod, nemam narok na ubytovani
-                if len(self.children) == 0:
+                children = [c for c in self.children if c.is_under_16]
+                if len(children) == 0:
                     result["accomodation_message_cz"] = "Nemáte nárok na ubytování, protože nejste aktivní účastník a nejste doprovod dětského účastníka."
                     result["accomodation_message_en"] = "You are not entitled to accommodation because you are not an active participant and you are not the parent of a child participant."
                     return result
@@ -470,7 +472,6 @@ class User(Common_methods_db_model, UserMixin):
                                 result["accomodation_message_en"] = "You and your child have your own accommodation."
                         
             else:
-                
                 if self.primary_class is None:
                     if self.accomodation_type == "gym":
                         result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
@@ -485,7 +486,7 @@ class User(Common_methods_db_model, UserMixin):
                     # nactu pocet zabranejch mist az do my pozice
                     for user in users:
                         user: User
-                        if user == current_user:
+                        if user == self:
                             break
                         if user.accomodation_type == "gym" and user.primary_class:
                             mist_vycerpano_gym += user._kolik_mista_zabiram() # tady ubiram schvalne za dite i za doprovod
@@ -686,8 +687,8 @@ class User(Common_methods_db_model, UserMixin):
     
     def nacist_zmeny_z_org_requestu(self, request):
         
-        if request.form.get("primary_class_id") != self.primary_class_id:
-            self.datetime_class_pick = datetime.now(tz=timezone.utc)
+        if request.form.get("primary_class_id") != str(self.primary_class_id):
+            self.datetime_class_pick = datetime.now()
         if request.form.get("primary_class_id") == "-":
             self.datetime_class_pick = None
             
@@ -1064,6 +1065,15 @@ class User(Common_methods_db_model, UserMixin):
         
         self.update()
         
+    
+    def get_age(self) -> str:
+        if self.date_of_birth:
+            today = date.today()
+            age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
+            return str(age)
+        else:
+            return "-"
+        
 
     def info_for_tutor(self) -> dict:
         return {
@@ -1071,8 +1081,10 @@ class User(Common_methods_db_model, UserMixin):
             "full_name_en": self.get_full_name("en"),
             "email": self.email,
             "phone": self.phone,
+            "age": self.get_age(),
             "education": self.musical_education,
             "repertoire": self.repertoire,
+            "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "-",
         }
         
     
