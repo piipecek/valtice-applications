@@ -26,6 +26,7 @@ class User(Common_methods_db_model, UserMixin):
     surname = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     phone = db.Column(db.String(200))
+    date_of_birth = db.Column(db.Date)
     is_student = db.Column(db.Boolean, default=False)
     is_under_16 = db.Column(db.Boolean, default=False)
     
@@ -68,7 +69,6 @@ class User(Common_methods_db_model, UserMixin):
     tutor_departure = db.Column(db.Text)
     tutor_accompanying_names = db.Column(db.Text)
     tutor_address = db.Column(db.Text)
-    tutor_date_of_birth = db.Column(db.Date)
     tutor_bank_account = db.Column(db.String(200))
     
     #auth data
@@ -541,6 +541,7 @@ class User(Common_methods_db_model, UserMixin):
             "full_name": self.get_full_name("cz"),
             "email": self.email,
             "phone": self.phone if self.phone else "-",
+            "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
             "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "Zatím nevybráno",
@@ -584,7 +585,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
             "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
             "tutor_address": self.tutor_address if self.tutor_address else "-",
-            "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
             "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
@@ -630,6 +630,7 @@ class User(Common_methods_db_model, UserMixin):
             "surname": self.surname if self.surname else "",
             "email": self.email,
             "phone": self.phone,
+            "date_of_birth": self.date_of_birth.strftime("%Y-%m-%d") if self.date_of_birth else None,
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "child" if self.is_under_16 else "adult",
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
@@ -669,7 +670,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_departure": self.tutor_departure,
             "tutor_accompanying_names": self.tutor_accompanying_names,
             "tutor_address": self.tutor_address,
-            "tutor_date_of_birth": self.tutor_date_of_birth.strftime("%Y-%m-%d") if self.tutor_date_of_birth else None,
             "tutor_bank_account": self.tutor_bank_account,
             
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
@@ -715,6 +715,7 @@ class User(Common_methods_db_model, UserMixin):
         self.surname = request.form.get("surname")
         self.email = request.form.get("email")
         self.phone = request.form.get("phone")
+        self.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
         self.is_student = True if request.form.get("is_student") == "Ano" else False
         self.is_under_16 = True if request.form.get("age_category") == "child" else False
         self.is_this_year_participant = True if request.form.get("is_this_year_participant") == "Ano" else False
@@ -747,7 +748,6 @@ class User(Common_methods_db_model, UserMixin):
         self.tutor_departure = request.form.get("tutor_departure")
         self.tutor_accompanying_names = request.form.get("tutor_accompanying_names")
         self.tutor_address = request.form.get("tutor_address")
-        self.tutor_date_of_birth = datetime.strptime(request.form.get("tutor_date_of_birth"), "%Y-%m-%d") if request.form.get("tutor_date_of_birth") else None
         self.tutor_bank_account = request.form.get("tutor_bank_account")
         
         self.must_change_password_upon_login = True if request.form.get("must_change_password_upon_login") == "Ano" else False
@@ -769,6 +769,7 @@ class User(Common_methods_db_model, UserMixin):
             "surname": self.surname if self.surname else "-",
             "email": self.email,
             "phone": self.phone if self.phone else "-",
+            "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
@@ -812,7 +813,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
             "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
             "tutor_address": self.tutor_address if self.tutor_address else "-",
-            "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
             "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
             "confirmed_email": "Ano" if self.confirmed_email else "Ne",
@@ -836,6 +836,7 @@ class User(Common_methods_db_model, UserMixin):
             "surname": self.surname if self.surname else "-",
             "email": self.email,
             "phone": self.phone if self.phone else "-",
+            "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
             "is_student": "Yes" if self.is_student else "No",
             "age_category": "Up to and including 15 years" if self.is_under_16 else "16 years and older",
             "is_ssh_member": "Yes" if self.is_ssh_member else "No",
@@ -879,7 +880,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_departure": self.tutor_departure if self.tutor_departure else "-",
             "tutor_accompanying_names": self.tutor_accompanying_names if self.tutor_accompanying_names else "-",
             "tutor_address": self.tutor_address if self.tutor_address else "-",
-            "tutor_date_of_birth": pretty_datetime(self.tutor_date_of_birth) if self.tutor_date_of_birth else "-",
             "tutor_bank_account": self.tutor_bank_account if self.tutor_bank_account else "-",
             "must_change_password_upon_login": "Yes" if self.must_change_password_upon_login else "No",
             "confirmed_email": "Yes" if self.confirmed_email else "No",
@@ -916,6 +916,7 @@ class User(Common_methods_db_model, UserMixin):
             "surname": self.surname if self.surname else "",
             "email": self.email,
             "phone": self.phone,
+            "date_of_birth": self.date_of_birth.strftime("%Y-%m-%d") if self.date_of_birth else None,
             "is_student": "Ano" if self.is_student else "Ne",
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
@@ -949,7 +950,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_departure": self.tutor_departure,
             "tutor_accompanying_names": self.tutor_accompanying_names,
             "tutor_address": self.tutor_address,
-            "tutor_date_of_birth": self.tutor_date_of_birth.strftime("%Y-%m-%d") if self.tutor_date_of_birth else None,
             "tutor_bank_account": self.tutor_bank_account,
             "children": [
                 {
@@ -981,6 +981,7 @@ class User(Common_methods_db_model, UserMixin):
             "surname": self.surname if self.surname else "",
             "email": self.email,
             "phone": self.phone,
+            "date_of_birth": self.date_of_birth.strftime("%Y-%m-%d") if self.date_of_birth else None,
             "is_student": "Ano" if self.is_student else "Ne",
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
@@ -1014,7 +1015,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_departure": self.tutor_departure,
             "tutor_accompanying_names": self.tutor_accompanying_names,
             "tutor_address": self.tutor_address,
-            "tutor_date_of_birth": self.tutor_date_of_birth.strftime("%Y-%m-%d") if self.tutor_date_of_birth else None,
             "tutor_bank_account": self.tutor_bank_account,
             "children": [
                 {
@@ -1029,6 +1029,7 @@ class User(Common_methods_db_model, UserMixin):
         self.name = request.form.get("name")
         self.surname = request.form.get("surname")
         self.phone = request.form.get("phone")
+        self.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
         self.is_student = True if request.form.get("is_student") == "Ano" else False
         self.is_under_16 = True if request.form.get("age_category") == "child" else False
         self.is_this_year_participant = True if request.form.get("is_this_year_participant") == "Ano" else False
@@ -1054,7 +1055,6 @@ class User(Common_methods_db_model, UserMixin):
         self.tutor_departure = request.form.get("tutor_departure")
         self.tutor_accompanying_names = request.form.get("tutor_accompanying_names")
         self.tutor_address = request.form.get("tutor_address")
-        self.tutor_date_of_birth = datetime.strptime(request.form.get("tutor_date_of_birth"), "%Y-%m-%d") if request.form.get("tutor_date_of_birth") else None
         self.tutor_bank_account = request.form.get("tutor_bank_account")
         
         if request.form.get("new_password"):
