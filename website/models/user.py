@@ -1096,6 +1096,7 @@ class User(Common_methods_db_model, UserMixin):
             "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
             "bank_account": settings["czk_bank_account"] if self.billing_currency == "czk" else settings["eur_bank_account"],
             "iban": settings["czk_iban"] if self.billing_currency == "czk" else settings["eur_iban"],
+            "swift": settings["czk_swift"] if self.billing_currency == "czk" else settings["eur_swift"],
             "bic": settings["czk_bic"] if self.billing_currency == "czk" else settings["eur_bic"],
             "address": settings["czk_address"] if self.billing_currency == "czk" else settings["eur_address"],
             "zprava_pro_prijemce": self.get_full_name("cz")
@@ -1111,6 +1112,7 @@ class User(Common_methods_db_model, UserMixin):
             "celkova_castka": pretty_penize(self.kalkulace()["celkem"], self.billing_currency), 
             "bank_account": settings["czk_bank_account"] if self.billing_currency == "czk" else settings["eur_bank_account"],
             "iban": settings["czk_iban"] if self.billing_currency == "czk" else settings["eur_iban"],
+            "swift": settings["czk_swift"] if self.billing_currency == "czk" else settings["eur_swift"],
             "bic": settings["czk_bic"] if self.billing_currency == "czk" else settings["eur_bic"],
             "address": settings["czk_address"] if self.billing_currency == "czk" else settings["eur_address"],
             "zprava_pro_prijemce": self.get_full_name("en")
