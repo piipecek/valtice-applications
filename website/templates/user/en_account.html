@@ -192,16 +192,18 @@
         </tbody>
     </table>
 </div>
-<form method="post">
-    <div class="row">
-        <div class="col">
-            You will receive an e-mail with payment details from us as soon as possible, right after the organizers check and approve your application. But if you are sure that you know what you are doing and that <b>you will not make any further changes</b>, you can have the e-mail sent right away.
+{% if users_can_send_calculations %}
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                You will receive an e-mail with payment details from us as soon as possible, right after the organizers check and approve your application. But if you are sure that you know what you are doing and that <b>you will not make any further changes</b>, you can have the e-mail sent right away.
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Send e-mail</button><br>
+            </div>
         </div>
-        <div class="col-auto">
-            <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Send e-mail</button><br>
-        </div>
-    </div>
-</form>
+    </form>
+{% endif %}
 <hr>
 {% if "tutor" in roles %}
     <h2>Tutor information</h2>

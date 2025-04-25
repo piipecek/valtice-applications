@@ -191,6 +191,7 @@
         </tbody>
     </table>
 </div>
+{% if users_can_send_calculations %}
 <form method="post">
     <div class="row">
         <div class="col">
@@ -201,6 +202,7 @@
         </div>
     </div>
 </form>
+{% endif %}
 <hr>
 {% if "tutor" in roles %}
     <h2>Lektorské informace</h2>

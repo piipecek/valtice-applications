@@ -6,6 +6,8 @@ let settings = JSON.parse(httpGet("/org_api/settings"))
 for (let key in settings) {
     if (key === "users_locked") {
         continue
+    } else if (key === "users_can_send_calculations") {
+        continue
     } else {
         document.getElementById(key).value = settings[key]
     }
@@ -20,6 +22,14 @@ if (settings["users_locked"]) {
 } else {
     document.getElementById("lock_state").innerText = "Všichni uživatelé mohou své účty upravovat."
     document.getElementById("toggle_lock").innerText = "Zamknout změny"
+}
+
+if (settings["users_can_send_calculations"]) {
+    document.getElementById("calculations_state").innerText = "Uživatelé mohou sami sobě zaslat kalkulaci."
+    document.getElementById("toggle_calculations").innerText = "Zakázat"
+} else {
+    document.getElementById("calculations_state").innerText = "Uživatelé si nesmí sami zaslat kalkulaci."
+    document.getElementById("toggle_calculations").innerText = "Povolit"
 }
 
 end_of_issem_button.addEventListener("click", function () {

@@ -9,7 +9,7 @@ from website.models.meal import Meal
 from website.models.role import Role
 from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, set_both_capacities, set_bank_details
+from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, toggle_user_calculations_state, set_both_capacities, set_bank_details
 from website.helpers.export import export
 from website.helpers.end_of_issem_manager import end_of_issem
 from website.paths import logo_cz_path, logo_en_path
@@ -112,6 +112,10 @@ def settings():
             for u in User.get_all():
                 u.is_locked = new_state
                 u.update()
+            flash("Stav uzamčení uživatelů byl změněn", category="success")
+            return redirect(url_for("org_views.settings"))
+        elif request.form.get("toggle_calculations"):
+            toggle_user_calculations_state()
             flash("Stav uzamčení uživatelů byl změněn", category="success")
             return redirect(url_for("org_views.settings"))
         elif request.form.get("capacity"):

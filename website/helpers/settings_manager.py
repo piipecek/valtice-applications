@@ -90,6 +90,11 @@ def toggle_user_lock_state() -> bool:
     save_settings(settings)
     return settings['users_locked']
 
+def toggle_user_calculations_state() -> None:
+    settings = get_settings()
+    settings['users_can_send_calculations'] = not settings['users_can_send_calculations']
+    save_settings(settings)
+
 def set_both_capacities(vs, gym):
     settings = get_settings()
     settings['vs_capacity'] = vs

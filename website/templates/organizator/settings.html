@@ -61,6 +61,16 @@
     </div>
 </form>
 <hr>
+<h2>Posílání kalkulací</h2>
+<form method="post">
+    <div class="row">
+        <div class="col my-1" id="calculations_state"></div>
+        <div class="col-12 col-sm-auto my-1">
+            <button class="custom_button" name="toggle_calculations" id="toggle_calculations" value="whatever" type="submit"></button>
+        </div>
+    </div>
+</form>
+<hr>
 <h2>Vytvoření nového účtu</h2>
 <small>Pokud vytváříte účet pro pořadatele, je nutné mu poté <a class="link" href="{{url_for('org_views.organizatori')}}">udělit správné role</a>.</small>
 <form method="post">
