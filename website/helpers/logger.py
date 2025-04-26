@@ -5,21 +5,19 @@ from datetime import datetime
 
 def log(message: str) -> None:
     """
-    Logs a message to the log file with a timestamp and user information.
-
-    Args:
-        message (str): The message to log.
+    Logs a message to the log file with a timestamp and current_user information.
     """
-    # Get the current date and time
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-
-    # Get the current user's username
     username = current_user.get_full_name("cz")
-
-    # Create the log message
     log_message = f"{timestamp} - {username}: {message}\n"
 
-    # Write the log message to the log file
     with open(logs_path(), "a") as log_file:
         log_file.write(log_message)
+
+
+def get_logs_for_browser() -> str:
+    with open(logs_path(), "r") as log_file:
+        logs = log_file.read()
+    logs = logs.replace("\n", "<br>")
+    return logs
