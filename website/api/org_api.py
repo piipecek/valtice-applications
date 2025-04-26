@@ -75,10 +75,19 @@ def tridy_pro_seznamy():
     return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["long_name_cz"])))
 
 
-@org_api.route("/registrovanych")
+@org_api.route("/statistiky")
 @require_role_system_name_on_current_user("organiser")
-def registrovanych():
-    return json.dumps({"pocet": len(list(filter(lambda u: u.datetime_registered, User.get_all())))})
+def statistiky():
+    uzivatele_mimo_orgy = list(filter(lambda u: len(u.roles) == 0, User.get_all()))
+    zajemci = list(filter(lambda u: u.is_this_year_participant, uzivatele_mimo_orgy))
+    zapsani = list(filter(lambda u: u.datetime_class_pick, zajemci))
+    registrovani = list(filter(lambda u: u.datetime_registered, zapsani))
+    return json.dumps({
+        "vsichni": len(uzivatele_mimo_orgy),
+        "zajemci": len(zajemci),
+        "registrovani": len(registrovani),
+        "zapsani": len(zapsani),
+        })
 
 
 @org_api.route("/settings")

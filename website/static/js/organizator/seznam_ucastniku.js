@@ -1,7 +1,7 @@
 import httpGet from "../http_get.js"
 import TableCreator from "../table_creator.js"
 let ucastnici = JSON.parse(httpGet("/org_api/seznam_ucastniku"))
-let registrovanych = JSON.parse(httpGet("/org_api/registrovanych"))["pocet"]
+let statistiky = JSON.parse(httpGet("/org_api/statistiky"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
 tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])
@@ -35,9 +35,7 @@ ucastnici.forEach(element => {
     tc.make_row([jmeno_a, email_element, element["registrovan"], trida_span])
 });
 
-document.getElementById("total").innerText = ucastnici.length
-let pocet_procent = 0
-if (ucastnici.length > 0) {
-    pocet_procent = Math.round(registrovanych / ucastnici.length * 100)
-}
-document.getElementById("registrovanych").innerText = String(registrovanych) + " (" + String(pocet_procent) + "%)"
+document.getElementById("vsichni").innerText = statistiky.vsichni
+document.getElementById("zajemci").innerText = statistiky.zajemci
+document.getElementById("zapsani").innerText = statistiky.zapsani
+document.getElementById("registrovani").innerText = statistiky.registrovani
