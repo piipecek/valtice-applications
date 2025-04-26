@@ -3,9 +3,11 @@ from flask_mail import Message
 from flask import render_template, url_for, flash
 from socket import gaierror
 from smtplib import SMTPRecipientsRefused
+from website.helpers.logger import log
 
 
 def mail_sender(mail_identifier, target, data=None) -> None:
+    log(f"Posílá se e-mail: {mail_identifier} na adresu: {target}")
     try:    
         if mail_identifier == "reset_password":
             msg = Message("Změna hesla na Valtickém přihláškovém systému",
@@ -54,6 +56,8 @@ def mail_sender(mail_identifier, target, data=None) -> None:
             msg.html = render_template("mails/successful_payment.html")
         mail.send(msg)
     except gaierror:
+        log("Gaierror, pravděpodobně nejsi online. E-mail se neposlal.")
         flash(f"Gaierror, pravděpodobně nejsi online. E-mail se neposlal. Mail identifier: {mail_identifier}, target: {target}", category="info")
     except SMTPRecipientsRefused:
+        log("SMTPRecipientsRefused, e-mail se nepodařilo odeslat.")
         flash(f"SMTPRecipientsRefused, e-mail se nepodařilo odeslat. Kontaktujte organizátory.", category="info")

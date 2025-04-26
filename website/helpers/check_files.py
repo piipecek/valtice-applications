@@ -9,6 +9,15 @@ def check_data_folder() -> None:
         data_path.mkdir()
         
 
+def check_logs_file() -> None:
+    logs_path = p.logs_path()
+    if logs_path.exists():
+        pass
+    else:
+        with open(logs_path, "w") as f:
+            f.write("")
+        
+
 def check_settings_file() -> None:
     settings_path = p.settings_path()
     if settings_path.exists():

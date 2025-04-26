@@ -17,3 +17,6 @@ def logo_cz_path() -> Path:
 
 def logo_en_path() -> Path:
     return Path.cwd() / "website" / "static" / "img" / "logo_en.png"
+
+def logs_path() -> Path:
+    return Path.cwd() / "data" / "log.txt"

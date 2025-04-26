@@ -11,6 +11,7 @@ known_bugs.json
 .idea
 .env
 dam_si_zpet_superadmina.py
-settings.json
+data/settings.json
+data/log.txt
 logo_cz.png
 logo_en.png

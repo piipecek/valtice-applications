@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import LoginManager, current_user
 from flask_mail import Mail
-from .helpers.check_files import check_data_folder, check_settings_file
+from .helpers.check_files import check_data_folder, check_settings_file, check_logs_file
 from .paths import dotenv_path
 from .helpers.settings_manager import is_class_signup_closed, is_secondary_class_signup_open, is_primary_class_signup_open, get_settings
 
@@ -18,6 +18,7 @@ load_dotenv(dotenv_path=dotenv_path(), verbose=True)
 
 def create_app() -> Flask:
     check_data_folder()
+    check_logs_file()
     check_settings_file()
         
     db_driver = os.environ.get("DB_DRIVER")
