@@ -714,7 +714,7 @@ class User(Common_methods_db_model, UserMixin):
              
         self.name = request.form.get("name")
         self.surname = request.form.get("surname")
-        self.email = request.form.get("email")
+        self.email = request.form.get("email") if request.form.get("email") else None
         self.phone = request.form.get("phone")
         self.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
         self.is_student = True if request.form.get("is_student") == "Ano" else False
