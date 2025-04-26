@@ -9,7 +9,7 @@ def log(message: str) -> None:
     """
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-    username = current_user.get_full_name("cz")
+    username = current_user.get_full_name("cz") if current_user.is_authenticated else "odhlášený uživatel"
     log_message = f"{timestamp} - {username}: {message}\n"
 
     with open(logs_path(), "a") as log_file:
