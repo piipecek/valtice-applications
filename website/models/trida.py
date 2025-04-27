@@ -2,6 +2,7 @@ from website import db
 from website.models.common_methods_db_model import Common_methods_db_model
 from flask_login import current_user
 import czech_sort
+from website.helpers.pretty_date import pretty_datetime
 
 
 user_secondary_class_jointable = db.Table(
@@ -73,8 +74,8 @@ class Trida(Common_methods_db_model):
             "secondary_billing_behavior": secondary_billing_behavior,
             "is_time_exclusive": "Ano" if self.is_time_exclusive else "Ne",
             "age_group": age_group,
-            "primary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
-            "secondary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "ucast": "aktivní" if u.is_active_participant else "pasivní"} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
+            "primary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "cas": pretty_datetime(u.datetime_class_pick), "surname": u.surname or ""} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
+            "secondary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id)} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
             "primary_participants_count": len(self.primary_participants),
             "secondary_participants_count": len(self.secondary_participants),
         }
