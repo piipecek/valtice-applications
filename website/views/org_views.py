@@ -134,6 +134,8 @@ def settings():
             return redirect(url_for("org_views.settings"))
         elif request.form.get("logs"):
             return get_logs_for_browser()
+        elif request.form.get("ubytko_internat"):
+            return User.get_fronta_na_internat()
         else:
             return request.form.to_dict()
     

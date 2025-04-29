@@ -513,6 +513,29 @@ class User(Common_methods_db_model, UserMixin):
         return result
     
     
+    @staticmethod
+    def get_fronta_na_internat() -> str:
+        result = [
+            "Generuji seznam lidí, kteří mají aktivní účast, zájem o ubytování na internátě, zapsanou hlavní třídu a (jsou členy SSH nebo jim je pod 16)."
+        ]
+        users = User.get_all()
+        users = filter(lambda x: x.is_active_participant and x.accomodation_type == "vs" and x.primary_class_id and (x.is_ssh_member or x.is_under_16), users)
+        users = sorted(users, key=lambda x: x.datetime_class_pick)
+        for user in users:
+            zaznam = ""
+            zaznam += user.get_full_name("cz")
+            zaznam += f" | čas výběru tříy: {pretty_datetime(user.datetime_class_pick)}"
+            zaznam += f" | počet míst: {user.accomodation_count}"
+            result.append(zaznam)
+            if user.parent and user.is_under_16:
+                if user.parent in users:
+                    result.append(f"Minulý dětský účastník je podřazený pod {user.parent.get_full_name('cz')}, který je také v tomto seznamu.")
+                else:
+                    result.append(f"Minulý dětský účastník je podřazený pod {user.parent.get_full_name('cz')}, který není v tomto seznamu. Jeho účast je {'aktivní' if user.parent.is_active_participant else 'pasivní'}, {'je členem SSH' if user.parent.is_ssh_member else 'není členem SSH'} a žádá o {user.parent.accomodation_count} míst na internátě.")
+                
+            
+        return "<br>".join(result)
+    
     def info_pro_detail(self):
         # ubytovani
         if self.accomodation_type == "own":
