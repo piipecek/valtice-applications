@@ -1102,11 +1102,12 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "full_name_cz": self.get_full_name("cz"),
             "full_name_en": self.get_full_name("en"),
-            "email": self.email,
-            "phone": self.phone,
-            "age": self.get_age(),
-            "education": self.musical_education,
-            "repertoire": self.repertoire,
+            "email": self.email if self.email else "-",
+            "phone": self.phone if self.phone else "-",
+            "age": self.get_age() ,
+            "education": self.musical_education if self.musical_education else "-",
+            "repertoire": self.repertoire if self.repertoire else "-",
+            "instrument": self.musical_instrument if self.musical_instrument else "-",
             "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "-",
         }
         

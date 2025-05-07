@@ -45,6 +45,7 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("Age", participant.age))
             participant_div.appendChild(row_factory("Musical Education", participant.education))
             participant_div.appendChild(row_factory("Repertoire", participant.repertoire))
+            participant_div.appendChild(row_factory("Instrument", participant.instrument))
             participant_div.appendChild(row_factory("Datetime of enrollment", participant.datetime_class_pick))
         }
 
@@ -67,6 +68,7 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("Age", participant.age))
             participant_div.appendChild(row_factory("Musical Education", participant.education))
             participant_div.appendChild(row_factory("Repertoire", participant.repertoire))
+            participant_div.appendChild(row_factory("Instrument", participant.instrument))
             participant_div.appendChild(row_factory("Datetim of enrollment", participant.datetime_class_pick))
         }
 

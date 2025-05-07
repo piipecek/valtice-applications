@@ -46,6 +46,7 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("Věk", participant.age))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
             participant_div.appendChild(row_factory("Repertoár", participant.repertoire))
+            participant_div.appendChild(row_factory("Hudební nástroj", participant.instrument))
             participant_div.appendChild(row_factory("Čas přihlášení do třídy", participant.datetime_class_pick))
         }
 
@@ -68,6 +69,7 @@ if (tridy.length == 0) {
             participant_div.appendChild(row_factory("Věk", participant.age))
             participant_div.appendChild(row_factory("Hudební vzdělání", participant.education))
             participant_div.appendChild(row_factory("Repertoár", participant.repertoire))
+            participant_div.appendChild(row_factory("Hudební nástroj", participant.instrument))
             participant_div.appendChild(row_factory("Čas přihlášení do třídy", participant.datetime_class_pick))
         }
 
