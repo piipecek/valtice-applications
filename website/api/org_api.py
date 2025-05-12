@@ -69,7 +69,6 @@ def ceny():
 
 
 @org_api.route("/tridy_pro_seznamy")
-#TODO bude opraveno se seznamy
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_seznamy():
     return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["long_name_cz"])))

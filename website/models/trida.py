@@ -120,7 +120,7 @@ class Trida(Common_methods_db_model):
     def data_pro_seznamy(self):
         return {
             "id": self.id,
-            "long_name": self.full_name
+            "long_name_cz": self.full_name_cz
         }
         
         

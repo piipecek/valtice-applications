@@ -9,13 +9,16 @@ from website.models.meal import Meal
 from website.helpers.pretty_date import pretty_datetime, pretty_date
 from website.helpers.pretty_penize import pretty_penize
 from website.helpers.settings_manager import get_settings
+from website.mail_handler import mail_sender
 from datetime import datetime, timedelta, timezone, date
 from flask import current_app, flash, url_for
-from flask_login import UserMixin, login_user, current_user
+from flask_login import UserMixin, login_user
+from io import BytesIO
+from openpyxl import Workbook
 import jwt
-from werkzeug.security import generate_password_hash
+import czech_sort
 import sqlalchemy
-from website.mail_handler import mail_sender
+from werkzeug.security import generate_password_hash
 
 
 class User(Common_methods_db_model, UserMixin):
@@ -358,13 +361,13 @@ class User(Common_methods_db_model, UserMixin):
                             vecere += meal_order.count * Billing.get_by_system_name("vecere_ss").czk
                         elif self.billing_currency == "eur":
                             vecere += meal_order.count * Billing.get_by_system_name("vecere_ss").eur
+        print(snidane, obedy, vecere)
 
         
         pasivni_ucast_do_sumy = pasivni_ucast if pasivni_ucast is not None else 0
         hlavni_trida_do_sumy = hlavni_trida if hlavni_trida is not None else 0
         vedlejsi_tridy_do_sumy = sum(vedlejsi_tridy) if vedlejsi_tridy else 0
         ubytko_do_sumy = ubytko if ubytko is not None else 0
-        snidane = snidane if snidane is not None else 0
         snidane_do_sumy = snidane if snidane is not None else 0
         obedy_do_sumy = obedy if obedy is not None else 0
         vecere_do_sumy = vecere if vecere is not None else 0
@@ -535,6 +538,13 @@ class User(Common_methods_db_model, UserMixin):
                 
             
         return "<br>".join(result)
+
+    def get_meals_top_visible(self) -> str:
+        result_list = []
+        for meal_order in sorted(self.meal_orders):
+            entry = f"{meal_order.count}x {meal_order.meal.get_description_cz()}"
+            result_list.append(entry)
+        return ", ".join(result_list)
     
     def info_pro_detail(self):
         # ubytovani
@@ -634,7 +644,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
             "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
             "last_billing_email_message": last_billing_email_message,
-            "meals_top_visible": "Tady bude shrnutí info o jídle nahoru",
+            "meals_top_visible": self.get_meals_top_visible(),
             "hlavni_trida": {
                 "name": self.primary_class.full_name_cz if self.primary_class else "-",
                 "link": "/organizator/detail_tridy/" + str(self.primary_class_id) if self.primary_class else None
@@ -1141,190 +1151,308 @@ class User(Common_methods_db_model, UserMixin):
             "address": settings["czk_address"] if self.billing_currency == "czk" else settings["eur_address"],
             "zprava_pro_prijemce": self.get_full_name("en")
         }
-        
-# TODO procistit importy a dat je nahoru
-from datetime import date
-from io import BytesIO
-from openpyxl import Workbook
-import czech_sort
     
-    
-    # @staticmethod
-    # def vytvorit_seznam(kriteria: dict) -> dict:
-    #     ucastnici = User.get_all()
+
+    @staticmethod
+    def vytvorit_seznam(kriteria: dict) -> dict:
+        print("kriteria", kriteria)
         
-    #     # filtr tříd
-    #     if len(kriteria["tridy"]) != 0:
-    #         ucastnici = list(filter(lambda u: u.hlavni_trida_1_id in kriteria["tridy"] or u.hlavni_trida_2_id in kriteria["tridy"] or u.vedlejsi_trida_placena_id in kriteria["tridy"] or u.vedlejsi_trida_zdarma_id in kriteria["tridy"], ucastnici))
+        ucastnici: list[User] = User.get_all()
         
-    #     #filtr ubytka
-    #     if len(kriteria["ubytko"]) != 0:
-    #         ucastnici = list(filter(lambda u: u.ubytovani in kriteria["ubytko"], ucastnici))
+        # odstranim vsechny s roli
+        ucastnici = list(filter(lambda u: len(u.roles) == 0, ucastnici))
+        
+        
+        # mnozina
+        if kriteria["mnozina"] == "all":
+            pass
+        elif kriteria["mnozina"] == "enrolled":
+            ucastnici = list(filter(lambda u: u.primary_class_id, ucastnici))
+        elif kriteria["mnozina"] == "interested":
+            ucastnici = list(filter(lambda u: u.is_this_year_participant, ucastnici))
+        
+        # filtr tříd
+        if len(kriteria["tridy"]) != 0:
+            ucastnici_temp = ucastnici
+            ucastnici = []
+            for u in ucastnici_temp:
+                tridy_ids = [c.id for c in u.secondary_classes]
+                tridy_ids.append(u.primary_class_id)
+                for class_id in tridy_ids:
+                    if class_id in kriteria["tridy"]:
+                        ucastnici.append(u)
+                        break
             
-    #     # filtr stravy
-    #     if len(kriteria["strava"]) != 0:
-    #         u_snidane_zs = []
-    #         u_snidane_vs = []
-    #         u_obed_zs = []
-    #         u_obed_vs = []
-    #         u_vecere_zs = []
-    #         u_vecere_vs = []
-    #         if "snidane_zs" in kriteria["strava"]:
-    #             u_snidane_zs = list(filter(lambda u: u.strava_snidane_zs > 0, ucastnici))
-    #         if "snidane_vs" in kriteria["strava"]:
-    #             u_snidane_vs = list(filter(lambda u: u.strava_snidane_vinarska > 0, ucastnici))
-    #         if "obed_zs" in kriteria["strava"]:
-    #             u_obed_zs = list(filter(lambda u: u.strava_obed_zs_maso + u.strava_obed_zs_vege > 0, ucastnici))
-    #         if "obed_vs" in kriteria["strava"]:
-    #             u_obed_vs = list(filter(lambda u: u.strava_obed_vinarska_maso + u.strava_obed_vinarska_vege > 0, ucastnici))
-    #         if "vecere_zs" in kriteria["strava"]:
-    #             u_vecere_zs = list(filter(lambda u: u.strava_vecere_zs_maso + u.strava_vecere_zs_vege > 0, ucastnici))
-    #         if "vecere_vs" in kriteria["strava"]:
-    #             u_vecere_vs = list(filter(lambda u: u.strava_vecere_vinarska_maso + u.strava_vecere_vinarska_vege > 0, ucastnici))
-    #         ucastnici = list(set(u_snidane_zs + u_snidane_vs + u_obed_zs + u_obed_vs + u_vecere_zs + u_vecere_vs))
+        #filtr ubytka
+        if len(kriteria["ubytko"]) != 0:
+            ucastnici = list(filter(lambda u: u.accomodation_type in kriteria["ubytko"], ucastnici))
+            
+        # filtr stravy
+        if len(kriteria["strava"]) != 0:
+            u_snidane_zs = []
+            u_snidane_vs = []
+            u_obed_zs = []
+            u_obed_vs = []
+            u_vecere_zs = []
+            u_vecere_vs = []
+            if "snidane_zs" in kriteria["strava"]:
+                for u in ucastnici:
+                    for mo in u.meal_orders:
+                        if mo.meal.type == "breakfast" and mo.meal.location == "zs":
+                            u_snidane_zs.append(u)
+                            break
+            if "snidane_vs" in kriteria["strava"]:
+                for u in ucastnici:
+                    for mo in u.meal_orders:
+                        if mo.meal.type == "breakfast" and mo.meal.location == "vs":
+                            u_snidane_vs.append(u)
+                            break
+            if "obed_zs" in kriteria["strava"]:
+                for u in ucastnici:
+                    for mo in u.meal_orders:
+                        if mo.meal.type == "lunch" and mo.meal.location == "zs":
+                            u_obed_zs.append(u)
+                            break
+            if "obed_vs" in kriteria["strava"]:
+                for u in ucastnici:
+                    for mo in u.meal_orders:
+                        if mo.meal.type == "lunch" and mo.meal.location == "vs":
+                            u_obed_vs.append(u)
+                            break
+            if "vecere_zs" in kriteria["strava"]:
+                for u in ucastnici:
+                    for mo in u.meal_orders:
+                        if mo.meal.type == "dinner" and mo.meal.location == "zs":
+                            u_vecere_zs.append(u)
+                            break
+            if "vecere_vs" in kriteria["strava"]:
+                for u in ucastnici:
+                    for mo in u.meal_orders:
+                        if mo.meal.type == "dinner" and mo.meal.location == "vs":
+                            u_vecere_vs.append(u)
+                            break
+                        
+            ucastnici = list(set(u_snidane_zs + u_snidane_vs + u_obed_zs + u_obed_vs + u_vecere_zs + u_vecere_vs))
         
-    #     # filtr ostatnich
-    #     if "korekce" in kriteria["ostatni"]:
-    #         ucastnici = list(filter(lambda u: u.finance_korekce_kurzovne + u.finance_korekce_strava + u.finance_korekce_ubytko != 0, ucastnici))
-    #     if "neregistrace" in kriteria["ostatni"]:
-    #         ucastnici = list(filter(lambda u: not u.cas_registrace, ucastnici))
-    #     if "dar" in kriteria["ostatni"]:
-    #         ucastnici = list(filter(lambda u: u.finance_dar != 0, ucastnici))
-    #     if "poznamka" in kriteria["ostatni"]:
-    #         ucastnici = list(filter(lambda u: u.uzivatelska_poznamka, ucastnici))
+        # filtr ostatnich
+        if "korekce" in kriteria["ostatni"]:
+            ucastnici = list(filter(lambda u: u.billing_correction + u.billing_food_correction + u.billing_accomodation_correction != 0, ucastnici))
+        if "neregistrace" in kriteria["ostatni"]:
+            ucastnici = list(filter(lambda u: not u.datetime_registered, ucastnici))
+        if "dar" in kriteria["ostatni"]:
+            ucastnici = list(filter(lambda u: u.billing_gift != 0, ucastnici))
+        if "poznamka" in kriteria["ostatni"]:
+            ucastnici = list(filter(lambda u: u.comment, ucastnici))
         
-    #     # serazeni
-    #     ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.prijmeni + u.jmeno))
-    #     if kriteria["atribut_razeni"] == "prijmeni":
-    #         ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.prijmeni))
-    #     elif kriteria["atribut_razeni"] == "jmeno":
-    #         ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.jmeno))
-    #     elif kriteria["atribut_razeni"] == "cas":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.cas)
-    #     elif kriteria["atribut_razeni"] == "cas_registrace":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.cas_registrace if u.cas_registrace else datetime(1, 1, 1))
-    #     elif kriteria["atribut_razeni"] == "vek":
-    #         ucastnici = sorted(ucastnici, key=lambda u: int(u.vek) if u.vek else 0)
-    #     elif kriteria["atribut_razeni"] == "finance_dne":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.finance_dne if u.finance_dne else date(1, 1, 1))
-    #     elif kriteria["atribut_razeni"] == "finance_dar":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.finance_dar)
-    #     elif kriteria["atribut_razeni"] == "finance_celkem":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.kalkulace()["celkem"])
-    #     elif kriteria["atribut_razeni"] == "finance_mena":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.finance_mena)
-    #     elif kriteria["atribut_razeni"] == "finance_kategorie":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.finance_kategorie)
-    #     elif kriteria["atribut_razeni"] == "ssh_clen":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.ssh_clen)
-    #     elif kriteria["atribut_razeni"] == "ucast":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.ucast)
-    #     elif kriteria["atribut_razeni"] == "ubytovani":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.ubytovani)
-    #     elif kriteria["atribut_razeni"] == "student_zus_valtice_mikulov":
-    #         ucastnici = sorted(ucastnici, key=lambda u: u.student_zus_valtice_mikulov)
-
+        # serazeni
+        ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.get_full_name()))
+        if kriteria["atribut_razeni"] == "surname":
+            ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.surname if u.surname else ""))
+        elif kriteria["atribut_razeni"] == "name":
+            ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.name if u.name else ""))
+        elif kriteria["atribut_razeni"] == "datetime_class_pick":
+            ucastnici = sorted(ucastnici, key=lambda u: u.datetime_class_pick if u.datetime_class_pick else datetime(1, 1, 1)) 
+        elif kriteria["atribut_razeni"] == "datetime_registered":
+            ucastnici = sorted(ucastnici, key=lambda u: u.datetime_registered if u.datetime_registered else datetime(1, 1, 1))
+        elif kriteria["atribut_razeni"] == "age":
+            ucastnici = sorted(ucastnici, key=lambda u: int(u.get_age()) if u.date_of_birth else 0)
+        elif kriteria["atribut_razeni"] == "billing_date_paid":
+            ucastnici = sorted(ucastnici, key=lambda u: u.billing_date_paid if u.billing_date_paid else date(1, 1, 1))
+        elif kriteria["atribut_razeni"] == "billing_total":
+            ucastnici = sorted(ucastnici, key=lambda u: u.kalkulace()["celkem"])
+        elif kriteria["atribut_razeni"] == "billing_gift":
+            ucastnici = sorted(ucastnici, key=lambda u: u.billing_gift)
+        elif kriteria["atribut_razeni"] == "billing_currency":
+            ucastnici = sorted(ucastnici, key=lambda u: u.billing_currency)
+        elif kriteria["atribut_razeni"] == "is_ssh_member":
+            ucastnici = sorted(ucastnici, key=lambda u: u.is_ssh_member)
+        elif kriteria["atribut_razeni"] == "is_active_participant":
+            ucastnici = sorted(ucastnici, key=lambda u: u.is_active_participant)
+        elif kriteria["atribut_razeni"] == "accomodation_type":
+            ucastnici = sorted(ucastnici, key=lambda u: u.accomodation_type if u.accomodation_type else "")
+        elif kriteria["atribut_razeni"] == "is_student_of_partner_zus":
+            ucastnici = sorted(ucastnici, key=lambda u: u.is_student_of_partner_zus)
         
-    #     # vypsani atribut
-    #     result = {
-    #         "emaily":"",
-    #         "lidi": []
-    #     }
-    #     for i, u in enumerate(ucastnici):
-    #         entry = {
-    #             "#": i+1,
-    #             "Jméno": f"{u.prijmeni}, {u.jmeno}",
-    #         }
-    #         for a in kriteria["atributy"]:
-    #             if a == "cas":
-    #                 entry["Čas vyplnění přihlášky"] = pretty_datetime(u.cas)
-    #             elif a == "vek":
-    #                 entry["Věk"] = u.vek
-    #             elif a == "email":
-    #                 entry["Email"] = u.email
-    #             elif a == "telefon":
-    #                 entry["Telefon"] = u.telefon
-    #             elif a == "finance_dne":
-    #                 entry["Datum platby"] = pretty_datetime(u.finance_dne)
-    #             elif a == "finance_dar":
-    #                 entry["Dar"] = u.finance_dar
-    #             elif a == "finance_celkem":
-    #                 entry["Celkem"] = u.kalkulace()["celkem"]
-    #             elif a == "finance_mena":
-    #                 entry["Měna"] = u.finance_mena
-    #             elif a == "finance_kategorie":
-    #                 entry["Kategorie"] = "Dítě" if u.finance_kategorie == "dite" else "Student" if u.finance_kategorie == "student" else "Dospělý"
-    #             elif a == "finance_kurzovne":
-    #                 entry["Kurzovné"] = u.kalkulace()["hlavni_trida"] + u.kalkulace()["vedlejsi_trida"]
-    #             elif a == "finance_ubytovani":
-    #                 entry["Ubytování"] = u.kalkulace()["ubytovani"]
-    #             elif a == "finance_strava":
-    #                 entry["strava"] = u.kalkulace()["snidane"] + u.kalkulace()["obedy"] + u.kalkulace()["vecere"]
-    #             elif a == "finance_korekce_kurzovne":
-    #                 entry["Korekce kurzovné"] = u.finance_korekce_kurzovne
-    #             elif a == "finance_korekce_kurzovne_duvod":
-    #                 entry["Důvod korekce kurzovné"] = u.finance_korekce_kurzovne_duvod
-    #             elif a == "finance_korekce_strava":
-    #                 entry["Korekce stravy"] = u.finance_korekce_strava
-    #             elif a == "finance_korekce_strava_duvod":
-    #                 entry["Důvod korekce stravy"] = u.finance_korekce_strava_duvod
-    #             elif a == "finance_korekce_ubytko":
-    #                 entry["Korekce ubytování"] = u.finance_korekce_ubytko
-    #             elif a == "finance_korekce_ubytko_duvod":
-    #                 entry["Důvod korekce ubytování"] = u.finance_korekce_ubytko_duvod
-    #             elif a == "ssh_clen":
-    #                 entry["Člen SSH"] = "Ano" if u.ssh_clen else "Ne"
-    #             elif a == "ucast":
-    #                 entry["Účast"] = u.ucast
-    #             elif a == "hlavni_trida_1_id":
-    #                 entry["Hlavní třída"] = u.hlavni_trida_1.full_name if u.hlavni_trida_1_id else "-"
-    #             elif a == "hlavni_trida_2_id":
-    #                 entry["Hlavní třída druhá volba"] = u.hlavni_trida_2.full_name if u.hlavni_trida_2_id else "-"
-    #             elif a == "vedlejsi_trida_placena_id":
-    #                 entry["Vedlejší třída placená"] = u.vedlejsi_trida_placena.full_name if u.vedlejsi_trida_placena_id else "-"
-    #             elif a == "vedlejsi_trida_zdarma_id":
-    #                 entry["Vedlejší třída zdarma"] = u.vedlejsi_trida_zdarma.full_name if u.vedlejsi_trida_zdarma_id else "-"
-    #             elif a == "ubytovani":
-    #                 entry["Ubytování"] = u.ubytovani
-    #             elif a == "ubytovani_pocet":
-    #                 entry["Počet lůžek"] = u.ubytovani_pocet
-    #             elif a == "vzdelani":
-    #                 entry["Vzdělání"] = u.vzdelani
-    #             elif a == "nastroj":
-    #                 entry["Nástroj"] = u.nastroj
-    #             elif a == "repertoir":
-    #                 entry["Repertoár"] = u.repertoir
-    #             elif a == "student_zus_valtice_mikulov":
-    #                 entry["Student ZUŠ Valtice Mikulov"] = "Ano" if u.student_zus_valtice_mikulov else "Ne"
-    #             elif a == "strava":
-    #                 entry["Strava"] = u.info_pro_detail()["strava_na_ocich"]
-    #             elif a == "uzivatelska_poznamka":
-    #                 entry["Uživatelská poznámka"] = u.uzivatelska_poznamka
-    #             elif a == "admin_poznamka":
-    #                 entry["Admin poznámka"] = u.admin_poznamka
-    #             elif a == "cas_registrace":
-    #                 entry["Čas registrace"] = pretty_datetime(u.cas_registrace) if u.cas_registrace else "Zatím neregistrován"   
-    #         result["lidi"].append(entry)
-    #     seen = set()
-    #     ordered_unique_emails = []
-    #     for u in ucastnici:
-    #         if u.email not in seen:
-    #             ordered_unique_emails.append(u.email)
-    #             seen.add(u.email)
+        # vypsani atribut
+        result = {
+            "emaily":"",
+            "lidi": [],
+            "headers": []
+        }
+        for i, u in enumerate(ucastnici):
+            entry = {
+                "#": i+1,
+                "Jméno": u.get_full_name(),
+            }
+            result["headers"] = ["#", "Jméno"]
+            for a in kriteria["atributy"]:
+                # osobni
+                if a == "cas":
+                    entry["Čas vyplnění přihlášky"] = pretty_datetime(u.cas)
+                    result["headers"].append("Čas vyplnění přihlášky")
+                elif a == "age":
+                    entry["Věk"] = u.get_age()
+                    result["headers"].append("Věk")
+                elif a == "email":
+                    entry["Email"] = u.email
+                    result["headers"].append("E-mail")
+                elif a == "phone":
+                    entry["Telefon"] = u.phone
+                    result["headers"].append("Telefon")
+                elif a == "is_student":
+                    entry["Student"] = "ano" if u.is_student else "ne"
+                    result["headers"].append("Student")
+                elif a == "is_under_16":
+                    entry["Je pod 16 let?"] = "ano" if u.is_under_16 else "ne"
+                    result["headers"].append("Je pod 16 let?")
+                    
+                # casy
+                elif a == "datetime_created":
+                    entry["Čas vytvoření účtu"] = pretty_datetime(u.datetime_created)
+                    result["headers"].append("Čas vytvoření účtu")
+                elif a == "datetime_class_pick":
+                    entry["Čas výběru hlavní třídy"] = pretty_datetime(u.datetime_class_pick)
+                    result["headers"].append("Čas výběru hlavní třídy")
+                elif a == "datetime_registered":
+                    entry["Čas registrace ve Valticích"] = pretty_datetime(u.datetime_registered)
+                    result["headers"].append("Čas registrace ve Valticích")
+                elif a == "datetime_calculation_email":
+                    entry["Čas odeslání kalkulace"] = pretty_datetime(u.datetime_calculation_email)
+                    result["headers"].append("Čas odeslání kalkulace")
+                elif a == "billing_date_paid":
+                    entry["Datum zaplacení"] = pretty_datetime(u.billing_date_paid)
+                    result["headers"].append("Datum zaplacení")
+                    
+                # valtice           
+                elif a == "is_this_year_participant":
+                    entry["Je letošním účastníkem?"] = "ano" if u.is_this_year_participant else "ne"
+                    result["headers"].append("Je letošním účastníkem?")
+                elif a == "is_ssh_member":
+                    entry["Člen SSH?"] = "ano" if u.is_ssh_member else "ne"
+                    result["headers"].append("Člen SSH?")
+                elif a == "is_active_participant":
+                    entry["Účast"] = "aktivní" if u.is_active_participant else "pasivní"
+                    result["headers"].append("Účast")
+                elif a == "is_student_of_partner_zus":
+                    entry["Student ZUŠ Valtice/Mikulov?"] = "ano" if u.is_student_of_partner_zus else "ne"
+                    result["headers"].append("Student ZUŠ Valtice/Mikulov?")
+                elif a == "accomodation_type":
+                    entry["Typ ubytování"] = "internát" if u.accomodation_type == "vs" else "tělocvična" if u.accomodation_type == "gym" else "vlastní" if u.accomodation_type == "own" else "-"
+                    result["headers"].append("Typ ubytování")
+                elif a == "accomodation_count":
+                    entry["Počet lůžek"] = u.accomodation_count
+                    result["headers"].append("Počet lůžek")
+                elif a == "musical_education":
+                    entry["Hudební vzdělání"] = u.musical_education
+                    result["headers"].append("Hudební vzdělání")
+                elif a == "musical_instrument":
+                    entry["Hudební nástroj"] = u.musical_instrument
+                    result["headers"].append("Hudební nástroj")
+                elif a == "repertoire":
+                    entry["Repertoár"] = u.repertoire
+                    result["headers"].append("Repertoár")
+                elif a == "comment":
+                    entry["Uživatelská poznámka"] = u.comment
+                    result["headers"].append("Uživatelská poznámka")
+                elif a == "admin_comment":
+                    entry["Organizátorská poznámka"] = u.admin_comment
+                    result["headers"].append("Organizátorská poznámka")
+                elif a == "meals":
+                    entry["Strava"] = u.get_meals_top_visible()
+                    result["headers"].append("Strava")
+                
+                # finance
+                elif a == "billing_currency":
+                    entry["Měna"] = u.billing_currency
+                    result["headers"].append("Měna")
+                elif a == "billing_total":
+                    entry["Celkem"] = u.kalkulace()["celkem"]
+                    result["headers"].append("Celkem")
+                elif a == "billing_gift":
+                    entry["Dar"] = u.billing_gift
+                    result["headers"].append("Dar")
+                elif a in ["billing_total", "billing_classes", "billing_meals", "billing_accomodation"]:
+                    k = u.kalkulace()
+                    if a == "billing_total":
+                        entry["Celkem"] = k["celkem"]
+                        result["headers"].append("Celkem")
+                    elif a == "billing_classes":
+                        entry["Kurzovné"] = k["hlavni_trida"] if k["hlavni_trida"] else 0 + sum(k["vedlejsi_tridy"])
+                        result["headers"].append("Kurzovné")
+                    elif a == "billing_meals":
+                        entry["Strava"] = k["snidane"] + k["obedy"] + k["vecere"] if u.meals else 0
+                        result["headers"].append("Strava")
+                    elif a == "billing_accomodation":
+                        entry["Ubytování"] = k["ubytovani"]
+                        result["headers"].append("Ubytování")
+                elif a == "billing_correction":
+                    entry["Korekce"] = u.billing_correction
+                    result["headers"].append("Korekce")
+                elif a == "billing_correction_reason":
+                    entry["Důvod korekce"] = u.billing_correction_reason
+                    result["headers"].append("Důvod korekce")
+                elif a == "billing_food_correction":
+                    entry["Korekce stravy"] = u.billing_food_correction
+                    result["headers"].append("Korekce stravy")
+                elif a == "billing_food_correction_reason":
+                    entry["Důvod korekce stravy"] = u.billing_food_correction_reason
+                    result["headers"].append("Důvod korekce stravy")
+                elif a == "billing_accomodation_correction":
+                    entry["Korekce ubytování"] = u.billing_accomodation_correction
+                    result["headers"].append("Korekce ubytování")
+                elif a == "billing_accomodation_correction_reason":
+                    entry["Důvod korekce ubytování"] = u.billing_accomodation_correction_reason
+                    result["headers"].append("Důvod korekce ubytování")
+                
+                # přístupy
+                elif a == "must_change_password_upon_login":
+                    entry["Změna hesla po přihlášení"] = "ano" if u.must_change_password_upon_login else "ne"
+                    result["headers"].append("Změna hesla po přihlášení")
+                elif a == "confirmed_email":
+                    entry["Potvrzený e-mail"] = "ano" if u.confirmed_email else "ne"
+                    result["headers"].append("Potvrzený e-mail")
+                elif a == "is_locked":
+                    entry["Zamčený účet"] = "ano" if u.is_locked else "ne"
+                    result["headers"].append("Zamčený účet")
+                elif a == "parent":
+                    entry["Nadřazený účet"] = u.parent.get_full_name() if u.parent else "-"
+                    result["headers"].append("Nadřazený účet")
+                elif a == "children":
+                    entry["Podřazené účty"] = ", ".join([child.get_full_name() for child in u.children]) if len(u.children) > 0 else "-"
+                    result["headers"].append("Podřazené účty")
+                
+                # třídy
+                elif a == "primary_class":
+                    entry["Hlavní třída"] = u.primary_class.full_name_cz if u.primary_class else "-"
+                    result["headers"].append("Hlavní třída")
+                elif a == "secondary_classes":
+                    entry["Vedlejší třídy"] = ", ".join([trida.full_name_cz for trida in sorted(u.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))]) if u.secondary_classes else "-"
+                    result["headers"].append("Vedlejší třídy")
+                
+            result["lidi"].append(entry)
+        seen = set()
+        ordered_unique_emails = []
+        for u in ucastnici:
+            if u.email not in seen:
+                ordered_unique_emails.append(u.email)
+                seen.add(u.email)
+                
+        if None in ordered_unique_emails:
+            ordered_unique_emails.remove(None)
+            
+        result["emaily"] = ", ".join(ordered_unique_emails)
+        return result
 
-    #     result["emaily"] = ", ".join(ordered_unique_emails)
-    #     return result
-
-    # def vytvorit_xlsx_seznam(kriteria) -> BytesIO:
-    #     data = User.vytvorit_seznam(kriteria)
-    #     wb = Workbook()
-    #     ws = wb.active
-    #     ws.title = "Učastníci"
-    #     keys = data["lidi"][0].keys()
-    #     ws.append(list(keys))
-    #     for radek in data["lidi"]:
-    #         ws.append([radek[k] for k in keys])
-    #     output = BytesIO()
-    #     wb.save(output)
-    #     output.seek(0)
-    #     return output
+    def vytvorit_xlsx_seznam(kriteria) -> BytesIO:
+        data = User.vytvorit_seznam(kriteria)
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Učastníci"
+        keys = data["lidi"][0].keys()
+        ws.append(list(keys))
+        for radek in data["lidi"]:
+            ws.append([radek[k] for k in keys])
+        output = BytesIO()
+        wb.save(output)
+        output.seek(0)
+        return output

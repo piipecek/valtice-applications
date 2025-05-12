@@ -11,7 +11,7 @@ document.getElementById("full_name").innerText = full_name
 
 // věci na očích
 document.getElementById("ucast_na_ocich").innerText = data["is_active_participant"]
-document.getElementById("strava_na_ocich").innerText = data["meals_top_visible"]
+document.getElementById("meals_top_visible").innerText = data["meals_top_visible"]
 
 
 // ostatní

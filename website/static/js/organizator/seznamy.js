@@ -6,6 +6,7 @@ let tridy = JSON.parse(httpGet("/org_api/tridy_pro_seznamy"))
 document.getElementById("vytvorit_button").addEventListener("click", function() {
     document.getElementById("prvni_krok").hidden = true
     document.getElementById("loader").hidden = false
+
     $.ajax({
         data : {
             ucel: "view",
@@ -43,7 +44,7 @@ for (let trida of tridy) {
     let label = document.createElement("label")
     label.setAttribute("class", "form-check-label")
     label.setAttribute("for", trida.id)
-    label.innerText = trida["long_name"]
+    label.innerText = trida["long_name_cz"]
     let div = document.createElement("div")
     div.setAttribute("class", "form-check")
     div.appendChild(input)
@@ -58,13 +59,13 @@ document.getElementById("jakakoli_trida").addEventListener("change", function() 
     }
 })
 document.getElementById("jakekoli_ubytko").addEventListener("click", function() {
-    document.getElementById("telocvicna").checked = false
-    document.getElementById("internat").checked = false
+    document.getElementById("gym").checked = false
+    document.getElementById("vs").checked = false
 })
-document.getElementById("telocvicna").addEventListener("click", function() {
+document.getElementById("gym").addEventListener("click", function() {
     document.getElementById("jakekoli_ubytko").checked = false
 })
-document.getElementById("internat").addEventListener("click", function() {
+document.getElementById("vs").addEventListener("click", function() {
     document.getElementById("jakekoli_ubytko").checked = false
 })
 let strava_ids = ["snidane_zs", "snidane_vs", "obed_zs", "obed_vs", "vecere_zs", "vecere_vs"]
@@ -99,13 +100,24 @@ function vyhodnotit() {
         }
     }
 
+    //mnozina
+
+    let mnozina = ""
+    if (document.getElementById("interested").checked) {
+        mnozina = "interested"
+    } else if (document.getElementById("enrolled").checked) {
+        mnozina = "enrolled"
+    } else if (document.getElementById("all").checked) {
+        mnozina = "all"
+    }
+
     // ubytko
     let ubytko = []
-    if (document.getElementById("telocvicna").checked) {
-        ubytko.push("Tělocvična")
+    if (document.getElementById("gym").checked) {
+        ubytko.push("gym")
     }
-    if (document.getElementById("internat").checked) {
-        ubytko.push("Internát vinařské školy")
+    if (document.getElementById("vs").checked) {
+        ubytko.push("vs")
     }
 
     // strava
@@ -127,7 +139,49 @@ function vyhodnotit() {
 
 
     // atributy
-    let atributy_ids = ["cas", "vek", "email", "telefon", "finance_dne", "finance_celkem", "finance_dar", "finance_mena", "finance_kategorie", "finance_kurzovne", "finance_strava", "finance_ubytovani", "finance_korekce_kurzovne", "finance_korekce_kurzovne_duvod", "finance_korekce_strava", "finance_korekce_strava_duvod", "finance_korekce_ubytko", "finance_korekce_ubytko_duvod", "ssh_clen", "ucast", "hlavni_trida_1_id", "hlavni_trida_2_id", "vedlejsi_trida_placena_id", "vedlejsi_trida_zdarma_id", "ubytovani", "ubytovani_pocet", "vzdelani", "nastroj", "repertoir", "student_zus_valtice_mikulov", "strava", "uzivatelska_poznamka", "admin_poznamka", "cas_registrace"]
+    let atributy_ids = [
+        "age", 
+        "email", 
+        "phone", 
+        "is_student", 
+        "is_under_16", 
+        "datetime_created", 
+        "is_this_year_participant", 
+        "is_ssh_member", 
+        "is_active_participant",
+        "is_student_of_partner_zus",
+        "datetime_class_pick",
+        "datetime_registered",
+        "datetime_calculation_email",
+        "accomodation_type",
+        "accomodation_count",
+        "musical_education",
+        "musical_instrument",
+        "repertoire",
+        "comment",
+        "admin_comment",
+        "meals",
+        "billing_currency",
+        "billing_date_paid",
+        "billing_total",
+        "billing_gift",
+        "billing_classes",
+        "billing_meals",
+        "billing_accomodation",
+        "billing_correction",
+        "billing_correction_reason",
+        "billing_food_correction",
+        "billing_food_correction_reason",
+        "billing_accomodation_correction",
+        "billing_accomodation_correction_reason",
+        "must_change_password_upon_login",
+        "confirmed_email",
+        "is_locked",
+        "parent",
+        "children",
+        "primary_class",
+        "secondary_classes",
+    ]
     let atributy = []
     for (let id of atributy_ids) {
         if (document.getElementById(id).checked) {
@@ -138,6 +192,7 @@ function vyhodnotit() {
     // result
     let result = {
         "tridy": tridy_ids,
+        "mnozina": mnozina,
         "ubytko": ubytko,
         "strava": strava,
         "ostatni": ostatni,
@@ -149,8 +204,7 @@ function vyhodnotit() {
 
 function vykreslit_tabulku(result) {
     let table_creator = new TableCreator(document.getElementById("parent_div"), true, true)
-    let header = Object.keys(result["lidi"][0])
-    table_creator.make_header(header)
+    table_creator.make_header(result["headers"])
     for (let row of result["lidi"]) {
         table_creator.make_row(Object.values(row))
     }

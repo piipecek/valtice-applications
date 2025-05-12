@@ -2,7 +2,6 @@
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <h1>Generování seznamů</h1>
-<h1>TODO dodělat, od minulého roku byla řada změn</h1>
 <hr>
 <div id="prvni_krok">
     <p>
@@ -29,25 +28,40 @@
                 </div>
             </div>
             <div class="col-sm">
+                <h3>Množina účastníků</h3>
+                <div>
+                    <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="interested" name="mnozina" checked>
+                        <label class="form-radio-label" for="interested">Účastníci se zájmem o letošní ročník</label>
+                    </div>
+                    <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="enrolled" name="mnozina">
+                        <label class="form-radio-label" for="enrolled">Účastníci zapsaní do tříd</label>
+                    </div>
+                    <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="all" name="mnozina">
+                        <label class="form-radio-label" for="all">Všichni účastníci za všechny roky</label>
+                    </div>
+                </div>
                 <h3>Ubytování</h3>
-                <small class="text-muted">Vybráním tělocvičny i ubytka budou vybráni všichni účastníci, kteří jsou ubytovaní v tělocvičně nebo na internátu. <i>Příklad: vyber všechny účastníky, kterým MLŠSH zajišťuje ubytko, tedy v tělocvične i na intru.</i></small>
-                <div id="checkboxy_ubytovani">
+                <small class="text-muted">Vybráním tělocvičny i interánu budou vybráni všichni účastníci, kterým MLŠSH zařizuje ubytování.</small>
+                <div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="jakekoli_ubytko" checked>
                         <label class="form-check-label" for="jakekoli_ubytko">Jakékoli</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="telocvicna">
-                        <label class="form-check-label" for="telocvicna">Tělocvična</label>
+                        <input class="form-check-input" type="checkbox" id="gym">
+                        <label class="form-check-label" for="gym">Tělocvična</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="internat">
-                        <label class="form-check-label" for="internat">Internát VŠ</label>
+                        <input class="form-check-input" type="checkbox" id="vs">
+                        <label class="form-check-label" for="vs">Internát VŠ</label>
                     </div>
                 </div>
                 <h3>Strava</h3>
                 <small class="text-muted">Mezi jednotlivými možnostmi stravy funguje poměr slučovací: Při vybrání dvou a více možností stravy budou vybráni všichni účastníci, kteří využívají alespoň jednu z nich. <i>Například: vyber všechny účastníky, kteří mají snídani na VŠ nebo oběd na ZŠ.</i></small>
-                <div id="checkboxy_strava">
+                <div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="jakakoli_strava" checked>
                         <label class="form-check-label" for="jakakoli_strava">Jakákoli</label>
@@ -79,7 +93,7 @@
                 </div>
                 <h3>Ostatní</h3>
                 <small class="text-muted">Mezi jednotlivými pravidly platí konjunkce. <i>Příklad: Vyber všechny účastníky, kteří něco darovali a zároveň se ještě neregistrovali.</i></small>
-                <div id="checkboxy_ostatni">
+                <div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="korekce">
                         <label class="form-check-label" for="korekce">Všichni, kdo mají jakoukoli finanční korekci</label>
@@ -106,143 +120,182 @@
         <div class="row">
             <div class="col-sm">
                 <div id="checkboxy_udaju">
+                    <!-- personal data -->
+                    <h3>Osobní data</h3>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="cas">
-                        <label class="form-check-label" for="cas">Čas vyplnění přihlášky</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="cas_registrace">
-                        <label class="form-check-label" for="cas_registrace">Čas registrace</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="vek">
-                        <label class="form-check-label" for="vek">Věk</label>
+                        <input class="form-check-input" type="checkbox" value="" id="age">
+                        <label class="form-check-label" for="age">Věk</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="email">
                         <label class="form-check-label" for="email">Email</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="telefon">
-                        <label class="form-check-label" for="telefon">Telefon</label>
+                        <input class="form-check-input" type="checkbox" value="" id="phone">
+                        <label class="form-check-label" for="phone">Telefon</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_dne">
-                        <label class="form-check-label" for="finance_dne">Datum zaplacení</label>
+                        <input class="form-check-input" type="checkbox" value="" id="is_student">
+                        <label class="form-check-label" for="is_student">Student</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_celkem">
-                        <label class="form-check-label " for="finance_celkem">Finance - Celková částka</label>
+                        <input class="form-check-input" type="checkbox" value="" id="is_under_16">
+                        <label class="form-check-label" for="is_under_16">Je pod 16 let?</label>
+                    </div>
+                    
+                    
+                    <h3>Časy</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_created">
+                        <label class="form-check-label" for="datetime_created">Čas vytvoření účtu</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_mena">
-                        <label class="form-check-label" for="finance_mena">Finance - Měna</label>
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_class_pick">
+                        <label class="form-check-label" for="datetime_class_pick">Čas výběru hlavní třídy</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_kategorie">
-                        <label class="form-check-label" for="finance_kategorie">Finance - Kategorie</label>
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_registered">
+                        <label class="form-check-label" for="datetime_registered">Čas registrace ve Valticích</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_dar">
-                        <label class="form-check-label" for="finance_dar">Finance - Dar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_kurzovne">
-                        <label class="form-check-label" for="finance_kurzovne">Finance - Kurzovné</label>
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_calculation_email">
+                        <label class="form-check-label" for="datetime_calculation_email">Čas odeslání kalkulace</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_strava">
-                        <label class="form-check-label" for="finance_strava">Finance - Strava</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_ubytovani">
-                        <label class="form-check-label" for="finance_ubytovani">Finance - Ubytování</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_date_paid">
+                        <label class="form-check-label" for="billing_date_paid">Datum zaplacení</label>
                     </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_korekce_kurzovne">
-                        <label class="form-check-label" for="finance_korekce_kurzovne">Finance - Korekce kurzovné</label>
+                    <h3>Valtická data</h3>
+                     <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_this_year_participant">
+                        <label class="form-check-label" for="is_this_year_participant">Je letošním účastníkem</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_korekce_kurzovne_duvod">
-                        <label class="form-check-label" for="finance_korekce_kurzovne_duvod">Finance - Důvod korekce kurzovné</label>
+                        <input class="form-check-input" type="checkbox" value="" id="is_ssh_member">
+                        <label class="form-check-label" for="is_ssh_member">Je členem SSH?</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_korekce_strava">
-                        <label class="form-check-label" for="finance_korekce_strava">Finance - Korekce strava</label>
+                        <input class="form-check-input" type="checkbox" value="" id="is_active_participant">
+                        <label class="form-check-label" for="is_active_participant">Účast</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_korekce_strava_duvod">
-                        <label class="form-check-label" for="finance_korekce_strava_duvod">Finance - Důvod korekce strava</label>
+                        <input class="form-check-input" type="checkbox" value="" id="is_student_of_partner_zus">
+                        <label class="form-check-label" for="is_student_of_partner_zus">Je student ZUŠ Valtice/Mikulov</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_korekce_ubytko">
-                        <label class="form-check-label" for="finance_korekce_ubytko">Finance - Korekce ubytování</label>
+                        <input class="form-check-input" type="checkbox" value="" id="accomodation_type">
+                        <label class="form-check-label" for="accomodation_type">Ubytování</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="finance_korekce_ubytko_duvod">
-                        <label class="form-check-label" for="finance_korekce_ubytko_duvod">Finance - Důvod korekce ubytování</label>
+                        <input class="form-check-input" type="checkbox" value="" id="accomodation_count">
+                        <label class="form-check-label" for="accomodation_count">Počet ubytování</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="ssh_clen">
-                        <label class="form-check-label" for="ssh_clen">SSH Člen</label>
+                        <input class="form-check-input" type="checkbox" value="" id="musical_education">
+                        <label class="form-check-label" for="musical_education">Hudební vzdělání</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="ucast">
-                        <label class="form-check-label" for="ucast">Účast</label>
+                        <input class="form-check-input" type="checkbox" value="" id="musical_instrument">
+                        <label class="form-check-label" for="musical_instrument">Hudební nástroj</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="hlavni_trida_1_id">
-                        <label class="form-check-label" for="hlavni_trida_1_id">Hlavní třída 1</label>
+                        <input class="form-check-input" type="checkbox" value="" id="repertoire">
+                        <label class="form-check-label" for="repertoire">Repertoár</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="hlavni_trida_2_id">
-                        <label class="form-check-label" for="hlavni_trida_2_id">Hlavní třída 2</label>
+                        <input class="form-check-input" type="checkbox" value="" id="comment">
+                        <label class="form-check-label" for="comment">Uživatelská poznámka</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="vedlejsi_trida_placena_id">
-                        <label class="form-check-label" for="vedlejsi_trida_placena_id">Vedlejší třída placená</label>
+                        <input class="form-check-input" type="checkbox" value="" id="admin_comment">
+                        <label class="form-check-label" for="admin_comment">Organizátorská poznámka</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="vedlejsi_trida_zdarma_id">
-                        <label class="form-check-label" for="vedlejsi_trida_zdarma_id">Vedlejší třída zdarma</label>
+                        <input class="form-check-input" type="checkbox" value="" id="meals">
+                        <label class="form-check-label" for="meals">Strava</label>
+                    </div>
+
+                    <h3>Finance</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="billing_currency">
+                        <label class="form-check-label" for="billing_currency">Měna</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="ubytovani">
-                        <label class="form-check-label" for="ubytovani">Ubytování</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_total">
+                        <label class="form-check-label " for="billing_total">Celková částka</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="ubytovani_pocet">
-                        <label class="form-check-label" for="ubytovani_pocet">Počet ubytování</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_gift">
+                        <label class="form-check-label" for="billing_gift">Dar</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="vzdelani">
-                        <label class="form-check-label" for="vzdelani">Vzdělání</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_classes">
+                        <label class="form-check-label" for="billing_classes">Kurzovné</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="nastroj">
-                        <label class="form-check-label" for="nastroj">Nástroj</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_meals">
+                        <label class="form-check-label" for="billing_meals">Strava</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="repertoir">
-                        <label class="form-check-label" for="repertoir">Repertoár</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_accomodation">
+                        <label class="form-check-label" for="billing_accomodation">Ubytování</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="student_zus_valtice_mikulov">
-                        <label class="form-check-label" for="student_zus_valtice_mikulov">Student ZUŠ Valtice/Mikulov</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_correction">
+                        <label class="form-check-label" for="billing_correction">Korekce kurzovné</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="strava">
-                        <label class="form-check-label" for="strava">Strava</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_correction_reason">
+                        <label class="form-check-label" for="billing_correction_reason">Důvod korekce kurzovné</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="uzivatelska_poznamka">
-                        <label class="form-check-label" for="uzivatelska_poznamka">Uživatelská poznámka</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_food_correction">
+                        <label class="form-check-label" for="billing_food_correction">Korekce strava</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="admin_poznamka">
-                        <label class="form-check-label" for="admin_poznamka">Admin poznámka</label>
+                        <input class="form-check-input" type="checkbox" value="" id="billing_food_correction_reason">
+                        <label class="form-check-label" for="billing_food_correction_reason">Důvod korekce strava</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="billing_accomodation_correction">
+                        <label class="form-check-label" for="billing_accomodation_correction">Korekce ubytování</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="billing_accomodation_correction_reason">
+                        <label class="form-check-label" for="billing_accomodation_correction_reason">Důvod korekce ubytování</label>
+                    </div>
+                    
+                    <h3>Přístupy</h3>
+                     <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="must_change_password_upon_login">
+                        <label class="form-check-label" for="must_change_password_upon_login">Musí změnit heslo po přihlášení</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="confirmed_email">
+                        <label class="form-check-label" for="confirmed_email">Má ověřený e-mail</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_locked">
+                        <label class="form-check-label" for="is_locked">Má zamčené změny</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="parent">
+                        <label class="form-check-label" for="parent">Nadřazený účet</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="children">
+                        <label class="form-check-label" for="children">Podřazené účty</label>
+                    </div>
+
+                    <h3>Třídy</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="primary_class">
+                        <label class="form-check-label" for="primary_class">Hlavní třída</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="secondary_classes">
+                        <label class="form-check-label" for="secondary_classes">Vedlejší třídy</label>
                     </div>
                 </div>
             </div>
@@ -254,20 +307,19 @@
         <div class="col-sm">
             <div>
                 <select class="form-select" id="atribut_razeni">
-                    <option value="prijmeni" selected>Příjmení</option>
-                    <option value="jmeno">Jméno</option>
-                    <option value="cas">Čas vyplnění přihlášky</option>
-                    <option value="cas_registrace">Čas registrace</option>
-                    <option value="vek">Věk</option>
-                    <option value="finance_dne">Datum zaplacení</option>
-                    <option value="finance_celkem">Finance - Celková částka</option>
-                    <option value="finance_dar">Finance - Dar</option>
-                    <option value="finance_mena">Finance - Měna</option>
-                    <option value="finance_kategorie">Finance - Kategorie</option>
-                    <option value="ssh_clen">SSH Člen</option>
-                    <option value="ucast">Účast</option>
-                    <option value="ubytovani">Ubytování</option>
-                    <option value="student_zus_valtice_mikulov">Student ZUŠ Valtice/Mikulov</option>
+                    <option value="surname" selected>Příjmení</option>
+                    <option value="name">Jméno</option>
+                    <option value="datetime_class_pick">Čas přihlášení do třídy</option>
+                    <option value="datetime_registered">Čas registrace ve Valticích</option>
+                    <option value="age">Věk</option>
+                    <option value="billing_date_paid">Datum zaplacení</option>
+                    <option value="billing_total">Finance - Celková částka</option>
+                    <option value="billing_gift">Finance - Dar</option>
+                    <option value="billing_currency">Finance - Měna</option>
+                    <option value="is_ssh_member">SSH Člen</option>
+                    <option value="is_active_participant">Účast</option>
+                    <option value="accomodation_type">Ubytování</option>
+                    <option value="is_student_of_partner_zus">Student ZUŠ Valtice/Mikulov</option>
                 </select>
             </div>
         </div>

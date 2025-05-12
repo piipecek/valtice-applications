@@ -330,11 +330,9 @@ def seznamy():
         return render_template("organizator/seznamy.html", roles=get_roles(current_user))
     else:
         if request.form.get("ucel") == "excel":
-            print("jsem tu")
             result = json.loads(request.form.get("data"))
             bytes = User.vytvorit_xlsx_seznam(result)
             return send_file(bytes, as_attachment=True, download_name="seznam.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            # return make_response(send_file(bytes, as_attachment=True, download_name="seznam.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
         elif request.form.get("ucel") == "pdf":
             kriteria = json.loads(request.form.get("data"))
             data_pro_tabulku = User.vytvorit_seznam(kriteria)

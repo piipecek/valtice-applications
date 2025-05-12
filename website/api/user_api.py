@@ -49,7 +49,7 @@ def primary_classes_capacity():
 @user_api.route("/solo_secondary_classes_capacity", methods=["GET"])
 @login_required
 def solo_secondary_classes_capacity():
-    # jsou tu jen tridy, ktere maji .has_capacity a maji skutecne misto diky .primary_participants
+    # jsou tu jen tridy, ktere maji .has_capacity a maji skutecne misto diky .primary_participants + .secondary_participants
     # jejich .age_group je "adult" nebo "both"
     # current_user v ni neni jako primary
     # nejsou time exclusive
@@ -58,7 +58,7 @@ def solo_secondary_classes_capacity():
     for trida in tridy:
         if not trida.has_capacity:
             continue
-        if len(trida.primary_participants) >= trida.capacity:
+        if len(trida.primary_participants) + len(trida.secondary_participants) >= trida.capacity:
             continue
         if current_user in trida.primary_participants:
             continue
