@@ -253,12 +253,12 @@ class User(Common_methods_db_model, UserMixin):
     
     def kalkulace(self) -> dict:
         # ubytovani
-        if self.accomodation_type == "gym" and self.ubytovani()["fits"]:
+        if self.accomodation_type == "gym":
             if self.billing_currency == "czk":      
                 ubytko = self.accomodation_count * Billing.get_by_system_name("telocvicna").czk
             elif self.billing_currency == "eur":
                 ubytko = self.accomodation_count * Billing.get_by_system_name("telocvicna").eur
-        elif self.accomodation_type == "vs" and self.ubytovani()["fits"]:
+        elif self.accomodation_type == "vs":
             if self.billing_currency == "czk":
                 ubytko = self.accomodation_count * Billing.get_by_system_name("internat").czk
             elif self.billing_currency == "eur":
@@ -411,7 +411,7 @@ class User(Common_methods_db_model, UserMixin):
         result = {
             "accomodation_message_cz": None,
             "accomodation_message_en": None,
-            "fits": False,
+            "fits": False, # momentalne to neni nikde jinde vyuzivany. Puvodne to slouzilo tak, ze kalkulace nepocitala ubytko, pokud se clovek nevejde. To bylo ale nezadouci.
         }
         
         settings = get_settings()
