@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, logout_user, current_user
 from website.mail_handler import mail_sender
 import requests
+import os
 
 
 auth_views = Blueprint("auth_views",__name__, template_folder="auth")
@@ -78,7 +79,7 @@ def register_adult():
         return render_template("auth/cz_register_adult.html", roles=get_roles())
     else:
         recaptcha_response = request.form.get('g-recaptcha-response')
-        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        secret = os.environ.get("CAPTCHA_SECRET")
         payload = {
             'secret': secret,
             'response': recaptcha_response
@@ -117,7 +118,7 @@ def register_child():
         return render_template("auth/cz_register_child.html", roles=get_roles())
     else:
         recaptcha_response = request.form.get('g-recaptcha-response')
-        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        secret = os.environ.get("CAPTCHA_SECRET")
         payload = {
             'secret': secret,
             'response': recaptcha_response
@@ -195,7 +196,7 @@ def en_register_adult():
         return render_template("auth/en_register_adult.html", roles=get_roles())
     else:
         recaptcha_response = request.form.get('g-recaptcha-response')
-        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        secret = os.environ.get("CAPTCHA_SECRET")
         payload = {
             'secret': secret,
             'response': recaptcha_response
@@ -234,7 +235,7 @@ def en_register_child():
         return render_template("auth/en_register_child.html", roles=get_roles())
     else:
         recaptcha_response = request.form.get('g-recaptcha-response')
-        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        secret = os.environ.get("CAPTCHA_SECRET")
         payload = {
             'secret': secret,
             'response': recaptcha_response
