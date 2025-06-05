@@ -4,6 +4,7 @@ from website.helpers.get_roles import get_roles
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, logout_user, current_user
 from website.mail_handler import mail_sender
+import requests
 
 
 auth_views = Blueprint("auth_views",__name__, template_folder="auth")
@@ -76,6 +77,17 @@ def register_adult():
     if request.method == "GET":
         return render_template("auth/cz_register_adult.html", roles=get_roles())
     else:
+        recaptcha_response = request.form.get('g-recaptcha-response')
+        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        payload = {
+            'secret': secret,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+        result = r.json()
+        
+        if not result.get('success'):
+            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
@@ -104,6 +116,17 @@ def register_child():
     if request.method == "GET":
         return render_template("auth/cz_register_child.html", roles=get_roles())
     else:
+        recaptcha_response = request.form.get('g-recaptcha-response')
+        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        payload = {
+            'secret': secret,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+        result = r.json()
+        
+        if not result.get('success'):
+            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
@@ -171,6 +194,17 @@ def en_register_adult():
     if request.method == "GET":
         return render_template("auth/en_register_adult.html", roles=get_roles())
     else:
+        recaptcha_response = request.form.get('g-recaptcha-response')
+        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        payload = {
+            'secret': secret,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+        result = r.json()
+        
+        if not result.get('success'):
+            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
@@ -199,6 +233,17 @@ def en_register_child():
     if request.method == "GET":
         return render_template("auth/en_register_child.html", roles=get_roles())
     else:
+        recaptcha_response = request.form.get('g-recaptcha-response')
+        secret = "6LdwoVYrAAAAAOmG5LgeSyCZTzKlm4C9RMXlYPGI"
+        payload = {
+            'secret': secret,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+        result = r.json()
+        
+        if not result.get('success'):
+            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")

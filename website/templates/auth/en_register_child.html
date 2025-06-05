@@ -59,6 +59,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-center my-2">
+            <div class="g-recaptcha" data-sitekey="6LdwoVYrAAAAAHPoGZwq_0M53JkBRfvBbYxGPT1M" data-action="LOGIN"></div> 
             <button type="submit" class="custom_button" id="create_account_button">Create a child account</button>
         </div>
         <hr>
@@ -80,11 +81,12 @@
     </div>
     <div id="vytvorit_ucet_div" hidden>
         <div class="d-flex justify-content-center my-2">
+            <div class="g-recaptcha" data-sitekey="6LdwoVYrAAAAAHPoGZwq_0M53JkBRfvBbYxGPT1M" data-action="LOGIN"></div>
             <button type="button" class="custom_button" id="create_account_button_2">Vytvořit dětský účet</button>
         </div>
     </div>
 </form>
 
 <script type="module" src="{{url_for('static', filename='js/auth/register_child.js')}}"></script>
-
+<script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
 {% endblock %}
