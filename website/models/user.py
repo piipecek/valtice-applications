@@ -1252,6 +1252,8 @@ class User(Common_methods_db_model, UserMixin):
             ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.surname if u.surname else ""))
         elif kriteria["atribut_razeni"] == "name":
             ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.name if u.name else ""))
+        elif kriteria["atribut_razeni"] == "datetime_created":
+            ucastnici = sorted(ucastnici, key=lambda u: u.datetime_created if u.datetime_created else datetime(1, 1, 1))
         elif kriteria["atribut_razeni"] == "datetime_class_pick":
             ucastnici = sorted(ucastnici, key=lambda u: u.datetime_class_pick if u.datetime_class_pick else datetime(1, 1, 1)) 
         elif kriteria["atribut_razeni"] == "datetime_registered":
