@@ -130,7 +130,7 @@ function vyhodnotit() {
 
     // ostatni
     let ostatni = []
-    let ostatni_ids = ["korekce", "neregistrace", "dar", "poznamka"]
+    let ostatni_ids = ["korekce", "neregistrace", "dar", "poznamka", "chybejici_udaje", "chybejici_hlavni_trida"]
     for (let id of ostatni_ids) {
         if (document.getElementById(id).checked) {
             ostatni.push(id)
@@ -141,6 +141,7 @@ function vyhodnotit() {
     // atributy
     let atributy_ids = [
         "age", 
+        "date_of_birth",
         "email", 
         "phone", 
         "is_student", 

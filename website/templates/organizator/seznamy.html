@@ -110,6 +110,21 @@
                         <input class="form-check-input" type="checkbox" id="poznamka">
                         <label class="form-check-label" for="poznamka">Všichni, kdo mají uživatelskou poznámku</label>
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="chybejici_udaje">
+                        <label class="form-check-label" for="chybejici_udaje">Všichni, kdo:
+                            <ul>
+                                <li>mají zájem o tento ročník</li>
+                                <li>jsou zapsaní v nějaké třídě nebo mají pasivní účast</li>
+                                <li>chybí jim jeden z údajů: jméno, příjmení, e-mail, telefon, datum narození</li>
+                                <li>Pokud je účet podřazený, kontroluje se pouze absence jména, příjmení a data narození.</li>
+                            </ul>
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="chybejici_hlavni_trida">
+                        <label class="form-check-label" for="chybejici_hlavni_trida">Všichni, kdo mají vedlejší třídu ale chybí zápis do hlavní</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,6 +140,10 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="age">
                         <label class="form-check-label" for="age">Věk</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="date_of_birth">
+                        <label class="form-check-label" for="date_of_birth">Datum narození</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="email">

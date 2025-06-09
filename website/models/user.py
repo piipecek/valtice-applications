@@ -1245,6 +1245,18 @@ class User(Common_methods_db_model, UserMixin):
             ucastnici = list(filter(lambda u: u.billing_gift != 0, ucastnici))
         if "poznamka" in kriteria["ostatni"]:
             ucastnici = list(filter(lambda u: u.comment, ucastnici))
+        if "chybejici_udaje" in kriteria["ostatni"]:
+            ucastnici_temp = ucastnici
+            ucastnici = []
+            for u in ucastnici_temp:
+                if u.parent:
+                    if u.is_this_year_participant and (u.primary_class or not u.is_active_participant) and (not u.name or not u.surname or not u.date_of_birth):
+                        ucastnici.append(u)
+                else:
+                    if u.is_this_year_participant and (u.primary_class or not u.is_active_participant) and (not u.name or not u.surname or not u.email or not u.phone or not u.date_of_birth):
+                        ucastnici.append(u)
+        if "chybejici_hlavni_trida" in kriteria["ostatni"]:
+            ucastnici = list(filter(lambda u: u.secondary_classes and not u.primary_class, ucastnici))
         
         # serazeni
         ucastnici = sorted(ucastnici, key=lambda u: czech_sort.key(u.get_full_name()))
@@ -1294,6 +1306,9 @@ class User(Common_methods_db_model, UserMixin):
                 if a == "cas":
                     entry["Čas vyplnění přihlášky"] = pretty_datetime(u.cas)
                     result["headers"].append("Čas vyplnění přihlášky")
+                elif a == "date_of_birth":
+                    entry["Datum narození"] = pretty_date(u.date_of_birth) if u.date_of_birth else "-"
+                    result["headers"].append("Datum narození")
                 elif a == "age":
                     entry["Věk"] = u.get_age()
                     result["headers"].append("Věk")
