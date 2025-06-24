@@ -419,9 +419,11 @@ class User(Common_methods_db_model, UserMixin):
         if not self.accomodation_type:
             result["accomodation_message_cz"] = "Ubytování zatím není vybráno."
             result["accomodation_message_en"] = "Accommodation not selected yet."
+            return result
         elif self.accomodation_type == "own":
             result["accomodation_message_cz"] = "Ubytování máte vlastní."
             result["accomodation_message_en"] = "You have your own accommodation."
+            return result
         else:
             if not self.is_active_participant:
                 # moje volba mista ubytovani nema roli, je to podle meho doprovodu
@@ -441,6 +443,7 @@ class User(Common_methods_db_model, UserMixin):
                     if not rozhodujici_dite:
                         result["accomodation_message_cz"] = "Máte zájem o ubytování, ale do fronty budete zařazeni, teprve až se do třídy přihlásí jeden z Vašich podřízených účtů."
                         result["accomodation_message_en"] = "You are interested in accommodation, but you will be placed in the queue only after one of your child accounts signs up for the class."
+                        return result
                     else:
                         for user in users:
                             user: User
@@ -459,6 +462,7 @@ class User(Common_methods_db_model, UserMixin):
                             poradi_display = ", ".join(poradi_list)
                             result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně společně s účtem, který doprovádíte. Pořadí vašich míst ve frontě je: {poradi_display}."
                             result["accomodation_message_en"] = f"You are interested in accommodation in the gym together with the account you are accompanying. The order of your places in the queue is: {poradi_display}."
+                            return result
                         elif rozhodujici_dite.accomodation_type == "vs":
                             poradi_list = []
                             for i in range(rozhodujici_dite.accomodation_count + self.accomodation_count):
@@ -468,22 +472,36 @@ class User(Common_methods_db_model, UserMixin):
                             poradi_display = ", ".join(poradi_list)
                             result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole společně s účtem, který doprovázíte. Pořadí vašich míst ve frontě je: {poradi_display}."
                             result["accomodation_message_en"] = f"You are interested in accommodation at the wine school together with the account you are accompanying. The order of your places in the queue is: {poradi_display}."
+                            return result
                         else:
                             if not rozhodujici_dite.accomodation_type:
                                 result["accomodation_message_cz"] = "Vaše dítě si ještě nevybralo ubytování a vy jste s ním z důvodu pasivní účasti."
                                 result["accomodation_message_en"] = "Your child has not yet chosen accommodation and you are with them due to passive participation."
+                                return result
                             elif rozhodujici_dite.accomodation_type == "own":
                                 result["accomodation_message_cz"] = "Ubytování máte společně s dítětem vlastní."
                                 result["accomodation_message_en"] = "You and your child have your own accommodation."
+                                return result
                         
             else:
                 if self.primary_class is None:
                     if self.accomodation_type == "gym":
                         result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
                         result["accomodation_message_en"] = f"You are interested in accommodation in the gym, number of places: {self.accomodation_count}. But you will be placed in the queue only after signing up for the class."
+                        return result
                     elif self.accomodation_type == "vs":
                         result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole, počet míst: {self.accomodation_count}. Do fronty ale budete zařazeni až po přihlášení do třídy."
                         result["accomodation_message_en"] = f"You are interested in accommodation at the wine school, number of places: {self.accomodation_count}. But you will be placed in the queue only after signing up for the class."
+                        return result
+                elif self.accomodation_count == 0:
+                    if self.accomodation_type == "gym":
+                        result["accomodation_message_cz"] = "Máte zájem o ubytování v tělocvičně, ale nevybrali jste počet míst. Kontaktujte prosím organizátory."
+                        result["accomodation_message_en"] = "You are interested in accommodation in the gym, but you have not selected the number of places. Please contact the organizers."
+                        return result
+                    elif self.accomodation_type == "vs":
+                        result["accomodation_message_cz"] = "Máte zájem o ubytování na vinařské škole, ale nevybrali jste počet míst. Kontaktujte prosím organizátory."
+                        result["accomodation_message_en"] = "You are interested in accommodation at the wine school, but you have not selected the number of places. Please contact the organizers."
+                        return result
                 else:
                     users = sorted(filter(lambda x: x.primary_class_id, User.get_all()), key=lambda x: x.datetime_class_pick)
                     mist_vycerpano_gym = 0
@@ -506,6 +524,7 @@ class User(Common_methods_db_model, UserMixin):
                         poradi_display = ", ".join(poradi_list)
                         result["accomodation_message_cz"] = f"Máte zájem o ubytování v tělocvičně. Pořadí Vašich míst ve frontě je: {poradi_display}."
                         result["accomodation_message_en"] = f"You are interested in accommodation in the gym. The order of your places in the queue is: {poradi_display}."
+                        return result
                     if self.accomodation_type == "vs":
                         poradi_list = []
                         for i in range(user.accomodation_count):
@@ -515,6 +534,7 @@ class User(Common_methods_db_model, UserMixin):
                         poradi_display = ", ".join(poradi_list)
                         result["accomodation_message_cz"] = f"Máte zájem o ubytování na vinařské škole. Pořadí Vašich míst ve frontě je: {poradi_display}."
                         result["accomodation_message_en"] = f"You are interested in accommodation at the wine school. The order of your places in the queue is: {poradi_display}."
+                        return result
         return result
     
     
