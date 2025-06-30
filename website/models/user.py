@@ -7,6 +7,7 @@ from website.models.trida import Trida, user_secondary_class_jointable
 from website.models.billing import Billing
 from website.models.role import Role
 from website.models.meal_order import Meal_order
+from website.models.role import Role
 from website.models.meal import Meal
 from website.helpers.pretty_date import pretty_datetime, pretty_date
 from website.helpers.pretty_penize import pretty_penize
@@ -1177,21 +1178,25 @@ class User(Common_methods_db_model, UserMixin):
 
     @staticmethod
     def vytvorit_seznam(kriteria: dict) -> dict:
-        print("kriteria", kriteria)
         
-        ucastnici: list[User] = User.get_all()
-        
-        # odstranim vsechny s roli
-        ucastnici = list(filter(lambda u: len(u.roles) == 0, ucastnici))
-        
+        ucastnici = User.get_all()
+        print(len(ucastnici), "users found")
+        tutor_role = Role.get_by_system_name("tutor")
         
         # mnozina
-        if kriteria["mnozina"] == "all":
-            pass
-        elif kriteria["mnozina"] == "enrolled":
-            ucastnici = list(filter(lambda u: u.primary_class_id, ucastnici))
-        elif kriteria["mnozina"] == "interested":
-            ucastnici = list(filter(lambda u: u.is_this_year_participant, ucastnici))
+        if kriteria["mnozina"] == "tutors":
+            print("got tutors")
+            ucastnici = list(filter(lambda u: tutor_role in u.roles, ucastnici))
+            print(len(ucastnici), "tutors found")
+        else:
+            ucastnici = list(filter(lambda u: len(u.roles) == 0, ucastnici))
+            if kriteria["mnozina"] == "all":
+                pass
+            elif kriteria["mnozina"] == "enrolled":
+                ucastnici = list(filter(lambda u: u.primary_class_id, ucastnici))
+            elif kriteria["mnozina"] == "interested":
+                ucastnici = list(filter(lambda u: u.is_this_year_participant, ucastnici))
+        
         
         # filtr tříd
         if len(kriteria["tridy"]) != 0:
@@ -1467,7 +1472,30 @@ class User(Common_methods_db_model, UserMixin):
                 elif a == "secondary_classes":
                     entry["Vedlejší třídy"] = ", ".join([trida.full_name_cz for trida in sorted(u.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))]) if u.secondary_classes else "-"
                     result["headers"].append("Vedlejší třídy")
-                
+                    
+                # lektori
+                elif a == "tutor_travel":
+                    entry["Způsob dopravy"] = "vlastní" if u.tutor_travel == "own" else "veřejná"
+                    result["headers"].append("Způsob dopravy")
+                elif a == "tutor_license_plate":
+                    entry["Registrační značka vozidla"] = u.tutor_license_plate if u.tutor_license_plate else "-"
+                    result["headers"].append("Registrační značka vozidla")
+                elif a == "tutor_arrival":
+                    entry["Příjezd"] = u.tutor_arrival if u.tutor_arrival else "-"
+                    result["headers"].append("Příjezd")
+                elif a == "tutor_departure":
+                    entry["Odjezd"] = u.tutor_departure if u.tutor_departure else "-"
+                    result["headers"].append("Odjezd")
+                elif a == "tutor_accompanying_names":
+                    entry["Jména doprovodu"] = u.tutor_accompanying_names if u.tutor_accompanying_names else "-"
+                    result["headers"].append("Jména doprovodu")
+                elif a == "tutor_address":
+                    entry["Adresa"] = u.tutor_address if u.tutor_address else "-"
+                    result["headers"].append("Adresa")
+                elif a == "tutor_bank_account":
+                    entry["Bankovní účet"] = u.tutor_bank_account if u.tutor_bank_account else "-"
+                    result["headers"].append("Bankovní účet")
+                    
             result["lidi"].append(entry)
         seen = set()
         ordered_unique_emails = []

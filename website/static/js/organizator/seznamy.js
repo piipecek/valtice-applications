@@ -109,6 +109,8 @@ function vyhodnotit() {
         mnozina = "enrolled"
     } else if (document.getElementById("all").checked) {
         mnozina = "all"
+    } else if (document.getElementById("tutors").checked) {
+        mnozina = "tutors"
     }
 
     // ubytko
@@ -182,6 +184,13 @@ function vyhodnotit() {
         "children",
         "primary_class",
         "secondary_classes",
+        "tutor_travel",
+        "tutor_license_plate",
+        "tutor_arrival",
+        "tutor_departure",
+        "tutor_accompanying_names",
+        "tutor_address",
+        "tutor_bank_account"
     ]
     let atributy = []
     for (let id of atributy_ids) {

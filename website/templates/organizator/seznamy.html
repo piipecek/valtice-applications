@@ -7,13 +7,13 @@
     <p>
         Seznamy se generují v několika krocích:
         <ol>
-            <li>Výběr množiny účastníků</li>
+            <li>Výběr množiny účtů</li>
             <li>Zvolení atribut k vypsání</li>
             <li>Vytvoření výpisu</li>
             <li>Možnosti exportu jako .xlsx nebo .pdf soubory.</li>
         </ol>
     </p>
-    <h2> Výběr účastníků</h2>
+    <h2> Výběr účtů</h2>
     <small class="text-muted">Mezi jednotlivými kategoriemi platí konjunkce. <i>Příklad: Vyber všechny účastníky, kteří chodí do třídy Roberta Huga a zároveň mají snídani na VŠ.</i></small>
     <div class="container">
         <div class="row">
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="col-sm">
-                <h3>Množina účastníků</h3>
+                <h3>Množina účtů</h3>
                 <div>
                     <div class="form-radio">
                         <input class="form-radio-input" type="radio" id="interested" name="mnozina" checked>
@@ -41,6 +41,10 @@
                     <div class="form-radio">
                         <input class="form-radio-input" type="radio" id="all" name="mnozina">
                         <label class="form-radio-label" for="all">Všichni účastníci za všechny roky</label>
+                    </div>
+                    <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="tutors" name="mnozina">
+                        <label class="form-radio-label" for="tutors">Lektoři</label>
                     </div>
                 </div>
                 <h3>Ubytování</h3>
@@ -162,31 +166,8 @@
                         <label class="form-check-label" for="is_under_16">Je pod 16 let?</label>
                     </div>
                     
-                    
-                    <h3>Časy</h3>
+                    <h3>Valtické informace</h3>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="datetime_created">
-                        <label class="form-check-label" for="datetime_created">Čas vytvoření účtu</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="datetime_class_pick">
-                        <label class="form-check-label" for="datetime_class_pick">Čas výběru hlavní třídy</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="datetime_registered">
-                        <label class="form-check-label" for="datetime_registered">Čas registrace ve Valticích</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="datetime_calculation_email">
-                        <label class="form-check-label" for="datetime_calculation_email">Čas odeslání kalkulace</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="billing_date_paid">
-                        <label class="form-check-label" for="billing_date_paid">Datum zaplacení</label>
-                    </div>
-
-                    <h3>Valtická data</h3>
-                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="is_this_year_participant">
                         <label class="form-check-label" for="is_this_year_participant">Je letošním účastníkem</label>
                     </div>
@@ -233,6 +214,38 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="meals">
                         <label class="form-check-label" for="meals">Strava</label>
+                    </div>
+
+                    <h3>Třídy</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="primary_class">
+                        <label class="form-check-label" for="primary_class">Hlavní třída</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="secondary_classes">
+                        <label class="form-check-label" for="secondary_classes">Vedlejší třídy</label>
+                    </div>
+
+                    <h3>Časy</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_created">
+                        <label class="form-check-label" for="datetime_created">Čas vytvoření účtu</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_class_pick">
+                        <label class="form-check-label" for="datetime_class_pick">Čas výběru hlavní třídy</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_registered">
+                        <label class="form-check-label" for="datetime_registered">Čas registrace ve Valticích</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="datetime_calculation_email">
+                        <label class="form-check-label" for="datetime_calculation_email">Čas odeslání kalkulace</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="billing_date_paid">
+                        <label class="form-check-label" for="billing_date_paid">Datum zaplacení</label>
                     </div>
 
                     <h3>Finance</h3>
@@ -286,7 +299,7 @@
                     </div>
                     
                     <h3>Přístupy</h3>
-                     <div class="form-check">
+                    <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="must_change_password_upon_login">
                         <label class="form-check-label" for="must_change_password_upon_login">Musí změnit heslo po přihlášení</label>
                     </div>
@@ -307,14 +320,35 @@
                         <label class="form-check-label" for="children">Podřazené účty</label>
                     </div>
 
-                    <h3>Třídy</h3>
+                    <h3>Lektorské informace</h3>
+
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="primary_class">
-                        <label class="form-check-label" for="primary_class">Hlavní třída</label>
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_travel">
+                        <label class="form-check-label" for="tutor_travel">Způsob dopravy</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="secondary_classes">
-                        <label class="form-check-label" for="secondary_classes">Vedlejší třídy</label>
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_license_plate">
+                        <label class="form-check-label" for="tutor_license_plate">Registrační značka vozidla</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_arrival">
+                        <label class="form-check-label" for="tutor_arrival">Příjezd</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_departure">
+                        <label class="form-check-label" for="tutor_departure">Odjezd</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_accompanying_names">
+                        <label class="form-check-label" for="tutor_accompanying_names">Jména doprovodu</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_address">
+                        <label class="form-check-label" for="tutor_address">Adresa</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="tutor_bank_account">
+                        <label class="form-check-label" for="tutor_bank_account">Bankovní účet</label>
                     </div>
                 </div>
             </div>
@@ -359,10 +393,10 @@
     <button type="button" class="custom_button" id="excel_button">Stáhnout .xlsx</button>
     <button type="button" class="custom_button" id="pdf_button" value="whatever">Zobrazit pro export do .pdf</button>
     <p>
-        Počet vybraných účastníků: <span id="pocet_ucastniku"></span>
+        Počet vybraných účtů: <span id="pocet_ucastniku"></span>
     </p>
     <p>
-        Jejich maily pro kopírování: <i>Může jich být méně než je vybraných účastníků, protože jsou odstraňovány duplikáty.</i><br>
+        Jejich maily pro kopírování: <i>Může jich být méně než je vybraných účtů, protože jsou odstraňovány duplikáty.</i><br>
         <code id="maily"></code>
     </p>
     <div id="parent_div"></div>
