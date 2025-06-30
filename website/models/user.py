@@ -34,6 +34,7 @@ class User(Common_methods_db_model, UserMixin):
     date_of_birth = db.Column(db.Date)
     is_student = db.Column(db.Boolean, default=False)
     is_under_16 = db.Column(db.Boolean, default=False)
+    passport_number = db.Column(db.String(200), default=None)
     
     #automatic data
     datetime_created = db.Column(db.DateTime, default=datetime.now)
@@ -601,6 +602,7 @@ class User(Common_methods_db_model, UserMixin):
             "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
+            "passport_number": self.passport_number if self.passport_number else "-",
             "datetime_class_pick": pretty_datetime(self.datetime_class_pick) if self.datetime_class_pick else "Zatím nevybráno",
             "datetime_created": pretty_datetime(self.datetime_created),
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
@@ -690,6 +692,7 @@ class User(Common_methods_db_model, UserMixin):
             "date_of_birth": self.date_of_birth.strftime("%Y-%m-%d") if self.date_of_birth else None,
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "child" if self.is_under_16 else "adult",
+            "passport_number": self.passport_number if self.passport_number else "",
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
@@ -775,6 +778,7 @@ class User(Common_methods_db_model, UserMixin):
         self.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
         self.is_student = True if request.form.get("is_student") == "Ano" else False
         self.is_under_16 = True if request.form.get("age_category") == "child" else False
+        self.passport_number = request.form.get("passport_number") if request.form.get("passport_number") else None
         self.is_this_year_participant = True if request.form.get("is_this_year_participant") == "Ano" else False
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
@@ -829,6 +833,7 @@ class User(Common_methods_db_model, UserMixin):
             "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
             "is_student": "Ano" if self.is_student else "Ne",
             "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
+            "passport_number": self.passport_number if self.passport_number else "-",
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
@@ -896,6 +901,7 @@ class User(Common_methods_db_model, UserMixin):
             "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
             "is_student": "Yes" if self.is_student else "No",
             "age_category": "Up to and including 15 years" if self.is_under_16 else "16 years and older",
+            "passport_number": self.passport_number if self.passport_number else "-",
             "is_ssh_member": "Yes" if self.is_ssh_member else "No",
             "is_this_year_participant": "Yes" if self.is_this_year_participant else "No",
             "is_active_participant": "active" if self.is_active_participant else "passive",
@@ -977,6 +983,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_student": "Ano" if self.is_student else "Ne",
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
+            "passport_number": self.passport_number if self.passport_number else "",
             "zmena_letosni_ucasti": zmena_ucasti, # zmena aaktivni a pasivni je take podminena zadnejma tridama
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
@@ -1042,6 +1049,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_student": "Ano" if self.is_student else "Ne",
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
+            "passport_number": self.passport_number if self.passport_number else "",
             "zmena_letosni_ucasti": zmena_ucasti, # zmena aaktivni a pasivni je take podminena zadnejma tridama
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
@@ -1089,6 +1097,7 @@ class User(Common_methods_db_model, UserMixin):
         self.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
         self.is_student = True if request.form.get("is_student") == "Ano" else False
         self.is_under_16 = True if request.form.get("age_category") == "child" else False
+        self.passport_number = request.form.get("passport_number") if request.form.get("passport_number") else None
         self.is_this_year_participant = True if request.form.get("is_this_year_participant") == "Ano" else False
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
@@ -1349,7 +1358,10 @@ class User(Common_methods_db_model, UserMixin):
                 elif a == "is_under_16":
                     entry["Je pod 16 let?"] = "ano" if u.is_under_16 else "ne"
                     result["headers"].append("Je pod 16 let?")
-                    
+                elif a == "passport_number":
+                    entry["Číslo OP / pasu"] = u.passport_number if u.passport_number else "-"
+                    result["headers"].append("Číslo OP / pasu")
+
                 # casy
                 elif a == "datetime_created":
                     entry["Čas vytvoření účtu"] = pretty_datetime(u.datetime_created)

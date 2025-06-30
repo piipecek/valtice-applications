@@ -148,6 +148,7 @@ function vyhodnotit() {
         "phone", 
         "is_student", 
         "is_under_16", 
+        "passport_number",
         "datetime_created", 
         "is_this_year_participant", 
         "is_ssh_member", 
