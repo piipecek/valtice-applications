@@ -61,3 +61,6 @@ def mail_sender(mail_identifier, target, data=None) -> None:
     except SMTPRecipientsRefused:
         log("SMTPRecipientsRefused, e-mail se nepodařilo odeslat.")
         flash(f"SMTPRecipientsRefused, e-mail se nepodařilo odeslat. Kontaktujte organizátory.", category="info")
+    except TypeError:
+        log("TypeError, e-mail se nepodařilo odeslat. Zkontroluj, zda je target správně nastaven.")
+        flash(f"TypeError, e-mail se nepodařilo odeslat. Zkontroluj, zda je target správně nastaven. Možná ani účastník, ani jeho rodič nemá e-mail? Mail identifier: {mail_identifier}, target: {target}", category="info")
