@@ -566,10 +566,13 @@ class User(Common_methods_db_model, UserMixin):
 
     def get_meals_top_visible(self) -> str:
         result_list = []
-        for meal_order in sorted(self.meal_orders):
-            entry = f"{meal_order.count}x {meal_order.meal.get_description_cz()}"
-            result_list.append(entry)
-        return ", ".join(result_list)
+        if len(self.meal_orders) == 0:
+            return "Stravu si zařizujete samostatně."
+        else:
+            for meal_order in sorted(self.meal_orders):
+                entry = f"{meal_order.count}x {meal_order.meal.get_description_cz()}"
+                result_list.append(entry)
+            return ", ".join(result_list)
     
     def info_pro_detail(self):
         # ubytovani
@@ -625,7 +628,7 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno",
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "Zatím neplaceno.",
             "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
             "billing_correction_reason": self.billing_correction_reason if self.billing_correction_reason else "-",
             "billing_food_correction": pretty_penize(self.billing_food_correction, self.billing_currency),

@@ -25,6 +25,23 @@
             <tr>
                 <td class="pravy_text">Ubytování</td>
                 <td id="accomodation_message" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Placeno dne</td>
+                <td id="billing_date_visible" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Hlavní třída</td>
+                <td id="primary_class_visible" colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="pravy_text">Registrace ve Valticích</td>
+                <td id="datetime_registered_visible" colspan="2">
+                    <form method="post" id="zaregistrovat_form" hidden>
+                        <button class="custom_button" name="zaregistrovat" value="whatever">Zaregistrovat teď</button>
+                    </form>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -83,12 +100,7 @@
             </tr>
             <tr>
                 <td class="pravy_text">Čas registrace ve Valticích</td>
-                <td id="datetime_registered"></td>
-                <td>
-                    <form method="post" id="zaregistrovat_form">
-                        <button class="custom_button" name="zaregistrovat" value="whatever">Zaregistrovat teď</button>
-                    </form>
-                </td>
+                <td id="datetime_registered" colspan="2"></td>
             </tr>
             <tr>
                 <td class="pravy_text">Ubytování</td>

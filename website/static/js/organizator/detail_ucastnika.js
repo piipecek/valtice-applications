@@ -12,6 +12,8 @@ document.getElementById("full_name").innerText = full_name
 // věci na očích
 document.getElementById("ucast_na_ocich").innerText = data["is_active_participant"]
 document.getElementById("meals_top_visible").innerText = data["meals_top_visible"]
+document.getElementById("billing_date_visible").innerText = data["billing_date_paid"]
+// document.getElementById("primary_class_visible") to se resi v ostatnich v hlavni_tride
 
 
 // ostatní
@@ -57,7 +59,9 @@ for (let key in data) {
     } else if (key == "datetime_registered") {
         document.getElementById(key).innerText = data[key]
         if (data[key] != "Zatím neregistrován") {
-            document.getElementById("zaregistrovat_form").hidden = true
+            document.getElementById("datetime_registered_visible").innerText = data[key]
+        } else {
+            document.getElementById("zaregistrovat_form").hidden = false
         }
     } else if (key == "email") {
         if (data[key]) {
@@ -76,8 +80,11 @@ for (let key in data) {
             a.innerText = data[key]["name"]
             a.classList.add("link")
             document.getElementById(key).appendChild(a)
+            let a_copy = a.cloneNode(true)
+            document.getElementById("primary_class_visible").appendChild(a_copy)
         } else {
             document.getElementById(key).innerText = data[key]["name"]
+            document.getElementById("primary_class_visible").innerText = data[key]["name"]
         }
         continue
     } else if (key == "vedlejsi_tridy") {
