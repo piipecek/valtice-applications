@@ -11,7 +11,9 @@ ucastnici.forEach(element => {
     jmeno_a.innerText = element["full_name"]
     jmeno_a.setAttribute("class", "jmeno-a")
     let trida_span = document.createElement("span")
-    if (element["hlavni_trida_id"]) {
+    if (!element["is_active_participant"]) {
+        trida_span.innerText = "Pasivní účast"
+    } else if (element["hlavni_trida_id"]) {
         let trida_a = document.createElement("a")
         trida_a.href = "/organizator/detail_tridy/" + element["hlavni_trida_id"]
         trida_a.innerText = element["hlavni_trida"]

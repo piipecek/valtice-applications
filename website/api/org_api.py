@@ -80,7 +80,7 @@ def statistiky():
     uzivatele_mimo_orgy = list(filter(lambda u: len(u.roles) == 0, User.get_all()))
     zajemci = list(filter(lambda u: u.is_this_year_participant, uzivatele_mimo_orgy))
     zapsani = list(filter(lambda u: u.datetime_class_pick, zajemci))
-    registrovani = list(filter(lambda u: u.datetime_registered, zapsani))
+    registrovani = list(filter(lambda u: u.datetime_registered, zajemci)) # aby to pocitalo i pasivni tridy
     return json.dumps({
         "vsichni": len(uzivatele_mimo_orgy),
         "zajemci": len(zajemci),

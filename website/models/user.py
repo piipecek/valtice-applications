@@ -162,7 +162,8 @@ class User(Common_methods_db_model, UserMixin):
             "email": self.email if self.email else self.parent.email if self.parent else "-",
             "registrovan": "Registrován" if self.datetime_registered else "-",
             "hlavni_trida": self.primary_class.short_name_cz if self.primary_class else "-",
-            "hlavni_trida_id": self.primary_class_id
+            "hlavni_trida_id": self.primary_class_id,
+            "is_active_participant": self.is_active_participant,
         }
         
     
