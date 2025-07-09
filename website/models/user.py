@@ -1198,9 +1198,7 @@ class User(Common_methods_db_model, UserMixin):
         
         # mnozina
         if kriteria["mnozina"] == "tutors":
-            print("got tutors")
             ucastnici = list(filter(lambda u: tutor_role in u.roles, ucastnici))
-            print(len(ucastnici), "tutors found")
         else:
             ucastnici = list(filter(lambda u: len(u.roles) == 0, ucastnici))
             if kriteria["mnozina"] == "all":
@@ -1209,6 +1207,8 @@ class User(Common_methods_db_model, UserMixin):
                 ucastnici = list(filter(lambda u: u.primary_class_id, ucastnici))
             elif kriteria["mnozina"] == "interested":
                 ucastnici = list(filter(lambda u: u.is_this_year_participant, ucastnici))
+            elif kriteria["mnozina"] == "passive":
+                ucastnici = list(filter(lambda u: not u.is_active_participant, ucastnici))
         
         
         # filtr tříd

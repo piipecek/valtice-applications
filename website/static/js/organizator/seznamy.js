@@ -112,6 +112,8 @@ function vyhodnotit() {
         mnozina = "all"
     } else if (document.getElementById("tutors").checked) {
         mnozina = "tutors"
+    } else if (document.getElementById("passive").checked) {
+        mnozina = "passive"
     }
 
     // ubytko
