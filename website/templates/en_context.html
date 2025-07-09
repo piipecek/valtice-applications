@@ -14,6 +14,15 @@
 {% endblock %}
 
 
+{% block odkazy %}
+    <div class="odkazy">
+        <a class="page_href" href="https://www.early-music.cz">Main page</a>
+        <a class="page_href" href="https://application.early-music.cz/en_dashboard">Application system</a>
+    </div>
+{% endblock %}
+
+
+
 {% block flag %}
     <a href="{{url_for('guest_views.cz_dashboard')}}" class="flag">
         <img src="{{url_for('static', filename='img/ikonky/czech-republic.png')}}" alt="CZ">

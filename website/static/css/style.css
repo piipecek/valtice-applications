@@ -287,6 +287,13 @@ hr {
     font-weight: bold;
 }
 
+.motd a{
+    color:rgb(103, 125, 171)
+}
+.motd a:hover{
+    color:rgb(180, 130, 148)
+}
+
 
 @media (max-width: 1400px) {
     .main_section {

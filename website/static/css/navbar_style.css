@@ -17,7 +17,21 @@
 .flag_wrapper{
     width: 70%;
     display: flex;
-    flex-direction: row-reverse;
+    justify-content: end;
+}
+
+.odkazy {
+    display: flex;
+    gap: 10px;
+    margin-right: 10px;
+}
+
+.page_href{
+    text-decoration: none;
+    color: rgb(255,245,235);
+}
+.page_href:hover{
+    color: rgb(251, 223, 194);
 }
 
 .flag img{
