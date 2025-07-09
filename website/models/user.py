@@ -1334,182 +1334,189 @@ class User(Common_methods_db_model, UserMixin):
             "headers": []
         }
         for i, u in enumerate(ucastnici):
+            # entry = {
+            #     "#": i+1,
+            #     "Jméno": u.get_full_name(),
+            # }
             entry = {
-                "#": i+1,
-                "Jméno": u.get_full_name(),
+                "id": u.id,
+                "data": {
+                    "#": i+1,
+                    "Jméno": u.get_full_name(),
+                }
             }
             result["headers"] = ["#", "Jméno"]
             for a in kriteria["atributy"]:
                 # osobni
                 if a == "cas":
-                    entry["Čas vyplnění přihlášky"] = pretty_datetime(u.cas)
+                    entry["data"]["Čas vyplnění přihlášky"] = pretty_datetime(u.cas)
                     result["headers"].append("Čas vyplnění přihlášky")
                 elif a == "date_of_birth":
-                    entry["Datum narození"] = pretty_date(u.date_of_birth) if u.date_of_birth else "-"
+                    entry["data"]["Datum narození"] = pretty_date(u.date_of_birth) if u.date_of_birth else "-"
                     result["headers"].append("Datum narození")
                 elif a == "age":
-                    entry["Věk"] = u.get_age()
+                    entry["data"]["Věk"] = u.get_age()
                     result["headers"].append("Věk")
                 elif a == "email":
-                    entry["Email"] = u.email
+                    entry["data"]["Email"] = u.email
                     result["headers"].append("E-mail")
                 elif a == "phone":
-                    entry["Telefon"] = u.phone
+                    entry["data"]["Telefon"] = u.phone
                     result["headers"].append("Telefon")
                 elif a == "is_student":
-                    entry["Student"] = "ano" if u.is_student else "ne"
+                    entry["data"]["Student"] = "ano" if u.is_student else "ne"
                     result["headers"].append("Student")
                 elif a == "is_under_16":
-                    entry["Je pod 16 let?"] = "ano" if u.is_under_16 else "ne"
+                    entry["data"]["Je pod 16 let?"] = "ano" if u.is_under_16 else "ne"
                     result["headers"].append("Je pod 16 let?")
                 elif a == "passport_number":
-                    entry["Číslo OP / pasu"] = u.passport_number if u.passport_number else "-"
+                    entry["data"]["Číslo OP / pasu"] = u.passport_number if u.passport_number else "-"
                     result["headers"].append("Číslo OP / pasu")
 
                 # casy
                 elif a == "datetime_created":
-                    entry["Čas vytvoření účtu"] = pretty_datetime(u.datetime_created)
+                    entry["data"]["Čas vytvoření účtu"] = pretty_datetime(u.datetime_created)
                     result["headers"].append("Čas vytvoření účtu")
                 elif a == "datetime_class_pick":
-                    entry["Čas výběru hlavní třídy"] = pretty_datetime(u.datetime_class_pick)
+                    entry["data"]["Čas výběru hlavní třídy"] = pretty_datetime(u.datetime_class_pick)
                     result["headers"].append("Čas výběru hlavní třídy")
                 elif a == "datetime_registered":
-                    entry["Čas registrace ve Valticích"] = pretty_datetime(u.datetime_registered)
+                    entry["data"]["Čas registrace ve Valticích"] = pretty_datetime(u.datetime_registered)
                     result["headers"].append("Čas registrace ve Valticích")
                 elif a == "datetime_calculation_email":
-                    entry["Čas odeslání kalkulace"] = pretty_datetime(u.datetime_calculation_email)
+                    entry["data"]["Čas odeslání kalkulace"] = pretty_datetime(u.datetime_calculation_email)
                     result["headers"].append("Čas odeslání kalkulace")
                 elif a == "billing_date_paid":
-                    entry["Datum zaplacení"] = pretty_datetime(u.billing_date_paid)
+                    entry["data"]["Datum zaplacení"] = pretty_datetime(u.billing_date_paid)
                     result["headers"].append("Datum zaplacení")
                     
                 # valtice           
                 elif a == "is_this_year_participant":
-                    entry["Je letošním účastníkem?"] = "ano" if u.is_this_year_participant else "ne"
+                    entry["data"]["Je letošním účastníkem?"] = "ano" if u.is_this_year_participant else "ne"
                     result["headers"].append("Je letošním účastníkem?")
                 elif a == "is_ssh_member":
-                    entry["Člen SSH?"] = "ano" if u.is_ssh_member else "ne"
+                    entry["data"]["Člen SSH?"] = "ano" if u.is_ssh_member else "ne"
                     result["headers"].append("Člen SSH?")
                 elif a == "is_active_participant":
-                    entry["Účast"] = "aktivní" if u.is_active_participant else "pasivní"
+                    entry["data"]["Účast"] = "aktivní" if u.is_active_participant else "pasivní"
                     result["headers"].append("Účast")
                 elif a == "is_student_of_partner_zus":
-                    entry["Student ZUŠ Valtice/Mikulov?"] = "ano" if u.is_student_of_partner_zus else "ne"
+                    entry["data"]["Student ZUŠ Valtice/Mikulov?"] = "ano" if u.is_student_of_partner_zus else "ne"
                     result["headers"].append("Student ZUŠ Valtice/Mikulov?")
                 elif a == "accomodation_type":
-                    entry["Typ ubytování"] = "internát" if u.accomodation_type == "vs" else "tělocvična" if u.accomodation_type == "gym" else "vlastní" if u.accomodation_type == "own" else "-"
+                    entry["data"]["Typ ubytování"] = "internát" if u.accomodation_type == "vs" else "tělocvična" if u.accomodation_type == "gym" else "vlastní" if u.accomodation_type == "own" else "-"
                     result["headers"].append("Typ ubytování")
                 elif a == "accomodation_count":
-                    entry["Počet lůžek"] = u.accomodation_count
+                    entry["data"]["Počet lůžek"] = u.accomodation_count
                     result["headers"].append("Počet lůžek")
                 elif a == "musical_education":
-                    entry["Hudební vzdělání"] = u.musical_education
+                    entry["data"]["Hudební vzdělání"] = u.musical_education
                     result["headers"].append("Hudební vzdělání")
                 elif a == "musical_instrument":
-                    entry["Hudební nástroj"] = u.musical_instrument
+                    entry["data"]["Hudební nástroj"] = u.musical_instrument
                     result["headers"].append("Hudební nástroj")
                 elif a == "repertoire":
-                    entry["Repertoár"] = u.repertoire
+                    entry["data"]["Repertoár"] = u.repertoire
                     result["headers"].append("Repertoár")
                 elif a == "comment":
-                    entry["Uživatelská poznámka"] = u.comment
+                    entry["data"]["Uživatelská poznámka"] = u.comment
                     result["headers"].append("Uživatelská poznámka")
                 elif a == "admin_comment":
-                    entry["Organizátorská poznámka"] = u.admin_comment
+                    entry["data"]["Organizátorská poznámka"] = u.admin_comment
                     result["headers"].append("Organizátorská poznámka")
                 elif a == "meals":
-                    entry["Strava"] = u.get_meals_top_visible()
+                    entry["data"]["Strava"] = u.get_meals_top_visible()
                     result["headers"].append("Strava")
                 
                 # finance
                 elif a == "billing_currency":
-                    entry["Měna"] = u.billing_currency
+                    entry["data"]["Měna"] = u.billing_currency
                     result["headers"].append("Měna")
                 elif a == "billing_total":
-                    entry["Celkem"] = u.kalkulace()["celkem"]
+                    entry["data"]["Celkem"] = u.kalkulace()["celkem"]
                     result["headers"].append("Celkem")
                 elif a == "billing_gift":
-                    entry["Dar"] = u.billing_gift
+                    entry["data"]["Dar"] = u.billing_gift
                     result["headers"].append("Dar")
                 elif a in ["billing_total", "billing_classes", "billing_meals", "billing_accomodation"]:
                     k = u.kalkulace()
                     if a == "billing_total":
-                        entry["Celkem"] = k["celkem"]
+                        entry["data"]["Celkem"] = k["celkem"]
                         result["headers"].append("Celkem")
                     elif a == "billing_classes":
-                        entry["Kurzovné"] = k["hlavni_trida"] if k["hlavni_trida"] else 0 + sum(k["vedlejsi_tridy"])
+                        entry["data"]["Kurzovné"] = k["hlavni_trida"] if k["hlavni_trida"] else 0 + sum(k["vedlejsi_tridy"])
                         result["headers"].append("Kurzovné")
                     elif a == "billing_meals":
-                        entry["Strava"] = k["snidane"] + k["obedy"] + k["vecere"] if u.meals else 0
+                        entry["data"]["Strava"] = k["snidane"] + k["obedy"] + k["vecere"] if u.meals else 0
                         result["headers"].append("Strava")
                     elif a == "billing_accomodation":
-                        entry["Ubytování"] = k["ubytovani"]
+                        entry["data"]["Ubytování"] = k["ubytovani"]
                         result["headers"].append("Ubytování")
                 elif a == "billing_correction":
-                    entry["Korekce"] = u.billing_correction
+                    entry["data"]["Korekce"] = u.billing_correction
                     result["headers"].append("Korekce")
                 elif a == "billing_correction_reason":
-                    entry["Důvod korekce"] = u.billing_correction_reason
+                    entry["data"]["Důvod korekce"] = u.billing_correction_reason
                     result["headers"].append("Důvod korekce")
                 elif a == "billing_food_correction":
-                    entry["Korekce stravy"] = u.billing_food_correction
+                    entry["data"]["Korekce stravy"] = u.billing_food_correction
                     result["headers"].append("Korekce stravy")
                 elif a == "billing_food_correction_reason":
-                    entry["Důvod korekce stravy"] = u.billing_food_correction_reason
+                    entry["data"]["Důvod korekce stravy"] = u.billing_food_correction_reason
                     result["headers"].append("Důvod korekce stravy")
                 elif a == "billing_accomodation_correction":
-                    entry["Korekce ubytování"] = u.billing_accomodation_correction
+                    entry["data"]["Korekce ubytování"] = u.billing_accomodation_correction
                     result["headers"].append("Korekce ubytování")
                 elif a == "billing_accomodation_correction_reason":
-                    entry["Důvod korekce ubytování"] = u.billing_accomodation_correction_reason
+                    entry["data"]["Důvod korekce ubytování"] = u.billing_accomodation_correction_reason
                     result["headers"].append("Důvod korekce ubytování")
                 
                 # přístupy
                 elif a == "must_change_password_upon_login":
-                    entry["Změna hesla po přihlášení"] = "ano" if u.must_change_password_upon_login else "ne"
+                    entry["data"]["Změna hesla po přihlášení"] = "ano" if u.must_change_password_upon_login else "ne"
                     result["headers"].append("Změna hesla po přihlášení")
                 elif a == "confirmed_email":
-                    entry["Potvrzený e-mail"] = "ano" if u.confirmed_email else "ne"
+                    entry["data"]["Potvrzený e-mail"] = "ano" if u.confirmed_email else "ne"
                     result["headers"].append("Potvrzený e-mail")
                 elif a == "is_locked":
-                    entry["Zamčený účet"] = "ano" if u.is_locked else "ne"
+                    entry["data"]["Zamčený účet"] = "ano" if u.is_locked else "ne"
                     result["headers"].append("Zamčený účet")
                 elif a == "parent":
-                    entry["Nadřazený účet"] = u.parent.get_full_name() if u.parent else "-"
+                    entry["data"]["Nadřazený účet"] = u.parent.get_full_name() if u.parent else "-"
                     result["headers"].append("Nadřazený účet")
                 elif a == "children":
-                    entry["Podřazené účty"] = ", ".join([child.get_full_name() for child in u.children]) if len(u.children) > 0 else "-"
+                    entry["data"]["Podřazené účty"] = ", ".join([child.get_full_name() for child in u.children]) if len(u.children) > 0 else "-"
                     result["headers"].append("Podřazené účty")
                 
                 # třídy
                 elif a == "primary_class":
-                    entry["Hlavní třída"] = u.primary_class.full_name_cz if u.primary_class else "-"
+                    entry["data"]["Hlavní třída"] = u.primary_class.full_name_cz if u.primary_class else "-"
                     result["headers"].append("Hlavní třída")
                 elif a == "secondary_classes":
-                    entry["Vedlejší třídy"] = ", ".join([trida.full_name_cz for trida in sorted(u.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))]) if u.secondary_classes else "-"
+                    entry["data"]["Vedlejší třídy"] = ", ".join([trida.full_name_cz for trida in sorted(u.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))]) if u.secondary_classes else "-"
                     result["headers"].append("Vedlejší třídy")
                     
                 # lektori
                 elif a == "tutor_travel":
-                    entry["Způsob dopravy"] = "vlastní" if u.tutor_travel == "own" else "veřejná"
+                    entry["data"]["Způsob dopravy"] = "vlastní" if u.tutor_travel == "own" else "veřejná"
                     result["headers"].append("Způsob dopravy")
                 elif a == "tutor_license_plate":
-                    entry["Registrační značka vozidla"] = u.tutor_license_plate if u.tutor_license_plate else "-"
+                    entry["data"]["Registrační značka vozidla"] = u.tutor_license_plate if u.tutor_license_plate else "-"
                     result["headers"].append("Registrační značka vozidla")
                 elif a == "tutor_arrival":
-                    entry["Příjezd"] = u.tutor_arrival if u.tutor_arrival else "-"
+                    entry["data"]["Příjezd"] = u.tutor_arrival if u.tutor_arrival else "-"
                     result["headers"].append("Příjezd")
                 elif a == "tutor_departure":
-                    entry["Odjezd"] = u.tutor_departure if u.tutor_departure else "-"
+                    entry["data"]["Odjezd"] = u.tutor_departure if u.tutor_departure else "-"
                     result["headers"].append("Odjezd")
                 elif a == "tutor_accompanying_names":
-                    entry["Jména doprovodu"] = u.tutor_accompanying_names if u.tutor_accompanying_names else "-"
+                    entry["data"]["Jména doprovodu"] = u.tutor_accompanying_names if u.tutor_accompanying_names else "-"
                     result["headers"].append("Jména doprovodu")
                 elif a == "tutor_address":
-                    entry["Adresa"] = u.tutor_address if u.tutor_address else "-"
+                    entry["data"]["Adresa"] = u.tutor_address if u.tutor_address else "-"
                     result["headers"].append("Adresa")
                 elif a == "tutor_bank_account":
-                    entry["Bankovní účet"] = u.tutor_bank_account if u.tutor_bank_account else "-"
+                    entry["data"]["Bankovní účet"] = u.tutor_bank_account if u.tutor_bank_account else "-"
                     result["headers"].append("Bankovní účet")
                     
             result["lidi"].append(entry)
@@ -1531,10 +1538,10 @@ class User(Common_methods_db_model, UserMixin):
         wb = Workbook()
         ws = wb.active
         ws.title = "Učastníci"
-        keys = data["lidi"][0].keys()
+        keys = data["lidi"][0]["data"].keys()
         ws.append(list(keys))
         for radek in data["lidi"]:
-            ws.append([radek[k] for k in keys])
+            ws.append([radek["data"][k] for k in keys])
         output = BytesIO()
         wb.save(output)
         output.seek(0)

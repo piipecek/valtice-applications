@@ -18,6 +18,7 @@ document.getElementById("vytvorit_button").addEventListener("click", function() 
     .done(function(data) {
         document.getElementById("loader").hidden = true
         document.getElementById("druhy_krok").hidden = false
+        console.log(JSON.parse(data))
         vykreslit_tabulku(JSON.parse(data))
     })
     .fail(function() {
@@ -216,8 +217,19 @@ function vyhodnotit() {
 function vykreslit_tabulku(result) {
     let table_creator = new TableCreator(document.getElementById("parent_div"), true, true)
     table_creator.make_header(result["headers"])
-    for (let row of result["lidi"]) {
-        table_creator.make_row(Object.values(row))
+    for (let ucet of result["lidi"]) {
+        let a = document.createElement("a")
+        a.href = "/organizator/detail_ucastnika/"+ucet["id"]
+        a.innerText = ucet["data"]["Jméno"]
+        a.classList.add("jmeno-a")
+        let values = Object.values(ucet.data)
+        values[1] = a // replace name with link
+        let th_indexes = []
+        for (let _ of values) {
+            th_indexes.push(0)
+        }
+        th_indexes[1] = 1 // first column is name
+        table_creator.make_row(values, th_indexes)
     }
     document.getElementById("pocet_ucastniku").innerText = result["lidi"].length
     document.getElementById("maily").innerText = result["emaily"]

@@ -74,7 +74,7 @@ class Trida(Common_methods_db_model):
             "secondary_billing_behavior": secondary_billing_behavior,
             "is_time_exclusive": "Ano" if self.is_time_exclusive else "Ne",
             "age_group": age_group,
-            "primary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "cas": pretty_datetime(u.datetime_class_pick), "surname": u.surname or ""} for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
+            "primary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id), "cas": pretty_datetime(u.datetime_class_pick), "surname": u.surname or "", "secondary_classes": ", ".join([sc.full_name_cz for sc in u.secondary_classes]) if u.secondary_classes else "-" } for u in sorted(self.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
             "secondary_participants": [{"name": u.get_full_name("cz"), "link": "/organizator/detail_ucastnika/" + str(u.id)} for u in sorted(self.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))],
             "primary_participants_count": len(self.primary_participants),
             "secondary_participants_count": len(self.secondary_participants),

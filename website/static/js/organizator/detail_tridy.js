@@ -30,6 +30,7 @@ for(let ucastnik of data.primary_participants){
     let tr = document.createElement("tr")
     let td = document.createElement("td")
     let a = document.createElement("a")
+    let secondary_participants_a = document.createElement("a")
     a.href = ucastnik["link"]
     a.innerText = ucastnik["name"]
     a.classList.add("link")
@@ -38,11 +39,14 @@ for(let ucastnik of data.primary_participants){
     let td2 = document.createElement("td")
     td2.innerText = ucastnik["cas"]
     tr.appendChild(td2)
-    // hidden surnaame td for sorting
     let td3 = document.createElement("td")
-    td3.innerText = ucastnik["surname"]
-    td3.style.display = "none"
+    td3.innerText = ucastnik["secondary_classes"]
     tr.appendChild(td3)
+    // hidden surname td for sorting
+    let td4 = document.createElement("td")
+    td4.innerText = ucastnik["surname"]
+    td4.style.display = "none"
+    tr.appendChild(td4)
     document.getElementById("primary_participants").appendChild(tr)
 }
 
@@ -63,8 +67,8 @@ jmeno_th.addEventListener("click", function() {
     // use hidden surname td for sorting
     let rows = document.querySelectorAll("#primary_participants tr")
     let sortedRows = Array.from(rows).sort((a, b) => {
-        let surnameA = a.cells[2].innerText
-        let surnameB = b.cells[2].innerText
+        let surnameA = a.cells[3].innerText
+        let surnameB = b.cells[3].innerText
         return surnameA.localeCompare(surnameB)
     })
     let tableBody = document.getElementById("primary_participants")
