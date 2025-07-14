@@ -376,6 +376,7 @@ class User(Common_methods_db_model, UserMixin):
         snidane_do_sumy = snidane if snidane is not None else 0
         obedy_do_sumy = obedy if obedy is not None else 0
         vecere_do_sumy = vecere if vecere is not None else 0
+        
         result = {
             "ubytovani": ubytko,
             "pasivni_ucast": pasivni_ucast,

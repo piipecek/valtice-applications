@@ -366,18 +366,32 @@
 <form method="post" id="end_of_issem_form">
     <div class="row">
         <div class="col">
-            TODO tohle ještě dodělat a domyslet, co všechno se má stát. Zatím se děje tohle:
-            <ul>
-                <li>Nechá to všechny uživatele a třídy</li>
-                <li>Promaže to všechny spojení účastníků do tříd</li>
-                <li>U všech stávajících účastníků to nastaví, že se dalšího ročníku defaultně neúčastní</li>
-            </ul>
+            <div class="attention-message">
+                Před přípravou systému na další ročník se ujistěte, že jste provedli export systému tlačítkem výše a že ho máte dobře uložený. Toto tlačítko nenávratně připraví systém na další ročník.
+            </div>
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-flex align-items-center">
             <button class="custom_button" id="end_of_issem" type="button">Provést</button>
             <input type="hidden" name="end_of_issem" value="whatever">
         </div>
     </div>
+    Co se při restartu děje?
+    <ul>
+        <li>ponechání všech uživatelů, tříd, rolí, sazeb a jídel</li>
+        <li>odhlášení všech účastníků ze všech tříd</li>
+        <li>nastavení u všech účastníků, že nemají zájem o letošní ročník. To znamená, že při příští návštěvě účtu budou konfrontováni s tím, zda mají či nemají zájem jet znovu</li>
+        <li>promazání data odeslání e-mailu s financemi, data zápisu do hlavní třídy, data registrace ve Valticích a data zaplacení</li>
+        <li>promazání organizátorské poznámky, všech korekcí a všech důvodů korekcí</li>
+        <li>promazání všech objednávek jídla</li>
+        <li>lektorům je promazána informace o příjezdu a odjezdu</li>
+    </ul>
+    Co je při restartu dále potřeba udělat ručně v nastavení?
+    <ul>
+        <li>Nastavit datum přihlášek někdy na duben - to proto, aby se systém choval tak, že přihlášky budou, ne že už byly.</li>
+        <li>Odemknout změny na všech účtech</li>
+        <li>Zakázat samovolné posílání kalkulací všem uživatelům</li>
+        <li>Přepsat texty na úvodní české a anglické stránce</li>
+    </ul>
 </form>
 <script type="module" src="{{url_for('static', filename='js/organizator/settings.js')}}"></script>
 
