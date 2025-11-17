@@ -17,6 +17,7 @@ from website.paths import logo_cz_path, logo_en_path
 from werkzeug.security import generate_password_hash
 from website.mail_handler import mail_sender
 import sqlalchemy
+from website.helpers.restore import restore
 
 org_views = Blueprint("org_views",__name__)
 
@@ -136,6 +137,17 @@ def settings():
             return get_logs_for_browser()
         elif request.form.get("ubytko_internat"):
             return User.get_fronta_na_internat()
+        elif request.form.get("restore"):
+            xlsx_file = request.files.get("restore_file")
+            if not xlsx_file:
+                flash("Nebyl vybrán žádný soubor se zálohou.", "error")
+                return redirect(url_for("org_views.settings"))
+            result = restore(xlsx_file)
+            if result["success"]:
+                flash("Systém byl obnoven ze zálohy.", category="success")
+            else:
+                flash(result["message"], category="error")
+            return redirect(url_for("org_views.settings"))
         else:
             return request.form.to_dict()
     

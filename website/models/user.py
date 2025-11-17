@@ -366,8 +366,6 @@ class User(Common_methods_db_model, UserMixin):
                             vecere += meal_order.count * Billing.get_by_system_name("vecere_ss").czk
                         elif self.billing_currency == "eur":
                             vecere += meal_order.count * Billing.get_by_system_name("vecere_ss").eur
-        print(snidane, obedy, vecere)
-
         
         pasivni_ucast_do_sumy = pasivni_ucast if pasivni_ucast is not None else 0
         hlavni_trida_do_sumy = hlavni_trida if hlavni_trida is not None else 0
@@ -1194,7 +1192,6 @@ class User(Common_methods_db_model, UserMixin):
     def vytvorit_seznam(kriteria: dict) -> dict:
         
         ucastnici = User.get_all()
-        print(len(ucastnici), "users found")
         tutor_role = Role.get_by_system_name("tutor")
         
         # mnozina
