@@ -1332,10 +1332,6 @@ class User(Common_methods_db_model, UserMixin):
             "headers": []
         }
         for i, u in enumerate(ucastnici):
-            # entry = {
-            #     "#": i+1,
-            #     "Jméno": u.get_full_name(),
-            # }
             entry = {
                 "id": u.id,
                 "data": {
@@ -1430,25 +1426,25 @@ class User(Common_methods_db_model, UserMixin):
                 elif a == "billing_currency":
                     entry["data"]["Měna"] = u.billing_currency
                     result["headers"].append("Měna")
-                elif a == "billing_total":
-                    entry["data"]["Celkem"] = u.kalkulace()["celkem"]
-                    result["headers"].append("Celkem")
                 elif a == "billing_gift":
                     entry["data"]["Dar"] = u.billing_gift
                     result["headers"].append("Dar")
-                elif a in ["billing_total", "billing_classes", "billing_meals", "billing_accomodation"]:
+                elif a in ["billing_total", "billing_total", "billing_classes", "billing_passive", "billing_meals", "billing_accomodation"]:
                     k = u.kalkulace()
                     if a == "billing_total":
                         entry["data"]["Celkem"] = k["celkem"]
                         result["headers"].append("Celkem")
                     elif a == "billing_classes":
-                        entry["data"]["Kurzovné"] = k["hlavni_trida"] if k["hlavni_trida"] else 0 + sum(k["vedlejsi_tridy"])
+                        entry["data"]["Kurzovné"] = k["hlavni_trida"] + sum(k["vedlejsi_tridy"]) if k["hlavni_trida"] else 0 + sum(k["vedlejsi_tridy"])
                         result["headers"].append("Kurzovné")
+                    elif a == "billing_passive":
+                        entry["data"]["Pasivní účast"] = k["pasivni_ucast"] if not u.is_active_participant else 0
+                        result["headers"].append("Pasivní účast")
                     elif a == "billing_meals":
                         entry["data"]["Strava"] = k["snidane"] + k["obedy"] + k["vecere"] if u.meals else 0
                         result["headers"].append("Strava")
                     elif a == "billing_accomodation":
-                        entry["data"]["Ubytování"] = k["ubytovani"]
+                        entry["data"]["Ubytování"] = k["ubytovani"] if u.accomodation_type in ["vs", "gym"] else 0
                         result["headers"].append("Ubytování")
                 elif a == "billing_correction":
                     entry["data"]["Korekce"] = u.billing_correction

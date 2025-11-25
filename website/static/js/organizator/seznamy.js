@@ -173,6 +173,7 @@ function vyhodnotit() {
         "billing_total",
         "billing_gift",
         "billing_classes",
+        "billing_passive",
         "billing_meals",
         "billing_accomodation",
         "billing_correction",
