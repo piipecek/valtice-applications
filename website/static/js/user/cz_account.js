@@ -1,5 +1,5 @@
-import httpGet from "../http_get.js"
-let data = JSON.parse(httpGet("/user_api/ucet"))
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
+let data = JSON.parse(await awaitable_custom_fetch("/user_api/ucet"))
 
 
 for (let key in data) {

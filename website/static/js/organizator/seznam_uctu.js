@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
-let ucty = JSON.parse(httpGet("/org_api/seznam_uctu"))
+let ucty = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_uctu"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
 tc.make_header(["Jméno", "E-mail", "Datum vytvoření účtu"])

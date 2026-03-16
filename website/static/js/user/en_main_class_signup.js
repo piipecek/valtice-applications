@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 
-let primary_tridy_a_kapacity = JSON.parse(httpGet("/user_api/primary_classes_capacity"))
+let primary_tridy_a_kapacity = JSON.parse(await awaitable_custom_fetch("/user_api/primary_classes_capacity"))
 let hlavni_tridy_div = document.getElementById("tridy")
 
 

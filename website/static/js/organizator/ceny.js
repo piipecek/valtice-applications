@@ -1,7 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
 
-let ceny = JSON.parse(httpGet("/org_api/ceny"))
+let ceny = JSON.parse(await awaitable_custom_fetch("/org_api/ceny"))
 
 let table_kurzovne = new TableCreator(document.getElementById("table_kurzovne"))
 table_kurzovne.make_header(["Název", "Sazba v CZK", "Sazba v EUR"])

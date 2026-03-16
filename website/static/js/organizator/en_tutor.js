@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 
-let tridy = JSON.parse(httpGet("/org_api/en_my_participants"))
+let tridy = JSON.parse(await awaitable_custom_fetch("/org_api/en_my_participants"))
 
 let parent_div = document.getElementById("parent_div")
 

@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 let id_usera = document.getElementById("id_getter").value
-let role_uzivatele = JSON.parse(httpGet("/org_api/role_uzivatele/" + String(id_usera)))
+let role_uzivatele = JSON.parse(await awaitable_custom_fetch("/org_api/role_uzivatele/" + String(id_usera)))
 let checkdiv = document.getElementById("check_div")
 let save_roles_button = document.getElementById("save_roles_button")
 let resut_input = document.getElementById("result")

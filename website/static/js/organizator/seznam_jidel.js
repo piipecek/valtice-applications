@@ -1,8 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
 
-
-let jidla = JSON.parse(httpGet("/org_api/seznam_jidel"))
+let jidla = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_jidel"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true)
 tc.make_header(["Popis", "Počet objednaných sad", "Detail"])

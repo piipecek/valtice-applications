@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
-let data = JSON.parse(httpGet("/user_api/uprava_uctu"))
-let jidla = JSON.parse(httpGet("/user_api/jidla_pro_upravu_ucastnika"))
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
+let data = JSON.parse(await awaitable_custom_fetch("/user_api/uprava_uctu"))
+let jidla = JSON.parse(await awaitable_custom_fetch("/user_api/jidla_pro_upravu_ucastnika"))
 
 
 for (let key in data) {

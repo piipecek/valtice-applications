@@ -1,7 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
-let ucastnici = JSON.parse(httpGet("/org_api/seznam_ucastniku"))
-let statistiky = JSON.parse(httpGet("/org_api/statistiky"))
+let ucastnici = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_ucastniku"))
+let statistiky = JSON.parse(await awaitable_custom_fetch("/org_api/statistiky"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
 tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])

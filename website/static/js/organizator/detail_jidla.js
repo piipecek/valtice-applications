@@ -1,7 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/org_api/detail_jidla/" + id))
+let data = JSON.parse(await awaitable_custom_fetch("/org_api/detail_jidla/" + id))
 
 for (let key in data) {
     document.getElementById(key).innerText = data[key]

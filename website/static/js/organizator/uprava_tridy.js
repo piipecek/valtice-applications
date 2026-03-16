@@ -1,7 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/org_api/uprava_tridy/" + id))
-let lektori = JSON.parse(httpGet("/org_api/seznam_lektoru_pro_upravu_tridy"))
+let data = JSON.parse(await awaitable_custom_fetch("/org_api/uprava_tridy/" + id))
+let lektori = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_lektoru_pro_upravu_tridy"))
 let has_capacity_select = document.getElementById("has_capacity")
 let capacity_row = document.getElementById("capacity_row")
 

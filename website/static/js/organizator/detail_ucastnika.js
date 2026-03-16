@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/org_api/detail_ucastnika/" + id))
+let data = JSON.parse(await awaitable_custom_fetch("/org_api/detail_ucastnika/" + id))
 
 // jméno
 let full_name = data["name"] + " " + data["surname"]

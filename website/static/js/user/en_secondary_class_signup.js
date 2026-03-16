@@ -1,8 +1,8 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 
-let solove_druhe_tridy_a_kapacity = JSON.parse(httpGet("/user_api/solo_secondary_classes_capacity"))
-let bezkapacitni_druhe_tridy_a_kapacity = JSON.parse(httpGet("/user_api/no_capacity_secondary_classes_capacity"))
-let casove_exklutzivni_druhe_tridy_a_kapacity = JSON.parse(httpGet("/user_api/time_exclusive_secondary_classes_capacity"))
+let solove_druhe_tridy_a_kapacity = JSON.parse(await awaitable_custom_fetch("/user_api/solo_secondary_classes_capacity"))
+let bezkapacitni_druhe_tridy_a_kapacity = JSON.parse(await awaitable_custom_fetch("/user_api/no_capacity_secondary_classes_capacity"))
+let casove_exklutzivni_druhe_tridy_a_kapacity = JSON.parse(await awaitable_custom_fetch("/user_api/time_exclusive_secondary_classes_capacity"))
 let solove_druhe_tridy_div = document.getElementById("solo_secondary_classes")
 let bezkapacitni_druhe_tridy_div = document.getElementById("no_capacity_secondary_classes")
 let casove_exkluzivni_tridy_div = document.getElementById("time_exclusive_classes_div")

@@ -1,6 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
-let uzivatele_pro_udeleni_roli = JSON.parse(httpGet("/org_api/uzivatele_pro_udeleni_roli"))
+
+let uzivatele_pro_udeleni_roli = JSON.parse(await awaitable_custom_fetch("/org_api/uzivatele_pro_udeleni_roli"))
 
 let tc1 = new TableCreator(document.getElementById("parent_div_stavajici"))
 tc1.make_header(["Jméno", "E-mail", "Role", "Změnit role", "Detail"])

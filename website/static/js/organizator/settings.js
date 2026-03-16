@@ -1,6 +1,6 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 
-let settings = JSON.parse(httpGet("/org_api/settings"))
+let settings = JSON.parse(await awaitable_custom_fetch("/org_api/settings"))
 
 
 for (let key in settings) {

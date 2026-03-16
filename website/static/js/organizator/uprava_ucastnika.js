@@ -1,8 +1,8 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 let id = document.getElementById("id_getter").value
-let data = JSON.parse(httpGet("/org_api/uprava_ucastnika/" + id))
-let tridy = JSON.parse(httpGet("/org_api/tridy_pro_upravu_ucastnika"))
-let jidla = JSON.parse(httpGet("/user_api/jidla_pro_upravu_ucastnika")) // pouziva se i v user sekci
+let data = JSON.parse(await awaitable_custom_fetch("/org_api/uprava_ucastnika/" + id))
+let tridy = JSON.parse(await awaitable_custom_fetch("/org_api/tridy_pro_upravu_ucastnika"))
+let jidla = JSON.parse(await awaitable_custom_fetch("/user_api/jidla_pro_upravu_ucastnika")) // pouziva se i v user sekci
 
 let secondary_classes_div = document.getElementById("secondary_classes_div")
 let add_secondary_class_button = document.getElementById("add_secondary_class")

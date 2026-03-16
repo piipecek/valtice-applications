@@ -1,8 +1,7 @@
-import httpGet from "../http_get.js"
+import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
 
-
-let tridy = JSON.parse(httpGet("/org_api/seznam_trid"))
+let tridy = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_trid"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true)
 tc.make_header(["Název", "Lektor", "Počet účastníků"])
