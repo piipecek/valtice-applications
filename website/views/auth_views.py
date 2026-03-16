@@ -141,7 +141,7 @@ def register_child():
             flash("Odpovědná osoba musí být starší 16 let.", category="error")
             return redirect(url_for("auth_views.register_child"))
         if parent.parent:
-            flash("Odpovědná osoba je sama připojena jako dítě.", category="error")
+            flash("Odpovědná osoba je sama připojena jako dítě někoho jiného a proto nemůže být odpovědnou osobou.", category="error")
             return redirect(url_for("auth_views.register_child"))
         
         if not should_have_email_password:
