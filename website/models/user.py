@@ -127,6 +127,7 @@ class User(Common_methods_db_model, UserMixin):
             return None
         return User.get_by_id(data["user_id"])
     
+    
     def get_full_name(self, lang: str = "cz") -> str:
         def is_blank(s):
             return s is None or s.strip() == ""
@@ -193,6 +194,7 @@ class User(Common_methods_db_model, UserMixin):
             ],
         }
         
+        
     @staticmethod
     def get_seznam_pro_udileni_roli() -> list:
         result = []
@@ -205,6 +207,7 @@ class User(Common_methods_db_model, UserMixin):
             }
             result.append(data)
         return result
+
 
     @staticmethod
     def get_seznam_pro_options_na_uprave_tridy() -> list:
@@ -563,6 +566,7 @@ class User(Common_methods_db_model, UserMixin):
             
         return "<br>".join(result)
 
+
     def get_meals_top_visible(self) -> str:
         result_list = []
         if len(self.meal_orders) == 0:
@@ -572,6 +576,7 @@ class User(Common_methods_db_model, UserMixin):
                 entry = f"{meal_order.count}x {meal_order.meal.get_description_cz()}"
                 result_list.append(entry)
             return ", ".join(result_list)
+    
     
     def info_pro_detail(self):
         # ubytovani
@@ -747,6 +752,7 @@ class User(Common_methods_db_model, UserMixin):
             "secondary_classes": [trida.id for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))],
         }
     
+    
     def nacist_zmeny_z_org_requestu(self, request):
         
         if request.form.get("primary_class_id") != str(self.primary_class_id):
@@ -891,6 +897,7 @@ class User(Common_methods_db_model, UserMixin):
                 } for child in self.children
             ] if len(self.children) > 0 else "-",
         }
+        
         
     def info_pro_en_user_detail(self) -> dict:
         kalkulace = self.kalkulace()
@@ -1526,6 +1533,7 @@ class User(Common_methods_db_model, UserMixin):
             
         result["emaily"] = ", ".join(ordered_unique_emails)
         return result
+
 
     def vytvorit_xlsx_seznam(kriteria) -> BytesIO:
         data = User.vytvorit_seznam(kriteria)
