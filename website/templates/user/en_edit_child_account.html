@@ -1,6 +1,8 @@
 {% extends"en_context.html" %}
 {% block content %}
-<h1>Edit personal data</h1>
+<input hidden id="child_id" value="{{id}}">
+<h1>{{name_cz}}</h1>
+<h2>Edit data - <span id="full_name"></span></h2>
 <hr>
 <form method="post">
     <button type="submit" class="custom_button" name="save" value="whatever">Save changes</button>
@@ -228,55 +230,6 @@
 
         
         <hr>
-        {% if "tutor" in roles %}
-            <h2>Tutor information</h2>
-            <div class="row my-1" id="tutor_yes">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Means of travel</div>
-                <div class="col">
-                    <select class="form-select" id="tutor_travel" name="tutor_travel">
-                        <option value="own">own</option>
-                        <option value="public">public</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row my-1">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Car license plate</div>
-                <div class="col">
-                    <input type="text" class="form-control" id="tutor_license_plate" name="tutor_license_plate">
-                </div>
-            </div>
-            <div class="row my-1">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Arrival details</div>
-                <div class="col">
-                <input type="text" class="form-control" id="tutor_arrival" name="tutor_arrival">
-                </div>
-            </div>
-            <div class="row my-1">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Departure details</div>
-                <div class="col">
-                <input type="text" class="form-control" id="tutor_departure" name="tutor_departure">
-                </div>
-            </div>
-            <div class="row my-1">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Accompanying names</div>
-                <div class="col">
-                <input type="text" class="form-control" id="tutor_accompanying_names" name="tutor_accompanying_names">
-                </div>
-            </div>
-            <div class="row my-1">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Address</div>
-                <div class="col">
-                <input type="text" class="form-control" id="tutor_address" name="tutor_address">
-                </div>
-            </div>
-            <div class="row my-1">
-                <div class="col-sm-3 d-flex align-items-center justify-content-between">Bank account number</div>
-                <div class="col">
-                <input type="text" class="form-control" id="tutor_bank_account" name="tutor_bank_account">
-                </div>
-            </div>
-            <hr>
-        {% endif %}
         <h2>Account</h2>
         <div class="row my-1">
             <div class="col-sm-3 d-flex align-items-center justify-content-between">Do I participate this year?</div>
@@ -296,44 +249,19 @@
                 <input type="text" class="form-control" id="new_password" name="new_password">
             </div>
         </div>
-        <div class="row my-1" id="no_parent" hidden>
-            <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a parent account
-                <div class="custom-tooltip">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">If, for example, one person manages the Valtice in one family, they can connect the accounts like this. The parent account can manage its connected accounts.</span>
-                </div>
-            </div>
-            <div class="col">
-                <input type="text" class="form-control" name="parent_email" placeholder="parent's email">
-            </div>
-        </div>
-        <div class="row my-1" id="yes_parent" hidden>
-            <div class="col">
-                This account is managed by <span id="manager_name"></span>. If you wish to unlink these accounts, the parent account must do it.
-            </div>
-        </div>
         <div class="row my-1">
-            <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a child account</div>
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">New account manager</div>
             <div class="col">
-                <input type="text" class="form-control" name="child_first_name" placeholder="first name">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col-2">Child accounts</div>
-            <div class="col" id="children">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col">
-                <small>You can make further changes to managed accounts from <a class="link" href="{{url_for('user_views.en_account')}}">your profile</a>.</small>
+                <input type="text" class="form-control" id="new_manager_email" name="new_manager_email">
             </div>
         </div>
     </div>
 
 </form>
-<form method="post" hidden id="unlink_form">
-    <input type="text" id="unlink_child_id" name="unlink_child_id">
+<form method="post">
+    <button type="submit" class="custom_button" name="unlink" value="whatever">Unlink child account</button>
+    <input hidden type="text" id="unlink_child_id" name="unlink_child_id" value="{{id}}">
 </form>
-<script type="module" src="{{url_for('static', filename='js/user/en_edit_account.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/user/en_edit_child_account.js')}}"></script>
 
 {% endblock %}

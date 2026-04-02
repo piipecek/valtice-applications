@@ -1,64 +1,67 @@
 {% extends "cz_context.html" %}
 
 {% block content %}
-<h1>Účet - <span id="full_name"></span></h1>
-<p>
-    Tento účet se mezi ročníky zachovává. Vaše účast na daném ročníku je daná tím, zda se zapíšete do některé třídy.
-</p>
+<input hidden id="child_id" value="{{id}}">
+<h1>{{name_en}}</h1>
+<h2>Account detail <span id="full_name"></span></h2>
 <hr>
-{% if is_locked %}
+<div id="locked_yes" hidden>
     <p>
-        Váš účet má uzamčené změny, nejspíše proto, že termín MLŠSH se blíží. Pokud si přejete provést nějaké změny, kontaktujte pořadatele.
+        This account has locked changes, probably because the ISSEM deadline is approaching. If you want to make any changes, please contact the organizer.
     </p>
-{% else %}
-    <a href="{{url_for('user_views.edit_account')}}">
-        <button class="custom_button" type="button">Upravit údaje</button>
+</div>
+<div id="locked_no" hidden>
+    <a href="{{url_for('user_views.en_edit_child_account', id=id)}}">
+        <button class="custom_button" type="button">Edit child's information</button>
     </a>
-{% endif %}
+</div>
+<form method="post">
+    <button class="custom_button my-1" type="submit" name="child_id" value="{{id}}">Log in as this account</button>
+</form>
 
 <hr>
-<h2>Valtické informace</h2>
+<h2>ISSEM Information</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
             <tr id="primary_class_row" hidden>
-                <td class="pravy_text">Hlavní třída</td> 
+                <td class="pravy_text">Primary Class</td> 
                 <td id="primary_class" colspan="2"></td>
             </tr>
             <tr id="secondary_class_row" hidden>
-                <td class="pravy_text">Vedlejší třídy</td>
+                <td class="pravy_text">Secondary Classes</td>
                 <td id="secondary_classes" colspan="2"></td>
             </tr>
             <tr id="no_class_row" hidden>
-                <td class="pravy_text">Třídy</td>
-                <td colspan="2">Zde se zobrazují informace o zapsaných třídách pro aktivní účastníky.</td>
+                <td class="pravy_text">Classes</td>
+                <td colspan="2">This is where class info is displayed for active participants.</td>
             </tr>
             <tr>
-                <td class="pravy_text">Člen SSH</td>
+                <td class="pravy_text">EMS member</td>
                 <td id="is_ssh_member" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Účast</td>
+                <td class="pravy_text">Participation</td>
                 <td id="is_active_participant" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Student ZUŠ Valtice / Mikulov</td>
+                <td class="pravy_text">Student of ZUŠ Valtice / Mikulov</td>
                 <td id="is_student_of_partner_zus" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Hudební vzdělání</td>
+                <td class="pravy_text">Musical Education</td>
                 <td id="musical_education" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Nástroj</td>
+                <td class="pravy_text">Musical Instrument</td>
                 <td id="musical_instrument" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Repertoár</td>
+                <td class="pravy_text">Repertoire</td>
                 <td id="repertoire" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Uživatelská poznámka</td>
+                <td class="pravy_text">Comment</td>
                 <td id="comment" colspan="2"></td>
             </tr>
         </tbody>
@@ -66,7 +69,7 @@
 </div>
 <div id="child_accounts" hidden>
     <hr>
-    <h2>Dětské účty</h2>
+    <h2>Child Accounts</h2>
     <div class="table-responsive">
         <table class="table table-hover table-striped">
             <tbody id="children_tbody">
@@ -75,16 +78,16 @@
     </div>
 </div>
 <hr>
-<h2>Osobní informace</h2>
+<h2>Personal Information</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="pravy_text">Jméno</td>
+                <td class="pravy_text">Name</td>
                 <td id="name" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Příjmení</td>
+                <td class="pravy_text">Surname</td>
                 <td id="surname" colspan="2"></td>
             </tr>
             <tr>
@@ -92,11 +95,11 @@
                 <td id="email" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Telefon</td>
+                <td class="pravy_text">Phone</td>
                 <td id="phone" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Datum narození</td>
+                <td class="pravy_text">Date of Birth</td>
                 <td id="date_of_birth"></td>
             </tr>
             <tr>
@@ -104,101 +107,101 @@
                 <td id="is_student" colspan="2"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Věková kategorie</td>
+                <td class="pravy_text">Age Category</td>
                 <td id="age_category"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Číslo OP / pasu</td>
+                <td class="pravy_text">ID / Passport Number</td>
                 <td id="passport_number"></td>
             </tr>
         </tbody>
     </table>
 </div>
 <hr>
-<h2>Ubytování</h2>
+<h2>Accommodation</h2>
 <p id="accomodation_message"></p>
 <hr>
-<h2>Strava</h2>
+<h2>Food</h2>
 <div class="table-responsive" id="strava_yes" hidden>
     <table class="table table-hover table-striped">
         <thead>
             <tr>
-                <th>Popis</th>
-                <th>Počet sad</th>
+                <th>Description</th>
+                <th>Number of sets</th>
             </tr>
         <tbody id="meals"></tbody>
     </table>
 </div>
 <p id="strava_no" hidden>
-    Stravu si zařizujete samostatně.
+    You manage the food yourself.
 </p>
 <hr>
-<h2>Finance</h2>
+<h2>Billing</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="pravy_text">Placeno dne</td>
+                <td class="pravy_text">Payment date</td>
                 <td id="billing_date_paid"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Celková částka</td>
+                <td class="pravy_text">Total fee</td>
                 <td id="billing_celkem"></td>
                 <td></td>
             </tr>
             <tr id="billing_primary_class_row" hidden>
-                <td class="pravy_text">Hlavní třída</td>
+                <td class="pravy_text">Main class</td>
                 <td id="billing_hlavni_trida"></td>
                 <td></td>
             </tr>
             <tr id="billing_secondary_class_row" hidden>
-                <td class="pravy_text">Vedlejší třídy</td>
+                <td class="pravy_text">Secondary classes</td>
                 <td id="billing_vedlejsi_tridy"></td>
                 <td></td>
             </tr>
             <tr id="billing_passive_row" hidden>
-                <td class="pravy_text">Pasivní účast</td>
+                <td class="pravy_text">Passive participation</td>
                 <td id="billing_pasivni_ucast"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Ubytování</td>
+                <td class="pravy_text">Accommodation</td>
                 <td id="billing_ubytovani"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Snídaně</td>
+                <td class="pravy_text">Breakfast</td>
                 <td id="billing_snidane"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Obědy</td>
+                <td class="pravy_text">Lunch</td>
                 <td id="billing_obedy"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Večeře</td>
+                <td class="pravy_text">Dinner</td>
                 <td id="billing_vecere"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Dar</td>
+                <td class="pravy_text">Donation</td>
                 <td id="billing_dar"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Korekce kurzovné</td>
+                <td class="pravy_text">Course fee correction</td>
                 <td id="billing_correction"></td>
                 <td id="billing_correction_reason"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Korekce strava</td>
+                <td class="pravy_text">Food fee correction</td>
                 <td id="billing_food_correction"></td>
                 <td id="billing_food_correction_reason"></td>
             </tr>
             <tr>
-                <td class="pravy_text">Korekce ubytko</td>
+                <td class="pravy_text">Accommodation correction</td>
                 <td id="billing_accomodation_correction"></td>
                 <td id="billing_accomodation_correction_reason"></td>
             </tr>
@@ -209,105 +212,63 @@
 <form method="post">
     <div class="row">
         <div class="col">
-            Pokud jste si jistí, že všechny údaje souhlasí, můžete si kalkulaci odeslat na vlastní e-mail kliknutím na tlačítko "Odeslat kalkulaci".
+            You can send the calculation to your e-mail by clicking the "Send calculation" button if you are sure that all data is correct.
         </div>
         <div class="col-auto">
-            <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Odeslat kalkulaci</button><br>
+            <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Send calculation</button><br>
         </div>
     </div>
 </form>
 {% endif %}
 <hr>
-{% if "tutor" in roles %}
-    <h2>Lektorské informace</h2>
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
-            <tbody>
-                <tr>
-                    <td class="pravy_text">Způsob dopravy</td>
-                    <td id="tutor_travel"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Registrační značka vozidla</td>
-                    <td id="tutor_license_plate"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Příjezd</td>
-                    <td id="tutor_arrival"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Odjezd</td>
-                    <td id="tutor_departure"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Jména doprovodu</td>
-                    <td id="tutor_accompanying_names"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Adresa</td>
-                    <td id="tutor_address"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Bankovní účet</td>
-                    <td id="tutor_bank_account"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <hr>
-{% endif %}
 
-<h2>Přístup k účtu</h2>
+<h2>Account</h2>
 <div class="table-responsive">
     <table class="table table-hover table-striped">
         <tbody>
             <tr>
-                <td class="d-flex justify-content-between">Jste letošním účastníkem?
+                <td class="d-flex justify-content-between">Do I participate in this year?
                     <div class="custom-tooltip">
                         <i class="fa-solid fa-circle-info"></i>
-                        <span class="custom-tooltiptext">Při dalším ročníku byste byli tázáni, zda si přejete účastnit znovu, protože účty se zachovávají.</span>
+                        <span class="custom-tooltiptext">In the next year, you will be asked if you want to participate again, because accounts are preserved.</span>
                     </div>
                 </td>
                 <td id="is_this_year_participant"></td>
             </tr>
             <tr>
-                <td>Musíte při dalším přihlášení změnit heslo?</td>
+                <td>Do I need to change my password at the next login?</td>
                 <td id="must_change_password_upon_login"></td>
             </tr>
             <tr>
-                <td>Máte ověřený e-mail?</td>
+                <td>Do I have a confirmed email?</td>
                 <td id="confirmed_email"></td>
             </tr>
             <tr>
-                <td class="d-flex justify-content-between">Máte uzamčené změny účtu?
+                <td class="d-flex justify-content-between">Do I have locked account changes?
                     <div class="custom-tooltip">
                         <i class="fa-solid fa-circle-info"></i>
-                        <span class="custom-tooltiptext">Než ročník započne, uzamkneme změnu některých údajů na všech účtech.</span>
+                        <span class="custom-tooltiptext">Before the year starts, we will lock changes to certain details on all accounts.</span>
                     </div>
                 </td>
                 <td id="is_locked"></td>
             </tr>
             <tr>
-                <td>Datum vytvoření účtu</td>
+                <td>Account creation date</td>
                 <td id="datetime_created" colspan="2"></td>
             </tr>
             <tr>
-                <td class="d-flex justify-content-between">Datum registrace ve Valticích
+                <td class="d-flex justify-content-between">Registration date in Valtice
                     <div class="custom-tooltip">
                         <i class="fa-solid fa-circle-info"></i>
-                        <span class="custom-tooltiptext">Po příjezdu do Valtic se musíte odprezentovat.</span>
+                        <span class="custom-tooltiptext">You must present yourself at the arrival to Valtice.</span>
                     </div>
                 </td>
                 <td id="datetime_registered" colspan="2"></td>
             </tr>
             <tr>
                 <td>
-                    Nadřazený účet<br>
-                    {% if session.parent_id %}
-                        <a href="{{url_for('user_views.return_to_parent')}}" class="link">Zpět jako rodič</a>
-                    {% else %}
-                        <small id="parent_hint" hidden>Pokud se chcete přihlásit jako nadřazený účet, <a class="link" href="{{url_for('auth_views.logout')}}">nejdříve se odhlašte</a>.</small>
-                    {% endif %}
+                    Parent account<br>
+                    <small id="parent_hint" hidden>You are currently logged in as this parent :)</small>
                 </td>
                 <td id="parent" colspan="2"></td>
             </tr>
@@ -315,7 +276,7 @@
     </table>
 </div>
 
-<script type="module" src="{{url_for('static', filename='js/user/cz_account.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/user/en_child_account.js')}}"></script>
 
 
 {% endblock %}

@@ -837,6 +837,7 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
+            "full_name": self.get_full_name("cz"),
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
@@ -906,6 +907,7 @@ class User(Common_methods_db_model, UserMixin):
         return {
             "name": self.name if self.name else "-",
             "surname": self.surname if self.surname else "-",
+            "full_name": self.get_full_name("en"),
             "email": self.email,
             "phone": self.phone if self.phone else "-",
             "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
@@ -968,6 +970,118 @@ class User(Common_methods_db_model, UserMixin):
         }
         
         
+    def info_for_child_detail(self) -> dict:
+        kalkulace = self.kalkulace()
+        ubytovani = self.ubytovani()
+        return {
+            "name": self.name if self.name else "-",
+            "surname": self.surname if self.surname else "-",
+            "full_name": self.get_full_name("cz"),
+            "email": self.email,
+            "phone": self.phone if self.phone else "-",
+            "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
+            "is_student": "Ano" if self.is_student else "Ne",
+            "age_category": "Do 15 let včetně" if self.is_under_16 else "16 a více let",
+            "passport_number": self.passport_number if self.passport_number else "-",
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
+            "accomodation_message": ubytovani["accomodation_message_cz"],
+            "musical_education": self.musical_education if self.musical_education else "-",
+            "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
+            "repertoire": self.repertoire if self.repertoire else "-",
+            "comment": self.comment if self.comment else "-",
+            "wants_meals": self.meals,
+            "meals": [
+                {
+                    "popis": meal_order.meal.get_description_cz(),
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
+            "primary_class": self.primary_class.full_name_cz if self.primary_class else "-",
+            "secondary_classes": "\n".join([trida.full_name_cz for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_cz))]) if self.secondary_classes else "-",
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
+            "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
+            "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
+            "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
+            "billing_vedlejsi_tridy": "\n".join([trida.full_name_cz + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
+            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
+            "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
+            "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
+            "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
+            "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
+            "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
+            "billing_correction_reason": self.billing_correction_reason,
+            "billing_food_correction": pretty_penize(self.billing_food_correction, self.billing_currency),
+            "billing_food_correction_reason": self.billing_food_correction_reason,
+            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
+            "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
+            "must_change_password_upon_login": "Ano" if self.must_change_password_upon_login else "Ne",
+            "confirmed_email": "Ano" if self.confirmed_email else "Ne",
+            "is_locked": "Ano" if self.is_locked else "Ne",
+            "datetime_created": pretty_datetime(self.datetime_created),
+            "parent": self.parent.get_full_name("cz") if self.parent else "-",
+        }
+    
+        
+    def info_for_en_child_detail(self) -> dict:
+        kalkulace = self.kalkulace()
+        ubytovani = self.ubytovani()
+        return {
+            "name": self.name if self.name else "-",
+            "surname": self.surname if self.surname else "-",
+            "full_name": self.get_full_name("en"),
+            "email": self.email,
+            "phone": self.phone if self.phone else "-",
+            "date_of_birth": pretty_date(self.date_of_birth) if self.date_of_birth else "-",
+            "is_student": "Yes" if self.is_student else "No",
+            "age_category": "Up to 15 years inclusive" if self.is_under_16 else "16 and above",
+            "passport_number": self.passport_number if self.passport_number else "-",
+            "is_this_year_participant": "Yes" if self.is_this_year_participant else "No",
+            "is_ssh_member": "Yes" if self.is_ssh_member else "No",
+            "is_active_participant": "active" if self.is_active_participant else "inactive",
+            "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
+            "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
+            "accomodation_message": ubytovani["accomodation_message_en"],
+            "musical_education": self.musical_education if self.musical_education else "-",
+            "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
+            "repertoire": self.repertoire if self.repertoire else "-",
+            "comment": self.comment if self.comment else "-",
+            "wants_meals": self.meals,
+            "meals": [
+                {
+                    "popis": meal_order.meal.get_description_en(),
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
+            "primary_class": self.primary_class.full_name_en if self.primary_class else "-",
+            "secondary_classes": "\n".join([trida.full_name_en for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_en))]) if self.secondary_classes else "-",
+            "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
+            "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
+            "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
+            "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
+            "billing_vedlejsi_tridy": "\n".join([trida.full_name_en + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
+            "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
+            "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
+            "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
+            "billing_vecere": pretty_penize(kalkulace["vecere"], self.billing_currency),
+            "billing_dar": pretty_penize(kalkulace["dar"], self.billing_currency),
+            "billing_correction": pretty_penize(self.billing_correction, self.billing_currency),
+            "billing_correction_reason": self.billing_correction_reason,
+            "billing_food_correction": pretty_penize(self.billing_food_correction, self.billing_currency),
+            "billing_food_correction_reason": self.billing_food_correction_reason,
+            "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
+            "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
+            "must_change_password_upon_login": "Yes" if self.must_change_password_upon_login else "No",
+            "confirmed_email": "Yes" if self.confirmed_email else "No",
+            "is_locked": "Yes" if self.is_locked else "No",
+            "datetime_created": pretty_datetime(self.datetime_created),
+            "parent": self.parent.get_full_name("en") if self.parent else "-",
+        }    
+        
+        
     def info_pro_user_upravu(self) -> dict:
         zmena_ucasti = "povolena"
         if any([self.primary_class, self.secondary_classes]):
@@ -994,7 +1108,7 @@ class User(Common_methods_db_model, UserMixin):
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
             "passport_number": self.passport_number if self.passport_number else "",
-            "zmena_letosni_ucasti": zmena_ucasti, # zmena aaktivni a pasivni je take podminena zadnejma tridama
+            "zmena_letosni_ucasti": zmena_ucasti, # zmena aktivni a pasivni je take podminena zadnejma tridama
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
@@ -1060,7 +1174,7 @@ class User(Common_methods_db_model, UserMixin):
             "zmena_kategorie": zmena_kategorie,
             "age_category": "child" if self.is_under_16 else "adult",
             "passport_number": self.passport_number if self.passport_number else "",
-            "zmena_letosni_ucasti": zmena_ucasti, # zmena aaktivni a pasivni je take podminena zadnejma tridama
+            "zmena_letosni_ucasti": zmena_ucasti, # zmena aktivni a pasivni je take podminena zadnejma tridama
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "active" if self.is_active_participant else "passive",
@@ -1099,6 +1213,57 @@ class User(Common_methods_db_model, UserMixin):
             ]
         }  
     
+    
+    def info_for_child_edit(self): # stejny a pouzivany pro en 
+        zmena_ucasti = "povolena"
+        if any([self.primary_class, self.secondary_classes]):
+            zmena_ucasti = "zakázána"
+            
+        zmena_kategorie = "povolena"
+        tridy = []
+        if self.primary_class:
+            tridy.append(self.primary_class)
+        for t in self.secondary_classes:
+            tridy.append(t)
+        for trida in tridy:
+            if trida.age_group != "both":
+                zmena_kategorie = "zakázána"
+                break
+        
+        return {
+            "name": self.name if self.name else "",
+            "surname": self.surname if self.surname else "",
+            "full_name": self.get_full_name("cz"),
+            "email": self.email,
+            "phone": self.phone,
+            "date_of_birth": self.date_of_birth.strftime("%Y-%m-%d") if self.date_of_birth else None,
+            "is_student": "Ano" if self.is_student else "Ne",
+            "zmena_kategorie": zmena_kategorie,
+            "age_category": "child" if self.is_under_16 else "adult",
+            "passport_number": self.passport_number if self.passport_number else "",
+            "zmena_letosni_ucasti": zmena_ucasti, # zmena aktivni a pasivni je take podminena zadnejma tridama
+            "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
+            "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
+            "is_active_participant": "active" if self.is_active_participant else "passive",
+            "zmena_ucasti": zmena_ucasti,
+            "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "zmena_ubytka": zmena_ucasti,
+            "accomodation_type": self.accomodation_type,
+            "accomodation_count": self.accomodation_count,
+            "musical_education": self.musical_education,
+            "musical_instrument": self.musical_instrument,
+            "repertoire": self.repertoire,
+            "comment": self.comment,
+            "wants_meal": "ano" if self.meals else "ne",
+            "meals": [
+                {
+                    "meal_id": meal_order.meal_id,
+                    "count": meal_order.count
+                } for meal_order in sorted(self.meal_orders)
+            ],
+            "billing_currency": self.billing_currency,
+            "billing_gift": self.billing_gift,
+        }   
     
     def nacist_zmeny_z_user_requestu(self, request):
         self.name = request.form.get("name")

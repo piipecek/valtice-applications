@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 from website.models.trida import Trida
 from website.models.meal import Meal
+from website.models.user import User
 import czech_sort
 from datetime import datetime
 
@@ -21,10 +22,37 @@ def en_ucet():
     return json.dumps(current_user.info_pro_en_user_detail())
 
 
+@user_api.route("/child_account/<int:child_id>", methods=["GET"])
+@login_required
+def child_account(child_id):
+    child = User.get_by_id(child_id)
+    if child and child.parent_id == current_user.id:
+        return json.dumps(child.info_for_child_detail())
+    return json.dumps({"error": "Child not found"}), 404
+
+
+@user_api.route("/en_child_account/<int:child_id>", methods=["GET"])
+@login_required
+def en_child_account(child_id):
+    child = User.get_by_id(child_id)
+    if child and child.parent_id == current_user.id:
+        return json.dumps(child.info_for_en_child_detail())
+    return json.dumps({"error": "Child not found"}), 404
+
+
 @user_api.route("/uprava_uctu", methods=["GET"])
 @login_required
 def uprava_uctu():
     return json.dumps(current_user.info_pro_user_upravu())
+
+
+@user_api.route("/edit_child_account/<int:child_id>", methods=["GET"]) # used for en as well
+@login_required
+def edit_child_account(child_id):
+    child = User.get_by_id(child_id)
+    if child and child.parent_id == current_user.id:
+        return json.dumps(child.info_for_child_edit())
+    return json.dumps({"error": "Child not found"}), 404
 
 
 @user_api.route("/en_uprava_uctu", methods=["GET"])

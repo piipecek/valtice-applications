@@ -1,20 +1,23 @@
 {% extends "cz_context.html" %}
 
 {% block content %}
-<h1>Účet - <span id="full_name"></span></h1>
-<p>
-    Tento účet se mezi ročníky zachovává. Vaše účast na daném ročníku je daná tím, zda se zapíšete do některé třídy.
-</p>
+<input hidden id="child_id" value="{{id}}">
+<h1>{{name_cz}}</h1>
+<h2>Detail účtu <span id="full_name"></span></h2>
 <hr>
-{% if is_locked %}
+<div id="locked_yes" hidden>
     <p>
-        Váš účet má uzamčené změny, nejspíše proto, že termín MLŠSH se blíží. Pokud si přejete provést nějaké změny, kontaktujte pořadatele.
+        Tento účet má uzamčené změny, nejspíše proto, že termín MLŠSH se blíží. Pokud si přejete provést nějaké změny, kontaktujte pořadatele.
     </p>
-{% else %}
-    <a href="{{url_for('user_views.edit_account')}}">
-        <button class="custom_button" type="button">Upravit údaje</button>
+</div>
+<div id="locked_no" hidden>
+    <a href="{{url_for('user_views.edit_child_account', id=id)}}">
+        <button class="custom_button" type="button">Upravit údaje dítěte</button>
     </a>
-{% endif %}
+</div>
+<form method="post">
+    <button class="custom_button my-1" type="submit" name="child_id" value="{{id}}">Přihlásit se jako tento účet</button>
+</form>
 
 <hr>
 <h2>Valtické informace</h2>
@@ -63,16 +66,6 @@
             </tr>
         </tbody>
     </table>
-</div>
-<div id="child_accounts" hidden>
-    <hr>
-    <h2>Dětské účty</h2>
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
-            <tbody id="children_tbody">
-            </tbody>
-        </table>
-    </div>
 </div>
 <hr>
 <h2>Osobní informace</h2>
@@ -218,44 +211,6 @@
 </form>
 {% endif %}
 <hr>
-{% if "tutor" in roles %}
-    <h2>Lektorské informace</h2>
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
-            <tbody>
-                <tr>
-                    <td class="pravy_text">Způsob dopravy</td>
-                    <td id="tutor_travel"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Registrační značka vozidla</td>
-                    <td id="tutor_license_plate"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Příjezd</td>
-                    <td id="tutor_arrival"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Odjezd</td>
-                    <td id="tutor_departure"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Jména doprovodu</td>
-                    <td id="tutor_accompanying_names"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Adresa</td>
-                    <td id="tutor_address"></td>
-                </tr>
-                <tr>
-                    <td class="pravy_text">Bankovní účet</td>
-                    <td id="tutor_bank_account"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <hr>
-{% endif %}
 
 <h2>Přístup k účtu</h2>
 <div class="table-responsive">
@@ -303,11 +258,7 @@
             <tr>
                 <td>
                     Nadřazený účet<br>
-                    {% if session.parent_id %}
-                        <a href="{{url_for('user_views.return_to_parent')}}" class="link">Zpět jako rodič</a>
-                    {% else %}
-                        <small id="parent_hint" hidden>Pokud se chcete přihlásit jako nadřazený účet, <a class="link" href="{{url_for('auth_views.logout')}}">nejdříve se odhlašte</a>.</small>
-                    {% endif %}
+                    <small id="parent_hint" hidden>Aktuálně jste přihlášen jako tento rodič :)</small>
                 </td>
                 <td id="parent" colspan="2"></td>
             </tr>
@@ -315,7 +266,7 @@
     </table>
 </div>
 
-<script type="module" src="{{url_for('static', filename='js/user/cz_account.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/user/cz_child_account.js')}}"></script>
 
 
 {% endblock %}

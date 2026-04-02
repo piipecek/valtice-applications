@@ -37,28 +37,34 @@ for (let key in data) {
         }
     } else if (key == "children") {
         if (data["children"] == "-") {
-            document.getElementById(key).innerText = "-"
         } else {
+            document.getElementById("child_accounts").hidden = false
             for (let child of data["children"]) {
-                let child_button = document.createElement("button")
-                child_button.innerText = child["full_name"]
-                child_button.classList.add("custom_button", "my-1")
-                child_button.type = "submit"
-                child_button.name = "child_id"
-                child_button.value = child["id"]
-                child_button.innerText = "Přihlásit se jako " + child["full_name"]
-
-                document.getElementById(key).appendChild(child_button)
-                document.getElementById(key).appendChild(document.createElement("br"))
+                let tr = document.createElement("tr")
+                let td1 = document.createElement("td")
+                td1.innerText = child["full_name"]
+                let td2 = document.createElement("td")
+                let a = document.createElement("a")
+                a.href = "/user/cz_child_account/" + child["id"]
+                let button = document.createElement("button")
+                button.classList.add("custom_button")
+                button.type = "button"
+                button.innerText = "Náhled účtu"
+                a.appendChild(button)
+                td2.appendChild(a)
+                tr.appendChild(td1)
+                tr.appendChild(td2)
+                document.getElementById("children_tbody").appendChild(tr)
             }
-            document.getElementById(key).lastChild.remove()
         }
     } else if (key == "parent") {
         document.getElementById(key).innerText = data[key]
-        if (data[key] == "-") {
-            document.getElementById("parent_hint").hidden = true
-        } else {
-            document.getElementById("parent_hint").hidden = false
+        if (document.getElementById("parent_hint")) {
+            if (data[key] == "-") {
+                document.getElementById("parent_hint").hidden = true
+            } else {
+                document.getElementById("parent_hint").hidden = false
+            }
         }
     } else {
         document.getElementById(key).innerText = data[key]

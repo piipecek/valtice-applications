@@ -1,15 +1,22 @@
 import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
-let data = JSON.parse(await awaitable_custom_fetch("/user_api/en_ucet"))
-
+let id = document.getElementById("child_id").value
+let data = JSON.parse(await awaitable_custom_fetch("/user_api/en_child_account/" + id))
 
 for (let key in data) {
     if (key.includes("tutor")) {
         if (document.getElementById(key)) {
             document.getElementById(key).innerText = data[key]
         }
+    } else if (key == "is_locked") {
+        document.getElementById(key).innerText = data[key]
+        if (data[key] == "Ano") {
+            document.getElementById("locked_yes").hidden = false
+        } else {
+            document.getElementById("locked_no").hidden = false
+        }
     } else if (key == "is_active_participant") {
         document.getElementById(key).innerText = data[key]
-        if (data[key] == "active") {
+        if (data[key] == "aktivní") {
             document.getElementById("billing_primary_class_row").hidden = false
             document.getElementById("billing_secondary_class_row").hidden = false
             document.getElementById("primary_class_row").hidden = false
@@ -35,36 +42,12 @@ for (let key in data) {
             tr.appendChild(td2)
             document.getElementById("meals").appendChild(tr)
         }
-    } else if (key == "children") {
-        if (data["children"] == "-") {
-        } else {
-            document.getElementById("child_accounts").hidden = false
-            for (let child of data["children"]) {
-                let tr = document.createElement("tr")
-                let td1 = document.createElement("td")
-                td1.innerText = child["full_name"]
-                let td2 = document.createElement("td")
-                let a = document.createElement("a")
-                a.href = "/user/en_child_account/" + child["id"]
-                let button = document.createElement("button")
-                button.classList.add("custom_button")
-                button.type = "button"
-                button.innerText = "View account"
-                a.appendChild(button)
-                td2.appendChild(a)
-                tr.appendChild(td1)
-                tr.appendChild(td2)
-                document.getElementById("children_tbody").appendChild(tr)
-            }
-        }
     } else if (key == "parent") {
         document.getElementById(key).innerText = data[key]
-        if (document.getElementById("parent_hint")) {
-            if (data[key] == "-") {
-                document.getElementById("parent_hint").hidden = true
-            } else {
-                document.getElementById("parent_hint").hidden = false
-            }
+        if (data[key] == "-") {
+            document.getElementById("parent_hint").hidden = true
+        } else {
+            document.getElementById("parent_hint").hidden = false
         }
     } else {
         document.getElementById(key).innerText = data[key]

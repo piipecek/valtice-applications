@@ -1,7 +1,7 @@
 {% extends "en_context.html" %}
 
 {% block content %}
-<h1>Account - {{name_cz}}</h1>
+<h1>Account - <span id="full_name"></span></h1>
 <p>
     This account is preserved through out years. Your participation in a given year is determined by whether you sign up for a class.
 </p>
@@ -63,6 +63,16 @@
             </tr>
         </tbody>
     </table>
+</div>
+<div id="child_accounts" hidden>
+    <hr>
+    <h2>Child accounts</h2>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <tbody id="children_tbody">
+            </tbody>
+        </table>
+    </div>
 </div>
 <hr>
 <h2>Personal information</h2>
@@ -173,7 +183,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="pravy_text">Gift</td>
+                <td class="pravy_text">Donation</td>
                 <td id="billing_dar"></td>
                 <td></td>
             </tr>
@@ -293,16 +303,13 @@
             <tr>
                 <td class="d-flex justify-content-between">
                     Parent account<br>
-                    <small id="parent_hint" hidden>If you want to log-in as a parent account, you need to <a class="link" href="{{url_for('auth_views.logout')}}">log-out first</a>.</small>
+                    {% if session.parent_id %}
+                        <a href="{{url_for('user_views.return_to_parent')}}" class="link">Return as parent</a>
+                    {% else %}
+                        <small id="parent_hint" hidden>If you want to log-in as a parent account, you need to <a class="link" href="{{url_for('auth_views.logout')}}">log-out first</a>.</small>
+                    {% endif %}
                 </td>
                 <td id="parent" colspan="2"></td>
-            </tr>
-            <tr>
-                <td>Child accounts</td>
-                <td colspan="2">
-                    <form method="post" id="children">
-                    </form>
-                </td>
             </tr>
         </tbody>
     </table>
