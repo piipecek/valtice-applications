@@ -10,18 +10,36 @@
 </p>
 <form method="post" id="form">
     <div class="row">
-        <div class="col-auto">
-            E-mail odpovědné osoby:
+        <div class="col-auto d-flex align-items-center justify-content-between">
+            E-mail odpovědné osoby
         </div>
         <div class="col">
-            <input type="email" name="email_odpovedne" id="email_odpovedne" maxlength="100" class="form-control"/>
+            <input type="email" name="email_odpovedne" id="email_odpovedne" maxlength="100" class="form-control" required/>
         </div>
     </div>
-    <p>
+    <small>
         Na tento e-mail přijde oznámení o tom, že k němu bylo přiřazené dítě.
-    </p>
+    </small>
+    <div class="row my-1">
+        <div class="col-sm-3 d-flex align-items-center justify-content-between">Jméno</div>
+        <div class="col">
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm-3 d-flex align-items-center justify-content-between">Příjmení</div>
+        <div class="col">
+            <input type="text" class="form-control" id="surname" name="surname" required>
+        </div>
+    </div>
+    <div class="row my-1">
+        <div class="col-sm-3 d-flex align-items-center justify-content-between">Datum narození</div>
+        <div class="col">
+        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-auto">
+        <div class="col-auto d-flex align-items-center justify-content-between">
             Má mít dítě vlastní e-mail a heslo?
         </div>
         <div class="col">
@@ -36,7 +54,7 @@
         <hr>
         <div class="row my-1">
             <div class="col-sm-3">
-                E-mail dětského účastníka:
+                E-mail dětského účastníka
             </div>
             <div class="col">
                 <input type="email" name="email" maxlength="100" class="form-control"/>
@@ -44,7 +62,7 @@
         </div>
         <div class="row my-1">
             <div class="col-sm-3">
-                Heslo dětského účastníka:
+                Heslo dětského účastníka
             </div>
             <div class="col">
                 <input type="password" name="password" minlength="6" maxlength="300" class="form-control"/>	

@@ -6,6 +6,7 @@ from flask_login import login_required, logout_user, current_user
 from website.mail_handler import mail_sender
 import requests
 import os
+from datetime import datetime
 
 
 auth_views = Blueprint("auth_views",__name__, template_folder="auth")
@@ -88,10 +89,16 @@ def register_adult():
         result = r.json()
         
         if not result.get('success'):
-            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
+            flash("reCAPTCHA ověření selhalo. Zkuste to prosím znovu.", category="error")
+            return redirect(url_for("auth_views.register_adult"))
+        
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
+        name = request.form.get("name")
+        surname = request.form.get("surname")
+        date_of_birth = request.form.get("date_of_birth")
+        
         if password != confirm:
             flash("Hesla se neshodují.", category="error")
             return redirect(url_for("auth_views.register_adult"))
@@ -101,8 +108,14 @@ def register_adult():
         elif User.get_by_email(email=email):
             flash("Uživatel s tímto e-mailem již existuje.", category="error")
             return redirect(url_for("auth_views.register_adult"))
+        if not name or not surname or not date_of_birth:
+            flash("Jméno, příjmení a datum narození musí být vyplněny.", category="error")
+            return redirect(url_for("auth_views.register_adult"))
         else:
             user = User(email=email, password=generate_password_hash(password, method="scrypt"))
+            user.name = name
+            user.surname = surname
+            user.date_of_birth = datetime.strptime(date_of_birth, "%Y-%m-%d")
             user.update()
             user.login()
             mail_sender(mail_identifier="confirm_email", target=user.email, data=user.get_reset_token())
@@ -127,12 +140,17 @@ def register_child():
         result = r.json()
         
         if not result.get('success'):
-            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
+            flash("reCAPTCHA ověření selhalo. Zkuste to prosím znovu.", category="error")
+            return redirect(url_for("auth_views.register_child"))
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
         should_have_email_password = True if request.form.get("child_select") == "ano" else False
         parent_email = request.form.get("email_odpovedne")
+        name = request.form.get("name")
+        surname = request.form.get("surname")
+        date_of_birth = request.form.get("date_of_birth")
+        
         parent = User.get_by_email(email=parent_email)
         if parent is None:
             flash("E-mail odpovědné osoby nebyl nalezen.", category="error")
@@ -143,12 +161,19 @@ def register_child():
         if parent.parent:
             flash("Odpovědná osoba je sama připojena jako dítě někoho jiného a proto nemůže být odpovědnou osobou.", category="error")
             return redirect(url_for("auth_views.register_child"))
+        if not name or not surname or not date_of_birth:
+            flash("Jméno, příjmení a datum narození musí být vyplněny.", category="error")
+            return redirect(url_for("auth_views.register_child"))
+        
+        user = User()
+        user.parent = parent
+        user.is_under_16 = True
+        user.name = name
+        user.surname = surname
+        user.date_of_birth = datetime.strptime(date_of_birth, "%Y-%m-%d")
         
         if not should_have_email_password:
-            user = User()
-            user.parent = parent
             mail_sender(mail_identifier="cz_new_child", target=parent_email)
-            user.is_under_16 = True
             user.update()
             user.login()
             flash("Registrace byla úspěšná. Můžete pokračovat vyplňováním osobních údajů.", category="success")
@@ -164,9 +189,6 @@ def register_child():
                 flash("Uživatel s tímto e-mailem již existuje.", category="error")
                 return redirect(url_for("auth_views.register_child"))
         
-            user = User()
-            user.parent = parent
-            user.is_under_16 = True
             user.email = email
             user.password = generate_password_hash(password, method="scrypt")
             user.update()
@@ -205,10 +227,16 @@ def en_register_adult():
         result = r.json()
         
         if not result.get('success'):
-            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
+            flash("reCAPTCHA verification failed. Please try again.", category="error")
+            return redirect(url_for("auth_views.en_register_adult"))
+        
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
+        name = request.form.get("name")
+        surname = request.form.get("surname")
+        date_of_birth = request.form.get("date_of_birth")
+        
         if password != confirm:
             flash("Passwords do not match.", category="error")
             return redirect(url_for("auth_views.en_register_adult"))
@@ -218,8 +246,14 @@ def en_register_adult():
         elif User.get_by_email(email=email):
             flash("User with this e-mail already exists.", category="error")
             return redirect(url_for("auth_views.en_register_adult"))
+        if not name or not surname or not date_of_birth:
+            flash("Name, surname and date of birth must be filled in.", category="error")
+            return redirect(url_for("auth_views.en_register_adult"))
         else:
             user = User(email=email, password=generate_password_hash(password, method="scrypt"))
+            user.name = name
+            user.surname = surname
+            user.date_of_birth = datetime.strptime(date_of_birth, "%Y-%m-%d")
             user.update()
             user.login()
             mail_sender(mail_identifier="en_confirm_email", target=user.email, data=user.get_reset_token())
@@ -244,12 +278,17 @@ def en_register_child():
         result = r.json()
         
         if not result.get('success'):
-            return "reCAPTCHA ověření selhalo. Zkuste to prosím znovu."
+            flash("reCAPTCHA verification failed. Please try again.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
         email = request.form.get("email")
         password = request.form.get("password")
         confirm = request.form.get("confirm")
         should_have_email_password = True if request.form.get("child_select") == "ano" else False
         parent_email = request.form.get("email_odpovedne")
+        name = request.form.get("name")
+        surname = request.form.get("surname")
+        date_of_birth = request.form.get("date_of_birth")
+        
         parent = User.get_by_email(email=parent_email)
         if parent is None:
             flash("Responsible person's e-mail not found.", category="error")
@@ -260,12 +299,19 @@ def en_register_child():
         if parent.parent:
             flash("Responsible person is connected as a child themselves.", category="error")
             return redirect(url_for("auth_views.en_register_child"))
+        if not name or not surname or not date_of_birth:
+            flash("Name, surname and date of birth must be filled in.", category="error")
+            return redirect(url_for("auth_views.en_register_child"))
+        
+        user = User()
+        user.parent = parent
+        user.is_under_16 = True
+        user.name = name
+        user.surname = surname
+        user.date_of_birth = datetime.strptime(date_of_birth, "%Y-%m-%d")
         
         if not should_have_email_password:
-            user = User()
-            user.parent = parent
             mail_sender(mail_identifier="en_new_child", target=parent_email)
-            user.is_under_16 = True
             user.update()
             user.login()
             flash("Registration was successful. You can continue filling in personal details.", category="success")
@@ -281,9 +327,6 @@ def en_register_child():
                 flash("User with this e-mail already exists.", category="error")
                 return redirect(url_for("auth_views.en_register_child"))
         
-            user = User()
-            user.parent = parent
-            user.is_under_16 = True
             user.email = email
             user.password = generate_password_hash(password, method="scrypt")
             user.update()

@@ -32,13 +32,16 @@ def require_role_system_name_on_current_user(role_system_name: str, user = curre
     return what_should_i_name_this
 
 
-def ensure_email_password_participant(language): # cz/en
+def ensure_valid_participant(language): # cz/en
     #chatgpt written
     """
-    Decorator to ensure that the current user has a confirmed email
-    and does not need to change their password upon login
-    and participate in this year.
-    If they do not have an e-mail at all, they are a kid and are free to go.
+    Decorator to ensure that the current user has all the necessary data:
+        - logged in. if not -> login page
+        - if they do not have e-mail, skip the e-mail check, they are a kid.
+        - if they do have e-mail, it must be confirmed. if not -> send confirmation e-mail and redirect to confirmation page
+        - if they must change their password upon login, redirect to change password page
+        - if they are not this year's participant, flash a message and let them go
+        - if they don't have {name, surname, date_of_birth}, redirect them to page where this data must be filled in
     """
     def what_should_i_name_this(original_function):
         @wraps(original_function)
@@ -49,27 +52,33 @@ def ensure_email_password_participant(language): # cz/en
                 else:
                     return redirect(url_for("auth_views.en_login"))
             
-            if current_user.email is None:
-                pass
+            if current_user.email:
+                if not current_user.confirmed_email:
+                    if language == "cz":
+                        mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
+                        return redirect(url_for("auth_views.confirm_mail"))
+                    else:
+                        mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
+                        return redirect(url_for("auth_views.en_confirm_mail"))
             
-            elif not current_user.confirmed_email:
-                if language == "cz":
-                    mail_sender(mail_identifier="confirm_email", target=current_user.email, data=current_user.get_reset_token())
-                    return redirect(url_for("auth_views.confirm_mail"))
-                else:
-                    mail_sender(mail_identifier="en_confirm_email", target=current_user.email, data=current_user.get_reset_token())
-                    return redirect(url_for("auth_views.en_confirm_mail"))
-            
-            elif current_user.must_change_password_upon_login:
+            if current_user.must_change_password_upon_login:
                 if language == "cz":
                     return redirect(url_for("auth_views.change_password"))
                 else:
                     return redirect(url_for("auth_views.en_change_password"))
-            elif not current_user.is_this_year_participant:
+            
+            if not current_user.name or not current_user.surname or not current_user.date_of_birth:
+                if language == "cz":
+                    return redirect(url_for("user_views.required_data"))
+                else:
+                    return redirect(url_for("user_views.en_required_data"))
+                
+            if not current_user.is_this_year_participant:
                 if language == "cz":
                     flash("Nejste letošním účastníkem. Pokud se chcete letos MLŠSH účastnit, proveďte tuto změnu na svém účtu.", category="error")
                 else:
                     flash("You are not this year's participant. If you want to participate this year, please change it in your account.", category="error")
+                    
             return original_function(*args, **kwargs)
         return wrapper
     return what_should_i_name_this

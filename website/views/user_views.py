@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import current_user, logout_user
+from flask_login import current_user, logout_user, login_required
 from website.helpers.get_roles import get_roles
 from website.models.user import User
-from website.helpers.require_role import ensure_email_password_participant
+from website.helpers.require_role import ensure_valid_participant
 from website.mail_handler import mail_sender
 from datetime import datetime
 
@@ -11,7 +11,7 @@ user_views = Blueprint("user_views",__name__)
 
 
 @user_views.route("/account", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def account():
     if request.method == "GET":
         return render_template("user/cz_account.html", roles=get_roles(), is_locked = current_user.is_locked)
@@ -31,7 +31,7 @@ def account():
 
 
 @user_views.route("/cz_child_account/<int:id>", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def child_account(id):
     child = User.get_by_id(id)
     if child and child.parent_id == current_user.id:
@@ -78,7 +78,7 @@ def return_to_parent():
     
     
 @user_views.route("/en_account", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_account():
     if request.method == "GET":
         return render_template("user/en_account.html", roles=get_roles(), is_locked = current_user.is_locked)
@@ -108,7 +108,7 @@ def en_account():
         
 
 @user_views.route("/en_child_account/<int:id>", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_child_account(id):
     child = User.get_by_id(id)
     if child and child.parent_id == current_user.id:
@@ -155,7 +155,7 @@ def en_return_to_parent():
     
     
 @user_views.route("/edit_account", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def edit_account():
     if request.method == "GET":
         return render_template("user/cz_edit_account.html", roles=get_roles())
@@ -196,7 +196,7 @@ def edit_account():
 
 
 @user_views.route("/en_edit_account", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_edit_account():
     if request.method == "GET":
         return render_template("user/en_edit_account.html", roles=get_roles(), is_locked=current_user.is_locked)
@@ -237,7 +237,7 @@ def en_edit_account():
         
         
 @user_views.route("/edit_child_account/<int:id>", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def edit_child_account(id):
     child = User.get_by_id(id)
     if child and child.parent_id == current_user.id:
@@ -299,7 +299,7 @@ def edit_child_account(id):
         
         
 @user_views.route("/en_edit_child_account/<int:id>", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_edit_child_account(id):
     child = User.get_by_id(id)
     if child and child.parent_id == current_user.id:
@@ -360,7 +360,7 @@ def en_edit_child_account(id):
             return request.form.to_dict()
         
 @user_views.route("/new_child", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def new_child():
     if request.method == "GET":
         return render_template("user/cz_new_child.html", roles=get_roles())
@@ -393,7 +393,7 @@ def new_child():
         
 
 @user_views.route("/en_new_child", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_new_child():
     if request.method == "GET":
         return render_template("user/en_new_child.html", roles=get_roles())
@@ -423,10 +423,60 @@ def en_new_child():
             u.update()
             flash("Account created", "success")
             return redirect(url_for("user_views.en_child_account", id=u.id))
+        
+
+@user_views.route("/required_data", methods=["GET", "POST"])
+@login_required
+def required_data():
+    if request.method == "GET":
+        current_data = {
+            "name": current_user.name,
+            "surname": current_user.surname,
+            "date_of_birth": current_user.date_of_birth
+        }
+        return render_template("user/cz_required_data.html", roles=get_roles(), current_data=current_data)
+    else:
+        name = request.form.get("name")
+        surname = request.form.get("surname")
+        date_of_birth_str = request.form.get("date_of_birth")
+        if not name or not surname or not date_of_birth_str:
+            flash("Všechna pole jsou povinná", "error")
+            return redirect(url_for("user_views.required_data"))
+        current_user.name = name
+        current_user.surname = surname
+        current_user.date_of_birth = datetime.strptime(date_of_birth_str, "%Y-%m-%d")
+        current_user.update()
+        flash("Požadované údaje uloženy", "success")
+        return redirect(url_for("user_views.account"))
+    
+
+@user_views.route("/en_required_data", methods=["GET", "POST"])
+@login_required
+def en_required_data():
+    if request.method == "GET":
+        current_data = {
+            "name": current_user.name,
+            "surname": current_user.surname,
+            "date_of_birth": current_user.date_of_birth
+        }
+        return render_template("user/en_required_data.html", roles=get_roles(), current_data=current_data)
+    else:
+        name = request.form.get("name")
+        surname = request.form.get("surname")
+        date_of_birth_str = request.form.get("date_of_birth")
+        if not name or not surname or not date_of_birth_str:
+            flash("All fields are required", "error")
+            return redirect(url_for("user_views.en_required_data"))
+        current_user.name = name
+        current_user.surname = surname
+        current_user.date_of_birth = datetime.strptime(date_of_birth_str, "%Y-%m-%d")
+        current_user.update()
+        flash("Required data saved", "success")
+        return redirect(url_for("user_views.account"))
 
 
 @user_views.route("/zapis_hlavni_tridy", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def zapis_hlavni_tridy():
     if not current_user.is_active_participant:
         flash("Pasivní účastníci se nemohou registrovat do tříd", "error")
@@ -438,7 +488,7 @@ def zapis_hlavni_tridy():
 
 
 @user_views.route("/zapis_vedlejsi_tridy", methods=["GET", "POST"])
-@ensure_email_password_participant("cz")
+@ensure_valid_participant("cz")
 def zapis_vedlejsi_tridy():
     if not current_user.is_active_participant:
         flash("Pasivní účastníci se nemohou registrovat do tříd", "error")
@@ -450,7 +500,7 @@ def zapis_vedlejsi_tridy():
 
     
 @user_views.route("/en_zapis_hlavni_tridy", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_zapis_hlavni_tridy():
     if not current_user.is_active_participant:
         flash("Passive participants cannot register for classes", "error")
@@ -462,7 +512,7 @@ def en_zapis_hlavni_tridy():
     
     
 @user_views.route("/en_zapis_vedlejsi_tridy", methods=["GET", "POST"])
-@ensure_email_password_participant("en")
+@ensure_valid_participant("en")
 def en_zapis_vedlejsi_tridy():
     if not current_user.is_active_participant:
         flash("Passive participants cannot register for classes", "error")

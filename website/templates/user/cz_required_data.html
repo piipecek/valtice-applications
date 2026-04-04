@@ -1,0 +1,36 @@
+{% extends"cz_context.html" %}
+{% block content %}
+
+<h1>Doplnění požadovaných údajů</h1>
+<p>
+    Na Vašem účtu chybí některé povinné údaje. Prosíme, doplňte je.
+</p>
+<form method="post">
+    <div class="container my-2">
+        <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Jméno</div>
+            <div class="col">
+                <input type="text" class="form-control" id="name" name="name" value="{{current_data.name}}" required>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Příjmení</div>
+            <div class="col">
+                <input type="text" class="form-control" id="surname" name="surname" value="{{current_data.surname}}" required>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Datum narození</div>
+            <div class="col">
+            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{current_data.date_of_birth}}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-center">
+                <button type="submit" class="custom_button">Uložit</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
