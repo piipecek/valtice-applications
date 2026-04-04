@@ -434,6 +434,7 @@ def required_data():
             "surname": current_user.surname,
             "date_of_birth": current_user.date_of_birth
         }
+        print(current_data)
         return render_template("user/cz_required_data.html", roles=get_roles(), current_data=current_data)
     else:
         name = request.form.get("name")

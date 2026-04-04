@@ -2,6 +2,7 @@ from flask import abort, redirect, url_for, flash
 from flask_login import current_user
 from functools import wraps
 from website.mail_handler import mail_sender
+from website.helpers.get_roles import get_roles
 
 def require_role_system_name_on_current_user(role_system_name: str, user = current_user):
     """Můj pokus o napsání login_required decoratoru
@@ -41,7 +42,9 @@ def ensure_valid_participant(language): # cz/en
         - if they do have e-mail, it must be confirmed. if not -> send confirmation e-mail and redirect to confirmation page
         - if they must change their password upon login, redirect to change password page
         - if they are not this year's participant, flash a message and let them go
-        - if they don't have {name, surname, date_of_birth}, redirect them to page where this data must be filled in
+        - if they don't have {name, surname, date_of_birth}, redirect them to page where this data must be filled in.
+        
+        The name/surname/dob check only applies to regular participants without any role.
     """
     def what_should_i_name_this(original_function):
         @wraps(original_function)
@@ -67,11 +70,13 @@ def ensure_valid_participant(language): # cz/en
                 else:
                     return redirect(url_for("auth_views.en_change_password"))
             
-            if not current_user.name or not current_user.surname or not current_user.date_of_birth:
-                if language == "cz":
-                    return redirect(url_for("user_views.required_data"))
-                else:
-                    return redirect(url_for("user_views.en_required_data"))
+            roles = get_roles(current_user)
+            if "repetiteur" not in roles and "tutor" not in roles and "organizer" not in roles and "admin" not in roles:
+                if not current_user.name or not current_user.surname or not current_user.date_of_birth:
+                    if language == "cz":
+                        return redirect(url_for("user_views.required_data"))
+                    else:
+                        return redirect(url_for("user_views.en_required_data"))
                 
             if not current_user.is_this_year_participant:
                 if language == "cz":

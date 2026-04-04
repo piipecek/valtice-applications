@@ -2,9 +2,11 @@
 {% block content %}
 <h1>Korepetitoři</h1>
 <p>
-    Lektoři, kteří se letošního ročníku neúčastní, ale jejich účty nebylo potřeba mazat, jsou uvedeni v <a class="link" href="{{url_for('org_views.seznam_vypnutych_lektoru')}}">seznamu vypnutých lektorů a korepetitorů</a>.
+    Korepetitoři, kteří se letošního ročníku neúčastní, ale jejich účty nebylo potřeba mazat, jsou uvedeni v <a class="link" href="{{url_for('org_views.seznam_vypnutych_lektoru')}}">seznamu vypnutých lektorů a korepetitorů</a>. Nové korepetitory můžete založit v <a class="link" href="{{url_for('org_views.settings')}}">nastavení</a>.
 </p>
 
-ve výstavbě
+<div id="parent_div"></div>
+
+<script type="module" src="{{url_for('static', filename='js/organizator/seznam_korepetitoru.js')}}"></script>
 
 {% endblock %}

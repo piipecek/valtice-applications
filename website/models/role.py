@@ -10,10 +10,11 @@ class Role(Common_methods_db_model):
     users = db.relationship("User", secondary=user_role_jointable, back_populates="roles")
     
     _role_hiearchy = {
-        "tutor": 1,
-        "organiser": 2,
-        "editor": 3,
-        "admin": 4
+        "repetiteur": 1,
+        "tutor": 2,
+        "organiser": 3,
+        "editor": 4,
+        "admin": 5
     }
     
     def __repr__(self) -> str:

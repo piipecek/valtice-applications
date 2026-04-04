@@ -2,7 +2,16 @@
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
+
 <h1><span id="full_name"></span> - detail účtu</h1>
+
+{% if "tutor" in user_roles and "repetiteur" in user_roles %}
+    <p>Lektor a korepetitor</p>
+{% elif "tutor" in user_roles %}
+    <p>Lektor</p>
+{% elif "repetiteur" in user_roles %}
+    <p>Korepetitor</p>
+{% endif %}
 
 <hr>
 <form method="post">
@@ -10,19 +19,34 @@
     <!-- TODO tohle zpristupnit jen nejaky vyssi roli -->
     <button type="submit" class="custom_button" name="log_in_as" value="whatever">Přihlásit se jako tento účet</button>
 </form>
-{% if "tutor" in user_roles %}
+
+{% if "tutor" in user_roles or "repetiteur" in user_roles %}
     <hr>
     <form method="post">
-        {%if tutor_this_year%}
-            <p>
-                Tento lektor je pro letos zapnutý.
-            </p>
-            <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Vypnout tohoto lektora pro letošní rok</button>
-        {% else %}
-            <p>
-                Tento lektor je pro letošní rok vypnutý.
-            </p>
-            <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Zapnout tohoto lektora pro letošní rok</button>
+        {% if "tutor" in user_roles %}
+            {% if tutor_this_year %}
+                <p>
+                    Tento lektor je pro letos zapnutý.
+                </p>
+                <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Vypnout tohoto lektora pro letošní rok</button>
+            {% else %}
+                <p>
+                    Tento lektor je pro letos vypnutý.
+                </p>
+                <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Zapnout tohoto lektora pro letošní rok</button>
+            {% endif %}
+        {% elif "repetiteur" in user_roles %}            
+            {% if tutor_this_year %}
+                <p>
+                    Tento korepetitor je pro letos zapnutý.
+                </p>
+                <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Vypnout tohoto korepetitora pro letošní rok</button>
+            {% else %}
+                <p>
+                    Tento korepetitor je pro letos vypnutý.
+                </p>
+                <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Zapnout tohoto korepetitora pro letošní rok</button>
+            {% endif %}
         {% endif %}
     </form>
 {% endif %}
@@ -265,7 +289,7 @@
 </p>
 <hr>
 <h2>Lektorské informace</h2>
-{% if "tutor" in user_roles %}
+{% if "tutor" in user_roles or "repetiteur" in user_roles %}
     <div class="table-responsive">
         <table class="table table-hover table-striped">
             <tbody>

@@ -19,7 +19,7 @@ save_roles_button.addEventListener("click", function () {
 })
 
 for (let role of role_uzivatele) {
-    for (let id of ["tutor", "organiser", "editor", "admin"]) {
+    for (let id of ["repetiteur", "tutor", "organiser", "editor", "admin"]) {
         if (role == id) {
             document.getElementById(id).checked = true
         }

@@ -46,15 +46,24 @@
         Každý uživatel může mít přiřazeno několik rolí:
         <ul>
             <li><b>bez role</b>: Běžný účastník MLŠSH, vidí pouze svůj účet</li>
+            <li><b>Korepetitor</b>: Je zařazen mezi korepetitory.</li>
             <li><b>Lektor</b>: Má náhled na svou třídu a účastníky v ní.</li>
             <li><b>Organizátor:</b> Má náhled na všechny účastníky a třídy.</li>
             <li><b>Editor</b>: Možnost mazání účastníků a tříd, nastavení ceníku, přístup k více nastavením.</li>
             <li><b>Admin</b>: Přístup k udílení rolí dalším pořadatelům.</li>
         </ul>
-        V celém systému je u každé akce na kterou nemáte oprávnění jasně napsáno, jaká role danou činnost může provést.
     </p>
 
     <h2 id="ucastnici">Účastníci</h2>
+    <p>
+        Při každém přihlášení projde účet účastníka několika kontrolami, které zajišťují úplnost dat:
+        <ul>
+            <li>Pokud mají zadaný e-mail, musí být ověřený. Pokud není ověřený, je odeslán ověřovací e-mail a jsou přesměrováni na stránku pro ověření e-mailu. Tato kontrola neprobíhá u účtů bez e-mailu, což jsou (snad) výhradně děti.</li>
+            <li>Pokud musí změnit po přihlášení heslo, jsou přesměrováni na stránku pro změnu hesla. To se může stát v případě, kdy jim bylo heslo změněno někým z organizátorů nebo pokud byl jejich účet organizátory vytvořen.</li>
+            <li>Pokud nemají zájem o letošní ročník, jsou přesměrováni na místo, kde jej mohou projevit. Do svého účtu se dostanou i bez tohoto souhlasu, ale budou na to neustále upozorňováni. Po konci ročníku je všem účastníkům nastaveno, že o další ročník zájem nemají.</li>
+            <li>Pokud jim chybí některé povinné informace, jsou přesměrováni na stránku pro jejich doplnění.</li>
+        </ul>
+    </p>
 
     <h2 id="tridy">Třídy</h2>
 

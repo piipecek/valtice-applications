@@ -41,6 +41,8 @@ def settings():
             u = User(email = email, password = generate_password_hash(password, method='scrypt'))
             if request.form.get("is_tutor"):
                 u.roles.append(Role.get_by_system_name("tutor"))
+            if request.form.get("is_repetiteur"):
+                u.roles.append(Role.get_by_system_name("repetiteur"))
             if request.form.get("email_verified"):
                 u.confirmed_email = True
             if request.form.get("require_password_change"):
@@ -180,10 +182,12 @@ def detail_ucastnika(id:int):
                 return redirect(url_for("org_views.seznam_lektoru", id=id))
             u.tutor_this_year = not u.tutor_this_year
             u.update()
+            
+            word = "Lektor" if Role.get_by_system_name("tutor") in u.roles else "Korepetitor"
             if u.tutor_this_year:
-                flash("Lektor byl pro tento ročník zahrnut.", category="success")
+                flash(f"{word} byl pro tento ročník zahrnut.", category="success")
             else:
-                flash("Lektor byl pro tento ročník vypnut.", category="success")
+                flash(f"{word} byl pro tento ročník vypnut.", category="success")
             return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif lang := request.form.get("send_calc"):
             if u.parent:
@@ -395,14 +399,13 @@ def udelit_role(id):
         if nove_role := request.form.get("nove_role"):
             nove_role_objekty = [Role.get_by_system_name(r) for r in json.loads(nove_role)]
             user = User.get_by_id(id)
-            if user.roles == nove_role_objekty:
-                pass
-            else:
-                user.roles = nove_role_objekty
-                user.update()
-            if Role.get_by_system_name("tutor") not in user.roles:
-                user.taught_classes = []
-                user.update()
+            if Role.get_by_system_name("tutor") not in nove_role_objekty and user.taught_classes:
+                flash("Tento lektor má přiřazené třídy, nelze mu tedy odebrat roli lektora. Nejprve mu odeberte všechny třídy.", category="error")
+                return redirect(url_for("org_views.udelit_role", id=id))
+            
+            user.roles = nove_role_objekty
+            user.update()
+                
             flash("Role byly upraveny.", category="success")
             return redirect(url_for("org_views.organizatori", id=id))
         else:    

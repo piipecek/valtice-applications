@@ -12,6 +12,7 @@ with app.app_context():
     
     #role
     Role(system_name="tutor", display_name="Lektor").update()
+    Role(system_name="repetiteur", display_name="Korepetitor").update()
     Role(system_name="organiser", display_name="Organizátor").update()
     Role(system_name="editor", display_name="Editor").update()
     Role(system_name="admin", display_name="Admin").update()
