@@ -41,7 +41,9 @@ for (let key in data) {
             document.getElementById("zmena_kategorie_zakazana").hidden = false
         }
     } else if (key == "manager_name") {
-        document.getElementById("manager_name").innerText = data[key]
+        if (document.getElementById("manager_name")) {
+            document.getElementById("manager_name").innerText = data[key]
+        }
     } else if (key == "meals") {
         for (let jidlo of data[key]) {
             add_meal_row(jidlo["meal_id"], jidlo["count"])

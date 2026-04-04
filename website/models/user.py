@@ -1138,12 +1138,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_accompanying_names": self.tutor_accompanying_names,
             "tutor_address": self.tutor_address,
             "tutor_bank_account": self.tutor_bank_account,
-            "children": [
-                {
-                    "id": child.id,
-                    "full_name": child.get_full_name("cz")
-                } for child in self.children
-            ]
         }   
         
         
@@ -1203,12 +1197,6 @@ class User(Common_methods_db_model, UserMixin):
             "tutor_accompanying_names": self.tutor_accompanying_names,
             "tutor_address": self.tutor_address,
             "tutor_bank_account": self.tutor_bank_account,
-            "children": [
-                {
-                    "id": child.id,
-                    "full_name": child.get_full_name("en")
-                } for child in self.children
-            ]
         }  
     
     
@@ -1286,7 +1274,14 @@ class User(Common_methods_db_model, UserMixin):
         self._save_meals(request)
         
         self.billing_currency = request.form.get("billing_currency")
-        self.billing_gift = int(request.form.get("billing_gift")) if request.form.get("billing_gift") else 0
+        if request.form.get("billing_gift"):
+            try:
+                self.billing_gift = int(request.form.get("billing_gift"))
+            except ValueError:
+                self.billing_gift = 0
+                flash("Neplatná hodnota pro dar, musí být celé číslo. Dar byl nastaven na 0.", "error")
+        else:
+            self.billing_gift = 0
         
         self.tutor_travel = request.form.get("tutor_travel")
         self.tutor_license_plate = request.form.get("tutor_license_plate")
