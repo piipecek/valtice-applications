@@ -64,16 +64,25 @@
         </tbody>
     </table>
 </div>
-<div id="child_accounts" hidden>
-    <hr>
+
+<hr>
+{% if is_child %}
+    <p>
+        Toto je dětský účet. Pokud chcete přidat další děti nebo spravované účty, musí tak provést rodič.
+    </p>
+{% else %}
     <h2>Dětské účty</h2>
+    <a href="{{url_for('user_views.new_child')}}">
+        <button class="custom_button my-1" type="button">Přidat dítě nebo spravovaný účet</button>
+    </a>
     <div class="table-responsive">
         <table class="table table-hover table-striped">
             <tbody id="children_tbody">
             </tbody>
         </table>
     </div>
-</div>
+{% endif %}
+
 <hr>
 <h2>Osobní informace</h2>
 <div class="table-responsive">

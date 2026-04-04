@@ -38,7 +38,6 @@ for (let key in data) {
     } else if (key == "children") {
         if (data["children"] == "-") {
         } else {
-            document.getElementById("child_accounts").hidden = false
             for (let child of data["children"]) {
                 let tr = document.createElement("tr")
                 let td1 = document.createElement("td")

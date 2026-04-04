@@ -188,11 +188,6 @@ def edit_account():
                     current_user.confirmed_email = False
                     current_user.update()
                     flash("E-mail úspěšně změněn.", "success")
-            if request.form.get("child_first_name"):
-                u = User()
-                u.name = request.form.get("child_first_name")
-                u.parent = current_user
-                u.update()
             current_user.nacist_zmeny_z_user_requestu(request)
             flash("Změny uloženy", "success")
             return redirect(url_for("user_views.account"))
@@ -206,17 +201,7 @@ def en_edit_account():
     if request.method == "GET":
         return render_template("user/en_edit_account.html", roles=get_roles(), is_locked=current_user.is_locked)
     else:
-        if id := request.form.get("unlink_child_id"):
-            child = User.get_by_id(id)
-            if child and child.parent_id == current_user.id:
-                child.parent_id = None
-                child.update()
-                flash("Account unlinked", "success")
-                return redirect(url_for("user_views.en_edit_account"))
-            else:
-                flash("You don't have permission for this child", "error")
-                return redirect(url_for("user_views.en_edit_account"))
-        elif request.form.get("save"):
+        if request.form.get("save"):
             if request.form.get("parent_email"):
                 user = User.get_by_email(request.form.get("parent_email"))
                 if user:
@@ -244,11 +229,6 @@ def en_edit_account():
                     current_user.confirmed_email = False
                     current_user.update()
                     flash("E-mail successfully changed.", "success")
-            if request.form.get("child_first_name"):
-                u = User()
-                u.name = request.form.get("child_first_name")
-                u.parent = current_user
-                u.update()
             current_user.nacist_zmeny_z_user_requestu(request)
             flash("Changes saved", "success")
             return redirect(url_for("user_views.en_account"))
@@ -264,7 +244,7 @@ def edit_child_account(id):
         pass
     else:
         flash("Nemáte právo na toto dítě", "error")
-        return redirect(url_for("user_views.edit_account"))
+        return redirect(url_for("user_views.account"))
     
     if request.method == "GET":
         return render_template("user/cz_edit_child_account.html", roles=get_roles(), id=id)
@@ -273,13 +253,25 @@ def edit_child_account(id):
             id = request.form.get("unlink_child_id")
             child = User.get_by_id(id)
             if child and child.parent_id == current_user.id:
-                child.parent_id = None
-                child.update()
-                flash("Účet odpojen", "success")
-                return redirect(url_for("user_views.edit_account"))
+                if child.email and child.password:
+                    child.parent_id = None
+                    child.update()
+                    flash("Účet odpojen", "success")
+                else:
+                    flash("Účet bez e-mailu a hesla nelze odpojit, protože by se k němu pak nikdo nedostal. Nejprve nastavte e-mail a heslo pro tento účet.", "error")
+                return redirect(url_for("user_views.account"))
             else:
                 flash("Nemáte právo na toto dítě", "error")
-                return redirect(url_for("user_views.edit_account"))
+                return redirect(url_for("user_views.account"))
+        elif delete_id := request.form.get("delete_child_id"):
+            child = User.get_by_id(delete_id)
+            if child and child.parent_id == current_user.id:
+                child.delete()
+                flash("Účet smazán", "success")
+                return redirect(url_for("user_views.account"))
+            else:
+                flash("Nemáte právo na toto dítě", "error")
+                return redirect(url_for("user_views.account"))
         elif request.form.get("save"):
             if request.form.get("new_manager_email"):
                 user = User.get_by_email(request.form.get("new_manager_email"))
@@ -314,7 +306,7 @@ def en_edit_child_account(id):
         pass
     else:
         flash("You do not have permission for this child", "error")
-        return redirect(url_for("user_views.edit_account"))
+        return redirect(url_for("user_views.en_account"))
     
     if request.method == "GET":
         return render_template("user/en_edit_child_account.html", roles=get_roles(), id=id)
@@ -323,25 +315,37 @@ def en_edit_child_account(id):
             id = request.form.get("unlink_child_id")
             child = User.get_by_id(id)
             if child and child.parent_id == current_user.id:
-                child.parent_id = None
-                child.update()
-                flash("Account unlinked", "success")
-                return redirect(url_for("user_views.edit_account"))
+                if child.email and child.password:
+                    child.parent_id = None
+                    child.update()
+                    flash("Account unlinked", "success")
+                else:
+                    flash("Account without email and password cannot be unlinked, because no one would be able to access it later. First set email and password for this account.", "error")
+                return redirect(url_for("user_views.en_account"))
             else:
                 flash("You do not have permission for this child", "error")
-                return redirect(url_for("user_views.edit_account"))
+                return redirect(url_for("user_views.en_account"))
+        elif delete_id := request.form.get("delete_child_id"):
+            child = User.get_by_id(delete_id)
+            if child and child.parent_id == current_user.id:
+                child.delete()
+                flash("Account deleted", "success")
+                return redirect(url_for("user_views.en_account"))
+            else:
+                flash("You do not have permission for this child", "error")
+                return redirect(url_for("user_views.en_account"))
         elif request.form.get("save"):
             if request.form.get("new_manager_email"):
                 user = User.get_by_email(request.form.get("new_manager_email"))
                 if user:
                     if user == current_user:
                         flash("You cannot be the manager of your own account", "error")
-                        return redirect(url_for("user_views.edit_account"))
+                        return redirect(url_for("user_views.en_edit_account"))
                     else:
                         child.parent = user
                         child.update()
                         flash("Manager account changed", "success")
-                        return redirect(url_for("user_views.account"))
+                        return redirect(url_for("user_views.en_account"))
                 else:
                     flash("User with this email does not exist", "error")
             if request.form.get("email") != child.email:
@@ -351,9 +355,74 @@ def en_edit_child_account(id):
                 child.update()
             child.nacist_zmeny_z_user_requestu(request)
             flash("Changes saved", "success")
-            return redirect(url_for("user_views.child_account", id=id))
+            return redirect(url_for("user_views.en_child_account", id=id))
         else:
             return request.form.to_dict()
+        
+@user_views.route("/new_child", methods=["GET", "POST"])
+@ensure_email_password_participant("cz")
+def new_child():
+    if request.method == "GET":
+        return render_template("user/cz_new_child.html", roles=get_roles())
+    else:
+        if request.form.get("child_select") == "ano": # chce ucet s mailem a heslem. overit neexistenci mailu a poslat overovaci.
+            email = request.form.get("email")
+            if User.get_by_email(email):
+                flash("Uživatel s tímto e-mailem již existuje", "error")
+                return redirect(url_for("user_views.new_child"))
+            else:
+                u = User()
+                u.name = request.form.get("name")
+                u.surname = request.form.get("surname")
+                u.email = email
+                u.parent = current_user
+                u.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
+                u.update()
+                mail_sender("confirm_email", email, u.get_reset_token())
+                flash("Účet dítěte vytvořen, e-mail s potvrzením odeslán na " + email, "success")
+                return redirect(url_for("user_views.child_account", id=u.id))
+        else: # chce ucet bez mailu a hesla
+            u = User()
+            u.name = request.form.get("name")
+            u.surname = request.form.get("surname")
+            u.parent = current_user
+            u.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
+            u.update()
+            flash("Účet dítěte vytvořen", "success")
+            return redirect(url_for("user_views.child_account", id=u.id))
+        
+
+@user_views.route("/en_new_child", methods=["GET", "POST"])
+@ensure_email_password_participant("en")
+def en_new_child():
+    if request.method == "GET":
+        return render_template("user/en_new_child.html", roles=get_roles())
+    else:
+        if request.form.get("child_select") == "ano": # chce ucet s mailem a heslem. overit neexistenci mailu a poslat overovaci.
+            email = request.form.get("email")
+            if User.get_by_email(email):
+                flash("User with this email already exists", "error")
+                return redirect(url_for("user_views.en_new_child"))
+            else:
+                u = User()
+                u.name = request.form.get("name")
+                u.surname = request.form.get("surname")
+                u.email = email
+                u.parent = current_user
+                u.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
+                u.update()
+                mail_sender("confirm_email", email, u.get_reset_token())
+                flash("Account created, verification email sent to " + email, "success")
+                return redirect(url_for("user_views.en_child_account", id=u.id))
+        else: # chce ucet bez mailu a hesla
+            u = User()
+            u.name = request.form.get("name")
+            u.surname = request.form.get("surname")
+            u.parent = current_user
+            u.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
+            u.update()
+            flash("Account created", "success")
+            return redirect(url_for("user_views.en_child_account", id=u.id))
 
 
 @user_views.route("/zapis_hlavni_tridy", methods=["GET", "POST"])

@@ -1,0 +1,95 @@
+{% extends"en_context.html" %}
+{% block content %}
+
+<h1>A new account under {{name_en}}</h1>
+
+<form method="post">
+    <div class="container my-2">
+        <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Name</div>
+            <div class="col">
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Surname</div>
+            <div class="col">
+                <input type="text" class="form-control" id="surname" name="surname" required>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="col-sm-3 d-flex align-items-center justify-content-between">Date of birth</div>
+            <div class="col">
+            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+            </div>
+        </div>
+        <div class="row">
+            <small>Decide whether this account should have the option to log in independently or if you will manage it only through your account.</small>
+            <div class="col-sm-auto">
+                Should the child have its own email and password?
+            </div>
+            <div class="col">
+                <select class="form-select" id="child_select" name="child_select">
+                    <option value="" selected disabled>select</option>
+                    <option value="ano">Yes, I want it to have its own email and password.</option>
+                    <option value="ne">No, I want the account to be managed only by me.</option>
+                </select>
+            </div>
+        </div>
+        <div id="registrace_details" hidden>
+            <hr>
+            <div class="row my-1">
+                <div class="col-sm-3">
+                    Child's email:
+                </div>
+                <div class="col">
+                    <input type="email" name="email" maxlength="100" class="form-control"/>
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-sm-3">
+                    Child's password:
+                </div>
+                <div class="col">
+                    <input type="password" name="password" minlength="6" maxlength="300" class="form-control"/>	
+                </div>
+            </div>
+            <div class="row my-1">
+                <div class="col-sm-3">
+                    Confirm password
+                </div>
+                <div class="col">
+                    <input type="password" name="confirm" minlength="6" maxlength="300" class="form-control"/>	
+                </div>
+            </div>
+        </div>
+        <div class="row" hidden id="vytvorit_ucet_div">
+            <div class="col d-flex justify-content-center">
+                <button type="submit" class="custom_button my-1">Add child</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="heslo_info" hidden>
+    <hr>
+    <p>
+        You can always reset your password if you forget it.
+    </p>
+    <p>
+        How does a good password look like?
+        <ul>
+            <li>It should be longer than 8 characters.</li>
+            <li>It should contain some special character other than letters or numbers.</li>
+            <li>It should be unique.</li>
+            <li>If you use a password manager, it doesn't need to be humanly memorable.</li>
+        </ul>
+    </p>
+    <div class="d-flex justify-content-center">
+        <img class="xkcd" src="https://imgs.xkcd.com/comics/password_strength.png" alt="xkcd password strength">
+    </div>
+</div>
+
+<!-- zamerne tu muzu pouzivat cz js protoze to je stejne -->
+<script type="module" src="{{url_for('static', filename='js/user/cz_new_child.js')}}"></script>
+{% endblock %}

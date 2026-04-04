@@ -296,44 +296,34 @@
                 <input type="text" class="form-control" id="new_password" name="new_password">
             </div>
         </div>
-        <div class="row my-1" id="no_parent" hidden>
-            <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a parent account
-                <div class="custom-tooltip">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">If, for example, one person manages the Valtice in one family, they can connect the accounts like this. The parent account can manage its connected accounts.</span>
+        {% if not is_parent and not is_child %}
+            <div class="row my-1">
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a parent account
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">If, for example, one person manages the Valtice in one family, they can connect the accounts like this. The parent account can manage its connected accounts.</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
                 </div>
             </div>
-            <div class="col">
-                <input type="text" class="form-control" name="parent_email" placeholder="parent's email">
+        {% elif is_child %}
+            <div class="row my-1">
+                <div class="col">
+                    This account is managed by <span id="manager_name"></span>. If you want to disconnect these accounts, the parent account must do so.
+                </div>
             </div>
-        </div>
-        <div class="row my-1" id="yes_parent" hidden>
-            <div class="col">
-                This account is managed by <span id="manager_name"></span>. If you wish to unlink these accounts, the parent account must do it.
+        {% elif is_parent %}
+            <div class="row my-1">
+                <div class="col">
+                    <small>You can manage the connected accounts from <a class="link" href="{{url_for('user_views.en_account')}}">your profile</a>.</small>
+                </div>
             </div>
-        </div>
-        <div class="row my-1">
-            <div class="col-sm-3 d-flex align-items-center justify-content-between">Add a child account</div>
-            <div class="col">
-                <input type="text" class="form-control" name="child_first_name" placeholder="first name">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col-2">Child accounts</div>
-            <div class="col" id="children">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col">
-                <small>You can make further changes to managed accounts from <a class="link" href="{{url_for('user_views.en_account')}}">your profile</a>.</small>
-            </div>
-        </div>
+        {% endif %}
     </div>
+</form>
 
-</form>
-<form method="post" hidden id="unlink_form">
-    <input type="text" id="unlink_child_id" name="unlink_child_id">
-</form>
 <script type="module" src="{{url_for('static', filename='js/user/en_edit_account.js')}}"></script>
 
 {% endblock %}

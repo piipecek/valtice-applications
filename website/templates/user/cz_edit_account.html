@@ -296,44 +296,34 @@
                 <input type="text" class="form-control" id="new_password" name="new_password">
             </div>
         </div>
-        <div class="row my-1" id="no_parent" hidden>
-            <div class="col-sm-3 d-flex align-items-center justify-content-between">Přidat nadřazený účet
-                <div class="custom-tooltip">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span class="custom-tooltiptext">Pokud například v jedné rodině spravuje Valtice jedna osoba, může si takto účty pospojovat. Nadřazený účet může spravovat své prpojené účty.</span>
+        {% if not is_parent and not is_child %}
+            <div class="row my-1">
+                <div class="col-sm-3 d-flex align-items-center justify-content-between">Přidat nadřazený účet
+                    <div class="custom-tooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span class="custom-tooltiptext">Pokud například v jedné rodině spravuje Valtice jedna osoba, může si takto účty pospojovat. Nadřazený účet může spravovat své prpojené účty.</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
                 </div>
             </div>
-            <div class="col">
-                <input type="text" class="form-control" name="parent_email" placeholder="e-mail rodiče">
+        {% elif is_child %}
+            <div class="row my-1">
+                <div class="col">
+                    Tento účet spravuje <span id="manager_name"></span>. Pokud si přejete tyto účty rozpojit, musí to provést nadřazený účet.
+                </div>
             </div>
-        </div>
-        <div class="row my-1" id="yes_parent" hidden>
-            <div class="col">
-                Tento účet spravuje <span id="manager_name"></span>. Pokud si přejete tyto účty rozpojit, musí to provést nadřazený účet.
+        {% elif is_parent %}
+            <div class="row my-1">
+                <div class="col">
+                    <small>Úpravy spravovaných účtů můžete provést ze <a class="link" href="{{url_for('user_views.account')}}">svého profilu</a>.</small>
+                </div>
             </div>
-        </div>
-        <div class="row my-1">
-            <div class="col-sm-3 d-flex align-items-center justify-content-between">Přidat podřízený účet</div>
-            <div class="col">
-                <input type="text" class="form-control" name="child_first_name" placeholder="křestní jméno">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col-sm-3">Spravované účty</div>
-            <div class="col" id="children">
-            </div>
-        </div>
-        <div class="row my-1">
-            <div class="col">
-                <small>Další úpravy spravovaných účtů můžete provést ze <a class="link" href="{{url_for('user_views.account')}}">svého profilu</a>.</small>
-            </div>
-        </div>
+        {% endif %}
     </div>
+</form>
 
-</form>
-<form method="post" hidden id="unlink_form">
-    <input type="text" id="unlink_child_id" name="unlink_child_id">
-</form>
 <script type="module" src="{{url_for('static', filename='js/user/cz_edit_account.js')}}"></script>
 
 {% endblock %}

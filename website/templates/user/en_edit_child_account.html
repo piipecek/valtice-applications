@@ -256,12 +256,18 @@
             </div>
         </div>
     </div>
-
 </form>
+
 <form method="post">
     <button type="submit" class="custom_button" name="unlink" value="whatever">Unlink child account</button>
     <input hidden type="text" id="unlink_child_id" name="unlink_child_id" value="{{id}}">
 </form>
+
+<form method="post" id="delete_form">
+    <button type="button" id="delete_button" class="btn btn-danger my-1" name="delete" value="whatever">Delete child account</button>
+    <input hidden type="text" name="delete_child_id" value="{{id}}">
+</form>
+
 <script type="module" src="{{url_for('static', filename='js/user/en_edit_child_account.js')}}"></script>
 
 {% endblock %}

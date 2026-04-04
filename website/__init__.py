@@ -112,6 +112,8 @@ def create_app() -> Flask:
             is_secondary_class_signup_open = is_secondary_class_signup_open(),
             is_under_16 = current_user.is_under_16 if current_user.is_authenticated else None,
             users_can_send_calculations = get_settings()["users_can_send_calculations"],
+            is_child = (True if current_user.parent_id else False) if current_user.is_authenticated else False,
+            is_parent = (True if current_user.children else False) if current_user.is_authenticated else False
         )
 
     return app

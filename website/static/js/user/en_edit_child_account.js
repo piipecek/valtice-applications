@@ -3,6 +3,13 @@ let id = document.getElementById("child_id").value
 let data = JSON.parse(await awaitable_custom_fetch("/user_api/edit_child_account/" + id))
 let jidla = JSON.parse(await awaitable_custom_fetch("/user_api/en_jidla_pro_upravu_ucastnika"))
 
+let delete_form = document.getElementById("delete_form")
+let delete_button = document.getElementById("delete_button")
+delete_button.addEventListener("click", () => {
+    if (confirm("Do you really want to delete this child's account? This action cannot be undone.")) {
+        delete_form.submit()
+    }
+})
 
 for (let key in data) {
     if (key == "full_name") {
