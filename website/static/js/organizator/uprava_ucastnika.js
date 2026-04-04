@@ -57,13 +57,6 @@ if (full_name.trim() == "") {
 document.getElementById("full_name").innerText = full_name
 
 
-if (data["is_tutor"]) {
-    document.getElementById("tutor_yes").hidden = false
-} else {
-    document.getElementById("tutor_no").hidden = false
-}
-
-
 add_secondary_class_button.addEventListener("click", () => {
     let row = generate_secondary_class_row()
     secondary_classes_div.appendChild(row)

@@ -83,6 +83,7 @@
                         <a href="{{url_for('org_views.seznam_ucastniku')}}" class="navbar_link navbar_link_small">Účastníci</a>
                         <a href="{{url_for('org_views.seznam_trid')}}" class="navbar_link navbar_link_small">Třídy</a>
                         <a href="{{url_for('org_views.seznam_lektoru')}}" class="navbar_link navbar_link_small">Lektoři</a>
+                        <a href="{{url_for('org_views.seznam_korepetitoru')}}" class="navbar_link navbar_link_small">Korepetitoři</a>
                         {% if "admin" in roles %}
                             <a href="{{url_for('org_views.organizatori')}}" class="navbar_link navbar_link_small">Pořadatelé a role</a>
                         {% endif %}

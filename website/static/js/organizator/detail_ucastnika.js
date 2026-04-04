@@ -28,12 +28,6 @@ for (let key in data) {
         } else{
             document.getElementById("billing_passive_row").hidden = false
         }
-    } else if (key == "is_tutor") {
-        if (data[key]) {
-            document.getElementById("tutor_yes").hidden = false
-        } else {
-            document.getElementById("tutor_no").hidden = false
-        }
     } else if (key == "wants_meals") {
         if (data[key]) {
             document.getElementById("strava_yes").hidden = false

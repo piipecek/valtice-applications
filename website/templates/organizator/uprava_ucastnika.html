@@ -255,8 +255,8 @@
         
         <hr>
         <h2>Lektorské informace</h2>
-        <div id="tutor_yes" hidden>
-            <div class="row my-1" id="tutor_yes">
+        {% if "tutor" in user_roles %}
+            <div class="row my-1">
                 <div class="col-2 d-flex align-items-center">Způsob dopravy</div>
                 <div class="col">
                     <select class="form-select" id="tutor_travel" name="tutor_travel">
@@ -301,10 +301,11 @@
                 <input type="text" class="form-control" id="tutor_bank_account" name="tutor_bank_account">
                 </div>
             </div>
-        </div>
-        <p hidden id="tutor_no">
-            Tento uživatel není lektorem. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">udělit role</a>
-        </p>
+        {% else %}
+            <p>
+                Tento uživatel není lektorem. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">udělit role</a>
+            </p>
+        {% endif %}
         
 
         <hr>

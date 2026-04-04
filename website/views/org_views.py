@@ -160,7 +160,7 @@ def detail_ucastnika(id:int):
         if u is None:
             flash("Uživatel s tímto ID neexistuje", category="error")
             return redirect(url_for("org_views.seznam_ucastniku"))
-        return render_template("organizator/detail_ucastnika.html", id=id, roles=get_roles(current_user))
+        return render_template("organizator/detail_ucastnika.html", id=id, roles=get_roles(current_user), user_roles = get_roles(u), tutor_this_year = u.tutor_this_year)
     else:
         if request.form.get("zaregistrovat"):
             u.datetime_registered = datetime.now()
@@ -174,6 +174,17 @@ def detail_ucastnika(id:int):
             u.login()
             flash(f"Jste přihlášen jako {u.get_full_name('cz')}. Pro pokračování s původním účtem se odhlašte a znovu přihlašte.", category="success")
             return redirect(url_for("user_views.account"))
+        elif request.form.get("toggle_tutor"):
+            if u.tutor_this_year and u.taught_classes:
+                flash("Tento lektor má přiřazené třídy, nelze ho tedy vypnout jako lektora. Nejprve mu odeberte všechny třídy.", category="error")
+                return redirect(url_for("org_views.seznam_lektoru", id=id))
+            u.tutor_this_year = not u.tutor_this_year
+            u.update()
+            if u.tutor_this_year:
+                flash("Lektor byl pro tento ročník zahrnut.", category="success")
+            else:
+                flash("Lektor byl pro tento ročník vypnut.", category="success")
+            return redirect(url_for("org_views.detail_ucastnika", id=id))
         elif lang := request.form.get("send_calc"):
             if u.parent:
                 target = u.parent.email
@@ -193,14 +204,14 @@ def detail_ucastnika(id:int):
 @org_views.route("/uprava_ucastnika/<int:id>", methods=["GET","POST"])
 @require_role_system_name_on_current_user("editor")
 def uprava_ucastnika(id:int):
+    u = User.get_by_id(id)
     if request.method == "GET":
-        if User.get_by_id(id) is None:
+        if u is None:
             flash("Uživatel s tímto ID neexistuje", category="error")
             return redirect(url_for("org_views.seznam_ucastniku"))
-        return render_template("organizator/uprava_ucastnika.html", id=id, roles=get_roles(current_user))
+        return render_template("organizator/uprava_ucastnika.html", id=id, roles=get_roles(current_user), user_roles = get_roles(u))
     else:
         if request.form.get("save"):
-            u = User.get_by_id(id)
             
             if request.form.get("parent_email"):
                 if parent := User.get_by_email(request.form.get("parent_email")):
@@ -425,6 +436,18 @@ def en_tutor():
 @require_role_system_name_on_current_user("organiser")
 def seznam_lektoru():
     return render_template("organizator/seznam_lektoru.html", roles=get_roles())
+
+
+@org_views.route("/seznam_korepetitoru")
+@require_role_system_name_on_current_user("organiser")
+def seznam_korepetitoru():
+    return render_template("organizator/seznam_korepetitoru.html", roles=get_roles())
+
+
+@org_views.route("/seznam_vypnutych_lektoru")
+@require_role_system_name_on_current_user("organiser")
+def seznam_vypnutych_lektoru():
+    return render_template("organizator/seznam_vypnutych_lektoru.html", roles=get_roles())
 
 
 @org_views.route("/seznam_jidel")

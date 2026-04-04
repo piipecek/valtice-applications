@@ -69,6 +69,7 @@ class User(Common_methods_db_model, UserMixin):
     
     #tutor data
     
+    tutor_this_year = db.Column(db.Boolean, default=True) # zda je tutor "zaply" nebo "vypnuty". to, ze to maj i ucastnici true, je jedno
     tutor_travel = db.Column(db.String(200), default="own") #own/public
     tutor_license_plate = db.Column(db.String(200))
     tutor_arrival = db.Column(db.Text)
@@ -192,6 +193,7 @@ class User(Common_methods_db_model, UserMixin):
                     "short_name": trida.short_name_cz
                 } for trida in sorted(self.taught_classes, key=lambda x: czech_sort.key(x.short_name_cz))
             ],
+            "role": "Lektor" if Role.get_by_system_name("tutor") in self.roles else "Korepetitor"
         }
         
         
@@ -639,7 +641,6 @@ class User(Common_methods_db_model, UserMixin):
             "billing_food_correction_reason": self.billing_food_correction_reason if self.billing_food_correction_reason else "-",
             "billing_accomodation_correction": pretty_penize(self.billing_accomodation_correction, self.billing_currency),
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason if self.billing_accomodation_correction_reason else "-",
-            "is_tutor": True if Role.get_by_system_name("tutor") in self.roles else False,
             "taught_classes":[
                 {
                     "id": trida.id,
@@ -731,7 +732,6 @@ class User(Common_methods_db_model, UserMixin):
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
             "billing_gift": self.billing_gift,
             
-            "is_tutor": True if Role.get_by_system_name("tutor") in self.roles else False,
             "tutor_travel": self.tutor_travel,
             "tutor_license_plate": self.tutor_license_plate,
             "tutor_arrival": self.tutor_arrival,

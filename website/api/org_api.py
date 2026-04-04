@@ -111,7 +111,14 @@ def role_uzivatele(id):
 @require_role_system_name_on_current_user("organiser")
 def seznam_lektoru():
     tutor_role = Role.get_by_system_name("tutor")
-    return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles], key=lambda x: czech_sort.key(x["surname"])))
+    return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles and u.tutor_this_year], key=lambda x: czech_sort.key(x["surname"])))
+
+
+@org_api.route("/seznam_vypnutych_lektoru")
+@require_role_system_name_on_current_user("organiser")
+def seznam_vypnutych_lektoru():
+    tutor_role = Role.get_by_system_name("tutor")
+    return json.dumps(sorted([u.info_pro_seznam_lektoru() for u in User.get_all() if tutor_role in u.roles and not u.tutor_this_year], key=lambda x: czech_sort.key(x["surname"])))
 
 
 @org_api.route("/seznam_lektoru_pro_upravu_tridy")

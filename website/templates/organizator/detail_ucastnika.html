@@ -3,12 +3,30 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/seznam_uzivatelu_table.css')}}">
 <input hidden id="id_getter" value="{{id}}"/>
 <h1><span id="full_name"></span> - detail účtu</h1>
+
 <hr>
 <form method="post">
     <button type="submit" class="custom_button" name="edit_button" value="whatever">Upravit</button>
     <!-- TODO tohle zpristupnit jen nejaky vyssi roli -->
     <button type="submit" class="custom_button" name="log_in_as" value="whatever">Přihlásit se jako tento účet</button>
 </form>
+{% if "tutor" in user_roles %}
+    <hr>
+    <form method="post">
+        {%if tutor_this_year%}
+            <p>
+                Tento lektor je pro letos zapnutý.
+            </p>
+            <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Vypnout tohoto lektora pro letošní rok</button>
+        {% else %}
+            <p>
+                Tento lektor je pro letošní rok vypnutý.
+            </p>
+            <button type="submit" class="custom_button" name="toggle_tutor" value="whatever">Zapnout tohoto lektora pro letošní rok</button>
+        {% endif %}
+    </form>
+{% endif %}
+
 <hr>
 <h2>Vybrané informace</h2>
 <div class="table-responsive">
@@ -247,47 +265,50 @@
 </p>
 <hr>
 <h2>Lektorské informace</h2>
-<div class="table-responsive" id="tutor_yes" hidden>
-    <table class="table table-hover table-striped">
-        <tbody>
-            <tr>
-                <td class="pravy_text">Vyučované třídy</td>
-                <td id="taught_classes"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Způsob dopravy</td>
-                <td id="tutor_travel"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Registrační značka vozidla</td>
-                <td id="tutor_license_plate"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Příjezd</td>
-                <td id="tutor_arrival"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Odjezd</td>
-                <td id="tutor_departure"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Jména doprovodu</td>
-                <td id="tutor_accompanying_names"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Adresa</td>
-                <td id="tutor_address"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Bankovní účet</td>
-                <td id="tutor_bank_account"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<p id="tutor_no" hidden>
-    Tento uživatel není lektorem. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">udělit role</a>
-</p>
+{% if "tutor" in user_roles %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr>
+                    <td class="pravy_text">Vyučované třídy</td>
+                    <td id="taught_classes"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Způsob dopravy</td>
+                    <td id="tutor_travel"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Registrační značka vozidla</td>
+                    <td id="tutor_license_plate"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Příjezd</td>
+                    <td id="tutor_arrival"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Odjezd</td>
+                    <td id="tutor_departure"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Jména doprovodu</td>
+                    <td id="tutor_accompanying_names"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Adresa</td>
+                    <td id="tutor_address"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Bankovní účet</td>
+                    <td id="tutor_bank_account"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>
+        Tento uživatel není lektorem. <a class="link" href="{{url_for('org_views.udelit_role', id=id)}}">udělit role</a>
+    </p>
+{% endif %}
 
 <hr>
 <h2>Přístup k účtu</h2>
