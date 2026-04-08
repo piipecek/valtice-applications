@@ -13,13 +13,13 @@ user_api = Blueprint("user_api", __name__)
 @user_api.route("/ucet", methods=["GET"])
 @login_required
 def ucet():
-    return json.dumps(current_user.info_pro_user_detail())
+    return json.dumps(current_user.info_for_user_detail())
 
 
 @user_api.route("/en_ucet", methods=["GET"])
 @login_required
 def en_ucet():
-    return json.dumps(current_user.info_pro_en_user_detail())
+    return json.dumps(current_user.info_for_en_user_detail())
 
 
 @user_api.route("/child_account/<int:child_id>", methods=["GET"])
@@ -43,7 +43,7 @@ def en_child_account(child_id):
 @user_api.route("/uprava_uctu", methods=["GET"])
 @login_required
 def uprava_uctu():
-    return json.dumps(current_user.info_pro_user_upravu())
+    return json.dumps(current_user.info_for_user_edit())
 
 
 @user_api.route("/edit_child_account/<int:child_id>", methods=["GET"]) # used for en as well
@@ -58,7 +58,7 @@ def edit_child_account(child_id):
 @user_api.route("/en_uprava_uctu", methods=["GET"])
 @login_required
 def en_uprava_uctu():
-    return json.dumps(current_user.info_pro_en_user_upravu())
+    return json.dumps(current_user.info_for_en_user_edit())
 
 
 @user_api.route("/primary_classes_capacity", methods=["GET"])
@@ -235,3 +235,9 @@ def jidla_pro_upravu_ucastnika():
 @login_required
 def en_jidla_pro_upravu_ucastnika():
     return json.dumps([m.en_data_pro_upravu_ucastnika() for m in sorted(Meal.get_all())])  
+
+
+@user_api.route("/classes_overview", methods=["GET"])
+@login_required
+def classes_overview():
+    return json.dumps(Trida.classes_overview())

@@ -41,6 +41,7 @@
     {% endif %}
     {% if "prihlasen" in roles %}
         <a href="{{url_for('user_views.account')}}" class="navbar_link">{{name_cz}}</a>
+        <a href="{{url_for('user_views.cz_classes')}}" class="navbar_link">Třídy</a>
     {% endif %}
 {% endblock %}
 

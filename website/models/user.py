@@ -44,6 +44,7 @@ class User(Common_methods_db_model, UserMixin):
     is_ssh_member = db.Column(db.Boolean, default=False)
     is_active_participant = db.Column(db.Boolean, default=True)
     is_student_of_partner_zus = db.Column(db.Boolean, default=False)
+    show_name_in_class_list = db.Column(db.Boolean, default=True)
     datetime_class_pick = db.Column(db.DateTime) # udrzuje datum picknuti hlavni tridy
     datetime_registered = db.Column(db.DateTime)
     datetime_calculation_email = db.Column(db.DateTime)
@@ -216,7 +217,7 @@ class User(Common_methods_db_model, UserMixin):
         result = []
         tutor_role = Role.get_by_system_name("tutor")
         for u in User.get_all():
-            if tutor_role in u.roles:
+            if tutor_role in u.roles and u.tutor_this_year:
                 data = {
                     "id": u.id,
                     "full_name": u.get_full_name("cz"),
@@ -580,7 +581,7 @@ class User(Common_methods_db_model, UserMixin):
             return ", ".join(result_list)
     
     
-    def info_pro_detail(self):
+    def info_for_admin_detail(self):
         # ubytovani
         if self.accomodation_type == "own":
             ubytovani = "vlastní"
@@ -619,6 +620,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_this_year_participant": "Ano" if self.is_this_year_participant else "Ne",
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "Zatím neregistrován",
             "accomodation_message": self.ubytovani()["accomodation_message_cz"],
             "accomodation_type": ubytovani,
@@ -692,7 +694,7 @@ class User(Common_methods_db_model, UserMixin):
         }
     
     
-    def info_pro_upravu(self):
+    def info_for_admin_edit(self):
         return {
             "name": self.name if self.name else "",
             "surname": self.surname if self.surname else "",
@@ -731,7 +733,7 @@ class User(Common_methods_db_model, UserMixin):
             "billing_accomodation_correction": self.billing_accomodation_correction,
             "billing_accomodation_correction_reason": self.billing_accomodation_correction_reason,
             "billing_gift": self.billing_gift,
-            
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "tutor_travel": self.tutor_travel,
             "tutor_license_plate": self.tutor_license_plate,
             "tutor_arrival": self.tutor_arrival,
@@ -792,6 +794,7 @@ class User(Common_methods_db_model, UserMixin):
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
+        self.show_name_in_class_list = True if request.form.get("show_name_in_class_list") == "Ano" else False
         self.accomodation_type = request.form.get("accomodation_type") if request.form.get("accomodation_type") != "-" else None
         self.accomodation_count = int(request.form.get("accomodation_count")) if request.form.get("accomodation_count") else 0
         self.musical_education = request.form.get("musical_education")
@@ -830,7 +833,7 @@ class User(Common_methods_db_model, UserMixin):
         self.update()
             
         
-    def info_pro_user_detail(self) -> dict:
+    def info_for_user_detail(self) -> dict:
         kalkulace = self.kalkulace()
         ubytovani = self.ubytovani()
 
@@ -854,6 +857,7 @@ class User(Common_methods_db_model, UserMixin):
             "musical_instrument": self.musical_instrument if self.musical_instrument else "-",
             "repertoire": self.repertoire if self.repertoire else "-",
             "comment": self.comment if self.comment else "-",
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "wants_meals": self.meals,
             "meals": [
                 {
@@ -900,7 +904,7 @@ class User(Common_methods_db_model, UserMixin):
         }
         
         
-    def info_pro_en_user_detail(self) -> dict:
+    def info_for_en_user_detail(self) -> dict:
         kalkulace = self.kalkulace()
         ubytovani = self.ubytovani()
             
@@ -918,6 +922,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_this_year_participant": "Yes" if self.is_this_year_participant else "No",
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
+            "show_name_in_class_list": "Yes" if self.show_name_in_class_list else "No",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
             "accomodation_message": ubytovani["accomodation_message_en"],
             "musical_education": self.musical_education if self.musical_education else "-",
@@ -987,6 +992,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_ssh_member": "Ano" if self.is_ssh_member else "Ne",
             "is_active_participant": "aktivní" if self.is_active_participant else "pasivní",
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
             "accomodation_message": ubytovani["accomodation_message_cz"],
             "musical_education": self.musical_education if self.musical_education else "-",
@@ -1043,6 +1049,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_ssh_member": "Yes" if self.is_ssh_member else "No",
             "is_active_participant": "active" if self.is_active_participant else "inactive",
             "is_student_of_partner_zus": "Yes" if self.is_student_of_partner_zus else "No",
+            "show_name_in_class_list": "Yes" if self.show_name_in_class_list else "No",
             "datetime_registered": pretty_datetime(self.datetime_registered) if self.datetime_registered else "-",
             "accomodation_message": ubytovani["accomodation_message_en"],
             "musical_education": self.musical_education if self.musical_education else "-",
@@ -1082,7 +1089,7 @@ class User(Common_methods_db_model, UserMixin):
         }    
         
         
-    def info_pro_user_upravu(self) -> dict:
+    def info_for_user_edit(self) -> dict:
         zmena_ucasti = "povolena"
         if any([self.primary_class, self.secondary_classes]):
             zmena_ucasti = "zakázána"
@@ -1114,6 +1121,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "zmena_ubytka": zmena_ucasti,
             "accomodation_type": self.accomodation_type,
             "accomodation_count": self.accomodation_count,
@@ -1141,7 +1149,7 @@ class User(Common_methods_db_model, UserMixin):
         }   
         
         
-    def info_pro_en_user_upravu(self) -> dict: # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
+    def info_for_en_user_edit(self) -> dict: # stejny jako cz verze, ale z duvodu konsistence to tu nechavam zalozene
         zmena_ucasti = "povolena"
         if any([self.primary_class, self.secondary_classes]):
             zmena_ucasti = "zakázána"
@@ -1173,6 +1181,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "zmena_ubytka": zmena_ucasti,
             "accomodation_type": self.accomodation_type,
             "accomodation_count": self.accomodation_count,
@@ -1233,6 +1242,7 @@ class User(Common_methods_db_model, UserMixin):
             "is_active_participant": "active" if self.is_active_participant else "passive",
             "zmena_ucasti": zmena_ucasti,
             "is_student_of_partner_zus": "Ano" if self.is_student_of_partner_zus else "Ne",
+            "show_name_in_class_list": "Ano" if self.show_name_in_class_list else "Ne",
             "zmena_ubytka": zmena_ucasti,
             "accomodation_type": self.accomodation_type,
             "accomodation_count": self.accomodation_count,
@@ -1263,6 +1273,7 @@ class User(Common_methods_db_model, UserMixin):
         self.is_ssh_member = True if request.form.get("is_ssh_member") == "Ano" else False
         self.is_active_participant = True if request.form.get("is_active_participant") == "active" else False
         self.is_student_of_partner_zus = True if request.form.get("is_student_of_partner_zus") == "Ano" else False
+        self.show_name_in_class_list = True if request.form.get("show_name_in_class_list") == "Ano" else False
         self.accomodation_type = request.form.get("accomodation_type") if request.form.get("accomodation_type") != "-" else None
         self.accomodation_count = int(request.form.get("accomodation_count")) if request.form.get("accomodation_count") else 0
         self.musical_education = request.form.get("musical_education")

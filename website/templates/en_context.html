@@ -42,6 +42,7 @@
     {% endif %}
     {% if "prihlasen" in roles %}
         <a href="{{url_for('user_views.en_account')}}" class="navbar_link">{{name_en}}</a>
+        <a href="{{url_for('user_views.en_classes')}}" class="navbar_link">Classes</a>
     {% endif %}
 {% endblock %}
 

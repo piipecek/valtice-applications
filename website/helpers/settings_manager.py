@@ -72,12 +72,6 @@ def is_secondary_class_signup_open() -> bool:
     return secondary_start_date < datetime.now() < applications_end_date
 
 
-def is_class_signup_closed() -> bool:
-    settings = get_settings()
-    applications_end_date = datetime.strptime(settings['applications_end_date'] + ' ' + settings['applications_end_time'], '%Y-%m-%d %H:%M')
-    return datetime.now() > applications_end_date
-    
-
 def get_user_lock_state() -> bool:
     settings = get_settings()
     return settings['users_locked']

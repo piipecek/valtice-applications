@@ -98,21 +98,23 @@ for (let key in data) {
             document.getElementById(key).innerText = data[key]
         }
     } else if (key == "taught_classes") {
-        let links_span = document.createElement("span")
-        if (data["taught_classes"].length == 0) {
-            links_span.innerText = "Žádné"
-        } else {
-            for (let trida of data["taught_classes"]) {
-                let trida_a = document.createElement("a")
-                trida_a.href = "/organizator/detail_tridy/" + trida["id"]
-                trida_a.innerText = trida["short_name"]
-                trida_a.classList.add("link")
-                links_span.appendChild(trida_a)
-                links_span.appendChild(document.createTextNode(", "))
+        if (document.getElementById(key)) {
+            let links_span = document.createElement("span")
+            if (data["taught_classes"].length == 0) {
+                links_span.innerText = "Žádné"
+            } else {
+                for (let trida of data["taught_classes"]) {
+                    let trida_a = document.createElement("a")
+                    trida_a.href = "/organizator/detail_tridy/" + trida["id"]
+                    trida_a.innerText = trida["short_name"]
+                    trida_a.classList.add("link")
+                    links_span.appendChild(trida_a)
+                    links_span.appendChild(document.createTextNode(", "))
+                }
+                links_span.lastChild.remove()
             }
-            links_span.lastChild.remove()
+            document.getElementById(key).appendChild(links_span)
         }
-        document.getElementById(key).appendChild(links_span)
     } else if (key == "parent") {
         if (data["parent"] == "-") {
             document.getElementById(key).innerText = "-"

@@ -1,0 +1,40 @@
+{% extends "cz_context.html" %}
+
+{% block content %}
+
+<h1>Třídy</h1>
+<p>
+    Zápis do tříd probíhá na <a class="link" href="{{url_for('user_views.zapis_hlavni_tridy')}}">jiné stránce</a> . Zde si můžete ověřit, do které třídy jste zapsaní nahlédnout na účastníky dalších tříd.
+</p>
+<hr>
+<h2>Moje třídy</h2>
+<p>
+    {% if my_classes.main_class %}
+        Hlavní třída: {{my_classes.main_class}}
+    {% else %}
+        Nejste zapsaní v žádné hlavní třídě.
+    {% endif %}
+</p>
+<p>
+    {% if my_classes.secondary_classes %}
+        Vedlejší třídy: {{my_classes.secondary_classes }}
+    {% else %}
+        Nejste zapsaní v žádné vedlejší třídě.
+    {% endif %}
+</p>
+<hr>
+<h2>Náhled třídy</h2>
+<select class="form-select my-2" id="class_select">
+    <option value="" selected>Vyberte třídu</option>
+</select>
+<div id="class_info" hidden>
+    <h2 id="class_name"></h2>
+    <h3>Hlavní účastníci</h3>
+    <ul id="main_participants"></ul>
+    <h3>Vedlejší účastníci</h3>
+    <ul id="secondary_participants"></ul>
+</div>
+
+<script type="module" src="{{url_for('static', filename='js/user/cz_classes.js')}}"></script>
+
+{% endblock %}

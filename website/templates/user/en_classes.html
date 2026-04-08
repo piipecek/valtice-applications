@@ -1,0 +1,40 @@
+{% extends "en_context.html" %}
+
+{% block content %}
+
+<h1>Classes</h1>
+<p>
+    The class enrollment happens <a class="link" href="{{url_for('user_views.zapis_hlavni_tridy')}}">at an other place</a> . Here you can verify which class you are enrolled in and view participants of other classes.
+</p>
+<hr>
+<h2>My Classes</h2>
+<p>
+    {% if my_classes.main_class %}
+        Main Class: {{my_classes.main_class}}
+    {% else %}
+        You are not enrolled in any main class.
+    {% endif %}
+</p>
+<p>
+    {% if my_classes.secondary_classes %}
+        Secondary Classes: {{my_classes.secondary_classes }}
+    {% else %}
+        You are not enrolled in any secondary classes.
+    {% endif %}
+</p>
+<hr>
+<h2>Class Preview</h2>
+<select class="form-select my-2" id="class_select">
+    <option value="" selected>Select Class</option>
+</select>
+<div id="class_info" hidden>
+    <h2 id="class_name"></h2>
+    <h3>Main Participants</h3>
+    <ul id="main_participants"></ul>
+    <h3>Secondary Participants</h3>
+    <ul id="secondary_participants"></ul>
+</div>
+
+<script type="module" src="{{url_for('static', filename='js/user/en_classes.js')}}"></script>
+
+{% endblock %}

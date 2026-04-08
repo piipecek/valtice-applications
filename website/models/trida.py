@@ -46,7 +46,7 @@ class Trida(Common_methods_db_model):
         }
         
     
-    def info_pro_detail(self):
+    def info_for_admin_detail(self):
         if self.age_group == "child":
             age_group = "Do 15 let včetně"
         elif self.age_group == "adult":
@@ -162,3 +162,99 @@ class Trida(Common_methods_db_model):
             "state_secondary": state_secondary,
             "state_time_exclusive": state_time_exclusive
         }
+    
+    
+    @staticmethod
+    def classes_overview():
+        result = []
+        tridy = sorted(Trida.get_all(), key=lambda t: czech_sort.key(t.full_name_cz or ""))
+        
+        def _get_anonymous_user_texts(count: int, has_only_anonymous_participants: bool) -> dict[str, str]:
+            # creates texts: Žádní účastníci / Jeden účastník / {2,3,4} účastníci / {5+} účastníků
+            # or, "a žádní další účastníci" / "a jeden další účastník" / "a {2,3,4} další účastníci" / "a {5+} dalších účastníků" if has_only_anonymous_participants is False
+            # all that in cz and en
+            texts = {
+                "cz":"",
+                "en":""
+            }
+            if has_only_anonymous_participants:
+                if count == 0:
+                    texts["cz"] = "Žádní účastníci"
+                    texts["en"] = "No participants"
+                elif count == 1:
+                    texts["cz"] = "Jeden účastník"
+                    texts["en"] = "One participant"
+                elif count in [2,3,4]:
+                    texts["cz"] = f"{count} účastníci"
+                    texts["en"] = f"{count} participants"
+                else:
+                    texts["cz"] = f"{count} účastníků"
+                    texts["en"] = f"{count} participants"
+            else:
+                if count == 0:
+                    texts["cz"] = "a žádní další účastníci"
+                    texts["en"] = "and no additional participants"
+                elif count == 1:
+                    texts["cz"] = "a jeden další účastník"
+                    texts["en"] = "and one additional participant"
+                elif count in [2,3,4]:
+                    texts["cz"] = f"a {count} další účastníci"
+                    texts["en"] = f"and {count} additional participants"
+                else:
+                    texts["cz"] = f"a {count} dalších účastníků"
+                    texts["en"] = f"and {count} additional participants"
+            return texts
+        
+        for trida in tridy:
+            
+            main_participants = sorted(trida.primary_participants, key=lambda u: czech_sort.key(u.surname or ""))
+            secondary_participants = sorted(trida.secondary_participants, key=lambda u: czech_sort.key(u.surname or ""))
+            
+            entry = {
+                "id": trida.id,
+                "full_name_cz": trida.full_name_cz,
+                "full_name_en": trida.full_name_en,
+                "main_participants": [],
+                "secondary_participants": [],
+                "main_participants_anonymous_cz": "",
+                "main_participants_anonymous_en": "",
+                "secondary_participants_anonymous_cz": "",
+                "secondary_participants_anonymous_en": "",
+            }
+            
+            main_participants_anonymous_count = 0
+            main_participants_only_anonymous = True
+            secondary_participants_anonymous_count = 0
+            secondary_participants_only_anonymous = True
+            
+            for participant in main_participants:
+                if participant.show_name_in_class_list:
+                    main_participants_only_anonymous = False
+                    participant_text = participant.get_full_name("cz")
+                    if participant.musical_instrument:
+                        participant_text += f" - {participant.musical_instrument}"
+                    entry["main_participants"].append(participant_text)
+                else:
+                    main_participants_anonymous_count += 1
+                
+            for participant in secondary_participants:
+                if participant.show_name_in_class_list:
+                    secondary_participants_only_anonymous = False
+                    participant_text = participant.get_full_name("cz")
+                    if participant.musical_instrument:
+                        participant_text += f" - ({participant.musical_instrument})"
+                    entry["secondary_participants"].append(participant_text)
+                else:
+                    secondary_participants_anonymous_count += 1
+            
+            main_texts = _get_anonymous_user_texts(main_participants_anonymous_count, main_participants_only_anonymous)
+            secondary_texts = _get_anonymous_user_texts(secondary_participants_anonymous_count, secondary_participants_only_anonymous)
+        
+            
+            entry["main_participants_anonymous_cz"] = main_texts["cz"]
+            entry["main_participants_anonymous_en"] = main_texts["en"]
+            entry["secondary_participants_anonymous_cz"] = secondary_texts["cz"]
+            entry["secondary_participants_anonymous_en"] = secondary_texts["en"]
+            result.append(entry)
+            
+        return result

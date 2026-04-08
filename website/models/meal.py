@@ -40,7 +40,7 @@ class Meal(Common_methods_db_model):
             "count": sum([meal_order.count for meal_order in self.meal_orders])
         }
     
-    def info_pro_detail(self):
+    def info_for_admin_detail(self):
         typ = "snídaně"
         if self.type == "lunch":
             typ = "oběd"

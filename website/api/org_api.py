@@ -29,13 +29,13 @@ def seznam_uctu():
 @org_api.route("/detail_ucastnika/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def detail_ucastnika(id: int):
-    return json.dumps(User.get_by_id(id).info_pro_detail())
+    return json.dumps(User.get_by_id(id).info_for_admin_detail())
 
 
 @org_api.route("/uprava_ucastnika/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def uprava_ucastnika(id: int):
-    return json.dumps(User.get_by_id(id).info_pro_upravu())
+    return json.dumps(User.get_by_id(id).info_for_admin_edit())
 
 
 @org_api.route("/tridy_pro_upravu_ucastnika")
@@ -47,7 +47,7 @@ def tridy_pro_upravu_ucastnika():
 @org_api.route("/detail_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def detail_tridy(id: int):
-    return json.dumps(Trida.get_by_id(id).info_pro_detail())
+    return json.dumps(Trida.get_by_id(id).info_for_admin_detail())
 
 
 @org_api.route("/uprava_tridy/<int:id>")
@@ -170,7 +170,7 @@ def seznam_jidel():
 @org_api.route("/detail_jidla/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def detail_jidla(id: int):
-    return json.dumps(Meal.get_by_id(id).info_pro_detail())
+    return json.dumps(Meal.get_by_id(id).info_for_admin_detail())
 
 
 @org_api.route("/uprava_jidla/<int:id>")
