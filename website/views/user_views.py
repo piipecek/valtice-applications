@@ -528,8 +528,8 @@ def en_zapis_vedlejsi_tridy():
 @ensure_valid_participant("cz")
 def cz_classes():
     my_classes = {
-        "main_class": current_user.primary_class.full_name_cz if current_user.primary_class else None,
-        "secondary_classes": ", ".join([c.full_name_cz for c in current_user.secondary_classes]) if current_user.secondary_classes else None
+        "main_class": current_user.primary_class.get_name_cz() if current_user.primary_class else None,
+        "secondary_classes": ", ".join([c.get_name_cz() for c in current_user.secondary_classes]) if current_user.secondary_classes else None
     }
     return render_template("user/cz_classes.html", roles=get_roles(), my_classes =  my_classes)
 
@@ -538,7 +538,7 @@ def cz_classes():
 @ensure_valid_participant("en")
 def en_classes():
     my_classes = {
-        "main_class": current_user.primary_class.full_name_en if current_user.primary_class else None,
-        "secondary_classes": ", ".join([c.full_name_en for c in current_user.secondary_classes]) if current_user.secondary_classes else None
+        "main_class": current_user.primary_class.get_name_en() if current_user.primary_class else None,
+        "secondary_classes": ", ".join([c.get_name_en() for c in current_user.secondary_classes]) if current_user.secondary_classes else None
     }
     return render_template("user/en_classes.html", roles=get_roles(), my_classes =  my_classes)

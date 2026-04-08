@@ -41,7 +41,7 @@ def uprava_ucastnika(id: int):
 @org_api.route("/tridy_pro_upravu_ucastnika")
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_upravu_ucastnika():
-    return json.dumps([t.data_pro_upravu_ucastniku() for t in sorted(Trida.get_all(), key=lambda x: czech_sort.key(x.short_name_cz))])
+    return json.dumps([t.data_pro_upravu_ucastniku() for t in sorted(Trida.get_all(), key=lambda x: czech_sort.key(x.get_name_cz()))])
 
 
 @org_api.route("/detail_tridy/<int:id>")
@@ -53,13 +53,13 @@ def detail_tridy(id: int):
 @org_api.route("/uprava_tridy/<int:id>")
 @require_role_system_name_on_current_user("organiser")
 def uprava_tridy(id: int):
-    return json.dumps(Trida.get_by_id(id).info_pro_upravu())
+    return json.dumps(Trida.get_by_id(id).info_for_admin_edit())
 
 
 @org_api.route("/seznam_trid")
 @require_role_system_name_on_current_user("organiser")
 def seznam_trid():
-    return json.dumps(sorted([t.info_pro_seznam_trid() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["short_name"])))
+    return json.dumps(sorted([t.info_for_admin_class_list() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["name"])))
 
 
 @org_api.route("/ceny")
@@ -71,7 +71,7 @@ def ceny():
 @org_api.route("/tridy_pro_seznamy")
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_seznamy():
-    return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["long_name_cz"])))
+    return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["name"])))
 
 
 @org_api.route("/statistiky")
@@ -140,7 +140,7 @@ def seznam_lektoru_pro_upravu_tridy():
 def my_participants():
     result = [
         {
-            "class_name": trida.full_name_cz,
+            "class_name": trida.get_name_cz(),
             "primary_participants": [u.info_for_tutor() for u in sorted(trida.primary_participants, key=lambda u: u.datetime_class_pick)],
             "secondary_participants": [u.info_for_tutor() for u in trida.secondary_participants]
         } for trida in current_user.taught_classes
@@ -153,7 +153,7 @@ def my_participants():
 def my_participants_en():
     result = [
         {
-            "class_name": trida.full_name_en,
+            "class_name": trida.get_name_en(),
             "primary_participants": [u.info_for_tutor() for u in sorted(trida.primary_participants, key=lambda u: u.datetime_class_pick)],
             "secondary_participants": [u.info_for_tutor() for u in trida.secondary_participants]
         } for trida in current_user.taught_classes
@@ -176,4 +176,4 @@ def detail_jidla(id: int):
 @org_api.route("/uprava_jidla/<int:id>")
 @require_role_system_name_on_current_user("editor")
 def uprava_jidla(id: int):
-    return json.dumps(Meal.get_by_id(id).info_pro_upravu())
+    return json.dumps(Meal.get_by_id(id).info_for_admin_edit())

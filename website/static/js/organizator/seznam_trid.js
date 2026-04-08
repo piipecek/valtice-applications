@@ -9,7 +9,7 @@ tc.make_header(["Název", "Lektor", "Počet účastníků"])
 for (let trida of tridy){
     let a = document.createElement("a")
     a.href = "/organizator/detail_tridy/" + trida["id"]
-    a.innerText = trida["short_name"]
+    a.innerText = trida["name"]
     a.classList.add("jmeno-a")
 
     let links_span = document.createElement("span")

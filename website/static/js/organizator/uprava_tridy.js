@@ -5,7 +5,8 @@ let lektori = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_lektoru_p
 let has_capacity_select = document.getElementById("has_capacity")
 let capacity_row = document.getElementById("capacity_row")
 
-document.getElementById("name_title").innerText = data["short_name_cz"]
+
+document.getElementById("name_title").innerText = data["name"]
 
 
 for (let lektor of lektori) {
@@ -17,7 +18,11 @@ for (let lektor of lektori) {
 
 
 for (let key in data) {
-    document.getElementById(key).value = data[key]
+    if (key == "name") {
+        continue
+    } else {
+        document.getElementById(key).value = data[key]
+    }
 }
 
 

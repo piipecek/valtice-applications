@@ -6,14 +6,13 @@ let class_name = document.getElementById("class_name")
 let main_participants = document.getElementById("main_participants")
 let secondary_participants = document.getElementById("secondary_participants")
 
-console.log(data)
 
 class_select.addEventListener("change", handle_trida_display)
 
 for (let trida of data) {
     let option = document.createElement("option")
     option.value = trida.id
-    option.textContent = trida.full_name_en
+    option.textContent = trida.name_en
     class_select.appendChild(option)
 }
 
@@ -24,9 +23,8 @@ function handle_trida_display() {
     }
     let trida = data.find(t => t.id === parseInt(class_select.value))
 
-    console.log(trida)
 
-    class_name.textContent = trida.full_name_en
+    class_name.textContent = trida.name_en
     main_participants.innerHTML = ""
     secondary_participants.innerHTML = ""
     for (let participant of trida.main_participants) {

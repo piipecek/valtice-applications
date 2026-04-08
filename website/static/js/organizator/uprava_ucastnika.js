@@ -15,7 +15,7 @@ function generate_class_picker(name) {
     for (let trida of tridy) {
         let option = document.createElement("option")
         option.value = trida["id"]
-        option.innerText = trida["full_name_cz"]
+        option.innerText = trida["name"]
         select.appendChild(option)
     }
     let option = document.createElement("option")
@@ -83,7 +83,6 @@ for (let key in data) {
             let row = generate_secondary_class_row()
             document.getElementById("secondary_classes_div").appendChild(row)
             let select = row.children[0].children[0]
-            console.log(data[key][i])
             select.value = data[key][i]
         }
     } else if (key.includes("tutor")) {

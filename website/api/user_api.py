@@ -158,8 +158,8 @@ def handle_class_click():
             current_user.secondary_classes.remove(trida)
             current_user.update()
         return json.dumps({
-            "cz_status": f"Úspěšně jste se odhlásili z třídy {trida.short_name_cz}.",
-            "en_status": f"You have successfully unenrolled from class {trida.short_name_en}.",
+            "cz_status": f"Úspěšně jste se odhlásili z třídy {trida.get_name_cz()}.",
+            "en_status": f"You have successfully unenrolled from class {trida.get_name_en()}.",
             "data": trida.class_capacity_data()
         })
     elif data["state"] == "available":
@@ -184,8 +184,8 @@ def handle_class_click():
             current_user.datetime_class_pick = datetime.now()
             current_user.update()
             return json.dumps({
-                "cz_status": f"Úspěšně jste byli zapsáni do třídy {trida.short_name_cz}.",
-                "en_status": f"You have successfully enrolled in class {trida.short_name_en}.",
+                "cz_status": f"Úspěšně jste byli zapsáni do třídy {trida.get_name_cz()}.",
+                "en_status": f"You have successfully enrolled in class {trida.get_name_en()}.",
                 "data": trida.class_capacity_data()
             })
         else:
@@ -214,8 +214,8 @@ def handle_class_click():
             trida.secondary_participants.append(current_user)
             trida.update()
             return json.dumps({
-                "cz_status": f"Úspěšně jste byli zapsáni do třídy {trida.short_name_cz}.",
-                "en_status": f"You have successfully enrolled in class {trida.short_name_en}.",
+                "cz_status": f"Úspěšně jste byli zapsáni do třídy {trida.get_name_cz()}.",
+                "en_status": f"You have successfully enrolled in class {trida.get_name_en()}.",
                 "data": trida.class_capacity_data()
             })
     else:

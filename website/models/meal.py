@@ -54,7 +54,7 @@ class Meal(Common_methods_db_model):
         }
 
 
-    def info_pro_upravu(self):
+    def info_for_admin_edit(self):
         return {
             "type": self.type,
             "location": self.location,

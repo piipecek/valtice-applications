@@ -153,10 +153,8 @@ def restore(xlsx_file) -> dict:
 
         trida = Trida()
         trida.id = row_dict['id']
-        trida.short_name_cz = row_dict['short_name_cz']
-        trida.full_name_cz = row_dict['full_name_cz']
-        trida.short_name_en = row_dict['short_name_en']
-        trida.full_name_en = row_dict['full_name_en']
+        trida.name_cz = row_dict['name_cz']
+        trida.name_en = row_dict['name_en']
         trida.capacity = row_dict['capacity']
         trida.has_capacity = row_dict['has_capacity']
         trida.secondary_billing_behavior = row_dict['secondary_billing_behavior']

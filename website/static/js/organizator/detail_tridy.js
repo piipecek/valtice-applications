@@ -6,7 +6,7 @@ let data = JSON.parse(await awaitable_custom_fetch("/org_api/detail_tridy/" + id
 let jmeno_th = document.getElementById("jmeno_th")
 let cas_th = document.getElementById("cas_th")
 
-document.getElementById("name").innerHTML = data["short_name_cz"]
+document.getElementById("name").innerHTML = data["name_cz"]
 
 for (let key in data) {
     if (["primary_participants", "secondary_participants"].includes(key)) {

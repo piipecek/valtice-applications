@@ -18,7 +18,6 @@ document.getElementById("vytvorit_button").addEventListener("click", function() 
     .done(function(data) {
         document.getElementById("loader").hidden = true
         document.getElementById("druhy_krok").hidden = false
-        console.log(JSON.parse(data))
         vykreslit_tabulku(JSON.parse(data))
     })
     .fail(function() {
@@ -45,7 +44,7 @@ for (let trida of tridy) {
     let label = document.createElement("label")
     label.setAttribute("class", "form-check-label")
     label.setAttribute("for", trida.id)
-    label.innerText = trida["long_name_cz"]
+    label.innerText = trida["name"]
     let div = document.createElement("div")
     div.setAttribute("class", "form-check")
     div.appendChild(input)

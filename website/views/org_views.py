@@ -51,7 +51,7 @@ def settings():
             flash("Uživatel byl vytvořen", category="success")
             return redirect(url_for("org_views.uprava_ucastnika", id=u.id))
         elif request.form.get("nova_trida"):
-            t = Trida(short_name_cz=request.form.get("short_name"))
+            t = Trida(discipline_cz=request.form.get("discipline_cz"))
             t.update()
             id = t.id
             return redirect(url_for("org_views.uprava_tridy", id=id))

@@ -39,7 +39,7 @@ if (tridy.length == 0) {
             parent_div.appendChild(participant_div)
             participant_div.classList.add("tutor-participant-div")
             
-            participant_div.appendChild(row_factory("Name", participant.full_name_en))
+            participant_div.appendChild(row_factory("Name", participant.name_en))
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Phone", participant.phone))
             participant_div.appendChild(row_factory("Age", participant.age))
@@ -62,7 +62,7 @@ if (tridy.length == 0) {
             parent_div.appendChild(participant_div)
             participant_div.classList.add("tutor-participant-div")
             
-            participant_div.appendChild(row_factory("Name", participant.full_name_en))
+            participant_div.appendChild(row_factory("Name", participant.name_en))
             participant_div.appendChild(row_factory("E-mail", participant.email))
             participant_div.appendChild(row_factory("Phone", participant.phone))
             participant_div.appendChild(row_factory("Age", participant.age))
