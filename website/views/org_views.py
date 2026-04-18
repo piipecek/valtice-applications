@@ -137,8 +137,6 @@ def settings():
             return redirect(url_for("org_views.settings"))
         elif request.form.get("logs"):
             return get_logs_for_browser()
-        elif request.form.get("ubytko_internat"):
-            return User.get_fronta_na_internat()
         elif request.form.get("restore"):
             xlsx_file = request.files.get("restore_file")
             if not xlsx_file:

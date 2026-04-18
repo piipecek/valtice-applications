@@ -22,7 +22,7 @@ for (let lektor of lektori){
             trida_a.innerText = trida["name"]
             trida_a.classList.add("link")
             links_span.appendChild(trida_a)
-            links_span.appendChild(document.createTextNode(", "))
+            links_span.appendChild(document.createElement("br"))
         }
         links_span.lastChild.remove()
     }
