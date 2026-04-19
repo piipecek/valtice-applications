@@ -107,12 +107,16 @@ function vyhodnotit() {
         mnozina = "interested"
     } else if (document.getElementById("enrolled").checked) {
         mnozina = "enrolled"
-    } else if (document.getElementById("all").checked) {
-        mnozina = "all"
-    } else if (document.getElementById("tutors").checked) {
-        mnozina = "tutors"
     } else if (document.getElementById("passive").checked) {
         mnozina = "passive"
+    } else if (document.getElementById("present").checked) {
+        mnozina = "present"
+    } else if (document.getElementById("all").checked) {
+        mnozina = "all"
+    } else if (document.getElementById("team").checked) {
+        mnozina = "team"
+    } else if (document.getElementById("this_year_teachers").checked) {
+        mnozina = "this_year_teachers"
     }
 
     // ubytko
@@ -194,7 +198,12 @@ function vyhodnotit() {
         "tutor_departure",
         "tutor_accompanying_names",
         "tutor_address",
-        "tutor_bank_account"
+        "tutor_bank_account",
+        "is_repetiteur",
+        "is_tutor",
+        "is_organiser",
+        "is_editor",
+        "is_admin"
     ]
     let atributy = []
     for (let id of atributy_ids) {

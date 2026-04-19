@@ -1230,21 +1230,30 @@ class User(Common_methods_db_model, UserMixin):
     def vytvorit_seznam(kriteria: dict) -> dict:
         
         ucastnici = User.get_all()
+        
         tutor_role = Role.get_by_system_name("tutor")
+        repetiteur_role = Role.get_by_system_name("repetiteur")
+        editor_role = Role.get_by_system_name("editor")
+        organiser_role = Role.get_by_system_name("organiser")
+        admin_role = Role.get_by_system_name("admin")
         
         # mnozina
-        if kriteria["mnozina"] == "tutors":
-            ucastnici = list(filter(lambda u: tutor_role in u.roles, ucastnici))
+        if kriteria["mnozina"] == "team":
+            ucastnici = list(filter(lambda u: len(u.roles) > 0, ucastnici))
+        elif kriteria["mnozina"] == "this_year_teachers":
+            ucastnici = list(filter(lambda u: tutor_role in u.roles or repetiteur_role in u.roles and u.tutor_this_year, ucastnici))
         else:
             ucastnici = list(filter(lambda u: len(u.roles) == 0, ucastnici))
-            if kriteria["mnozina"] == "all":
-                pass
+            if kriteria["mnozina"] == "interested":
+                ucastnici = list(filter(lambda u: u.is_this_year_participant, ucastnici))
             elif kriteria["mnozina"] == "enrolled":
                 ucastnici = list(filter(lambda u: u.primary_class_id, ucastnici))
-            elif kriteria["mnozina"] == "interested":
-                ucastnici = list(filter(lambda u: u.is_this_year_participant, ucastnici))
             elif kriteria["mnozina"] == "passive":
                 ucastnici = list(filter(lambda u: not u.is_active_participant, ucastnici))
+            elif kriteria["mnozina"] == "present":
+                ucastnici = list(filter(lambda u: u.datetime_registered, ucastnici))
+            elif kriteria["mnozina"] == "all":
+                pass
         
         
         # filtr tříd
@@ -1550,6 +1559,23 @@ class User(Common_methods_db_model, UserMixin):
                 elif a == "tutor_bank_account":
                     entry["data"]["Bankovní účet"] = u.tutor_bank_account if u.tutor_bank_account else "-"
                     result["headers"].append("Bankovní účet")
+                    
+                # role
+                elif a == "is_repetiteur":
+                    entry["data"]["Korepetitor"] = "ano" if repetiteur_role in u.roles else "ne"
+                    result["headers"].append("Korepetitor")
+                elif a == "is_tutor":
+                    entry["data"]["Lektor"] = "ano" if tutor_role in u.roles else "ne"
+                    result["headers"].append("Lektor")
+                elif a == "is_organiser":
+                    entry["data"]["Organizátor"] = "ano" if organiser_role in u.roles else "ne"
+                    result["headers"].append("Organizátor")
+                elif a == "is_editor":
+                    entry["data"]["Editor"] = "ano" if editor_role in u.roles else "ne"
+                    result["headers"].append("Editor")
+                elif a == "is_admin":
+                    entry["data"]["Administrátor"] = "ano" if admin_role in u.roles else "ne"
+                    result["headers"].append("Administrátor")
                     
             result["lidi"].append(entry)
         seen = set()

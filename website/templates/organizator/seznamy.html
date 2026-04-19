@@ -43,13 +43,22 @@
                         <label class="form-radio-label" for="passive">Pasivní účastníci</label>
                     </div>
                     <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="present" name="mnozina">
+                        <label class="form-radio-label" for="present">Všichni prezentovaní ve Valticích</label>
+                    </div>
+                    <div class="form-radio">
                         <input class="form-radio-input" type="radio" id="all" name="mnozina">
                         <label class="form-radio-label" for="all">Všichni účastníci za všechny roky</label>
                     </div>
                     <div class="form-radio">
-                        <input class="form-radio-input" type="radio" id="tutors" name="mnozina">
-                        <label class="form-radio-label" for="tutors">Lektoři</label>
+                        <input class="form-radio-input" type="radio" id="team" name="mnozina">
+                        <label class="form-radio-label" for="team">Všichni členové týmu</label>
                     </div>
+                    <div class="form-radio">
+                        <input class="form-radio-input" type="radio" id="this_year_teachers" name="mnozina">
+                        <label class="form-radio-label" for="this_year_teachers">Letošní lektoři a korepetitoři</label>
+                    </div>
+
                 </div>
                 <h3>Ubytování</h3>
                 <small class="text-muted">Vybráním tělocvičny i internátu budou vybráni všichni účastníci, kterým MLŠSH zařizuje ubytování.</small>
@@ -361,6 +370,28 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="tutor_bank_account">
                         <label class="form-check-label" for="tutor_bank_account">Bankovní účet</label>
+                    </div>
+
+                    <h3>Role</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_repetiteur">
+                        <label class="form-check-label" for="is_repetiteur">Je korepetitorem?</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_tutor">
+                        <label class="form-check-label" for="is_tutor">Je lektorem?</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_organiser">
+                        <label class="form-check-label" for="is_organiser">Je organizátorem?</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_editor">
+                        <label class="form-check-label" for="is_editor">Je editorem?</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_admin">
+                        <label class="form-check-label" for="is_admin">Je administrátorem?</label>
                     </div>
                 </div>
             </div>
