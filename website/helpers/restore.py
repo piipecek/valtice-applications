@@ -129,6 +129,7 @@ def restore(xlsx_file) -> dict:
         user.billing_food_correction_reason = row_dict['billing_food_correction_reason']
         user.billing_accomodation_correction = row_dict['billing_accomodation_correction']
         user.billing_accomodation_correction_reason = row_dict['billing_accomodation_correction_reason']
+        user.tutor_this_year = row_dict['tutor_this_year']
         user.tutor_travel = row_dict['tutor_travel']
         user.tutor_license_plate = row_dict['tutor_license_plate']
         user.tutor_arrival = row_dict['tutor_arrival']
@@ -153,8 +154,8 @@ def restore(xlsx_file) -> dict:
 
         trida = Trida()
         trida.id = row_dict['id']
-        trida.name_cz = row_dict['name_cz']
-        trida.name_en = row_dict['name_en']
+        trida.discipline_cz = row_dict['discipline_cz']
+        trida.discipline_en = row_dict['discipline_en']
         trida.capacity = row_dict['capacity']
         trida.has_capacity = row_dict['has_capacity']
         trida.secondary_billing_behavior = row_dict['secondary_billing_behavior']

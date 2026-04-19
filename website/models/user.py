@@ -1596,7 +1596,7 @@ class User(Common_methods_db_model, UserMixin):
         data = User.vytvorit_seznam(kriteria)
         wb = Workbook()
         ws = wb.active
-        ws.title = "Učastníci"
+        ws.title = "Vypsané účty"
         keys = data["lidi"][0]["data"].keys()
         ws.append(list(keys))
         for radek in data["lidi"]:

@@ -371,6 +371,7 @@ def seznamy():
             return render_template("organizator/pdf_seznam.html", data = json.dumps(data_pro_tabulku))
         elif request.form.get("ucel") == "view":
             result = json.loads(request.form.get("result"))
+            print(json.dumps(result, indent=4))
             data_pro_tabulku = User.vytvorit_seznam(result)
             return json.dumps(data_pro_tabulku)
         else:
@@ -493,3 +494,33 @@ def uprava_jidla(id:int):
             return redirect(url_for("org_views.seznam_jidel"))
         else:
             return request.form.to_dict()
+
+
+@org_views.route("/accommodation_export")
+@require_role_system_name_on_current_user("organiser")
+def accommodation_export():
+    kriteria = {
+        "tridy": [],
+        "mnozina": "interested",
+        "ubytko": [
+            "gym",
+            "vs"
+        ],
+        "strava": [],
+        "ostatni": [],
+        "atributy": [
+            "age",
+            "is_ssh_member",
+            "is_active_participant",
+            "datetime_class_pick",
+            "accomodation_type",
+            "accomodation_count",
+            "comment",
+            "admin_comment",
+            "parent",
+            "children"
+        ],
+        "atribut_razeni": "surname"
+    }
+    bytes = User.vytvorit_xlsx_seznam(kriteria)
+    return send_file(bytes, as_attachment=True, download_name="ubytko.xlsx", mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

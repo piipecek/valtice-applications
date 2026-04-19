@@ -2,9 +2,8 @@
 
 {%block content%}
     <h1>Dokumentace k Valtickému přihláškovému systému</h1>
-    <h1>Je zastaralá a potřebuje dopsat po četných změnách</h1>
     <p>
-        TODO tohle dát kam to patří: Pokud potřebujete někam, kam nemáte přístup, kontaktujte jednoho z administrátorů: {{admins}}
+        Pokud potřebujete někam, kam nemáte přístup, kontaktujte jednoho z administrátorů: {{admins}}
     </p>
     <p>
         Cílem této stránky je poskytnout organizátorům informace o tom, jak systém funguje a jak jej používat.
@@ -66,60 +65,39 @@
     </p>
 
     <h2 id="tridy">Třídy</h2>
-
+    TODO Popsat ty jejich vlastnosti
     <h2 id="ubytovani">Ubytování</h2>
     <p>
-        Umisťování účastíků na internát nebo do tělocvičny je ruční práce. Systém poskytuje výpis všech relevantních informací popsaných níže. Účastníci mohou být ubytováni v jedné ze tří možností:
-    </p>
-    <ul>
-        <li>Internát VŠ</li>
-        <li>Tělocvična</li>
-        <li>Zařizují si ubytování sami</li>
-    </ul>
-    <p>
-        V rozhodování o ubytování hraje roli:
-    </p>
-    <ul>
-        <li>Členství v SSH</li>
-        <li>Návaznost na děti / rodiče</li>
-        <li>Čas přihlášení do třídy</li>
-        <li>Osobní poznámka a preference účastníka</li>
-        <li>Aktivní / pasivní účast</li>
-    </ul>
-    <p>
-        V další sekci je vysvětleno, jaké informace vidí účastník ve svém účtu:
-    </p>
-    <ul>
-        <li>Pokud účastník ještě žádnou možnost ubytování nevybral, je pro něj uvedena hláška <i>Ubytování zatím není vybráno.</i></li>
-        <li>Zařizuje-li si účastník ubytování sám, je pro něj uvedena hláška <i>Ubytování máte vlastní.</i></li>
-        <li>Pokud má účastník zájem o ubytování na internátu nebo v tělocvičně, vidí hlášku v závislosti na své účasti:</li>
+        Umisťování účastíků na internát nebo do tělocvičny je ruční práce. Systém poskytuje výpis všech relevantních informací níže. Účastník ve svém účtu vidí vždy právě jednu z těchto hlášek:
         <ul>
-            <li>Je-li účastník pasivní a není rodičem ani dítětem, je pro něj uvedena hláška <i>Nemáte nárok na ubytování, protože nejste aktivní účastník a nejste doprovod dětského účastníka.</i></li>
-            <li>Je-li účastník aktivní nebo je rodičem nebo dítětem, je pro něj uvedena hláška <i>Máte zájem o ubytování na internátu VŠ / v tělocvičně. O Vašem umístění Vám dáme vědět co nejdříve po přihlašování do tříd.</i></li>
+            <li>Pokud účastník ještě žádnou možnost ubytování nevybral, je pro něj uvedena hláška <i>Ubytování zatím není vybráno.</i></li>
+            <li>Zařizuje-li si účastník ubytování sám, je pro něj uvedena hláška <i>Ubytování máte vlastní.</i></li>
+            <li>Pokud má účastník zájem o ubytování na internátu nebo v tělocvičně, vidí hlášku v závislosti na své účasti:</li>
+            <ul>
+                <li>Je-li účastník pasivní a není rodičem ani dítětem, je pro něj uvedena hláška <i>Nemáte nárok na ubytování, protože nejste aktivní účastník a nejste doprovod dětského účastníka.</i></li>
+                <li>Je-li účastník aktivní nebo je rodičem nebo dítětem, je pro něj uvedena hláška <i>Máte zájem o ubytování na internátu VŠ / v tělocvičně. O Vašem umístění Vám dáme vědět co nejdříve po přihlašování do tříd.</i></li>
+            </ul>
         </ul>
-    </ul>
-    <p>
-        Pro vytvoření kompletního přehledu relevantních informací pro umisťování účastníků je doporučeno využít funkci <a href="{{url_for('org_views.seznamy')}}" class="link">Seznamy</a> a vypsat tyto informace:
     </p>
-    <ol>
-        <li>Při výběru účtů vybrat v sekci ubytování tělocvičnu i internát VŠ</li>
-        <li>Při výběru atributů k vypsání zvolit:</li>
-        <ul>
-            <li><i>Jméno a příjmení není na výběr, bude vypsáno vždy</i></li>
-            <li>Věk</li>
-            <li>Je pod 16 let? (Tato informace není s věkem nijak propojena)</li> 
-            <li>Je členem SSH?</li>
-            <li>Účast</li>
-            <li>Ubytování</li>
-            <li>Počet ubytování</li>
-            <li>Uživatelská a admin poznámka</li>
-            <li>Čas výběru hlavní třídy</li>
-        </ul>
-        <li>Seřadit výsledky podle času výběru hlavní třídy</li>
-        <li>Vytvořit seznam</li>
-        <li>Stáhnout .xlsx</li>
-        <li>Pokračovat ručně</li>
-    </ol>
+    <p>
+        Vytvoření výpisu se dá provést i ve výpisech, ale je možné využít odkaz níže. Postup je následující:
+        <ol>
+            <li>Jsou vybrány všechny účastnické účty, které mají zájem o letošní ročník a ubytování v tělocvičně nebo v internátu VŠ</li>
+            <li>Při výběru atributů k vypsání je zvoleno:</li>
+            <ul>
+                <li><i>Jméno a příjmení</i></li>
+                <li>Věk</li>
+                <li>Je členem SSH?</li>
+                <li>Účast</li>
+                <li>Ubytování</li>
+                <li>Počet ubytování</li>
+                <li>Uživatelská a admin poznámka</li>
+                <li>Čas výběru hlavní třídy</li>
+                <li>Nadřazený a podřazený účet</li>
+            </ul>
+        </ol>
+        <a class="link" target="_blank" href="{{url_for('org_views.accommodation_export')}}">Stáhnout výpis</a>
+    </p>
 
     <h2 id="cenik">Ceník</h2>
 
