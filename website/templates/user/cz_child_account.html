@@ -131,89 +131,95 @@
 </p>
 <hr>
 <h2>Finance</h2>
-<div class="table-responsive">
-    <table class="table table-hover table-striped">
-        <tbody>
-            <tr>
-                <td class="pravy_text">Placeno dne</td>
-                <td id="billing_date_paid"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Celková částka</td>
-                <td id="billing_celkem"></td>
-                <td></td>
-            </tr>
-            <tr id="billing_primary_class_row" hidden>
-                <td class="pravy_text">Hlavní třída</td>
-                <td id="billing_hlavni_trida"></td>
-                <td></td>
-            </tr>
-            <tr id="billing_secondary_class_row" hidden>
-                <td class="pravy_text">Vedlejší třídy</td>
-                <td id="billing_vedlejsi_tridy"></td>
-                <td></td>
-            </tr>
-            <tr id="billing_passive_row" hidden>
-                <td class="pravy_text">Pasivní účast</td>
-                <td id="billing_pasivni_ucast"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Ubytování</td>
-                <td id="billing_ubytovani"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Snídaně</td>
-                <td id="billing_snidane"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Obědy</td>
-                <td id="billing_obedy"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Večeře</td>
-                <td id="billing_vecere"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Dar</td>
-                <td id="billing_dar"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Korekce kurzovné</td>
-                <td id="billing_correction"></td>
-                <td id="billing_correction_reason"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Korekce strava</td>
-                <td id="billing_food_correction"></td>
-                <td id="billing_food_correction_reason"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Korekce ubytko</td>
-                <td id="billing_accomodation_correction"></td>
-                <td id="billing_accomodation_correction_reason"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-{% if users_can_send_calculations %}
-<form method="post">
-    <div class="row">
-        <div class="col">
-            Pokud jste si jistí, že všechny údaje souhlasí, můžete si kalkulaci odeslat na vlastní e-mail kliknutím na tlačítko "Odeslat kalkulaci".
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Odeslat kalkulaci</button><br>
-        </div>
+<p>
+    Pokud chcete, můžete zde nahlédnout do kalkulace svého dítěte. Prosíme, neplaťte žádné částky před {{payments_allowed_datetime}}.
+</p>
+<button class="custom_button" id="show_finance_button" type="button">Zobrazit kalkulaci</button>
+<div id="finance_calculation" hidden>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr>
+                    <td class="pravy_text">Placeno dne</td>
+                    <td id="billing_date_paid"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Celková částka</td>
+                    <td id="billing_celkem"></td>
+                    <td></td>
+                </tr>
+                <tr id="billing_primary_class_row" hidden>
+                    <td class="pravy_text">Hlavní třída</td>
+                    <td id="billing_hlavni_trida"></td>
+                    <td></td>
+                </tr>
+                <tr id="billing_secondary_class_row" hidden>
+                    <td class="pravy_text">Vedlejší třídy</td>
+                    <td id="billing_vedlejsi_tridy"></td>
+                    <td></td>
+                </tr>
+                <tr id="billing_passive_row" hidden>
+                    <td class="pravy_text">Pasivní účast</td>
+                    <td id="billing_pasivni_ucast"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Ubytování</td>
+                    <td id="billing_ubytovani"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Snídaně</td>
+                    <td id="billing_snidane"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Obědy</td>
+                    <td id="billing_obedy"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Večeře</td>
+                    <td id="billing_vecere"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Dar</td>
+                    <td id="billing_dar"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Korekce kurzovné</td>
+                    <td id="billing_correction"></td>
+                    <td id="billing_correction_reason"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Korekce strava</td>
+                    <td id="billing_food_correction"></td>
+                    <td id="billing_food_correction_reason"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Korekce ubytko</td>
+                    <td id="billing_accomodation_correction"></td>
+                    <td id="billing_accomodation_correction_reason"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-</form>
-{% endif %}
+    {% if users_can_send_calculations %}
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                Pokud jste si jistí, že všechny údaje souhlasí, můžete si kalkulaci odeslat na vlastní e-mail kliknutím na tlačítko "Odeslat kalkulaci".
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Odeslat kalkulaci</button><br>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>
 <hr>
 
 <h2>Přístup k účtu</h2>

@@ -3,7 +3,7 @@
 {% block content %}
 <input hidden id="child_id" value="{{id}}">
 <h1>{{name_en}}</h1>
-<h2>Account detail <span id="full_name"></span></h2>
+<h2>Detail of <span id="full_name"></span></h2>
 <hr>
 <div id="locked_yes" hidden>
     <p>
@@ -131,89 +131,95 @@
 </p>
 <hr>
 <h2>Billing</h2>
-<div class="table-responsive">
-    <table class="table table-hover table-striped">
-        <tbody>
-            <tr>
-                <td class="pravy_text">Payment date</td>
-                <td id="billing_date_paid"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Total fee</td>
-                <td id="billing_celkem"></td>
-                <td></td>
-            </tr>
-            <tr id="billing_primary_class_row" hidden>
-                <td class="pravy_text">Main class</td>
-                <td id="billing_hlavni_trida"></td>
-                <td></td>
-            </tr>
-            <tr id="billing_secondary_class_row" hidden>
-                <td class="pravy_text">Secondary classes</td>
-                <td id="billing_vedlejsi_tridy"></td>
-                <td></td>
-            </tr>
-            <tr id="billing_passive_row" hidden>
-                <td class="pravy_text">Passive participation</td>
-                <td id="billing_pasivni_ucast"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Accommodation</td>
-                <td id="billing_ubytovani"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Breakfast</td>
-                <td id="billing_snidane"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Lunch</td>
-                <td id="billing_obedy"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Dinner</td>
-                <td id="billing_vecere"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Donation</td>
-                <td id="billing_dar"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Course fee correction</td>
-                <td id="billing_correction"></td>
-                <td id="billing_correction_reason"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Food fee correction</td>
-                <td id="billing_food_correction"></td>
-                <td id="billing_food_correction_reason"></td>
-            </tr>
-            <tr>
-                <td class="pravy_text">Accommodation correction</td>
-                <td id="billing_accomodation_correction"></td>
-                <td id="billing_accomodation_correction_reason"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-{% if users_can_send_calculations %}
-<form method="post">
-    <div class="row">
-        <div class="col">
-            You can send the calculation to your e-mail by clicking the "Send calculation" button if you are sure that all data is correct.
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Send calculation</button><br>
-        </div>
+<p>
+    If you want, you can view the calculation of your child here. Please do not pay any amounts before {{payments_allowed_datetime}}.
+</p>
+<button class="custom_button" id="show_finance_button" type="button">Show calculation</button>
+<div id="finance_calculation" hidden>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr>
+                    <td class="pravy_text">Payment date</td>
+                    <td id="billing_date_paid"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Total fee</td>
+                    <td id="billing_celkem"></td>
+                    <td></td>
+                </tr>
+                <tr id="billing_primary_class_row" hidden>
+                    <td class="pravy_text">Main class</td>
+                    <td id="billing_hlavni_trida"></td>
+                    <td></td>
+                </tr>
+                <tr id="billing_secondary_class_row" hidden>
+                    <td class="pravy_text">Secondary classes</td>
+                    <td id="billing_vedlejsi_tridy"></td>
+                    <td></td>
+                </tr>
+                <tr id="billing_passive_row" hidden>
+                    <td class="pravy_text">Passive participation</td>
+                    <td id="billing_pasivni_ucast"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Accommodation</td>
+                    <td id="billing_ubytovani"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Breakfast</td>
+                    <td id="billing_snidane"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Lunch</td>
+                    <td id="billing_obedy"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Dinner</td>
+                    <td id="billing_vecere"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Donation</td>
+                    <td id="billing_dar"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Course fee correction</td>
+                    <td id="billing_correction"></td>
+                    <td id="billing_correction_reason"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Food fee correction</td>
+                    <td id="billing_food_correction"></td>
+                    <td id="billing_food_correction_reason"></td>
+                </tr>
+                <tr>
+                    <td class="pravy_text">Accommodation correction</td>
+                    <td id="billing_accomodation_correction"></td>
+                    <td id="billing_accomodation_correction_reason"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-</form>
-{% endif %}
+    {% if users_can_send_calculations %}
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                You can send the calculation to your e-mail by clicking the "Send calculation" button if you are sure that all data is correct.
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="custom_button my-1" name="send_calc" value="whatever">Send calculation</button><br>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>
 <hr>
 
 <h2>Account</h2>

@@ -1,6 +1,17 @@
 import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 let data = JSON.parse(await awaitable_custom_fetch("/user_api/en_ucet"))
 
+let show_finance_button = document.getElementById("show_finance_button")
+let finance_show = document.getElementById("finance_calculation")
+
+
+show_finance_button.addEventListener("click", function() {
+    if (confirm("Do you really want to view your calculation? Please do not pay any amounts before the date written above.")) {
+        finance_show.hidden = false
+        show_finance_button.hidden = true
+    }
+})
+
 
 for (let key in data) {
     if (key.includes("tutor")) {

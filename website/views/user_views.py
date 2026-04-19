@@ -5,6 +5,7 @@ from website.models.user import User
 from website.helpers.require_role import ensure_valid_participant
 from website.mail_handler import mail_sender
 from datetime import datetime
+from website.helpers.settings_manager import get_pretty_payments_allowed_datetime
 
 
 user_views = Blueprint("user_views",__name__)
@@ -14,7 +15,7 @@ user_views = Blueprint("user_views",__name__)
 @ensure_valid_participant("cz")
 def account():
     if request.method == "GET":
-        return render_template("user/cz_account.html", roles=get_roles(), is_locked = current_user.is_locked)
+        return render_template("user/cz_account.html", roles=get_roles(), is_locked = current_user.is_locked, payments_allowed_datetime=get_pretty_payments_allowed_datetime())
     else:
         if request.form.get("send_calc"):
             if current_user.parent:
@@ -40,7 +41,7 @@ def child_account(id):
         flash("Nemáte právo na toto dítě", "error")
         return redirect(url_for("user_views.account"))
     if request.method == "GET":
-        return render_template("user/cz_child_account.html", id = id, roles=get_roles())
+        return render_template("user/cz_child_account.html", id = id, roles=get_roles(), payments_allowed_datetime=get_pretty_payments_allowed_datetime())
     else:
         if id := request.form.get("child_id"):
             child = User.get_by_id(id)
@@ -81,7 +82,7 @@ def return_to_parent():
 @ensure_valid_participant("en")
 def en_account():
     if request.method == "GET":
-        return render_template("user/en_account.html", roles=get_roles(), is_locked = current_user.is_locked)
+        return render_template("user/en_account.html", roles=get_roles(), is_locked = current_user.is_locked, payments_allowed_datetime=get_pretty_payments_allowed_datetime())
     else:
         if id := request.form.get("child_id"):
             child = User.get_by_id(id)
@@ -117,7 +118,7 @@ def en_child_account(id):
         flash("You don't have permission for this child", "error")
         return redirect(url_for("user_views.en_account"))
     if request.method == "GET":
-        return render_template("user/en_child_account.html", id = id, roles=get_roles())
+        return render_template("user/en_child_account.html", id = id, roles=get_roles(), payments_allowed_datetime=get_pretty_payments_allowed_datetime())
     else:
         if id := request.form.get("child_id"):
             child = User.get_by_id(id)

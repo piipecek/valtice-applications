@@ -798,13 +798,13 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "primary_class": self.primary_class.full_name_en if self.primary_class else "-",
-            "secondary_classes": "\n".join([trida.full_name_en for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_en))]) if self.secondary_classes else "-",
+            "primary_class": self.primary_class.get_name_en() if self.primary_class else "-",
+            "secondary_classes": "\n".join([trida.get_name_en() for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.get_name_en()))]) if self.secondary_classes else "-",
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_tridy": "\n".join([trida.full_name_en + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
+            "billing_vedlejsi_tridy": "\n".join([trida.get_name_en() + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),
@@ -925,13 +925,13 @@ class User(Common_methods_db_model, UserMixin):
                     "count": meal_order.count
                 } for meal_order in sorted(self.meal_orders)
             ],
-            "primary_class": self.primary_class.full_name_en if self.primary_class else "-",
-            "secondary_classes": "\n".join([trida.full_name_en for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.full_name_en))]) if self.secondary_classes else "-",
+            "primary_class": self.primary_class.get_name_en() if self.primary_class else "-",
+            "secondary_classes": "\n".join([trida.get_name_en() for trida in sorted(self.secondary_classes, key=lambda x: czech_sort.key(x.get_name_en()))]) if self.secondary_classes else "-",
             "billing_date_paid": pretty_datetime(self.billing_date_paid) if self.billing_date_paid else "-",
             "billing_celkem": pretty_penize(kalkulace["celkem"], self.billing_currency),
             "billing_pasivni_ucast": pretty_penize(kalkulace["pasivni_ucast"], self.billing_currency),
             "billing_hlavni_trida": pretty_penize(kalkulace["hlavni_trida"], self.billing_currency),
-            "billing_vedlejsi_tridy": "\n".join([trida.full_name_en + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
+            "billing_vedlejsi_tridy": "\n".join([trida.get_name_en() + ": " + pretty_penize(calc, self.billing_currency) for trida, calc in zip(self.secondary_classes, kalkulace["vedlejsi_tridy"])]) if self.secondary_classes else "-",
             "billing_ubytovani": pretty_penize(kalkulace["ubytovani"], self.billing_currency),
             "billing_snidane": pretty_penize(kalkulace["snidane"], self.billing_currency),
             "billing_obedy": pretty_penize(kalkulace["obedy"], self.billing_currency),

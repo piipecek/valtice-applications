@@ -1,8 +1,7 @@
 from website.paths import settings_path
 import json
 from datetime import datetime
-from website.helpers.pretty_date import pretty_date
-from flask import request
+from website.helpers.pretty_date import pretty_datetime
 
 
 def get_settings() -> dict:
@@ -27,6 +26,13 @@ def set_secondary_classes_start_date_and_time(date: str, time: str):
     settings['secondary_classes_start_date'] = date
     settings['secondary_classes_start_time'] = time
     save_settings(settings)
+    
+
+def set_payments_allowed_date_and_time(date: str, time: str):
+    settings = get_settings()
+    settings['payments_allowed_date'] = date
+    settings['payments_allowed_time'] = time
+    save_settings(settings)
 
 
 def set_applications_end_date_and_time(date: str, time: str):
@@ -34,6 +40,13 @@ def set_applications_end_date_and_time(date: str, time: str):
     settings['applications_end_date'] = date
     settings['applications_end_time'] = time
     save_settings(settings)
+    
+
+def get_pretty_payments_allowed_datetime() -> str:
+    settings = get_settings()
+    payments_allowed_date = settings['payments_allowed_date']
+    payments_allowed_time = settings['payments_allowed_time']
+    return pretty_datetime(payments_allowed_date + ' ' + payments_allowed_time)
 
 
 def set_cz_frontpage_text(text: str):

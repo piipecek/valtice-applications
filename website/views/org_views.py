@@ -9,7 +9,7 @@ from website.models.meal import Meal
 from website.models.role import Role
 from website.helpers.get_roles import get_roles
 from website.helpers.require_role import require_role_system_name_on_current_user
-from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, toggle_user_calculations_state, set_both_capacities, set_bank_details
+from website.helpers.settings_manager import set_primary_classes_start_date_and_time, set_secondary_classes_start_date_and_time, set_applications_end_date_and_time, set_payments_allowed_date_and_time, set_cz_frontpage_text, set_en_frontpage_text, toggle_user_lock_state, toggle_user_calculations_state, set_both_capacities, set_bank_details
 from website.helpers.export import export
 from website.helpers.end_of_issem_manager import end_of_issem
 from website.helpers.logger import log, get_logs_for_browser
@@ -76,15 +76,18 @@ def settings():
             primary_classes_start_time = request.form.get("primary_classes_start_time")
             secondary_classes_start_date = request.form.get("secondary_classes_start_date")
             secondary_classes_start_time = request.form.get("secondary_classes_start_time")
+            payments_allowed_date = request.form.get("payments_allowed_date")
+            payments_allowed_time = request.form.get("payments_allowed_time")
             applications_end_date = request.form.get("applications_end_date")
             applications_end_time = request.form.get("applications_end_time")
-            if not all([primary_classes_start_date, primary_classes_start_time, secondary_classes_start_date, secondary_classes_start_time, applications_end_date, applications_end_time]):
+            if not all([primary_classes_start_date, primary_classes_start_time, secondary_classes_start_date, secondary_classes_start_time, payments_allowed_date, payments_allowed_time, applications_end_date, applications_end_time]):
                 flash("Nebyl vyplněn datum nebo čas jednoho z termínů.", category="error")
                 return redirect(url_for("org_views.settings"))
             else:
                 set_primary_classes_start_date_and_time(primary_classes_start_date, primary_classes_start_time)
                 set_secondary_classes_start_date_and_time(secondary_classes_start_date, secondary_classes_start_time)
                 set_applications_end_date_and_time(applications_end_date, applications_end_time)
+                set_payments_allowed_date_and_time(payments_allowed_date, payments_allowed_time)
                 flash("Datum a čas začátku přihlášek do tříd byl změněn.", category="success")
                 return redirect(url_for("org_views.settings"))
         elif request.form.get("nahrat_logo_cz"):
