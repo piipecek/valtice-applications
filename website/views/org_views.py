@@ -70,7 +70,8 @@ def settings():
             return redirect(url_for("org_views.detail_jidla", id=id))
         elif request.form.get("export"):
             bytes = export()
-            return send_file(bytes, as_attachment=True, download_name="export.zip", mimetype='application/zip')
+            filename = f"export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            return send_file(bytes, as_attachment=True, download_name=filename, mimetype='application/zip')
         elif request.form.get("dates"):
             primary_classes_start_date = request.form.get("primary_classes_start_date")
             primary_classes_start_time = request.form.get("primary_classes_start_time")
