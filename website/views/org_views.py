@@ -372,7 +372,6 @@ def seznamy():
             return render_template("organizator/pdf_seznam.html", data = json.dumps(data_pro_tabulku))
         elif request.form.get("ucel") == "view":
             result = json.loads(request.form.get("result"))
-            print(json.dumps(result, indent=4))
             data_pro_tabulku = User.vytvorit_seznam(result)
             return json.dumps(data_pro_tabulku)
         else:
