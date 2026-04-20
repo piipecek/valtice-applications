@@ -287,9 +287,12 @@ def edit_child_account(id):
                         return redirect(url_for("user_views.account"))
                 else:
                     flash("Uživatel s tímto e-mailem neexistuje", "error")
-            if request.form.get("email") != child.email:
+            incoming_email = request.form.get("email")
+            if not incoming_email or incoming_email.strip() == "":
+                incoming_email = None
+            if incoming_email != child.email:
                 # plati i pokud email neni zadanej -> proste rodic to muze prepsat jakkoli
-                child.email = request.form.get("email")
+                child.email = incoming_email
                 child.confirmed_email = False
                 child.update()
             child.nacist_zmeny_z_user_requestu(request)
@@ -349,9 +352,12 @@ def en_edit_child_account(id):
                         return redirect(url_for("user_views.en_account"))
                 else:
                     flash("User with this email does not exist", "error")
-            if request.form.get("email") != child.email:
+            incoming_email = request.form.get("email")
+            if not incoming_email or incoming_email.strip() == "":
+                incoming_email = None
+            if incoming_email != child.email:
                 # plati i pokud email neni zadanej -> proste rodic to muze prepsat jakkoli
-                child.email = request.form.get("email")
+                child.email = incoming_email
                 child.confirmed_email = False
                 child.update()
             child.nacist_zmeny_z_user_requestu(request)
