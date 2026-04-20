@@ -489,6 +489,10 @@ def uprava_jidla(id:int):
             flash("Jídlo bylo upraveno", category="success")
             return redirect(url_for("org_views.detail_jidla", id=id))
         elif request.form.get("delete"):
+            meal = Meal.get_by_id(id)
+            if meal.meal_orders:
+                flash("Toto jídlo nelze smazat, protože na něj existují objednávky. Nejprve smažte všechny objednávky tohoto jídla.", category="error")
+                return redirect(url_for("org_views.uprava_jidla", id=id))
             Meal.get_by_id(id).delete()
             flash("Jídlo bylo smazáno", category="success")
             return redirect(url_for("org_views.seznam_jidel"))
