@@ -146,7 +146,7 @@ class Trida(Common_methods_db_model):
             state_main = "enrolled"
         elif not self.has_capacity:
             state_main = "available"
-        elif len(self.primary_participants) >= self.capacity:
+        elif len(self.primary_participants) + len(self.secondary_participants) >= self.capacity:
             state_main = "full"
             
         state_secondary = "available" #available, enrolled, full
