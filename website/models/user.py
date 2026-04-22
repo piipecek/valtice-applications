@@ -1241,7 +1241,7 @@ class User(Common_methods_db_model, UserMixin):
         if kriteria["mnozina"] == "team":
             ucastnici = list(filter(lambda u: len(u.roles) > 0, ucastnici))
         elif kriteria["mnozina"] == "this_year_teachers":
-            ucastnici = list(filter(lambda u: tutor_role in u.roles or repetiteur_role in u.roles and u.tutor_this_year, ucastnici))
+            ucastnici = list(filter(lambda u: (tutor_role in u.roles or repetiteur_role in u.roles) and u.tutor_this_year, ucastnici))
         else:
             ucastnici = list(filter(lambda u: len(u.roles) == 0, ucastnici))
             if kriteria["mnozina"] == "interested":
