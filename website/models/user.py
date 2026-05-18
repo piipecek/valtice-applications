@@ -1383,10 +1383,11 @@ class User(Common_methods_db_model, UserMixin):
                 "id": u.id,
                 "data": {
                     "#": i+1,
-                    "Jméno": u.get_full_name(),
+                    "Jméno": u.name if u.name else "-",
+                    "Příjmení": u.surname if u.surname else "-",
                 }
             }
-            result["headers"] = ["#", "Jméno"]
+            result["headers"] = ["#", "Jméno", "Příjmení"]
             for a in kriteria["atributy"]:
                 # osobni
                 if a == "cas":

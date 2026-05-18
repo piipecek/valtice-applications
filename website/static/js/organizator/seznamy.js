@@ -18,6 +18,7 @@ document.getElementById("vytvorit_button").addEventListener("click", function() 
     .done(function(data) {
         document.getElementById("loader").hidden = true
         document.getElementById("druhy_krok").hidden = false
+        console.log(data)
         vykreslit_tabulku(JSON.parse(data))
     })
     .fail(function() {
