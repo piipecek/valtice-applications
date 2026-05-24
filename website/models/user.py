@@ -617,8 +617,11 @@ class User(Common_methods_db_model, UserMixin):
         }
     
     
-    def nacist_zmeny_z_org_requestu(self, request):
-        
+    def nacist_zmeny_z_org_requestu(self, request) -> list[str]:
+        """Returns list of errors, if there are any. Otherwise empty list.
+        """
+        errors = []
+
         if request.form.get("primary_class_id") != str(self.primary_class_id):
             self.datetime_class_pick = datetime.now()
         if request.form.get("primary_class_id") == "-":
@@ -641,12 +644,17 @@ class User(Common_methods_db_model, UserMixin):
             else:
                 target = self.email
             mail_sender(mail_identifier="succesful_payment", target=target)
-
+            
+        
+        other_user = User.get_by_email(request.form.get("email"))
+        if other_user and other_user.id != self.id:
+            errors.append("Uživatel s tímto emailem už existuje, zkontrolujte to prosím: " + request.form.get("email"))
+        else:
+            self.email = request.form.get("email") if request.form.get("email") else None
             
              
         self.name = request.form.get("name")
         self.surname = request.form.get("surname")
-        self.email = request.form.get("email") if request.form.get("email") else None
         self.phone = request.form.get("phone")
         self.date_of_birth = datetime.strptime(request.form.get("date_of_birth"), "%Y-%m-%d") if request.form.get("date_of_birth") else None
         self.is_student = True if request.form.get("is_student") == "Ano" else False
@@ -693,7 +701,8 @@ class User(Common_methods_db_model, UserMixin):
             self.must_change_password_upon_login = True
             
         self.update()
-            
+        
+        return errors
         
     def info_for_user_detail(self) -> dict:
         kalkulace = self.kalkulace()

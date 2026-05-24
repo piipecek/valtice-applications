@@ -226,8 +226,13 @@ def uprava_ucastnika(id:int):
                     flash("Rodič s tímto emailem neexistuje", category="error")
             
             try:
-                u.nacist_zmeny_z_org_requestu(request)
-                flash("Změny byly uloženy", category="success")
+                errors = u.nacist_zmeny_z_org_requestu(request)
+                if errors:
+                    flash("Data byla uložena, ale nastaly následující problémy:", category="info")
+                    for error in errors:
+                        flash(error, category="error")
+                else:
+                    flash("Změny byly uloženy", category="success")
                 return redirect(url_for("org_views.detail_ucastnika", id=id))
             except sqlalchemy.exc.IntegrityError as e:
                 flash("Nastala chyba při ukládání uživatele, žádná data se neuložila, kontaktujte vývojáře:" + str(e), category="error")
