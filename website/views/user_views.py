@@ -53,6 +53,16 @@ def child_account(id):
             else:       
                 flash("Nemáte právo na toto dítě", "error")
                 return redirect(url_for("user_views.account"))
+        elif request.form.get("send_calc"):
+            target = child.parent.email
+            if not target:
+                flash("Rodič tohoto dítěte nemá e-mail, nelze odeslat platební údaje", "error")
+                return redirect(url_for("user_views.cz_child_account", id=id))
+            mail_sender(mail_identifier="send_calculation", target=target, data=child.info_for_calculation_email())
+            child.datetime_calculation_email = datetime.now()
+            child.update()
+            flash("E-mail s platebními údaji byl odeslán", category="success")
+            return redirect(url_for("user_views.account", id=id))
         else:
             return request.form.to_dict()       
 
