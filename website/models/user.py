@@ -1258,7 +1258,7 @@ class User(Common_methods_db_model, UserMixin):
             elif kriteria["mnozina"] == "enrolled":
                 ucastnici = list(filter(lambda u: u.primary_class_id, ucastnici))
             elif kriteria["mnozina"] == "passive":
-                ucastnici = list(filter(lambda u: not u.is_active_participant, ucastnici))
+                ucastnici = list(filter(lambda u: not u.is_active_participant and u.is_this_year_participant, ucastnici))
             elif kriteria["mnozina"] == "present":
                 ucastnici = list(filter(lambda u: u.datetime_registered, ucastnici))
             elif kriteria["mnozina"] == "all":
