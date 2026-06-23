@@ -1,11 +1,11 @@
 import awaitable_custom_fetch from "../awaitable_custom_fetch.js"
 import TableCreator from "../table_creator.js"
-let ucastnici = JSON.parse(await awaitable_custom_fetch("/org_api/seznam_ucastniku"))
-let statistiky = JSON.parse(await awaitable_custom_fetch("/org_api/statistiky"))
+
+let data = await JSON.parse(await awaitable_custom_fetch("/org_api/seznam_ucastniku"))
 
 let tc = new TableCreator(document.getElementById("parent_div"), true, true, true)
 tc.make_header(["Jméno", "E-mail", "Registrován", "Hlavní třída"])
-ucastnici.forEach(element => {
+data.users.forEach(element => {
     let jmeno_a = document.createElement("a")
     jmeno_a.href = "/organizator/detail_ucastnika/" + element["id"]
     jmeno_a.innerText = element["full_name"]
@@ -37,7 +37,7 @@ ucastnici.forEach(element => {
     tc.make_row([jmeno_a, email_element, element["registrovan"], trida_span])
 });
 
-document.getElementById("vsichni").innerText = statistiky.vsichni
-document.getElementById("zajemci").innerText = statistiky.zajemci
-document.getElementById("zapsani").innerText = statistiky.zapsani
-document.getElementById("registrovani").innerText = statistiky.registrovani
+document.getElementById("vsichni").innerText = data.vsichni
+document.getElementById("zajemci").innerText = data.zajemci
+document.getElementById("zapsani").innerText = data.zapsani
+document.getElementById("registrovani").innerText = data.registrovani

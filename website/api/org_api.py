@@ -15,8 +15,20 @@ org_api = Blueprint("org_api", __name__)
 @org_api.route("/seznam_ucastniku")
 @require_role_system_name_on_current_user("organiser")
 def seznam_ucastniku():
-    sorted_users = sorted([u for u in User.get_all() if len(u.roles) == 0 and u.is_this_year_participant], key=lambda u: czech_sort.key(u.info_pro_seznam_ucastniku()["surname"]))
-    return json.dumps([u.info_pro_seznam_ucastniku() for u in sorted_users])
+    all_users = User.get_all()
+    non_staff_users = [u for u in all_users if not u.roles]
+    this_year_participants = [u for u in non_staff_users if u.is_this_year_participant]
+    zapsani = [u for u in this_year_participants if u.datetime_class_pick or not u.is_active_participant]
+    registrovani = [u for u in zapsani if u.datetime_registered]
+    result = {
+        "vsichni": len(non_staff_users),
+        "zajemci": len(this_year_participants),
+        "registrovani": len(registrovani),
+        "zapsani": len(zapsani),
+        "users": sorted([u.info_pro_seznam_ucastniku() for u in this_year_participants], key=lambda u: czech_sort.key(u["surname"]))
+    }
+    print(result)
+    return json.dumps(result)
 
 
 @org_api.route("/seznam_uctu")
@@ -72,21 +84,6 @@ def ceny():
 @require_role_system_name_on_current_user("organiser")
 def tridy_pro_seznamy():
     return json.dumps(sorted([t.data_pro_seznamy() for t in Trida.get_all()], key=lambda x: czech_sort.key(x["name"])))
-
-
-@org_api.route("/statistiky")
-@require_role_system_name_on_current_user("organiser")
-def statistiky():
-    uzivatele_mimo_orgy = list(filter(lambda u: len(u.roles) == 0, User.get_all()))
-    zajemci = list(filter(lambda u: u.is_this_year_participant, uzivatele_mimo_orgy))
-    zapsani = list(filter(lambda u: u.datetime_class_pick or not u.is_active_participant, zajemci))
-    registrovani = list(filter(lambda u: u.datetime_registered, zapsani)) # aby to pocitalo i pasivni tridy
-    return json.dumps({
-        "vsichni": len(uzivatele_mimo_orgy),
-        "zajemci": len(zajemci),
-        "registrovani": len(registrovani),
-        "zapsani": len(zapsani),
-        })
 
 
 @org_api.route("/settings")
